@@ -1,30 +1,59 @@
-version: '3.8'
+version: '3.9'
 
 services:
   api:
-    images: nestjs
-    build:
-      dockerfile: Dockerfile
-      context: ./backend/.
-    depends_on:
-      - postgre_db
-    env_file: .env_api
+    container_name: api
+    build: 
+      context: backend/.
     ports:
-      - "8080:3000"
+      - "8000:3000"
     volumes:
-      - api:/backend/
+      - api:/usr/src/app
+    networks:
+      - transcendance
 
-  postgre_db:
-    images: postgre
+  frontend:
+    container_name: front
+    build:
+      context: frontend/.
     ports:
-      -"35000:5432"
-    env_file: .env_db
+      - "3001:3002"
+    volumes:
+      - front:/usr/src/app
+    networks:
+      - transcendance
 
+  postgredb:
+    container_name: postgredb
+    build:
+      context: db/.
+    ports:
+      - "???:???"
+    volumes:
+      - db:/usr/src/db
+    networks:
+      - transcendance
+      
 volumes:
   api:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/usr/src/app'
-      
+      device: "{$PWD}/backend/srcs"
+  frontend:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: "{$PWD}/frontend/srcs"
+  postgredb:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: "{$PWD}/postgredb/srcs"
+
+networks:
+  transcendance:
+    driver: bridge

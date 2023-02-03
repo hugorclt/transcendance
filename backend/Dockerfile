@@ -1,10 +1,10 @@
 FROM    node:12
 
-WORKDIR /usr/src/app
+# run     mkdir -p /usr/src/app
+# WORKDIR /usr/src/app
 
-RUN     npm install
+# EXPOSE  8080
 
-RUN     npm run build
-
-EXPOSE  8080
-CMD [ "npm" , "start"]
+# CMD     ["npm", "install"]
+# CMD     ["npm", "run", "build"]
+# CMD     [ "npm" , "start"]
