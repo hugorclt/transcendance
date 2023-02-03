@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  api:
+    images: nestjs
+    build:
+      dockerfile: Dockerfile
+      context: ./backend/.
+    depends_on:
+      - postgre_db
+    env_file: .env_api
+    ports:
+      - "8080:3000"
+    volumes:
+      - api:/backend/
+
+  postgre_db:
+    images: postgre
+    ports:
+      -"35000:5432"
+    env_file: .env_db
+
+volumes:
+  api:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/usr/src/app'
+      
