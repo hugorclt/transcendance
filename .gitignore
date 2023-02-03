@@ -34,8 +34,7 @@
 */*/!.vscode/launch.json
 */*/!.vscode/extensions.json
 
-.env_api
-.env_db
+.env
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
