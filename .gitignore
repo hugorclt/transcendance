@@ -33,3 +33,6 @@
 */!.vscode/tasks.json
 */!.vscode/launch.json
 */!.vscode/extensions.json
+
+.env_api
+.env_db
