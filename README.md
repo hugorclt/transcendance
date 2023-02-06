@@ -45,4 +45,4 @@ In order to create the back-end you have first to create a nest app
 
 ---
 
-made with 💜 by mlaouedj, dsaada and hrecolet!
+made with 💜 by ddordain, dsaada and hrecolet!
