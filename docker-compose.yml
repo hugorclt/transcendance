@@ -32,8 +32,6 @@ services:
   postgredb:
     image: postgres:latest
     container_name: postgredb
-    ports:
-      - "3001:5432"
     volumes:
       - postgredb:/var/lib/postgresql/data
     networks:
