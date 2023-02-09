@@ -21,7 +21,7 @@ model User {
   balance     Int
 
   hasBloqued  Bloqued[] @relation("user")
-  isBloqued   Bloqued[] @relation("blocked")
+  isBloqued   Bloqued[] @relation("bloqued")
   friendOne   FriendShip[] @relation("friendOne")
   friendTwo   FriendShip[] @relation("friendTwo")
   winner      Match[] @relation("winner")
@@ -31,14 +31,15 @@ model User {
   admin       Room[] @relation("admin")
   participant Participant[]
   banned      Banned[]
+  sender      Message[]
 }
 
 model Bloqued {
   id          Int @id @default(autoincrement())
   userId      Int
-  blockedId   Int
+  bloquedId   Int
   user        User @relation("user", fields:[userId], references: [id])
-  blocked     User @relation("blocked", fields:[blockedId], references: [id])
+  bloqued     User @relation("bloqued", fields:[bloquedId], references: [id])
 }
 
 model FriendShip {
@@ -69,6 +70,7 @@ model Items {
   name    String
   price   Int
   image   String
+  
   item    UserItems[]
 }
 
@@ -87,9 +89,10 @@ model Room {
   type    Int
   adminId Int
   admin   User @relation("admin", fields: [adminId], references: [id])
-  
+
   room    Participant[]
   roomBan Banned[]
+  roomMsg Message[]
 }
 
 model Participant {
@@ -106,4 +109,14 @@ model Banned {
   userId  Int
   room    Room @relation(fields: [roomId], references: [id])
   user    User @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id        Int @id @default(autoincrement())
+  content   String
+  date      DateTime  @default(now())
+  senderId  Int
+  roomId    Int
+  sender    User @relation(fields: [senderId], references: [id])
+  room      Room @relation(fields: [roomId], references: [id])
 }
