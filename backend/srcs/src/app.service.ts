@@ -10,7 +10,7 @@ export class AppService {
   getUser() : any {
     const prisma = new PrismaClient();
 
-    const name = prisma.user.findMany()
-    return name;
+    const all = prisma.user.findMany();
+    return all;
   }
 }

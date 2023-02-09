@@ -1,10 +1,8 @@
 FROM    node:16.13.2
 
 WORKDIR /app
-
 EXPOSE  3000
+COPY    ./tools/runNestCreateDB.sh /
+RUN     chmod 777 /runNestCreateDB.sh
 
-CMD     ["/bin/bash", "-c", "npm install && npm run start:dev"]
-# CMD     ["npm", "install"]
-# CMD     ["npm", "run", "build"]
-# CMD     ["npm" , "start"]
+ENTRYPOINT  [".././runNestCreateDB.sh"]
