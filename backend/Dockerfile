@@ -1,8 +1,8 @@
-FROM    node:16.17
+FROM    node:16.13.2
 
 WORKDIR /app
 
-EXPOSE  8080
+EXPOSE  3000
 
 CMD     ["/bin/bash", "-c", "npm install && npm run start:dev"]
 # CMD     ["npm", "install"]
