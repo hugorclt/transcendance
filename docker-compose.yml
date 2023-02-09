@@ -6,7 +6,7 @@ services:
     build: 
       context: backend/.
     ports:
-      - "8000:3000"
+      - "3000:3000"
     volumes:
       - api:/app
     networks:
