@@ -19,58 +19,91 @@ model User {
   avatar      String
   status      Int
   balance     Int
+
   hasBloqued  Bloqued[] @relation("user")
   isBloqued   Bloqued[] @relation("blocked")
+  friendOne   FriendShip[] @relation("friendOne")
+  friendTwo   FriendShip[] @relation("friendTwo")
+  winner      Match[] @relation("winner")
+  playerOne   Match[] @relation("playerOne")
+  playerTwo   Match[] @relation("playerTwo")
+  user        UserItems[] @relation("owner")
+  admin       Room[] @relation("admin")
+  participant Participant[]
+  banned      Banned[]
 }
 
 model Bloqued {
   id          Int @id @default(autoincrement())
-  user        User @relation("user", fields:[userId], references: [id])
-  blocked     User @relation("blocked", fields:[blockedId], references: [id])
   userId      Int
   blockedId   Int
+  user        User @relation("user", fields:[userId], references: [id])
+  blocked     User @relation("blocked", fields:[blockedId], references: [id])
 }
 
-// model FriendShip {
-//   id        Int @id @default(autoincrement())
-//   user      User @relation(fields:[userOne, userTwo], references: [id])
-//   userOne   Int
-//   userTwo   Int
-// }
+model FriendShip {
+  id          Int @id @default(autoincrement())
+  userOneId   Int
+  userTwoId   Int
+  friendOne   User @relation("friendOne", fields:[userOneId], references: [id])
+  friendTwo   User @relation("friendTwo", fields:[userTwoId], references: [id])
+}
 
 
-// //# ----------------------------------- Match ---------------------------------- #
-// model Match {
-//   id        Int @id @default(autoincrement())
-//   date      DateTime   @default(now())
-//   duration  DateTime
-//   user      User @relation(fields:[winner, userOne, userTwo], references: [id])
-//   winner    Int
-//   userOne   Int
-//   userTwo   Int
-// }
+//# ----------------------------------- Match ---------------------------------- #
+model Match {
+  id          Int @id @default(autoincrement())
+  date        DateTime   @default(now())
+  duration    DateTime
+  winnerId    Int
+  playerOneId Int
+  playerTwoId Int
+  winner      User @relation("winner", fields:[winnerId], references: [id])
+  playerOne   User @relation("playerOne", fields:[playerOneId], references: [id]) 
+  playerTwo   User @relation("playerTwo", fields:[playerTwoId], references: [id])
+}
 
-// model MatchList {
-//   id      Int @id @default(autoincrement())
-//   user    User @relation(fields:[userOne, userTwo], references: [id])
-//   userOne Int
-//   userTwo Int
-//   match   Match @relation(fields:[matchId], references: [id])
-//   matchId Int
-// }
+//# ----------------------------------- Items ---------------------------------- #
+model Items {
+  id      Int @id @default(autoincrement())
+  name    String
+  price   Int
+  image   String
+  item    UserItems[]
+}
 
-// //# ----------------------------------- Items ---------------------------------- #
-// model Items {
-//   id      Int @id @default(autoincrement())
-//   name    String
-//   price   Int
-//   image   String
-// }
+model UserItems {
+  id      Int @id @default(autoincrement())
+  userId  Int
+  itemsId Int
+  user    User @relation("owner", fields:[userId], references:[id])
+  items   Items @relation(fields:[itemsId], references: [id])
+}
 
-// model userItems {
-//   id      Int @id @default(autoincrement())
-//   user    User @relation(fields:[userId], references:[id])
-//   userId  Int
-//   items   Items @relation(fields:[itemsId], references: [id])
-//   itemsId Int
-// }
+//# ------------------------------------ Room ------------------------------------- #
+model Room {
+  id      Int @id @default(autoincrement())
+  name    String @unique
+  type    Int
+  adminId Int
+  admin   User @relation("admin", fields: [adminId], references: [id])
+  
+  room    Participant[]
+  roomBan Banned[]
+}
+
+model Participant {
+  id      Int @id @default(autoincrement())
+  roomId  Int
+  userId  Int
+  room    Room @relation(fields: [roomId], references: [id])
+  user    User @relation(fields: [userId], references: [id])
+}
+
+model Banned {
+  id      Int @id @default(autoincrement())
+  roomId  Int
+  userId  Int
+  room    Room @relation(fields: [roomId], references: [id])
+  user    User @relation(fields: [userId], references: [id])
+}

@@ -32,8 +32,6 @@ services:
   postgredb:
     image: postgres:latest
     container_name: postgredb
-    build:
-      context: postgredb/.
     ports:
       - "3001:5432"
     volumes:
@@ -56,11 +54,6 @@ volumes:
       o: 'bind'
       device: "$PWD/frontend/srcs"
   postgredb:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: "$PWD/postgredb/srcs"
 
 networks:
   transcendance:
