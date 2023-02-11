@@ -1,20 +1,24 @@
 import React from 'react'
-import GoogleButton from 'react-google-button'
 import axios from "axios";
+import GoogleButton from 'react-google-button'
 
-const baseURL: string = "https://localhost:3000/";
+const baseURL: string = "http://localhost:3000/auth/google/login";
 
 function Login() {
+  var googleHandler = () => {
+    try {
+      window.open(baseURL, '_self');
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
   return (
     <div className="bg-white grid grid-cols-2 h-screen">
         <div className='flex justify-center h-screen items-center'>
-          <GoogleButton
-            onClick={() => { 
-              axios.get(baseURL).then((response) => {
-                console.log(response);
-              })
-            }}
-          />
+        <GoogleButton
+          onClick={googleHandler}
+        />
         </div>
         <h1 className='absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-8xl tracking-wider'>
           <span className='text-indigo-600'>O</span>

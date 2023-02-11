@@ -5,6 +5,9 @@ declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // app.setGlobalPrefix('api'); -> used to set a global prefix for the whole app
+
+  app.enableCors();
+  
   await app.listen(3000);
 
   if (module.hot) {
