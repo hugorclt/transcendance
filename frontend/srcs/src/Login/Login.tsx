@@ -16,9 +16,7 @@ function Login() {
   return (
     <div className="bg-white grid grid-cols-2 h-screen">
         <div className='flex justify-center h-screen items-center'>
-        <GoogleButton
-          onClick={googleHandler}
-        />
+          <GoogleButton onClick={googleHandler}/>
         </div>
         <h1 className='absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-8xl tracking-wider'>
           <span className='text-indigo-600'>O</span>
