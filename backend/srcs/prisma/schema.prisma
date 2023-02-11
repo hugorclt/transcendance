@@ -1,7 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
 //# ----------------------------- General_settings ----------------------------- #
 generator client {
   provider = "prisma-client-js"
@@ -14,81 +13,80 @@ datasource db {
 
 //# ----------------------------------- User ----------------------------------- #
 model User {
-  id          Int @id @default(autoincrement())
-  username    String @unique
-  avatar      String
-  status      Int
-  balance     Int
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  avatar   String
+  status   Int
+  balance  Int
 
-  hasBloqued  Bloqued[] @relation("user")
-  isBloqued   Bloqued[] @relation("bloqued")
-  friendOne   FriendShip[] @relation("friendOne")
-  friendTwo   FriendShip[] @relation("friendTwo")
-  winner      Match[] @relation("winner")
-  playerOne   Match[] @relation("playerOne")
-  playerTwo   Match[] @relation("playerTwo")
-  user        UserItems[] @relation("owner")
-  admin       Room[] @relation("admin")
+  hasBloqued  Bloqued[]     @relation("user")
+  isBloqued   Bloqued[]     @relation("bloqued")
+  friendOne   FriendShip[]  @relation("friendOne")
+  friendTwo   FriendShip[]  @relation("friendTwo")
+  winner      Match[]       @relation("winner")
+  playerOne   Match[]       @relation("playerOne")
+  playerTwo   Match[]       @relation("playerTwo")
+  user        UserItems[]   @relation("owner")
+  admin       Room[]        @relation("admin")
   participant Participant[]
   banned      Banned[]
   sender      Message[]
 }
 
 model Bloqued {
-  id          Int @id @default(autoincrement())
-  userId      Int
-  bloquedId   Int
-  user        User @relation("user", fields:[userId], references: [id])
-  bloqued     User @relation("bloqued", fields:[bloquedId], references: [id])
+  id        Int  @id @default(autoincrement())
+  userId    Int
+  bloquedId Int
+  user      User @relation("user", fields: [userId], references: [id])
+  bloqued   User @relation("bloqued", fields: [bloquedId], references: [id])
 }
 
 model FriendShip {
-  id          Int @id @default(autoincrement())
-  userOneId   Int
-  userTwoId   Int
-  friendOne   User @relation("friendOne", fields:[userOneId], references: [id])
-  friendTwo   User @relation("friendTwo", fields:[userTwoId], references: [id])
+  id        Int  @id @default(autoincrement())
+  userOneId Int
+  userTwoId Int
+  friendOne User @relation("friendOne", fields: [userOneId], references: [id])
+  friendTwo User @relation("friendTwo", fields: [userTwoId], references: [id])
 }
-
 
 //# ----------------------------------- Match ---------------------------------- #
 model Match {
-  id          Int @id @default(autoincrement())
-  date        DateTime   @default(now())
+  id          Int      @id @default(autoincrement())
+  date        DateTime @default(now())
   duration    DateTime
   winnerId    Int
   playerOneId Int
   playerTwoId Int
-  winner      User @relation("winner", fields:[winnerId], references: [id])
-  playerOne   User @relation("playerOne", fields:[playerOneId], references: [id]) 
-  playerTwo   User @relation("playerTwo", fields:[playerTwoId], references: [id])
+  winner      User     @relation("winner", fields: [winnerId], references: [id])
+  playerOne   User     @relation("playerOne", fields: [playerOneId], references: [id])
+  playerTwo   User     @relation("playerTwo", fields: [playerTwoId], references: [id])
 }
 
 //# ----------------------------------- Items ---------------------------------- #
 model Items {
-  id      Int @id @default(autoincrement())
-  name    String
-  price   Int
-  image   String
-  
-  item    UserItems[]
+  id    Int    @id @default(autoincrement())
+  name  String
+  price Int
+  image String
+
+  item UserItems[]
 }
 
 model UserItems {
-  id      Int @id @default(autoincrement())
+  id      Int   @id @default(autoincrement())
   userId  Int
   itemsId Int
-  user    User @relation("owner", fields:[userId], references:[id])
-  items   Items @relation(fields:[itemsId], references: [id])
+  user    User  @relation("owner", fields: [userId], references: [id])
+  items   Items @relation(fields: [itemsId], references: [id])
 }
 
-//# ------------------------------------ Room ------------------------------------- #
+//# ------------------------------------ Chat ------------------------------------- #
 model Room {
-  id      Int @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   name    String @unique
   type    Int
   adminId Int
-  admin   User @relation("admin", fields: [adminId], references: [id])
+  admin   User   @relation("admin", fields: [adminId], references: [id])
 
   room    Participant[]
   roomBan Banned[]
@@ -96,27 +94,27 @@ model Room {
 }
 
 model Participant {
-  id      Int @id @default(autoincrement())
-  roomId  Int
-  userId  Int
-  room    Room @relation(fields: [roomId], references: [id])
-  user    User @relation(fields: [userId], references: [id])
+  id     Int  @id @default(autoincrement())
+  roomId Int
+  userId Int
+  room   Room @relation(fields: [roomId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Banned {
-  id      Int @id @default(autoincrement())
-  roomId  Int
-  userId  Int
-  room    Room @relation(fields: [roomId], references: [id])
-  user    User @relation(fields: [userId], references: [id])
+  id     Int  @id @default(autoincrement())
+  roomId Int
+  userId Int
+  room   Room @relation(fields: [roomId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Message {
-  id        Int @id @default(autoincrement())
-  content   String
-  date      DateTime  @default(now())
-  senderId  Int
-  roomId    Int
-  sender    User @relation(fields: [senderId], references: [id])
-  room      Room @relation(fields: [roomId], references: [id])
+  id       Int      @id @default(autoincrement())
+  content  String
+  date     DateTime @default(now())
+  senderId Int
+  roomId   Int
+  sender   User     @relation(fields: [senderId], references: [id])
+  room     Room     @relation(fields: [roomId], references: [id])
 }
