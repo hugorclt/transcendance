@@ -12,6 +12,7 @@ async function main() {
             email: 'saada.dylan@gmail.com',
             password: 'grosmdpbb',
             avatar: 'none',
+            status: Status.CONNECTED,
             balance: 100000000,
         },
     });
@@ -24,6 +25,7 @@ async function main() {
             email: 'hugorecolet@gmail.com',
             password: 'grosmdpbb',
             avatar: 'none',
+            status: Status.CONNECTED,
             balance: 100000000,
         },
     });
