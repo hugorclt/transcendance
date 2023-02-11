@@ -13,14 +13,4 @@ export class AppService {
     const all = prisma.user.findMany();
     return all;
   }
-
-  googleLogin(req){
-    if(!req.user){
-      return "No user from google"
-    }
-    return{
-      message: "User info from Google",
-      user: req.user
-    }
-  }
 }
