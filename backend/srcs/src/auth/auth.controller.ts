@@ -3,6 +3,7 @@ import { GoogleAuthGuard } from "./utils/guards";
 import { AuthService } from "./auth.service";
 import { Credentials } from "src/interfaces/credentials.interface";
 import { Body } from "@nestjs/common";
+import { User } from ".prisma/client";
 
 @Controller('auth')
 export class AuthController {
