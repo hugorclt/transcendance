@@ -13,10 +13,12 @@ datasource db {
 
 //# ----------------------------------- User ----------------------------------- #
 model User {
-  id       Int    @id @default(autoincrement())
+  id       String @id @default(uuid())
   username String @unique
+  email    String @unique
+  password String
   avatar   String
-  status   Int
+  status   Status @default(DISCONNECTED)
   balance  Int
 
   hasBloqued  Bloqued[]     @relation("user")
@@ -33,30 +35,37 @@ model User {
   sender      Message[]
 }
 
+enum Status {
+  DISCONNECTED
+  CONNECTED
+  IN_GAME
+  AWAY
+}
+
 model Bloqued {
-  id        Int  @id @default(autoincrement())
-  userId    Int
-  bloquedId Int
-  user      User @relation("user", fields: [userId], references: [id])
-  bloqued   User @relation("bloqued", fields: [bloquedId], references: [id])
+  id        String @id @default(uuid())
+  userId    String
+  bloquedId String
+  user      User   @relation("user", fields: [userId], references: [id])
+  bloqued   User   @relation("bloqued", fields: [bloquedId], references: [id])
 }
 
 model FriendShip {
-  id        Int  @id @default(autoincrement())
-  userOneId Int
-  userTwoId Int
-  friendOne User @relation("friendOne", fields: [userOneId], references: [id])
-  friendTwo User @relation("friendTwo", fields: [userTwoId], references: [id])
+  id        String @id @default(uuid())
+  userOneId String
+  userTwoId String
+  friendOne User   @relation("friendOne", fields: [userOneId], references: [id])
+  friendTwo User   @relation("friendTwo", fields: [userTwoId], references: [id])
 }
 
 //# ----------------------------------- Match ---------------------------------- #
 model Match {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   date        DateTime @default(now())
   duration    DateTime
-  winnerId    Int
-  playerOneId Int
-  playerTwoId Int
+  winnerId    String
+  playerOneId String
+  playerTwoId String
   winner      User     @relation("winner", fields: [winnerId], references: [id])
   playerOne   User     @relation("playerOne", fields: [playerOneId], references: [id])
   playerTwo   User     @relation("playerTwo", fields: [playerTwoId], references: [id])
@@ -64,7 +73,7 @@ model Match {
 
 //# ----------------------------------- Items ---------------------------------- #
 model Items {
-  id    Int    @id @default(autoincrement())
+  id    String @id @default(uuid())
   name  String
   price Int
   image String
@@ -73,19 +82,19 @@ model Items {
 }
 
 model UserItems {
-  id      Int   @id @default(autoincrement())
-  userId  Int
-  itemsId Int
-  user    User  @relation("owner", fields: [userId], references: [id])
-  items   Items @relation(fields: [itemsId], references: [id])
+  id      String @id @default(uuid())
+  userId  String
+  itemsId String
+  user    User   @relation("owner", fields: [userId], references: [id])
+  items   Items  @relation(fields: [itemsId], references: [id])
 }
 
 //# ------------------------------------ Chat ------------------------------------- #
 model Room {
-  id      Int    @id @default(autoincrement())
+  id      String @id @default(uuid())
   name    String @unique
   type    Int
-  adminId Int
+  adminId String
   admin   User   @relation("admin", fields: [adminId], references: [id])
 
   room    Participant[]
@@ -94,27 +103,33 @@ model Room {
 }
 
 model Participant {
-  id     Int  @id @default(autoincrement())
-  roomId Int
-  userId Int
-  room   Room @relation(fields: [roomId], references: [id])
-  user   User @relation(fields: [userId], references: [id])
+  id     String @id @default(uuid())
+  role   Role   @default(BASIC)
+  roomId String
+  userId String
+  room   Room   @relation(fields: [roomId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  BASIC
+  ADMIN
 }
 
 model Banned {
-  id     Int  @id @default(autoincrement())
-  roomId Int
-  userId Int
-  room   Room @relation(fields: [roomId], references: [id])
-  user   User @relation(fields: [userId], references: [id])
+  id     String @id @default(uuid())
+  roomId String
+  userId String
+  room   Room   @relation(fields: [roomId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Message {
-  id       Int      @id @default(autoincrement())
+  id       String   @id @default(uuid())
   content  String
   date     DateTime @default(now())
-  senderId Int
-  roomId   Int
+  senderId String
+  roomId   String
   sender   User     @relation(fields: [senderId], references: [id])
   room     Room     @relation(fields: [roomId], references: [id])
 }

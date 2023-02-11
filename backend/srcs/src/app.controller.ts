@@ -17,7 +17,7 @@ export class AppController {
 
   @Get('/user/:id')
   async getUserById(@Param('id') id: string): Promise<UserModel> {
-    return this.userService.user({ id: Number(id) });
+    return this.userService.user({ id: String(id) });
   }
 
   @Get('/user-list')
