@@ -1,27 +1,36 @@
-all			:	build
+all		:	build
 
-build		:
-				docker-compose -f docker-compose.yml build
+build	:
+	docker-compose -f docker-compose.yml build
 
-up			:
-				docker-compose -f docker-compose.yml up --detach
+up		:
+	docker-compose -f docker-compose.yml up --detach
 
-logs			:
-				docker-compose -f docker-compose.yml up
+logs	:
+	docker-compose -f docker-compose.yml up
 
-stop		:
-				docker-compose -f docker-compose.yml stop
+stop	:
+	docker-compose -f docker-compose.yml stop
 
-purge		:
-				docker system prune -af
+purge	:
+	docker system prune -af
 
-re 			:
-				make purge
-				make build
-				make up
+re 		:
+	make purge
+	make build
+	make up
 
-clean		:
-				docker-compose -f docker-compose.yml down -v
+clean	:
+	docker-compose -f docker-compose.yml down -v
 
-# remove all volumes
-#docker volume rm $(docker volume ls -q)
+VOL:=$(shell docker volume ls -q)
+
+rmvol	: 		
+	docker volume rm $(VOL)
+
+deletus :
+	make stop
+	make purge
+	make rmvol
+
+.PHONY: all, build, up, logs, stop, purge, re, clean, rmvol, deletus

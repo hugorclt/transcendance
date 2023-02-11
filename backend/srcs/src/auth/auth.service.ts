@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Status } from "@prisma/client";
 import { Credentials } from "src/interfaces/credentials.interface";
 import { UserService } from "src/prisma/user.service";
 
@@ -12,7 +13,7 @@ export class AuthService {
                 email: credentials.email,
                 password: credentials.password,
                 avatar: '#',
-                status: 1,
+                status: Status.CONNECTED,
                 balance: 0,
         })
     }
