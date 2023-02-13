@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
     "@prisma/client": "^4.10.0",
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "express-session": "^1.17.3",
     "nest": "^0.1.6",
