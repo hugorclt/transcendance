@@ -1,10 +1,9 @@
 import { Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
 import { Auth42Guard, GoogleAuthGuard, LocalAuthGuard } from "./utils/guards";
 import { AuthService } from "./auth.service";
-import { Credentials } from "src/interfaces/credentials.interface";
 import { Body } from "@nestjs/common";
 import { User } from ".prisma/client";
-import { ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { LocalLogDto } from "./dto/log-user.dto";
 
 @Controller('auth')
@@ -32,13 +31,8 @@ export class AuthController {
 
     @Post('login')
     @UseGuards(LocalAuthGuard)
-    handleLocalLogin(@Request() req, @Body() localLogDto: LocalLogDto): any {
-        console.log(localLogDto);
-        return req.user;
+    handleLocalLogin(@Body() localLogDto: LocalLogDto): Promise<User> {
+        return this.authService.validateUser(localLogDto.username, localLogDto.password);
     }
 
-    // @Post('/login')
-    // handleLogin(@Body() credentials: Credentials): Promise<User> {
-    //     return this.authService.createNewAccount(credentials);
-    // }
 }

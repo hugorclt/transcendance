@@ -33,6 +33,7 @@
     "dotenv": "^16.0.3",
     "express-session": "^1.17.3",
     "nest": "^0.1.6",
+    "nestjs": "^0.0.1",
     "passport": "^0.6.0",
     "passport-42": "^1.2.6",
     "passport-google-oauth20": "^2.0.0",

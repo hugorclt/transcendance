@@ -22,6 +22,9 @@ export class LocalAuthGuard extends AuthGuard('local') { //'local' refers to the
 @Injectable()
 export class Auth42Guard extends AuthGuard('42') {
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        return true;
+        const activate = (await super.canActivate(context)) as boolean;
+        const request = context.switchToHttp().getRequest();
+        await super.logIn(request);
+        return activate;
     }
 }
