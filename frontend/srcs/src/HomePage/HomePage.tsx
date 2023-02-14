@@ -1,8 +1,11 @@
 import React from 'react'
+import ChatBar from '../ChatBar/ChatBar'
 
 function HomePage() {
   return (
-    <div>HomePage</div>
+    <div>
+      <ChatBar />
+    </div>
   )
 }
 

@@ -1,21 +1,15 @@
 import React from 'react'
+import ProfilBox from './ProfilBox/ProfilBox'
 
 function ChatBar() {
   return (
     <div>
-        <div className='w-60 h-full shadow-md bg-white absolute float-right'>
+        <div className='w-60 h-full shadow-md bg-gray-900 absolute inset-y-0 right-0'>
           <div className='pt-4 pb-2 px-6'>
-            <a href="#!">
-              <div className='flex items-center'>
-                <div className="shrink-0">
-                  <img className="rounded-full w-10" alt="avatar"></img>
-                </div>
-                <div className='grow ml-3'>
-                  <p className='text-sm font-semibold text-blue-600'>hrecolet</p>
-                </div>
-              </div>
-            </a>
+            <ProfilBox />
           </div>
+          <hr className="bg-orange-400 my-2"/>
+
         </div>
     </div>
   )

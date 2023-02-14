@@ -1,5 +1,6 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState } from 'react' 
+import '../Login.css'
 
 function RegisterForm() {
   const [username, setUsername] = useState('');
@@ -36,22 +37,11 @@ function RegisterForm() {
 
   return (
     <div>
-      <form action="" method="post" className="" onSubmit={handleSubmit}>
-        <div className=''>
-          <label >Username: </label>
-          <input onChange={e => setUsername(e.target.value)} value={username} className='bg-slate-300' type="text" name="name" id="name" required />
-        </div>
-        <div className=''>
-          <label>Email: </label>
-          <input onChange={e => setEmail(e.target.value)} value={email} className='bg-slate-300' type="email" name="email" id="email" required />
-        </div>
-        <div className=''>
-          <label>Password: </label>
-          <input onChange={e => setPassword(e.target.value)} value={password} className='bg-slate-300' type="text" name="password" id="password" required />
-        </div>
-        <div >
-          <input className='bg-slate-300' type="submit" value="Register" />
-        </div>
+      <form id="form-register" onSubmit={handleSubmit}>
+          <input placeholder="Username" onChange={e => setUsername(e.target.value)} value={username} type="text" name="name" id="name" required />
+          <input placeholder="Email" onChange={e => setEmail(e.target.value)} value={email}  type="email" name="email" id="email" required />
+          <input placeholder="Password" onChange={e => setPassword(e.target.value)} value={password} type="password" name="password" id="password" required />
+          <button form="form-register">Sign Up</button>
       </form>
   </div>
   )
