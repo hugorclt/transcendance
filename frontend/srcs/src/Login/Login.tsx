@@ -10,7 +10,7 @@ function Login() {
   const [isSignUp, setSignUp] = useState(true);
 
   return (
-    <div className='flex flex-col justify-center items-center h-screen'>
+    <div className='login-body flex flex-col justify-center items-center h-screen'>
       <div className={isSignUp == false ? "container right-panel-active" : "container"} id="container">
         <div className="form-container sign-up-container">
           <form action="#">

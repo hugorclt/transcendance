@@ -5,15 +5,9 @@
 	box-sizing: border-box;
 }
 
-body {
-	background: #f6f5f7;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	font-family: 'Montserrat', sans-serif;
-	height: 100vh;
-	margin: -20px 0 50px;
+.login-body {
+    background-image: url('https://64.media.tumblr.com/26a960808b3605f7eabca7ec60f03e7c/tumblr_nubbhqC9yT1rpco88o2_r1_500.gif');
+    background-size: cover;
 }
 
 h1 {
