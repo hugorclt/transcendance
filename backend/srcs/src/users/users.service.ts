@@ -22,6 +22,12 @@ export class UsersService {
     });
   }
 
+  findOneByUsername(username: string) {
+    return this.prisma.user.findUnique({
+      where: {username}
+    });
+  }
+
   findConnected(){
     return this.prisma.user.findMany({
       where: {status: Status.CONNECTED}
