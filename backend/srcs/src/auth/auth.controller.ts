@@ -32,8 +32,8 @@ export class AuthController {
 
     @Post('login')
     @UseGuards(LocalAuthGuard)
-    handleLocalLogin(@Body() localLogDto: LocalLogDto): Promise<User> {
-        return this.authService.validateUser(localLogDto);
+    handleLocalLogin(@Body() localLogDto: LocalLogDto) {
+        return { msg: "Hello success" };
     }
 
     @Post('register')
