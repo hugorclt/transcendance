@@ -3,46 +3,54 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Status } from '@prisma/client';
+import { exclude } from 'src/utils/exclude';
+import { UserEntity } from './entities/user.entity';
+import { ReturnUserEntity } from './entities/return-user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({ data: createUserDto });
+  async create(createUserDto: CreateUserDto) {
+    const user:UserEntity = await this.prisma.user.create({ data: createUserDto });
+    return exclude(user, ["password"]);
   }
 
-  findAll() {
-    return this.prisma.user.findMany({});
+  async findAll() {
+    const users:UserEntity[] = await this.prisma.user.findMany({});
+    return users.map(x => exclude(x, ["password"]));
   }
 
-  findOne(id: string) {
-    return this.prisma.user.findUnique({
+  async findOne(id: string) {
+    const user:UserEntity = await this.prisma.user.findUnique({
       where: { id }
     });
+    return exclude(user, ["password"]);
   }
 
-  findOneByUsername(username: string) {
-    return this.prisma.user.findUnique({
+  async findOneByUsername(username: string) {
+    const user:UserEntity = await this.prisma.user.findUnique({
       where: { username }
     });
+    return exclude(user, ["password"]);
   }
 
-  findConnected() {
-    return this.prisma.user.findMany({
+  async findConnected() {
+    const users:UserEntity[] = await this.prisma.user.findMany({
       where: { status: Status.CONNECTED }
     });
+    return users.map(x => exclude(x, ["password"]));
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.prisma.user.update({
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return await this.prisma.user.update({
       where: { id },
       data: updateUserDto,
     })
   }
 
-  remove(id: string) {
-    return this.prisma.user.delete({
+  async remove(id: string) {
+    return await this.prisma.user.delete({
       where: { id }
     });
   }

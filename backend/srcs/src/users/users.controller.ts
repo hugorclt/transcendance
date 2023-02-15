@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
+import { ReturnUserEntity } from './entities/return-user.entity';
 
 @Controller('users')
 @ApiTags('users')
@@ -11,38 +12,38 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: UserEntity })
-  create(@Body() createUserDto: CreateUserDto) {
+  @ApiCreatedResponse({ type: ReturnUserEntity })
+  create(@Body() createUserDto: CreateUserDto) : Promise<ReturnUserEntity> {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @ApiOkResponse({ type: UserEntity, isArray: true})
-  findAll() {
+  @ApiOkResponse({ type: ReturnUserEntity, isArray: true})
+  findAll() : Promise<ReturnUserEntity[]>{
     return this.usersService.findAll();
   }
 
   @Get('connected')
-  @ApiOkResponse({ type: UserEntity, isArray: true})
-  findConnected() {
+  @ApiOkResponse({ type: ReturnUserEntity, isArray: true})
+  findConnected() : Promise<ReturnUserEntity[]>{
     return this.usersService.findConnected();
   }
   
   @Get(':id')
-  @ApiOkResponse({ type: UserEntity})
-  findOne(@Param('id') id: string) {
+  @ApiOkResponse({ type: ReturnUserEntity})
+  findOne(@Param('id') id: string) : Promise<ReturnUserEntity>{
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiOkResponse({ type: UserEntity})
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @ApiOkResponse({ type: ReturnUserEntity})
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) : Promise<ReturnUserEntity>{
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: UserEntity})
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string) : Promise<ReturnUserEntity>{
     return this.usersService.remove(id);
   }
 }
