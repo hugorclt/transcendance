@@ -25,7 +25,7 @@ export class AuthService {
         })
     }
 
-    async validateUser(localLogDto: LocalLogDto): Promise<any> {
+    async validateUser(localLogDto: LocalLogDto): Promise<ReturnUserEntity> {
         const user = await this.prisma.user.findUnique({
             where: {username: localLogDto.username},
         })
