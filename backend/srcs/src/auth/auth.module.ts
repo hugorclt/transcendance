@@ -6,7 +6,6 @@ import { GoogleStrategy } from './utils/google-strategy';
 import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './utils/local-strategy';
-import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './utils/jwt-strategy';
 
@@ -15,7 +14,7 @@ import { JwtStrategy } from './utils/jwt-strategy';
         UsersModule,
         PassportModule,
         JwtModule.register({
-            secret: jwtConstants.secret,
+            secret: process.env["JWT_SECRET"],
             signOptions: { expiresIn: '1d' },
         }),
     ],
@@ -26,7 +25,6 @@ import { JwtStrategy } from './utils/jwt-strategy';
         GoogleStrategy,
         LocalStrategy,
         JwtStrategy,
-        // Auth42Strategy,
     ],
 })
 export class AuthModule { }

@@ -13,14 +13,14 @@ export class AuthController {
 
     @Get('me')
     @UseGuards(JwtAuthGuard)
-    acceptLoggedUser() {
-        return { msg: 'Welcome to the logged side of the site'}
+    acceptLoggedUser(@Request() req) {
+        return req.userId;
     }
 
     @Get('google/login')
     @UseGuards(GoogleAuthGuard)
     handleGoogleLogin() {
-        return { msg: 'Google auth' }
+        return { msg: 'Google auth' };
     }
 
     @Get('google/callback')

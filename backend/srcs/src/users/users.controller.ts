@@ -5,7 +5,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { ReturnUserEntity } from './entities/return-user.entity';
-import { JwtAuthGuard } from 'src/auth/utils/guards';
 
 @Controller('users')
 @ApiTags('users')
