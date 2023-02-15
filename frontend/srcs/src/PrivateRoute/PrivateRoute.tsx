@@ -20,16 +20,15 @@ export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent }) => 
       }
     })
       .then((res) => {
-        if (res.status >= 200 && res.status <= 204) {
-          setIsAuth(true);
-          setIsLoading(true);
-        }
-        else {
-          setIsLoading(true);
-          setIsAuth(false);
-        }
-    })
+        setIsAuth(true);
+        setIsLoading(true);
+      }).catch(err => {
+        setIsLoading(true);
+        setIsAuth(false);
+      })
   }, []);
+
+  if (!isLoading) return <p>Loading...</p>;
 
   if (isAuth === true) {
     return <RouteComponent />
