@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import { useState } from 'react' 
 import '../Login.css'
 
@@ -7,7 +7,11 @@ function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isGood, setIsGood] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState<string>('hidden');
+
+  const styles = {
+    
+  } as CSSProperties
 
   var handleSubmit = async (e : React.FormEvent) => {
     e.preventDefault();
@@ -24,16 +28,18 @@ function RegisterForm() {
         }),
       });
       let resJson = await res.json();
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status <= 204) {
         setUsername('');
         setEmail('');
         setPassword('');
-        console.log("OK!");
+        setIsGood(true);
       } else {
-        console.log("PAS OK!");
+        setIsGood(false)
       }
+      setIsVisible('visible');
     } catch (err) {
-      console.log(err)
+      setIsGood(false)
+      setIsVisible('visible');
     }
   };
 
@@ -43,7 +49,18 @@ function RegisterForm() {
           <input placeholder="Username" onChange={e => setUsername(e.target.value)} value={username} type="text" name="name" id="name" required />
           <input placeholder="Email" onChange={e => setEmail(e.target.value)} value={email}  type="email" name="email" id="email" required />
           <input placeholder="Password" onChange={e => setPassword(e.target.value)} value={password} type="password" name="password" id="password" required />
-          {isGood ? <p></p> : <p></p>}
+          {isGood ?
+          <p className='text-green' style={{
+            visibility: isVisible,
+            color: "green",
+          } as CSSProperties}
+          >Success, try to connect!</p> 
+          :
+          <p className='text-red' style={{
+            visibility: isVisible,
+            color: "red",
+          } as CSSProperties}
+          >Failure! Try again.</p>}
           <button form="form-register">Sign Up</button>
       </form>
   </div>

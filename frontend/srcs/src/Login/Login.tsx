@@ -33,7 +33,7 @@ function Login() {
           <div className="overlay">
             <div className="overlay-panel overlay-left">
               <h1>Welcome Back!</h1>
-              <p>Blague nul sur pong#1</p>
+              <p>Ping</p>
               <button className="ghost" id="signIn" onClick={() => setSignUp(true)}>Sign In</button>
             </div>
             <div className="overlay-panel overlay-right">
