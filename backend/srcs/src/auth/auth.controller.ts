@@ -40,5 +40,4 @@ export class AuthController {
     handleLocalRegister(@Body() localRegisterDto: LocalRegisterDto): Promise<ReturnUserEntity> {
         return this.authService.createNewAccount(localRegisterDto);
     }
-
 }

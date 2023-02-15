@@ -1,8 +1,12 @@
 import React, { CSSProperties }  from 'react'
 import { useState } from 'react' 
 import '../Login.css'
+import { useCookies } from 'react-cookie';
+
+const cookieTime = 86400000
 
 function LoginForm() {
+  const [authCookie, setAuthCookie] = useCookies(['access_token']);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isGood, setIsGood] = useState(false);
@@ -30,6 +34,10 @@ function LoginForm() {
         setIsGood(false)
       }
       setIsVisible('visible');
+      let expires = new Date();
+      expires.setTime(expires.getTime() + cookieTime);
+      setAuthCookie('access_token', resJson.access_token, { path: '/', expires})
+
     } catch (err) {
       setIsGood(false)
       setIsVisible('visible');
