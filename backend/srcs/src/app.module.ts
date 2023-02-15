@@ -7,14 +7,11 @@ import { AuthService } from './auth/auth.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ItemsModule } from './items/items.module';
 import { UsersModule } from './users/users.module';
+import { RoomsModule } from './rooms/rooms.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, ItemsModule, UsersModule],
+  imports: [AuthModule, PrismaModule, ItemsModule, UsersModule, RoomsModule],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: 'AUTH_SERVICE',
-    useClass: AuthService,
-  },
-    PrismaService],
+  providers: [AppService, AuthService, PrismaService],
 })
 export class AppModule { }

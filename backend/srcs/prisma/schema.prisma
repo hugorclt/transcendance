@@ -13,9 +13,9 @@ datasource db {
 
 //# ----------------------------------- User ----------------------------------- #
 model User {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username String @unique
-  email    String @unique
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username String  @unique
+  email    String  @unique
   password String
   avatar   String?
   status   Status? @default(DISCONNECTED)
@@ -28,7 +28,7 @@ model User {
   winner      Match[]       @relation("winner")
   playerOne   Match[]       @relation("playerOne")
   playerTwo   Match[]       @relation("playerTwo")
-  user        UserItems[]   @relation("owner")
+  user        UserItem[]    @relation("owner")
   admin       Room[]        @relation("admin")
   participant Participant[]
   banned      Banned[]
@@ -71,22 +71,22 @@ model Match {
   playerTwo   User     @relation("playerTwo", fields: [playerTwoId], references: [id])
 }
 
-//# ----------------------------------- Items ---------------------------------- #
-model Items {
+//# ----------------------------------- Item ---------------------------------- #
+model Item {
   id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name  String
   price Int
   image String
 
-  item UserItems[]
+  item UserItem[]
 }
 
-model UserItems {
+model UserItem {
   id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId  String @db.Uuid
   itemsId String @db.Uuid
   user    User   @relation("owner", fields: [userId], references: [id])
-  items   Items  @relation(fields: [itemsId], references: [id])
+  items   Item   @relation(fields: [itemsId], references: [id])
 }
 
 //# ------------------------------------ Chat ------------------------------------- #
