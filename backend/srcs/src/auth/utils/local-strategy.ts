@@ -7,10 +7,9 @@ import { LocalLogDto } from "../dto/log-user.dto";
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private authService: AuthService){
-        super(); // config for the strategy, not much needed here for local strategy 
+        super();
     }
 
-    //An equivalent can be to use a VerifyCallback that will do this for us (depending on the strategy we use)
     async validate(username: string, password: string): Promise<any> {
         const localLogDto: LocalLogDto = {username, password};
         const user = await this.authService.validateUser(localLogDto);
