@@ -1,14 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { Status, User } from "@prisma/client";
 import { UsersService } from "src/users/users.service";
-import { LocalRegisterDto } from "./dto/log-user.dto";
-import bcrypt from 'bcrypt';
+import { LocalLogDto, LocalRegisterDto } from "./dto/log-user.dto";
+import { PrismaService } from "src/prisma/prisma.service";
+import bcrypt from "bcrypt";
+import { exclude } from "../utils/exclude"
+import { ReturnUserEntity } from "src/users/entities/return-user.entity";
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService) { }
+    constructor(private usersService: UsersService, private prisma: PrismaService) { }
 
-    async createNewAccount(credentials: LocalRegisterDto): Promise<User> {
+    async createNewAccount(credentials: LocalRegisterDto): Promise<ReturnUserEntity> {
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(credentials.password, salt);
 
@@ -22,16 +25,13 @@ export class AuthService {
         })
     }
 
-    //This portion of the code is only in charge of validating or not the credentials given to login
-    //the usersService is in charge of finding the user matching the credentials if it exists
-    //The local-strategy will be in charge of handling the answer of the authService and provide needed exception in case of failure
-    async validateUser(username: string, password: string): Promise<any> {
-        const user = await this.usersService.findOneByUsername(username);
+    async validateUser(localLogDto: LocalLogDto): Promise<any> {
+        const user = await this.prisma.user.findUnique({
+            where: {username: localLogDto.username},
+        })
 
-        //if user found matching email and password
-        if (user && user.password === password){
-            const { password, username, ...rest} = user //we remove password and email , retrieve the rest
-            return rest;
+        if (user && user.password === localLogDto.password){
+            return exclude(user, ['password'])
         }
         //else
         return null;

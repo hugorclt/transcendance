@@ -15,6 +15,7 @@ import { LocalStrategy } from './utils/local-strategy';
         AuthService,
         GoogleStrategy,
         LocalStrategy,
+        // Auth42Strategy,
     ],
 })
 export class AuthModule { }
