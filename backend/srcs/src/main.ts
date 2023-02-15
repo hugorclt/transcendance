@@ -9,7 +9,11 @@ declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  app.enableCors({
+    allowedHeaders: ['content-type'],
+    origin: 'http://localhost:3002',
+    credentials: true,
+  });
 
   //===== Validation Pipe to check for input errors =====
   app.useGlobalPipes(new ValidationPipe({ whitelist: true}));
