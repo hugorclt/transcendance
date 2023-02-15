@@ -28,3 +28,6 @@ export class Auth42Guard extends AuthGuard('42') {
         return activate;
     }
 }
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}

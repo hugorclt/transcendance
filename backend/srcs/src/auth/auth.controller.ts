@@ -32,12 +32,11 @@ export class AuthController {
 
     @Post('login')
     @UseGuards(LocalAuthGuard)
-    handleLocalLogin(@Body() localLogDto: LocalLogDto): Promise<User> {
-        return this.authService.validateUser(localLogDto);
+    handleLocalLogin(@Body() localLogDto: LocalLogDto): Promise<any> {
+        return this.authService.login(localLogDto);
     }
 
     @Post('register')
-    @UseGuards(LocalAuthGuard)
     handleLocalRegister(@Body() localRegisterDto: LocalRegisterDto): Promise<ReturnUserEntity> {
         return this.authService.createNewAccount(localRegisterDto);
     }

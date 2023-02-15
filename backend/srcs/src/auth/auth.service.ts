@@ -6,10 +6,13 @@ import { PrismaService } from "src/prisma/prisma.service";
 import bcrypt from "bcrypt";
 import { exclude } from "../utils/exclude"
 import { ReturnUserEntity } from "src/users/entities/return-user.entity";
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService, private prisma: PrismaService) { }
+    constructor(private usersService: UsersService, 
+                private prisma: PrismaService,
+                private jwtService: JwtService ) { }
 
     async createNewAccount(credentials: LocalRegisterDto): Promise<ReturnUserEntity> {
         const salt = await bcrypt.genSalt();
@@ -38,5 +41,10 @@ export class AuthService {
         }
         //else
         return null;
+    }
+
+    async login(user: any) {
+        const payload = {username: user.username, sub: user.id};
+        return { access_token: this.jwtService.sign(payload) };
     }
 }
