@@ -11,31 +11,31 @@ import { ReturnUserEntity } from './entities/return-user.entity';
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.create({ data: createUserDto });
     return exclude(user, ["password"]);
   }
 
-  async findAll() {
+  async findAll() : Promise<ReturnUserEntity[]> {
     const users:UserEntity[] = await this.prisma.user.findMany({});
     return users.map(x => exclude(x, ["password"]));
   }
 
-  async findOne(id: string) {
+  async findOne(id: string) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.findUnique({
       where: { id }
     });
     return exclude(user, ["password"]);
   }
 
-  async findOneByUsername(username: string) {
+  async findOneByUsername(username: string) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.findUnique({
       where: { username }
     });
     return exclude(user, ["password"]);
   }
 
-  async findConnected() {
+  async findConnected() : Promise<ReturnUserEntity[]>{
     const users:UserEntity[] = await this.prisma.user.findMany({
       where: { status: Status.CONNECTED }
     });
@@ -43,15 +43,17 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    return await this.prisma.user.update({
+    const user:UserEntity = await this.prisma.user.update({
       where: { id },
       data: updateUserDto,
     })
+    return exclude(user, ["password"]);
   }
 
   async remove(id: string) {
-    return await this.prisma.user.delete({
+    const user:UserEntity = await this.prisma.user.delete({
       where: { id }
     });
+    return exclude(user, ["password"]);
   }
 }

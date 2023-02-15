@@ -19,9 +19,6 @@ export class AuthService {
                 username: credentials.username,
                 email: credentials.email,
                 password: hash,
-                avatar: '#',
-                status: Status.CONNECTED,
-                balance: 0,
         })
     }
 
@@ -30,7 +27,13 @@ export class AuthService {
             where: {username: localLogDto.username},
         })
 
-        if (user && user.password === localLogDto.password){
+        if (user){
+            // bcrypt.compare(localLogDto.password, user.password, function(err, result){
+            //     if (result)
+            //         return exclude(user, ['password'])
+            //     else
+            //         //failure
+            // });     
             return exclude(user, ['password'])
         }
         //else

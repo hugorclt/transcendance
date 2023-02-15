@@ -19,7 +19,7 @@ model User {
   password String
   avatar   String?
   status   Status? @default(DISCONNECTED)
-  balance  Int?
+  balance  Int?    @default(0)
 
   hasBloqued  Bloqued[]     @relation("user")
   isBloqued   Bloqued[]     @relation("bloqued")
