@@ -14,9 +14,6 @@ export class GoogleAuthGuard extends AuthGuard('google') {
 
 @Injectable()
 export class LocalAuthGuard extends AuthGuard('local') { //'local' refers to the local strategy 
-    async canActivate(context: ExecutionContext): Promise<boolean> {
-        return true;
-    }
 }
 
 @Injectable()
