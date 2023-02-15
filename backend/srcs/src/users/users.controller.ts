@@ -19,7 +19,6 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true})
   findAll() : Promise<ReturnUserEntity[]>{
     return this.usersService.findAll();
