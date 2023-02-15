@@ -21,3 +21,20 @@ export class LocalLogDto {
     @IsNotEmpty()
     password: string;
 }
+
+export class LocalRegisterDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  username: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+}

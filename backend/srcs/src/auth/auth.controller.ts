@@ -4,7 +4,7 @@ import { AuthService } from "./auth.service";
 import { Body } from "@nestjs/common";
 import { User } from ".prisma/client";
 import { ApiTags } from "@nestjs/swagger";
-import { LocalLogDto } from "./dto/log-user.dto";
+import { LocalLogDto, LocalRegisterDto } from "./dto/log-user.dto";
 
 @Controller('auth')
 @ApiTags('login')
@@ -33,6 +33,12 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     handleLocalLogin(@Body() localLogDto: LocalLogDto): Promise<User> {
         return this.authService.validateUser(localLogDto.username, localLogDto.password);
+    }
+
+    @Post('register')
+    @UseGuards(LocalAuthGuard)
+    handleLocalRegister(@Body() localRegisterDto: LocalRegisterDto): Promise<User> {
+        return this.authService.createNewAccount(localRegisterDto);
     }
 
 }

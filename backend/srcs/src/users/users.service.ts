@@ -6,7 +6,7 @@ import { Status } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   create(createUserDto: CreateUserDto) {
     return this.prisma.user.create({ data: createUserDto });
@@ -18,19 +18,19 @@ export class UsersService {
 
   findOne(id: string) {
     return this.prisma.user.findUnique({
-      where: {id}
+      where: { id }
     });
   }
 
   findOneByUsername(username: string) {
     return this.prisma.user.findUnique({
-      where: {username}
+      where: { username }
     });
   }
 
-  findConnected(){
+  findConnected() {
     return this.prisma.user.findMany({
-      where: {status: Status.CONNECTED}
+      where: { status: Status.CONNECTED }
     });
   }
 
