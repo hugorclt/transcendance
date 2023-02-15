@@ -17,6 +17,7 @@ function LoginForm() {
     try {
       let res = await fetch("http://localhost:3000/auth/login", {
         method: 'POST',
+        credentials: 'include',
         headers: {
        'Content-Type': 'application/json'
         },

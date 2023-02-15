@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom'
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 interface Props {
   component: React.ComponentType
@@ -7,13 +8,24 @@ interface Props {
 }
 
 export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent }) => {
-  function handleAuth() : boolean {
-    
-  }
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
 
-  const isAuthenticated : boolean = handleAuth;
+  axios.get("http:localhost/auth/me", { withCredentials: true})
+    .then((res) => {
+      if (res.status >= 200 && res.status <= 204) {
+        setIsAuth(true);
+        setIsLoading(true);
+      }
+      else {
+        setIsLoading(true);
+        setIsAuth(false);
+      }
+  })
 
-  if (isAuthenticated) {
+  while (isLoading === false) {}
+
+  if (isAuth === true) {
     return <RouteComponent />
   }
   return <Navigate to="/login" />
