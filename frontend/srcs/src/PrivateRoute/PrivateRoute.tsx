@@ -1,26 +1,20 @@
 import { Navigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import Cookies from 'js-cookie'
 
 interface Props {
-  component: React.ComponentType
   loading: React.ComponentType
-  default: React.ComponentType
-  path?: string
+  component: React.ComponentType
+  default: string
 }
 
-export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent, loading: LoadingComponent, default: DefaultComponent }) => {
+export const PrivateRoute: React.FC<Props> = ({ component: Component, loading: LoadingComponent, default: defaultRoute }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/auth/me", { 
-      withCredentials: true,
-      headers: {
-        "Authorization": `Bearer ${Cookies.get("access_token")}` 
-      }
-    })
+    axios.get("/auth/me", {})
       .then((res) => {
         setIsAuth(true);
         setIsLoading(true);
@@ -33,7 +27,7 @@ export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent, loadi
   if (!isLoading) return <LoadingComponent/>;
 
   if (isAuth === true) {
-    return <RouteComponent />
+    return <Component />
   }
-  return <DefaultComponent/>
+  return <Navigate to={defaultRoute} />;
 }

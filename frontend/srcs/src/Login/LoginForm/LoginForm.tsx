@@ -3,12 +3,14 @@ import { AxiosResponse, AxiosError } from "axios";
 import Cookies from 'js-cookie'
 import axios from "../../axios";
 import '../Login.css'
+import { useNavigate } from 'react-router';
 
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isGood, setIsGood] = useState(false);
   const [isVisible, setIsVisible] = useState<string>("hidden");
+  const navigate = useNavigate();
 
   var handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,10 +20,11 @@ function LoginForm() {
         password: password,
       })
       .then((res : AxiosResponse) => {
+        Cookies.set("access_token", res.data.access_token, { expires: 1 });
         setUsername("");
         setPassword("");
         setIsGood(true);
-        Cookies.set("access_token", res.data.access_token, { expires: 1 });
+        navigate("/");
       })
       .catch((err : AxiosError) => {
         if (err.response) {

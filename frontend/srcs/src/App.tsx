@@ -8,6 +8,7 @@ import Leaderboards from './Leaderboards/Leaderboards';
 import Lobby from './Lobby/Lobby';
 import Profil from './Profil/Profil';
 import ChatBar from './ChatBar/ChatBar';
+import Loading from './Loading/Loading';
 
 function App() {
   
@@ -15,13 +16,14 @@ function App() {
     <BrowserRouter>
       <div className="h-screen">
         <Routes>
-          <Route path="/login" element={<PrivateRoute component={Login} loading={Loading} default={Homepage} />}/>
-          <Route path="/" element={<PrivateRoute component={HomePage} loading={Loading} default={Login} />}/>
-          <Route path="/shop" element={<PrivateRoute component={Login} loading={Loading} default={Login} />}/>
-          <Route path="/profil" element={<PrivateRoute component={Profil} loading={Loading} default={Login} />}/>
-          <Route path="/leaderboards" element={<PrivateRoute component={Leaderboards} loading={Loading} default={Login} />}/>
-          <Route path="/lobby" element={<PrivateRoute component={Lobby} loading={Loading} default={Login} />}/>
-          <Route path="/lobby" element={<PrivateRoute component={ChatBar} loading={Loading} default={Login} />}/>
+          {/* <Route path="/login" element={<PrivateRoute component={Login} loading={Loading} default="/" />}/> */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<PrivateRoute component={HomePage} loading={Loading} default="/login" />}/>
+          <Route path="/shop" element={<PrivateRoute component={Login} loading={Loading} default="/login" />}/>
+          <Route path="/profil" element={<PrivateRoute component={Profil} loading={Loading} default="/login" />}/>
+          <Route path="/leaderboards" element={<PrivateRoute component={Leaderboards} loading={Loading} default="/login" />}/>
+          <Route path="/lobby" element={<PrivateRoute component={Lobby} loading={Loading} default="/login" />}/>
+          <Route path="/lobby" element={<PrivateRoute component={ChatBar} loading={Loading} default="/login" />}/>
         </Routes>
       </div>
     </BrowserRouter>
