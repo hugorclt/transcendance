@@ -73,6 +73,7 @@ export class AuthService {
         })
         if (!ticket)
             throw new UnauthorizedException();
+        console.log("Google token has been checked");
         return (ticket);
     }
 
@@ -83,9 +84,11 @@ export class AuthService {
         const payload = ticket.getPayload();
         try{
             const user = await this.usersService.findOneGoogleUser(payload.email)
+            console.log("success retrieving google user from db");
             return this.login(user, res);
         }
         catch(err){
+            console.log("couldn't retrieve google user from db");
             const user = await this.usersService.createGoogle({
                 email: payload.email,
                 username: payload.name,
