@@ -52,23 +52,17 @@ export class AuthService {
         return null;
     }
 
-    async login(user: any, @Response({passthrough: true}) res) {
-        try {
-            const payload = {username: user.username, sub: user.id};
-            const jwtToken = await this.jwtService.signAsync(payload)
-    
-            let secretData = {
-                jwtToken,
-                refreshToken: ''
-            }
-    
-            res.cookie('jwt', secretData, {httpOnly:true, domain: "http://localhost:3002"})
-            return user;
+    async login(user: any, @Response({passthrough: true}) res ) {
+        const payload = {username: user.username, sub: user.id};
+        const jwtToken = await this.jwtService.signAsync(payload)
+
+        let secretData = {
+            jwtToken,
+            refreshToken: ''
         }
-        catch (err) {
-            console.log("yo")
-            console.log(err);
-        }
+
+        res.cookie('jwt', secretData, {httpOnly:true})
+        return payload;
     }
 
     //====================== GOOGLE ===================

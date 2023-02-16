@@ -18,7 +18,7 @@ function LoginForm() {
       .post("/auth/login", {
         username: username,
         password: password,
-      })
+      }, {withCredentials: true })
       .then((res : AxiosResponse) => {
         setUsername("");
         setPassword("");
