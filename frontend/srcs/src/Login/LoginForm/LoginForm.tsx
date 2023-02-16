@@ -2,13 +2,14 @@ import React, { CSSProperties } from 'react'
 import { useState } from 'react'
 import '../Login.css'
 import Cookies from 'js-cookie'
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isGood, setIsGood] = useState(false);
   const [isVisible, setIsVisible] = useState<string>('hidden');
-
+  const navigate = useNavigate();
   var handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -26,13 +27,12 @@ function LoginForm() {
       let resJson = await res.json();
       console.log(res.status);
       if (res.status >= 200 && res.status <= 204) {
-        console.log("je passe ici");
-        Cookies.set('access_token', resJson.access_token, { expire: 1 });
+        Cookies.set("access_token", resJson.access_token, { expires: 1 });
         setUsername('');
         setPassword('');
         setIsGood(true);
+        navigate('/');
       } else {
-        console.log("je passe la");
         setIsGood(false)
       }
       setIsVisible('visible');

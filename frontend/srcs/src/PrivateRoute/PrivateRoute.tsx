@@ -5,10 +5,12 @@ import Cookies from 'js-cookie'
 
 interface Props {
   component: React.ComponentType
+  loading: React.ComponentType
+  default: React.ComponentType
   path?: string
 }
 
-export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent }) => {
+export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent, loading: LoadingComponent, default: DefaultComponent }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
 
@@ -28,10 +30,10 @@ export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent }) => 
       })
   }, []);
 
-  if (!isLoading) return <p>Loading...</p>;
+  if (!isLoading) return <LoadingComponent/>;
 
   if (isAuth === true) {
     return <RouteComponent />
   }
-  return <Navigate to="/login" />
+  return <DefaultComponent/>
 }
