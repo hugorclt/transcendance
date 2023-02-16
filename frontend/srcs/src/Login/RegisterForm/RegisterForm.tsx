@@ -25,7 +25,9 @@ function RegisterForm() {
         setIsGood(true);
       })
       .catch((err) => {
-        setIsGood(false);
+        if (err.response) {
+          setIsGood(false);
+        }
       });
     setIsVisible("visible");
   };
