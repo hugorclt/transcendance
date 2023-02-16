@@ -16,7 +16,7 @@ const fetchClient = () => {
 
   // Set the AUTH token for any request
   instance.interceptors.request.use(function (config) {
-    const token = Cookies.get("access_token");;
+    const token = Cookies.get("access_token");
     config.headers.Authorization =  token ? `Bearer ${token}` : '';
     return config;
   });

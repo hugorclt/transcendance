@@ -2,7 +2,7 @@ import React from "react";
 import "./Login.css";
 import LoginForm from "./LoginForm/LoginForm";
 import { FcGoogle } from "react-icons/fc";
-import logo42 from '../assets/42.jpg';
+import Icon42 from "./Icon42";
 
 function Signin() {
   return (
@@ -14,7 +14,7 @@ function Signin() {
             <FcGoogle />
           </a>
           <a href="http://localhost:3000/auth/google/login" className="social">
-            <img width="500" src={logo42} alt="logo42" />
+            <Icon42 />
           </a>
         </div>
         <span>or use your account</span>

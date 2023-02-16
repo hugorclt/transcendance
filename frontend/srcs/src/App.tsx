@@ -19,7 +19,6 @@ function App() {
     <BrowserRouter>
       <div className="h-screen">
         <Routes>
-          {/* <Route path="/login" element={<PrivateRoute component={Login} loading={Loading} default="/" />}/> */}
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateRoute component={HomePage} loading={Loading} default="/login" />}/>
           <Route path="/shop" element={<PrivateRoute component={Login} loading={Loading} default="/login" />}/>
