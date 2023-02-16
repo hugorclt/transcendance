@@ -9,7 +9,7 @@ async function main() {
         update: {},
         create: {
             username: 'Dylanus',
-            email: 'saada.dylan@gmail.com',
+            email: 'bidon@gmail.com',
             password: 'grosmdpbb',
             avatar: 'none',
             status: Status.CONNECTED,

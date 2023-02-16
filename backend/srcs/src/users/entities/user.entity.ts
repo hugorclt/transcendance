@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
-import { Status } from "@prisma/client";
+import { Status, Type } from "@prisma/client";
 
 export class UserEntity implements User {
     @ApiProperty()
@@ -18,6 +18,9 @@ export class UserEntity implements User {
     @ApiProperty({required: false, nullable: true})
     avatar: string | null ;
 
+    @ApiProperty({required: false, default: Type.LOCAL})
+    type: Type = Type.LOCAL;
+    
     @ApiProperty({required: false, default: Status.DISCONNECTED})
     status: Status = Status.DISCONNECTED;
 

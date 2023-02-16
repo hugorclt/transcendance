@@ -18,6 +18,7 @@ model User {
   email    String  @unique
   password String
   avatar   String?
+  type     Type    @default(LOCAL)
   status   Status? @default(DISCONNECTED)
   balance  Int?    @default(0)
 
@@ -33,6 +34,12 @@ model User {
   participant Participant[]
   banned      Banned[]
   sender      Message[]
+}
+
+enum Type {
+  LOCAL
+  GOOGLE
+  API42
 }
 
 enum Status {

@@ -5,30 +5,18 @@ import {
     IsEmail,
   } from 'class-validator';
 
-
-
-export class LocalLogDto {
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    username: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    password: string;
+export class GoogleTokenDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  token: string;
 }
 
-export class LocalRegisterDto {
+export class GoogleLogDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   username: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  password: string;
 
   @ApiProperty()
   @IsNotEmpty()
