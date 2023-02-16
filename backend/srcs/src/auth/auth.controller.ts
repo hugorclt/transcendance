@@ -5,6 +5,13 @@ import { Body } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { LocalRegisterDto } from "./dto/log-user.dto";
 import { ReturnUserEntity } from "src/users/entities/return-user.entity";
+import { OAuth2Client } from "google-auth-library";
+import { ClientRequest } from "http";
+
+const googleClient = new OAuth2Client(
+    process.env['GOOGLE_CLIENT_ID'],
+    process.env['GOOGLE_CLIENT_SECRET'],
+);
 
 @Controller('auth')
 @ApiTags('login')
@@ -15,6 +22,18 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     acceptLoggedUser(@Request() req) {
         return req.userId;
+    }
+
+    @Post('google/login')
+    async googleLogin(@Body('token') token): Promise<any> {
+        const ticket = await googleClient.verifyIdToken({
+            idToken: token,
+            audience: process.env['GOOGLE_CLIENT_ID']
+        })
+        console.log(ticket.getPayload());
+        return {
+            success: true,
+        }
     }
 
     @Get('google/login')
