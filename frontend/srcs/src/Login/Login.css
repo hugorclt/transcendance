@@ -10,16 +10,16 @@
     background-size: cover;
 }
 
-h1 {
+.login-body h1 {
 	font-weight: bold;
 	margin: 0;
 }
 
-h2 {
+.login-body h2 {
 	text-align: center;
 }
 
-p {
+.login-body p {
 	font-size: 14px;
 	font-weight: 100;
 	line-height: 20px;
@@ -27,18 +27,18 @@ p {
 	margin: 20px 0 30px;
 }
 
-span {
+.login-body span {
 	font-size: 12px;
 }
 
-a {
+.login-body a {
 	color: #333;
 	font-size: 14px;
 	text-decoration: none;
 	margin: 15px 0;
 }
 
-button {
+.login-body button {
 	border-radius: 20px;
 	border: 1px solid #111827;
 	background-color: #111827;
@@ -51,20 +51,20 @@ button {
 	transition: transform 80ms ease-in;
 }
 
-button:active {
+.login-body button:active {
 	transform: scale(0.95);
 }
 
-button:focus {
+.login-body button:focus {
 	outline: none;
 }
 
-button.ghost {
+.login-body button.ghost {
 	background-color: transparent;
 	border-color: #FFFFFF;
 }
 
-input {
+.login-body input {
 	background-color: #eee;
 	border: none;
 	padding: 12px 15px;
