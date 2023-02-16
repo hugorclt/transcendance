@@ -15,11 +15,13 @@ const fetchClient = () => {
   let instance = axios.create(defaultOptions);
 
   // Set the AUTH token for any request
-  instance.interceptors.request.use(function (config) {
-    const token = Cookies.get("jwt");
-    config.headers.Authorization =  token ? `Bearer ${token}` : '';
-    return config;
-  });
+  // instance.interceptors.request.use(function (config) {
+  //   const token = Cookies.get("jwt");
+  //   config.headers.Authorization =  token ? `Bearer ${token}` : '';
+  //   return config;
+  // });
+
+  
 
   return instance;
 };
