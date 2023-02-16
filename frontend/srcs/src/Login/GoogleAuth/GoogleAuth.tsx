@@ -19,7 +19,7 @@ function GoogleAuth() {
         <GoogleLogin
           onSuccess={async (credentialResponse: CredentialResponse) => {
             const response = await axios.post("/auth/google/login", {
-              credential: credentialResponse.credential,
+              token: credentialResponse.credential,
             });
             setGood(true);
             setIsVisible("block");
