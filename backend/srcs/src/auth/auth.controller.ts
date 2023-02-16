@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Request, Response, UseGuards } from "@nestjs/common";
 import { Auth42Guard, JwtAuthGuard, LocalAuthGuard } from "./utils/guards";
 import { AuthService } from "./auth.service";
 import { Body } from "@nestjs/common";
@@ -18,8 +18,8 @@ export class AuthController {
     }
 
     @Post('google/login')
-    async googleLogin(@Body('token') token): Promise<any> {
-        return this.authService.handleGoogleLogin({token: token});
+    async googleLogin(@Body('token') token, @Response({passthrough: true}) res): Promise<any> {
+        return this.authService.handleGoogleLogin({token: token}, res);
     }
 
     @Get('42/login')
@@ -30,8 +30,8 @@ export class AuthController {
 
     @Post('login')
     @UseGuards(LocalAuthGuard)
-    handleLocalLogin(@Request() req): Promise<any> {
-        return this.authService.login(req);
+    handleLocalLogin(@Request() req, @Response({passthrough: true}) res): Promise<any> {
+        return this.authService.login(req, res);
     }
 
     @Post('register')

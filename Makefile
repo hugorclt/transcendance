@@ -20,6 +20,11 @@ re 		:
 	make build
 	make up
 
+restart	:
+	make stop
+	make build
+	make up
+
 clean	:
 	docker-compose -f docker-compose.yml down -v
 

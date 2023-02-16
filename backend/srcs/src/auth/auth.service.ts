@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Response, UnauthorizedException } from "@nestjs/common";
 import { UsersService } from "src/users/users.service";
 import { LocalLogDto, LocalRegisterDto } from "./dto/log-user.dto";
 import { GoogleTokenDto, GoogleLogDto } from "./dto/google-log.dto";
@@ -35,8 +35,8 @@ export class AuthService {
     }
 
     async validateUser(localLogDto: LocalLogDto): Promise<ReturnUserEntity> {
-        const user = await this.prisma.user.findUnique({
-            where: {username: localLogDto.username},
+        const user = await this.prisma.user.findFirst({
+            where: {username: localLogDto.username, type: Type.LOCAL},
         })
 
         if (user){
@@ -52,9 +52,23 @@ export class AuthService {
         return null;
     }
 
-    async login(user: any) {
-        const payload = {username: user.username, sub: user.id};
-        return { access_token: this.jwtService.sign(payload) };
+    async login(user: any, @Response({passthrough: true}) res) {
+        try {
+            const payload = {username: user.username, sub: user.id};
+            const jwtToken = await this.jwtService.signAsync(payload)
+    
+            let secretData = {
+                jwtToken,
+                refreshToken: ''
+            }
+    
+            res.cookie('jwt', secretData, {httpOnly:true, domain: "http://localhost:3002"})
+            return user;
+        }
+        catch (err) {
+            console.log("yo")
+            console.log(err);
+        }
     }
 
     //====================== GOOGLE ===================
@@ -68,14 +82,14 @@ export class AuthService {
         return (ticket);
     }
 
-    async handleGoogleLogin(googleTokenDto: GoogleTokenDto): Promise<any> {
+    async handleGoogleLogin(googleTokenDto: GoogleTokenDto, @Response({passthrough: true}) res): Promise<any> {
         //----- CHECK AUTHENTICITY OF GOOGLE TOKENID -----
         const ticket = await this.checkGoogleToken(googleTokenDto.token);
 
         const payload = ticket.getPayload();
         try{
             const user = await this.usersService.findOneGoogleUser(payload.email)
-            return this.login(user);
+            return this.login(user, res);
         }
         catch(err){
             const user = await this.usersService.createGoogle({
@@ -84,7 +98,7 @@ export class AuthService {
                 password: "none",
                 type: Type.GOOGLE,
             })
-            return this.login(user);
+            return this.login(user, res);
         }
     }
 }
