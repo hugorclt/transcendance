@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateGoogleUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Status } from '@prisma/client';
+import { Status, Type } from '@prisma/client';
 import { exclude } from 'src/utils/exclude';
 import { UserEntity } from './entities/user.entity';
 import { ReturnUserEntity } from './entities/return-user.entity';
@@ -13,13 +13,18 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.create({ data: createUserDto });
-    return exclude(user, ["password"]);
+    return exclude(user, ["password", "type"]);
+  }
+
+  async createGoogle(createGoogleUserDto: CreateGoogleUserDto) : Promise<ReturnUserEntity> {
+    const user:UserEntity = await this.prisma.user.create({ data: createGoogleUserDto });
+    return exclude(user, ["password", "type"]);
   }
 
   async findAll() : Promise<ReturnUserEntity[]> {
     const users:UserEntity[] = await this.prisma.user.findMany({});
     if (users)
-      return users.map(x => exclude(x, ["password"]));
+      return users.map(x => exclude(x, ["password", "type"]));
     throw new NotFoundException();
   }
 
@@ -28,7 +33,7 @@ export class UsersService {
       where: { id }
     });
     if (user)
-      return exclude(user, ["password"]);
+      return exclude(user, ["password", "type"]);
     throw new NotFoundException();
   }
 
@@ -37,7 +42,28 @@ export class UsersService {
       where: { username }
     });
     if (user)
-      return exclude(user, ["password"]);
+      return exclude(user, ["password", "type"]);
+    throw new NotFoundException();
+  }
+
+  async findOneByEmail(email: string) : Promise<ReturnUserEntity> {
+    const user:UserEntity = await this.prisma.user.findUnique({
+      where: { email }
+    });
+    if (user)
+      return exclude(user, ["password", "type"]);
+    throw new NotFoundException();
+  }
+
+  async findOneGoogleUser(email: string) : Promise<ReturnUserEntity> {
+    const user:UserEntity = await this.prisma.user.findFirst({
+      where: { 
+        email: email,
+        type: Type.GOOGLE,
+      }
+    });
+    if (user)
+      return exclude(user, ["password", "type"]);
     throw new NotFoundException();
   }
 
@@ -46,7 +72,7 @@ export class UsersService {
       where: { status: Status.CONNECTED }
     });
     if (users)
-      return users.map(x => exclude(x, ["password"]));
+      return users.map(x => exclude(x, ["password", "type"]));
     throw new NotFoundException();
   }
 
@@ -56,7 +82,7 @@ export class UsersService {
       data: updateUserDto,
     })
     if (user)
-      return exclude(user, ["password"]);
+      return exclude(user, ["password", "type"]);
     throw new NotFoundException();
   }
 
@@ -65,7 +91,7 @@ export class UsersService {
       where: { id }
     });
     if (user)
-      return exclude(user, ["password"]);
+      return exclude(user, ["password", "type"]);
     throw new NotFoundException();
   }
 }
