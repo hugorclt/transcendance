@@ -7,29 +7,29 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ItemsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createItemDto: CreateItemDto) {
-    return this.prisma.item.create({ data: createItemDto});
+  async create(createItemDto: CreateItemDto) {
+    return await this.prisma.item.create({ data: createItemDto});
   }
 
-  findAll() {
-    return this.prisma.item.findMany({});
+  async findAll() {
+    return await this.prisma.item.findMany({});
   }
 
-  findOne(id: string) {
-    return this.prisma.item.findUnique({
+  async findOne(id: string) {
+    return await this.prisma.item.findUnique({
       where: {id}
     });
   }
 
-  update(id: string, updateItemDto: UpdateItemDto) {
-    return this.prisma.item.update({
+  async update(id: string, updateItemDto: UpdateItemDto) {
+    return await this.prisma.item.update({
       where: { id },
       data: updateItemDto,
     })
   }
 
-  remove(id: string) {
-    return this.prisma.item.delete({
+  async remove(id: string) {
+    return await this.prisma.item.delete({
       where: { id }
     });
   }
