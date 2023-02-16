@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,28 +18,36 @@ export class UsersService {
 
   async findAll() : Promise<ReturnUserEntity[]> {
     const users:UserEntity[] = await this.prisma.user.findMany({});
-    return users.map(x => exclude(x, ["password"]));
+    if (users)
+      return users.map(x => exclude(x, ["password"]));
+    throw new NotFoundException();
   }
 
   async findOne(id: string) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.findUnique({
       where: { id }
     });
-    return exclude(user, ["password"]);
+    if (user)
+      return exclude(user, ["password"]);
+    throw new NotFoundException();
   }
 
   async findOneByUsername(username: string) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.findUnique({
       where: { username }
     });
-    return exclude(user, ["password"]);
+    if (user)
+      return exclude(user, ["password"]);
+    throw new NotFoundException();
   }
 
   async findConnected() : Promise<ReturnUserEntity[]>{
     const users:UserEntity[] = await this.prisma.user.findMany({
       where: { status: Status.CONNECTED }
     });
-    return users.map(x => exclude(x, ["password"]));
+    if (users)
+      return users.map(x => exclude(x, ["password"]));
+    throw new NotFoundException();
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -47,13 +55,17 @@ export class UsersService {
       where: { id },
       data: updateUserDto,
     })
-    return exclude(user, ["password"]);
+    if (user)
+      return exclude(user, ["password"]);
+    throw new NotFoundException();
   }
 
   async remove(id: string) {
     const user:UserEntity = await this.prisma.user.delete({
       where: { id }
     });
-    return exclude(user, ["password"]);
+    if (user)
+      return exclude(user, ["password"]);
+    throw new NotFoundException();
   }
 }

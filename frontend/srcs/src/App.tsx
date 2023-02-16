@@ -1,6 +1,7 @@
 import React from 'react';
 import { PrivateRoute } from './PrivateRoute/PrivateRoute';
-import {BrowserRouter, Route, Routes} from "react-router-dom"
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { createGlobalState } from "react-use";
 
 import Login from './Login/Login';
 import HomePage from './HomePage/HomePage';
@@ -11,6 +12,8 @@ import ChatBar from './ChatBar/ChatBar';
 import Loading from './Loading/Loading';
 
 function App() {
+  
+  const isLoading = createGlobalState<boolean>(false);
   
   return (
     <BrowserRouter>
