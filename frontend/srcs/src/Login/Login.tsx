@@ -3,9 +3,8 @@ import RegisterForm from './RegisterForm/RegisterForm'
 import LoginForm from './LoginForm/LoginForm';
 import './Login.css';
 import { useState } from 'react';
-import {FcGoogle} from 'react-icons/fc'
-
-const baseURL: string = "http://localhost:3000/auth/google/login";
+import Signup from './Signup';
+import Signin from './Signin';
 
 function Login() {
   const [isSignUp, setSignUp] = useState(true);
@@ -13,22 +12,8 @@ function Login() {
   return (
     <div className='login-body flex flex-col justify-center items-center h-screen'>
       <div className={isSignUp == false ? "container right-panel-active" : "container"} id="container">
-        <div className="form-container sign-up-container">
-          <h1>Create Account</h1>
-          <div className="social-container">
-            <a href="http://localhost:3000/auth/google/login" className="social"><FcGoogle /></a>
-          </div>
-          <span>or use your email for registration</span>
-          <RegisterForm />
-        </div>
-        <div className="form-container sign-in-container">
-          <h1>Sign in</h1>
-          <div className="social-container">
-            <a href="http://localhost:3000/auth/google/login" className="social"><FcGoogle /></a>
-          </div>
-          <span>or use your account</span>
-          <LoginForm />
-        </div>
+        <Signup />
+        <Signin />
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
