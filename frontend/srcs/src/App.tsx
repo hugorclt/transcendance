@@ -1,6 +1,6 @@
 import React from 'react';
 import { PrivateRoute } from './PrivateRoute/PrivateRoute';
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import {BrowserRouter, Route, Routes} from "react-router-dom"
 
 import Login from './Login/Login';
 import HomePage from './HomePage/HomePage';
@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <div className="h-screen">
         <Routes>
-          <Route path="/login" element={<PrivateRoute component={Login} loading={Loading} default={HomePage} />}/>
+          <Route path="/login" element={<PrivateRoute component={Login} loading={Loading} default={Homepage} />}/>
           <Route path="/" element={<PrivateRoute component={HomePage} loading={Loading} default={Login} />}/>
           <Route path="/shop" element={<PrivateRoute component={Login} loading={Loading} default={Login} />}/>
           <Route path="/profil" element={<PrivateRoute component={Profil} loading={Loading} default={Login} />}/>
