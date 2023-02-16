@@ -20,18 +20,19 @@ function LoginForm() {
         password: password,
       })
       .then((res : AxiosResponse) => {
-        Cookies.set("access_token", res.data.access_token, { expires: 1 });
         setUsername("");
         setPassword("");
         setIsGood(true);
+        setIsVisible("visible");
         navigate("/");
       })
       .catch((err : AxiosError) => {
         if (err.response) {
           setIsGood(false);
+          setIsVisible("visible");
         }
       });
-    setIsVisible("visible");
+    
   };
 
   return (

@@ -23,13 +23,14 @@ function RegisterForm() {
         setEmail("");
         setPassword("");
         setIsGood(true);
+        setIsVisible("visible");
       })
       .catch((err) => {
         if (err.response) {
           setIsGood(false);
+          setIsVisible("visible");
         }
       });
-    setIsVisible("visible");
   };
 
   return (
