@@ -62,8 +62,12 @@ export class AuthService {
                 refreshToken: ''
             }
     
-            res.cookie('jwt', secretData, {httpOnly:true, domain: "http://localhost:3002"})
-            return user;
+            await res.cookie('jwt', secretData, {
+                secure: false, //===> Put it to true once we have https
+                httpOnly:true,
+            });
+
+            return user.id;
         }
         catch (err) {
             console.log("yo")
