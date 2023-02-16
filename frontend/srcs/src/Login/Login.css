@@ -6,8 +6,11 @@
 }
 
 .login-body {
-    background-image: url('https://64.media.tumblr.com/26a960808b3605f7eabca7ec60f03e7c/tumblr_nubbhqC9yT1rpco88o2_r1_500.gif');
-    background-size: cover;
+	/* background-image: url('https://wallpaperaccess.com/full/8351171.gif'); */
+	background-image: url("https://images.squarespace-cdn.com/content/v1/551a19f8e4b0e8322a93850a/1574024073167-PRLTM8P9IEOI4Q6EZQYO/Desert.gif");
+	/* background-image: url("https://onlinegiftools.com/images/examples-onlinegiftools/pineapple-with-background.gif"); */
+	/* background-image: url("https://cdn.dribbble.com/users/156849/screenshots/6993098/32.gif"); */
+	background-size: cover;
 }
 
 .login-body h1 {

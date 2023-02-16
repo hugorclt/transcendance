@@ -23,10 +23,6 @@ function GoogleAuth() {
             });
             setGood(true);
             setIsVisible("block");
-            const data = response.data;
-
-            Cookies.set("authData", data);
-            console.log(credentialResponse);
           }}
           onError={() => {
             setGood(false);

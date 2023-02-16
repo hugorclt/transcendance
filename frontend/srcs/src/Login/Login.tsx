@@ -12,7 +12,7 @@ function Login() {
 
   return (
     <div className='login-body flex flex-col justify-center items-center h-screen'>
-      <div className={isSignUp == false ? "container right-panel-active" : "container"} id="container">
+      <div className={isSignUp == false ? "transition duration-250 hover:scale-110 container right-panel-active" : "transition duration-250 hover:scale-110 container"} id="container">
         <Signup />
         <Signin />
         <div className="overlay-container">
