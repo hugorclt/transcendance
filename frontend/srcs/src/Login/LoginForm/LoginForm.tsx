@@ -1,9 +1,8 @@
-import React, { CSSProperties } from "react";
-import { useState } from "react";
-import "../Login.css";
-import Cookies from "js-cookie";
-import axios from "../../axios";
+import React, { CSSProperties, useState } from 'react'
 import { AxiosResponse, AxiosError } from "axios";
+import Cookies from 'js-cookie'
+import axios from "../../axios";
+import '../Login.css'
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -22,8 +21,7 @@ function LoginForm() {
         setUsername("");
         setPassword("");
         setIsGood(true);
-        console.log("test2")
-        Cookies.set("access_token", res.data.access_token, { expire: 1 });
+        Cookies.set("access_token", res.data.access_token, { expires: 1 });
       })
       .catch((err : AxiosError) => {
         if (err.response) {
