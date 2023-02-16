@@ -24,10 +24,9 @@ export const PrivateRoute: React.FC<Props> = ({ component: Component, loading: L
       })
   }, []);
 
-  if (!isLoading) return <LoadingComponent/>;
-
-  if (isAuth === true) {
-    return <Component />
-  }
-  return <Navigate to={defaultRoute} />;
+  return (
+    <>
+      {isLoading ? (isAuth ? <Component /> : <Navigate to={defaultRoute} />) : <LoadingComponent />}
+    </>
+  )
 }
