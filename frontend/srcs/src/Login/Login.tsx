@@ -5,6 +5,7 @@ import './Login.css';
 import { useState } from 'react';
 import Signup from './Signup';
 import Signin from './Signin';
+import Loading from '../Loading/Loading';
 
 function Login() {
   const [isSignUp, setSignUp] = useState(true);
