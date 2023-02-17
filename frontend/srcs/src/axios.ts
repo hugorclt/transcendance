@@ -1,10 +1,13 @@
-import Cookies from "js-cookie";
 import axios from 'axios';
 
-const fetchClient = () => {
+export const axiosClient = () => {
+  // Set the automatic cookies for any request
+  axios.defaults.withCredentials = true
+
+  //default get options
   const defaultOptions = {
     baseURL: process.env.REACT_APP_BASE_URL,
-    method: 'get',
+    withCredentials: true,
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
@@ -14,16 +17,7 @@ const fetchClient = () => {
   // Create instance
   let instance = axios.create(defaultOptions);
 
-  // Set the AUTH token for any request
-  // instance.interceptors.request.use(function (config) {
-  //   const token = Cookies.get("jwt");
-  //   config.headers.Authorization =  token ? `Bearer ${token}` : '';
-  //   return config;
-  // });
-
-  
-
   return instance;
 };
 
-export default fetchClient();
+export default axiosClient();

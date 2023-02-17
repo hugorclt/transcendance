@@ -1,6 +1,5 @@
 import React, { CSSProperties, useState } from 'react'
 import { AxiosResponse, AxiosError } from "axios";
-import Cookies from 'js-cookie'
 import axios from "../../axios";
 import '../Login.css'
 import { useNavigate } from 'react-router';
@@ -18,7 +17,7 @@ function LoginForm() {
       .post("/auth/login", {
         username: username,
         password: password,
-      }, {withCredentials: true })
+      })
       .then((res : AxiosResponse) => {
         setUsername("");
         setPassword("");

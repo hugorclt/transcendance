@@ -9,20 +9,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './utils/jwt-strategy';
 
 @Module({
-    imports: [
-        UsersModule,
-        PassportModule,
-        JwtModule.register({
-            secret: process.env["JWT_SECRET"],
-            signOptions: { expiresIn: '1d' },
-        }),
-    ],
-    controllers: [AuthController],
-    providers: [
-        PrismaService,
-        AuthService,
-        LocalStrategy,
-        JwtStrategy,
-    ],
+  imports: [
+    UsersModule,
+    PassportModule,
+    JwtModule.register({
+      secret: process.env['JWT_SECRET'],
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [PrismaService, AuthService, LocalStrategy, JwtStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}
