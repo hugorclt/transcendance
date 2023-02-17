@@ -3,15 +3,17 @@ import { AxiosResponse, AxiosError } from "axios";
 import axios from "../axios";
 import "../Login/Login.css";
 import { useNavigate } from "react-router";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
+import AuthContext from "../context/AuthProvider";
 
 function LoginForm() {
+  const { setAuth } = useContext(AuthContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const [isGood, setIsGood] = useState(false);
   const [isVisible, setIsVisible] = useState<string>("hidden");
   const navigate = useNavigate();
 
@@ -39,7 +41,7 @@ function LoginForm() {
             } as CSSProperties
           }
         >
-          Success, try to connect!
+          Login Success!
         </p>
       );
     } else {
@@ -67,18 +69,29 @@ function LoginForm() {
         username: username,
         password: password,
       })
-      .then((res: AxiosResponse) => {
+      .then(function (response: any) {
         setUsername("");
         setPassword("");
-        setIsGood(true);
+        setSuccess(true);
         setIsVisible("visible");
-        navigate("/");
+        console.log(JSON.stringify(response));
+        const accessToken = response?.data?.accessToken;
+        setAuth({ username, accessToken });
+        // navigate("/")
       })
-      .catch((err: AxiosError) => {
-        if (err.response) {
-          setIsGood(false);
-          setIsVisible("visible");
+      .catch(function (error: any) {
+        if (!error?.response) {
+          setErrMsg("No server response");
+        } else if (error.response?.status === 400) {
+          setErrMsg("Missing username or password");
+        } else if (error.response?.status === 401) {
+          setErrMsg("Unauthorized");
+        } else {
+          setErrMsg("Login Failed");
         }
+        errRef.current.focus();
+        setSuccess(false);
+        setIsVisible("visible");
       });
   };
 
@@ -107,7 +120,7 @@ function LoginForm() {
           required
         />
         <SubmitNote />
-        <button form="form-login">Sign Up</button>
+        <button form="form-login">Sign In</button>
       </form>
     </div>
   );

@@ -17,7 +17,7 @@ import { ReturnUserEntity } from './entities/return-user.entity';
 import { JwtAuthGuard } from 'src/auth/utils/guards';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
