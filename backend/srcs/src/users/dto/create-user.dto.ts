@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from '@prisma/client';
 import {
   IsNotEmpty,
   IsString,

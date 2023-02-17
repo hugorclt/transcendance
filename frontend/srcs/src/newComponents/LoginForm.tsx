@@ -70,13 +70,13 @@ function LoginForm() {
         password: password,
       })
       .then(function (response: any) {
-        setUsername("");
-        setPassword("");
         setSuccess(true);
         setIsVisible("visible");
         console.log(JSON.stringify(response));
         const accessToken = response?.data?.accessToken;
         setAuth({ username, accessToken });
+        setUsername("");
+        setPassword("");
         // navigate("/")
       })
       .catch(function (error: any) {
