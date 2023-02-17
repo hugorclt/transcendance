@@ -1,9 +1,7 @@
-import React, { CSSProperties, useState } from "react";
-import "./Login.css";
-import LoginForm from "./LoginForm/LoginForm";
+// import LoginForm from "./LoginForm/LoginForm";
+import LoginForm from "../newComponents/LoginForm";
 import Icon42 from "./Icon42";
 import GoogleAuth from "./GoogleAuth/GoogleAuth";
-
 
 function Signin() {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import "./Login.css";
-import RegisterForm from "./RegisterForm/RegisterForm";
-import Register from "../newComponents/Register";
+// import RegisterForm from "./RegisterForm/RegisterForm";
+import RegisterForm from "../newComponents/RegisterForm";
 import GoogleAuth from "./GoogleAuth/GoogleAuth";
 import Icon42 from "./Icon42";
 
@@ -17,8 +17,7 @@ function Signup() {
           </a>
         </div>
         <span>or use your email for registration</span>
-        {/* <RegisterForm /> */}
-        <Register />
+        <RegisterForm />
       </div>
     </div>
   );

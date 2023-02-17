@@ -15,7 +15,7 @@ const PASSWORD_REGEX =
 const EMAIL_REGEX = /^[A-z0-9._+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/;
 const REGISTER_URL = "auth/register";
 
-function Register() {
+function RegisterForm() {
   const userRef = useRef(document.createElement("input")); //explains to typescript that this will have a type
   const errRef = useRef(document.createElement("input"));
 
@@ -174,6 +174,7 @@ function Register() {
         }
         setIsVisible("vicible");
         setSuccess(false);
+        errRef.current.focus();
       });
   };
 
@@ -230,4 +231,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterForm;
