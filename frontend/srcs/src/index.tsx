@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { AuthProvider } from "./context/AuthProvider";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 if (process.env['ENV_MODE'] === 'production'){
   disableReactDevTools();
@@ -14,8 +15,12 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/*" element={<App />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
