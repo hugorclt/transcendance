@@ -76,8 +76,6 @@ function LoginForm() {
         setSuccess(true);
         setIsVisible("visible");
         const accessToken = response?.data?.access_token;
-        console.log("accessToken = ", accessToken);
-        console.log("username = ", username);
         setAuth({ username, accessToken });
         setUsername("");
         setPassword("");

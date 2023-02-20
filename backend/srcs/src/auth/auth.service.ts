@@ -124,7 +124,7 @@ export class AuthService {
     const rtMatches = bcrypt.compare(rt, user.refreshToken);
     if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const newAt = this.jwtService.signAsync(
+    const newAt = await this.jwtService.signAsync(
       {
         sub: userId,
         username: user.username,
