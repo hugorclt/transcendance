@@ -9,13 +9,16 @@ import Profile from "./Profile/Profile";
 import Missing from "./Missing/Missing";
 import Shop from "./Shop/Shop";
 import RequireAuth from "./newComponents/RequireAuth";
+import PersistLogin from "./Login/PersistLogin";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        {/* Public route */}
-        <Route path="/login" element={<Login />} />
+      {/* <Route path="/" element={<Layout />}> */}
+      {/* Public route */}
+      <Route path="/login" element={<Login />} />
+
+      <Route element={<PersistLogin />}>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
           <Route path="/" element={<HomePage />} />
@@ -24,9 +27,10 @@ function App() {
           <Route path="/lobby" element={<Lobby />} />
           <Route path="/leaderboards" element={<Leaderboards />} />
         </Route>
-        {/* Catch all (404)*/}
-        <Route path="*" element={<Missing />} />
       </Route>
+      {/* Catch all (404)*/}
+      <Route path="*" element={<Missing />} />
+      {/* </Route> */}
     </Routes>
   );
 }
