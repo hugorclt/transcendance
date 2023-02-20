@@ -25,4 +25,4 @@ import { JwtStrategy } from './utils/jwt-strategy';
         JwtStrategy,
     ],
 })
-export class AuthModule { }
+export class AuthModule {}

@@ -6,12 +6,13 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import axios from "../../axios";
-import Cookies from "js-cookie";
+import { useNavigate } from 'react-router';
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
   const [isGood, setGood] = useState(true);
   const clientId: string = process.env["REACT_APP_GOOGLE_CLIENT_ID"]!;
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -23,6 +24,7 @@ function GoogleAuth() {
             });
             setGood(true);
             setIsVisible("block");
+            navigate("/");
           }}
           onError={() => {
             setGood(false);

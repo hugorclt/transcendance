@@ -15,4 +15,5 @@ export class Auth42Guard extends AuthGuard('42') {
 }
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {}
+export class JwtAuthGuard extends AuthGuard('jwt') {
+}
