@@ -14,7 +14,12 @@ import { accessStrategy } from './utils/access-strategy';
     imports: [
         UsersModule,
         PassportModule,
-        JwtModule,
+        JwtModule.register({
+            secret: process.env["AT_SECRET"],
+            signOptions: {
+              expiresIn: "20s",
+            },
+        }),
     ],
     controllers: [AuthController],
     providers: [

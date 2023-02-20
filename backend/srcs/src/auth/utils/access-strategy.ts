@@ -11,9 +11,9 @@ type jwtPayload = {
 export class accessStrategy extends PassportStrategy(Strategy, 'access') {
   constructor() {
     super({
-      ignoreExpirations: false,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env['AT_SECRET'],
+      ignoreExpiration: false,
     });
   }
 

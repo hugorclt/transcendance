@@ -8,7 +8,7 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor() {
     super({
       ignoreExpirations: false,
-      passReqToCallback: true,
+      // passReqToCallback: true,
       secretOrKey: process.env['RT_SECRET'],
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
@@ -16,28 +16,25 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
           if (!data) {
             return null;
           }
-          console.log('/auth/me: jwtToken = ', data.jwtToken);
-          return data.jwtToken;
+          return data;
         },
       ]),
     });
   }
 
   async validate(req: Request, payload: any): Promise<any> {
-    const cookie = req?.cookies['jwt'];
+    const refreshToken = req?.cookies['jwt'];
 
-    console.log('refresh');
-    if (!cookie)
-      // BIZARRE DE FOU PREMIER TRUC A CHECK SI BUG
+    if (!refreshToken) // BIZARRE DE FOU PREMIER TRUC A CHECK SI BUG
       throw new UnauthorizedException();
-    const refreshToken = cookie.jwtToken;
 
     if (payload === null) {
       throw new UnauthorizedException();
     }
 
+    const sub = payload.sub;
     return {
-      ...payload,
+      sub,
       refreshToken,
     };
   }

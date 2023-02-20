@@ -141,10 +141,6 @@ export class AuthService {
           sub: userId,
           username,
         },
-        {
-          secret: process.env['AT_SECRET'],
-          expiresIn: 60000,
-        },
       ),
       this.jwtService.signAsync(
         {
