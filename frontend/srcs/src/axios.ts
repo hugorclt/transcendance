@@ -28,4 +28,4 @@ export const axiosPrivate = axios.create({
   },
 });
 
-export default axiosClient;
+export default axiosClient();

@@ -14,16 +14,18 @@ function Leaderboards() {
   const location = useLocation();
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
+    // let isMounted = true;
+    // const controller = new AbortController();
 
     const getUsers = async () => {
       try {
-        const response = await axiosPrivate.get("/users", {
-          signal: controller.signal,
-        });
+        const response = await axiosPrivate.get("/users");
+        // const response = await axiosPrivate.get("/users", {
+        //   signal: controller.signal,
+        // });
         console.log(response.data);
-        isMounted && setUsers(response.data);
+        // isMounted && setUsers(response.data);
+        setUsers(response.data);
       } catch (err) {
         console.error(err);
         navigate("/login", { state: { from: location }, replace: true });
@@ -32,10 +34,11 @@ function Leaderboards() {
 
     getUsers();
 
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
+    // return () => {
+    //   console.log("aborted");
+    //   isMounted = false;
+    //   controller.abort();
+    // };
   }, []);
 
   return (

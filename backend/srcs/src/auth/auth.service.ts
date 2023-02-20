@@ -1,5 +1,10 @@
 import { uid } from 'rand-token';
-import { ForbiddenException, Injectable, Response, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  Response,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { LocalLogDto, LocalRegisterDto } from './dto/log-user.dto';
 import { GoogleTokenDto, GoogleLogDto } from './dto/google-log.dto';
@@ -81,9 +86,13 @@ export class AuthService {
 
   /* ---------------------------------- login --------------------------------- */
   async login(user: any, @Response({ passthrough: true }) res) {
-    const tokens = await this.getTokens(user.id, user.username)
-    res.cookie('jwt', tokens.refresh_token, { expires: true, maxAge: 60 * 60 * 24 * 7, httpOnly: true });
-    
+    const tokens = await this.getTokens(user.id, user.username);
+    res.cookie('jwt', tokens.refresh_token, {
+      expires: true,
+      maxAge: 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
+
     this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
@@ -99,23 +108,25 @@ export class AuthService {
       },
       data: {
         refreshToken: null,
-      }
-    })
+      },
+    });
   }
 
   /* ------------------------------ refresh_token ----------------------------- */
-  async refreshToken(userId: string, rt: string, @Response({ passthrough: true }) res) {
+  async refreshToken(
+    userId: string,
+    rt: string,
+    @Response({ passthrough: true }) res,
+  ) {
     const user = await this.prisma.user.findUnique({
-      where : {
+      where: {
         id: userId,
-      }
-    })
-    if (!user) 
-      throw new ForbiddenException("Access Denied");
-    
+      },
+    });
+    if (!user) throw new ForbiddenException('Access Denied');
+
     const rtMatches = bcrypt.compare(rt, user.refreshToken);
-    if (!rtMatches)
-      throw new ForbiddenException("Access Denied");
+    if (!rtMatches) throw new ForbiddenException('Access Denied');
 
     return this.login(user, res);
   }
@@ -131,8 +142,9 @@ export class AuthService {
           username,
         },
         {
-            secret: process.env["AT_SECRET"],
-            expiresIn: 60 * 15,
+          secret: process.env['AT_SECRET'],
+          expiresIn: 60000,
+          // expiresIn: 60 * 15,
         },
       ),
       this.jwtService.signAsync(
@@ -141,11 +153,11 @@ export class AuthService {
           username,
         },
         {
-            secret: process.env["RT_SECRET"],
-            expiresIn: 60 * 60 * 24 * 7,
+          secret: process.env['RT_SECRET'],
+          expiresIn: 7 * 24 * 3600000,
         },
       ),
-    ])
+    ]);
     return {
       access_token: at,
       refresh_token: rt,
