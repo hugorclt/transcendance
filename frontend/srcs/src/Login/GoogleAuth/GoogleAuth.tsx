@@ -6,14 +6,49 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import axios from "../../axios";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router";
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
-  const [isGood, setGood] = useState(true);
+  const [errMsg, setErrMsg] = useState("");
+  const [success, setSuccess] = useState(false);
   const clientId: string = process.env["REACT_APP_GOOGLE_CLIENT_ID"]!;
   const navigate = useNavigate();
 
+  //----- DEFINING SUCCESS/ERROR MESSAGE ON SUBMIT -----
+  const SubmitNote = () => {
+    if (success) {
+      return (
+        <p
+          className="text-green"
+          style={
+            {
+              visibility: isVisible,
+              color: "green",
+            } as CSSProperties
+          }
+        >
+          Login Success!
+        </p>
+      );
+    } else {
+      return (
+        <p
+          className="text-red"
+          style={
+            {
+              visibility: isVisible,
+              color: "red",
+            } as CSSProperties
+          }
+        >
+          {errMsg}
+        </p>
+      );
+    }
+  };
+
+  //----- Rendering -----
   return (
     <div>
       <GoogleOAuthProvider clientId={clientId}>
@@ -22,41 +57,18 @@ function GoogleAuth() {
             const response = await axios.post("/auth/google/login", {
               token: credentialResponse.credential,
             });
-            setGood(true);
+            setSuccess(true);
             setIsVisible("block");
             navigate("/");
           }}
           onError={() => {
-            setGood(false);
+            setErrMsg("Google Auth failed");
+            setSuccess(false);
             setIsVisible("block");
           }}
         />
       </GoogleOAuthProvider>
-      {isGood ? (
-        <p
-          className="text-green"
-          style={
-            {
-              display: isVisible,
-              color: "green",
-            } as CSSProperties
-          }
-        >
-          Success, try to connect!
-        </p>
-      ) : (
-        <p
-          className="text-red"
-          style={
-            {
-              display: isVisible,
-              color: "red",
-            } as CSSProperties
-          }
-        >
-          Failure! Try again.
-        </p>
-      )}
+      <SubmitNote />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 // import LoginForm from "./LoginForm/LoginForm";
-import LoginForm from "../newComponents/LoginForm";
+import LoginForm from "./LoginForm/LoginForm";
 import Icon42 from "./Icon42";
 import GoogleAuth from "./GoogleAuth/GoogleAuth";
 
