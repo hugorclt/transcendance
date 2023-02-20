@@ -24,7 +24,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  //====================  LOCAL ===============================
+  /* ---------------------------------- Local --------------------------------- */
   async createNewLocalAccount(
     credentials: LocalRegisterDto,
   ): Promise<ReturnUserEntity> {
@@ -38,44 +38,7 @@ export class AuthService {
     });
   }
 
-  async validateUser(localLogDto: LocalLogDto): Promise<ReturnUserEntity> {
-    const user = await this.prisma.user.findFirst({
-      where: { username: localLogDto.username, type: Type.LOCAL },
-    });
-
-    if (user) {
-      // bcrypt.compare(localLogDto.password, user.password, function(err, result){
-      //     if (result)
-      //         return exclude(user, ['password'])
-      //     else
-      //         //failure
-      // });
-      return exclude(user, ['password']);
-    }
-    //else
-    return null;
-  }
-
-  async login(user: any, @Response({ passthrough: true }) res) {
-    const payload = { username: user.username, sub: user.id };
-    const jwtToken = await this.jwtService.signAsync(payload);
-    const refreshToken = uid(256);
-    this.usersService.updateRefreshToken(user.id, refreshToken);
-
-    res.cookie('jwt', refreshToken, { httpOnly: true });
-    return { access_token: jwtToken };
-  }
-
-  //====================== GOOGLE ===================
-  async checkGoogleToken(token: string): Promise<LoginTicket> {
-    const ticket = await googleClient.verifyIdToken({
-      idToken: token,
-      audience: process.env['GOOGLE_CLIENT_ID'],
-    });
-    if (!ticket) throw new UnauthorizedException();
-    return ticket;
-  }
-
+  /* --------------------------------- google --------------------------------- */
   async handleGoogleLogin(
     googleTokenDto: GoogleTokenDto,
     @Response({ passthrough: true }) res,
@@ -95,5 +58,84 @@ export class AuthService {
       });
       return this.login(user, res);
     }
+  }
+
+  /* ------------------------------- validation ------------------------------- */
+  async validateUser(localLogDto: LocalLogDto): Promise<ReturnUserEntity> {
+    const user = await this.prisma.user.findFirst({
+      where: { username: localLogDto.username, type: Type.LOCAL },
+    });
+
+    if (user) {
+      // bcrypt.compare(localLogDto.password, user.password, function(err, result){
+      //     if (result)
+      //         return exclude(user, ['password'])
+      //     else
+      //         //failure
+      // });
+      return exclude(user, ['password']);
+    }
+    //else
+    return null;
+  }
+
+  /* ---------------------------------- login --------------------------------- */
+  async login(user: any, @Response({ passthrough: true }) res) {
+    const tokens = await this.getTokens(user.id, user.username)
+    res.cookie('jwt', tokens.refresh_token, { httpOnly: true });
+    
+    this.updateRefreshHash(user.id, tokens.refresh_token);
+    return { access_token: tokens.access_token };
+  }
+
+  /* ------------------------------ refresh_token ----------------------------- */
+  async refreshToken() {
+    return {msg : "bjr"}
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                               utilyFunctions                               */
+  /* -------------------------------------------------------------------------- */
+  async getTokens(userId: string, username: string) {
+    const [at, rt] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          username,
+        },
+        {
+            secret: process.env["AT_SECRET"],
+            expiresIn: 60 * 15,
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          username,
+        },
+        {
+            secret: process.env["RT_SECRET"],
+            expiresIn: 60 * 60 * 24 * 7,
+        },
+      ),
+    ])
+    return {
+      access_token: at,
+      refresh_token: rt,
+    };
+  }
+
+  async updateRefreshHash(userId: string, rt: string) {
+    const hash = await bcrypt.hash(rt, 10);
+    this.usersService.updateRefreshToken(userId, hash);
+  }
+
+  async checkGoogleToken(token: string): Promise<LoginTicket> {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env['GOOGLE_CLIENT_ID'],
+    });
+    if (!ticket) throw new UnauthorizedException();
+    return ticket;
   }
 }

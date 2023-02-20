@@ -17,8 +17,8 @@ model User {
   username       String  @unique
   email          String  @unique
   password       String
-  refreshToken   String?  @unique
   avatar         String?
+  refreshToken   String? @unique
   type           Type    @default(LOCAL)
   status         Status? @default(DISCONNECTED)
   balance        Int?    @default(0)

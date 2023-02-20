@@ -6,23 +6,23 @@ import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './utils/local-strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './utils/jwt-strategy';
+import { refreshStrategy } from './utils/refresh-strategy';
+import { accessStrategy } from './utils/access-strategy';
+
 
 @Module({
     imports: [
         UsersModule,
         PassportModule,
-        JwtModule.register({
-            secret: process.env["JWT_SECRET"],
-            signOptions: { expiresIn: '300' },
-        }),
+        JwtModule,
     ],
     controllers: [AuthController],
     providers: [
         PrismaService,
         AuthService,
         LocalStrategy,
-        JwtStrategy,
+        refreshStrategy,
+        accessStrategy,
     ],
 })
 export class AuthModule {}
