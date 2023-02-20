@@ -13,6 +13,7 @@ export class accessStrategy extends PassportStrategy(Strategy, 'access') {
     super({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env['AT_SECRET'],
+        ignoreExpiration: false,
     })
   }
 
