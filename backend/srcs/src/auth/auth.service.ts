@@ -86,19 +86,9 @@ export class AuthService {
 
   /* ---------------------------------- login --------------------------------- */
   async login(user: any, @Response({ passthrough: true }) res) {
-<<<<<<< HEAD
-    const tokens = await this.getTokens(user.id, user.username);
-    res.cookie('jwt', tokens.refresh_token, {
-      expires: true,
-      maxAge: 60 * 60 * 24 * 7,
-      httpOnly: true,
-    });
-
-=======
     const tokens = await this.getTokens(user.id, user.username)
     res.cookie('jwt', tokens.refresh_token, { expires: true, maxAge: 7 * 24 * 3600000, httpOnly: true });
     
->>>>>>> hugo
     this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
