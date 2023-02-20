@@ -6,7 +6,12 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { Auth42Guard, AccessAuthGard, RefreshAuthGard, LocalAuthGuard } from './utils/guards';
+import {
+  Auth42Guard,
+  AccessAuthGard,
+  RefreshAuthGard,
+  LocalAuthGuard,
+} from './utils/guards';
 import { AuthService } from './auth.service';
 import { Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -56,21 +61,15 @@ export class AuthController {
 
   @Get('refresh')
   @UseGuards(RefreshAuthGard)
-  refreshToken(
-    @Request() req,
-    @Response({ passthrough: true }) res
-  ) {
-    console.log(req.sub)
-    console.log(req.access_token)
+  refreshToken(@Request() req, @Response({ passthrough: true }) res) {
+    console.log(req.user);
     return this.authService.refreshToken(req.sub, req.refresh_token, res);
   }
 
   @Post('logout')
   @UseGuards(AccessAuthGard)
-  logout(
-    @Request() req,
-  ) {
+  logout(@Request() req) {
     this.authService.logout(req.sub);
-    return req.sub
+    return req.sub;
   }
 }
