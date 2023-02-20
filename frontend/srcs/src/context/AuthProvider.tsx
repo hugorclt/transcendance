@@ -6,58 +6,41 @@ import React, {
   ReactNode,
 } from "react";
 
-// export type Auth = {
-//   username: string;
-//   accessToken: string;
-// };
-
-// export type AuthContextInterface = {
-//   auth: Auth;
-//   setAuth: Dispatch<SetStateAction<Auth>>;
-// };
-
-// export const AuthContext = createContext<AuthContextInterface | null>(null);
-
-// type AuthProviderProps = {
-//   children: ReactNode;
-// };
-
-// export function AuthProvider({ children }: AuthProviderProps) {
-//   const [auth, setAuth] = useState<Auth>({
-//     username: "",
-//     accessToken: "",
-//   });
-
-//   return (
-//     <AuthContext.Provider value={{ auth, setAuth }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
-
-export interface AuthStateInterface {
+export type Auth = {
   username: string;
   accessToken: string;
-}
+};
 
-export const AuthContext = createContext({
-  auth: {} as Partial<AuthStateInterface>,
-  setAuth: {} as Dispatch<SetStateAction<Partial<AuthStateInterface>>>,
-});
+export type AuthStateInterface = {
+  auth: Auth;
+  setAuth: Dispatch<SetStateAction<Auth>>;
+};
 
-export const AuthProvider = ({
-  children,
-  value = {} as AuthStateInterface,
-}: {
-  children: React.ReactNode;
-  value?: Partial<AuthStateInterface>;
-}) => {
-  const [auth, setAuth] = useState(value);
+const defaultState = {
+  auth: {
+    username: "",
+    accessToken: "",
+  },
+  setAuth: (auth: Auth) => {},
+} as AuthStateInterface;
+
+export const AuthContext = createContext<AuthStateInterface>(defaultState);
+
+type AuthProviderProps = {
+  children: ReactNode;
+};
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [auth, setAuth] = useState<Auth>({
+    username: "",
+    accessToken: "",
+  });
+
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export default AuthProvider;
