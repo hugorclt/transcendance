@@ -1,7 +1,7 @@
 import React, { CSSProperties, useState } from "react";
 import axios from "../../axios";
 import "../Login.css";
-import { useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAuth } from "../../hooks/useAuth";
@@ -15,7 +15,10 @@ function LoginForm() {
   const [success, setSuccess] = useState(false);
 
   const [isVisible, setIsVisible] = useState<string>("hidden");
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
 
   const userRef = useRef(document.createElement("input"));
   const errRef = useRef(document.createElement("input"));
@@ -78,7 +81,7 @@ function LoginForm() {
         setAuth({ username, accessToken });
         setUsername("");
         setPassword("");
-        navigate("/");
+        navigate(from, { replace: true } );
       })
       .catch((error: AxiosError) => {
         if (!error?.response) {
