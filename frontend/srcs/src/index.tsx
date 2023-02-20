@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-if (process.env['ENV_MODE'] === 'production'){
+if (process.env["ENV_MODE"] === "production") {
   disableReactDevTools();
 }
 

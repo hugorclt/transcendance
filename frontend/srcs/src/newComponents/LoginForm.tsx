@@ -1,13 +1,13 @@
 import React, { CSSProperties, useState } from "react";
-import { AxiosResponse, AxiosError } from "axios";
 import axios from "../axios";
 import "../Login/Login.css";
 import { useNavigate } from "react-router";
-import { useRef, useEffect, useContext } from "react";
-import AuthContext from "../context/AuthProvider";
+import { useRef, useEffect } from "react";
+import { AxiosError, AxiosResponse } from "axios";
+import useAuth from "../hooks/useAuth";
 
 function LoginForm() {
-  const { setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -69,17 +69,20 @@ function LoginForm() {
         username: username,
         password: password,
       })
-      .then(function (response: any) {
+      .then((response: AxiosResponse) => {
         setSuccess(true);
         setIsVisible("visible");
-        console.log(JSON.stringify(response));
-        const accessToken = response?.data?.accessToken;
+        const accessToken = response?.data?.access_token;
+        console.log("accessToken = ", accessToken);
+        console.log("username = ", username);
+        console.log(auth.username);
+        console.log(auth.accessToken);
         setAuth({ username, accessToken });
         setUsername("");
         setPassword("");
         // navigate("/")
       })
-      .catch(function (error: any) {
+      .catch((error: AxiosError) => {
         if (!error?.response) {
           setErrMsg("No server response");
         } else if (error.response?.status === 400) {
