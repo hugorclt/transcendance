@@ -1,5 +1,5 @@
 import React, { CSSProperties, useState } from "react";
-import axios from "../../axios";
+import { axiosClient } from "../../axios";
 import "../Login.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useRef, useEffect } from "react";
@@ -67,7 +67,7 @@ function LoginForm() {
   //--- HANDLE SUBMIT ---
   var handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    axios
+    axiosClient()
       .post("/auth/login", {
         username: username,
         password: password,
@@ -81,7 +81,7 @@ function LoginForm() {
         setAuth({ username, accessToken });
         setUsername("");
         setPassword("");
-        navigate(from, { replace: true } );
+        navigate(from, { replace: true });
       })
       .catch((error: AxiosError) => {
         if (!error?.response) {

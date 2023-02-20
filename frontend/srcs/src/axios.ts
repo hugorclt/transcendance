@@ -1,23 +1,31 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const axiosClient = () => {
-  // Set the automatic cookies for any request
-  axios.defaults.withCredentials = true
-
   //default get options
   const defaultOptions = {
     baseURL: process.env.REACT_APP_BASE_URL,
     withCredentials: true,
-    credentials: 'include',
+    credentials: "include",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
 
   // Create instance
   let instance = axios.create(defaultOptions);
 
+  // Set the automatic cookies for any request
+  instance.defaults.withCredentials = true;
+
   return instance;
 };
 
-export default axiosClient();
+export const axiosPrivate = axios.create({
+  baseURL: process.env.REACT_APP_BASE_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export default axiosClient;
