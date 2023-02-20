@@ -13,14 +13,15 @@ datasource db {
 
 //# ----------------------------------- User ----------------------------------- #
 model User {
-  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username String  @unique
-  email    String  @unique
-  password String
-  avatar   String?
-  type     Type    @default(LOCAL)
-  status   Status? @default(DISCONNECTED)
-  balance  Int?    @default(0)
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username       String  @unique
+  email          String  @unique
+  password       String
+  refreshToken   String?  @unique
+  avatar         String?
+  type           Type    @default(LOCAL)
+  status         Status? @default(DISCONNECTED)
+  balance        Int?    @default(0)
 
   hasBloqued  Bloqued[]     @relation("user")
   isBloqued   Bloqued[]     @relation("bloqued")

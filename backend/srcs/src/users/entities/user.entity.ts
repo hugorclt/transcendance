@@ -26,4 +26,7 @@ export class UserEntity implements User {
 
     @ApiProperty({required: false})
     balance: number;
+
+    @ApiProperty()
+    refreshToken: string;
 }
