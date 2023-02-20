@@ -82,7 +82,7 @@ export class AuthService {
   /* ---------------------------------- login --------------------------------- */
   async login(user: any, @Response({ passthrough: true }) res) {
     const tokens = await this.getTokens(user.id, user.username)
-    res.cookie('jwt', tokens.refresh_token, { expires: true, maxAge: 60 * 60 * 24 * 7, httpOnly: true });
+    res.cookie('jwt', tokens.refresh_token, { expires: true, maxAge: 7 * 24 * 3600000, httpOnly: true });
     
     this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
@@ -132,7 +132,7 @@ export class AuthService {
         },
         {
             secret: process.env["AT_SECRET"],
-            expiresIn: 60 * 15,
+            expiresIn: 15 * 60,
         },
       ),
       this.jwtService.signAsync(
@@ -142,7 +142,7 @@ export class AuthService {
         },
         {
             secret: process.env["RT_SECRET"],
-            expiresIn: 60 * 60 * 24 * 7,
+            expiresIn: 7 * 24 * 3600000,
         },
       ),
     ])
