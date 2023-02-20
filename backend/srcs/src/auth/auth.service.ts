@@ -1,5 +1,5 @@
 import { uid } from 'rand-token';
-import { Injectable, Response, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Response, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { LocalLogDto, LocalRegisterDto } from './dto/log-user.dto';
 import { GoogleTokenDto, GoogleLogDto } from './dto/google-log.dto';
@@ -82,15 +82,42 @@ export class AuthService {
   /* ---------------------------------- login --------------------------------- */
   async login(user: any, @Response({ passthrough: true }) res) {
     const tokens = await this.getTokens(user.id, user.username)
-    res.cookie('jwt', tokens.refresh_token, { httpOnly: true });
+    res.cookie('jwt', tokens.refresh_token, { expires: true, maxAge: 60 * 60 * 24 * 7, httpOnly: true });
     
     this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
 
+  /* --------------------------------- logout --------------------------------- */
+  async logout(userId: string) {
+    await this.prisma.user.updateMany({
+      where: {
+        id: userId,
+        refreshToken: {
+          not: null,
+        },
+      },
+      data: {
+        refreshToken: null,
+      }
+    })
+  }
+
   /* ------------------------------ refresh_token ----------------------------- */
-  async refreshToken() {
-    return {msg : "bjr"}
+  async refreshToken(userId: string, rt: string, @Response({ passthrough: true }) res) {
+    const user = await this.prisma.user.findUnique({
+      where : {
+        id: userId,
+      }
+    })
+    if (!user) 
+      throw new ForbiddenException("Access Denied");
+    
+    const rtMatches = bcrypt.compare(rt, user.refreshToken);
+    if (!rtMatches)
+      throw new ForbiddenException("Access Denied");
+
+    return this.login(user, res);
   }
 
   /* -------------------------------------------------------------------------- */

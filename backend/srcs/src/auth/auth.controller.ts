@@ -21,7 +21,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(AccessAuthGard)
   acceptLoggedUser(@Request() req) {
-    return req.userId;
+    return req.sub;
   }
 
   @Post('google/login')
@@ -57,8 +57,18 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(RefreshAuthGard)
   refreshToken(
-    @Body() localRegisterDto: LocalRegisterDto,
+    @Request() req,
+    @Response({ passthrough: true }) res
   ) {
-    return this.authService.refreshToken();
+    return this.authService.refreshToken(req.sub, req.refresh_token, res);
+  }
+
+  @Post('logout')
+  @UseGuards(AccessAuthGard)
+  logout(
+    @Request() req,
+  ) {
+    this.authService.logout(req.sub);
+    return req.sub
   }
 }
