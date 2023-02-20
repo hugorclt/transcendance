@@ -4,9 +4,10 @@ import {
   GoogleOAuthProvider,
   GoogleLogin,
   CredentialResponse,
+  GoogleCredentialResponse,
 } from "@react-oauth/google";
 import axios from "../../axios";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
@@ -14,6 +15,8 @@ function GoogleAuth() {
   const [success, setSuccess] = useState(false);
   const clientId: string = process.env["REACT_APP_GOOGLE_CLIENT_ID"]!;
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
 
   //----- DEFINING SUCCESS/ERROR MESSAGE ON SUBMIT -----
   const SubmitNote = () => {
@@ -48,19 +51,22 @@ function GoogleAuth() {
     }
   };
 
+  var onSuccess = async (credentialResponse : GoogleCredentialResponse) => {
+    const response = await axios.post("/auth/google/login", {
+      token: credentialResponse.credential,
+    });
+    setSuccess(true);
+    setIsVisible("block");
+    console.log("from: ", from)
+    navigate(from, { replace: true });
+  }
+
   //----- Rendering -----
   return (
     <div>
       <GoogleOAuthProvider clientId={clientId}>
         <GoogleLogin
-          onSuccess={async (credentialResponse: CredentialResponse) => {
-            const response = await axios.post("/auth/google/login", {
-              token: credentialResponse.credential,
-            });
-            setSuccess(true);
-            setIsVisible("block");
-            navigate("/");
-          }}
+          onSuccess={onSuccess}
           onError={() => {
             setErrMsg("Google Auth failed");
             setSuccess(false);
