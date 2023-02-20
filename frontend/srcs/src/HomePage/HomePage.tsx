@@ -13,7 +13,7 @@ function HomePage() {
           navigate("/leaderboards");
         }}
       >
-        Go home
+        Leaderboards
       </button>
       <ChatBar />
     </div>

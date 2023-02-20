@@ -86,6 +86,7 @@ export class AuthService {
 
   /* ---------------------------------- login --------------------------------- */
   async login(user: any, @Response({ passthrough: true }) res) {
+<<<<<<< HEAD
     const tokens = await this.getTokens(user.id, user.username);
     res.cookie('jwt', tokens.refresh_token, {
       expires: true,
@@ -93,6 +94,11 @@ export class AuthService {
       httpOnly: true,
     });
 
+=======
+    const tokens = await this.getTokens(user.id, user.username)
+    res.cookie('jwt', tokens.refresh_token, { expires: true, maxAge: 7 * 24 * 3600000, httpOnly: true });
+    
+>>>>>>> hugo
     this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
@@ -142,9 +148,8 @@ export class AuthService {
           username,
         },
         {
-          secret: process.env['AT_SECRET'],
-          expiresIn: 60000,
-          // expiresIn: 60 * 15,
+            secret: process.env["AT_SECRET"],
+            expiresIn: 15 * 60000,
         },
       ),
       this.jwtService.signAsync(
