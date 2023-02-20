@@ -6,7 +6,7 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { Auth42Guard, JwtAuthGuard, LocalAuthGuard } from './utils/guards';
+import { Auth42Guard, AccessAuthGard, RefreshAuthGard, LocalAuthGuard } from './utils/guards';
 import { AuthService } from './auth.service';
 import { Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -19,7 +19,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessAuthGard)
   acceptLoggedUser(@Request() req) {
     return req.userId;
   }
@@ -52,5 +52,13 @@ export class AuthController {
     @Body() localRegisterDto: LocalRegisterDto,
   ): Promise<ReturnUserEntity> {
     return this.authService.createNewLocalAccount(localRegisterDto);
+  }
+
+  @Post('refresh')
+  @UseGuards(RefreshAuthGard)
+  refreshToken(
+    @Body() localRegisterDto: LocalRegisterDto,
+  ) {
+    return this.authService.refreshToken();
   }
 }

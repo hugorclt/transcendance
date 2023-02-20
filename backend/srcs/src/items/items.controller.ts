@@ -4,10 +4,10 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ItemEntity } from './entities/item.entity';
-import { JwtAuthGuard } from 'src/auth/utils/guards';
+import { AccessAuthGard } from 'src/auth/utils/guards';
 
 @Controller('items')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessAuthGard)
 @ApiTags('items')
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}

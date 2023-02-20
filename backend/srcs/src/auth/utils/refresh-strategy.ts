@@ -4,11 +4,12 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor() {
     super({
       ignoreExpirations: false,
-      secretOrKey: process.env['JWT_SECRET'],
+      passReqToCallback: true,
+      secretOrKey: process.env['RT_SECRET'],
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           let data = request?.cookies['jwt'];
@@ -18,14 +19,25 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
           console.log('/auth/me: jwtToken = ', data.jwtToken);
           return data.jwtToken;
         },
+
       ]),
     });
   }
 
-  async validate(payload: any): Promise<any> {
+  async validate(req: Request, payload: any): Promise<any> {
+    const cookie = req?.cookies['jwt'];
+
+    if (!cookie) // BIZARRE DE FOU PREMIER TRUC A CHECK SI BUG
+      throw new UnauthorizedException();
+    const refreshToken = cookie.jwtToken;
+
     if (payload === null) {
       throw new UnauthorizedException();
     }
-    return payload;
+
+    return {
+      ...payload,
+      refreshToken,
+    };
   }
 }
