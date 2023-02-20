@@ -26,19 +26,15 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     console.log('refresh guard');
     const refreshToken = req?.cookies['jwt'];
 
-    console.log('refresh token: ', refreshToken);
-    if (!refreshToken)
-      // BIZARRE DE FOU PREMIER TRUC A CHECK SI BUG
-      throw new UnauthorizedException();
+    if (!refreshToken) throw new UnauthorizedException();
 
     if (payload === null) {
       throw new UnauthorizedException();
     }
 
     const sub = payload.sub;
-    console.log(payload.sub);
     return {
-      sub,
+      ...payload,
       refreshToken,
     };
   }
