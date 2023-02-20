@@ -1,7 +1,7 @@
 import React, { CSSProperties, useState } from "react";
 import { axiosClient } from "../../axios";
 import "../Login.css";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAuth } from "../../hooks/useAuth";
