@@ -1,7 +1,7 @@
 import React from "react";
 import "./Login.css";
 // import RegisterForm from "./RegisterForm/RegisterForm";
-import RegisterForm from "../newComponents/RegisterForm";
+import RegisterForm from "./RegisterForm/RegisterForm";
 import GoogleAuth from "./GoogleAuth/GoogleAuth";
 import Icon42 from "./Icon42";
 
