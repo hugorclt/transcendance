@@ -19,7 +19,6 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
           console.log('/auth/me: jwtToken = ', data.jwtToken);
           return data.jwtToken;
         },
-
       ]),
     });
   }
@@ -27,7 +26,9 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   async validate(req: Request, payload: any): Promise<any> {
     const cookie = req?.cookies['jwt'];
 
-    if (!cookie) // BIZARRE DE FOU PREMIER TRUC A CHECK SI BUG
+    console.log('refresh');
+    if (!cookie)
+      // BIZARRE DE FOU PREMIER TRUC A CHECK SI BUG
       throw new UnauthorizedException();
     const refreshToken = cookie.jwtToken;
 
