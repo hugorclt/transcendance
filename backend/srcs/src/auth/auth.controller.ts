@@ -60,9 +60,8 @@ export class AuthController {
     @Request() req,
     @Response({ passthrough: true }) res
   ) {
-    console.log(req.sub)
-    console.log(req.access_token)
-    return this.authService.refreshToken(req.sub, req.refresh_token, res);
+    console.log(req)
+    return this.authService.refreshToken(req.user.sub, req.user.refreshToken, res);
   }
 
   @Post('logout')

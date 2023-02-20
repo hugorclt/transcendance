@@ -8,7 +8,7 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor() {
     super({
       ignoreExpirations: false,
-      // passReqToCallback: true,
+      passReqToCallback: true,
       secretOrKey: process.env['RT_SECRET'],
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
@@ -26,7 +26,7 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   async validate(req: Request, payload: any): Promise<any> {
     const refreshToken = req?.cookies['jwt'];
 
-    if (!refreshToken) // BIZARRE DE FOU PREMIER TRUC A CHECK SI BUG
+    if (!refreshToken)
       throw new UnauthorizedException();
 
     if (payload === null) {
@@ -34,8 +34,9 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     }
 
     const sub = payload.sub;
+
     return {
-      sub,
+      ...payload,
       refreshToken,
     };
   }
