@@ -14,17 +14,11 @@ function Leaderboards() {
   const location = useLocation();
 
   useEffect(() => {
-    // let isMounted = true;
-    // const controller = new AbortController();
-
+    //We should abort in case of unmount
     const getUsers = async () => {
       try {
         const response = await axiosPrivate.get("/users");
-        // const response = await axiosPrivate.get("/users", {
-        //   signal: controller.signal,
-        // });
         console.log(response.data);
-        // isMounted && setUsers(response.data);
         setUsers(response.data);
       } catch (err) {
         console.error(err);
@@ -33,12 +27,6 @@ function Leaderboards() {
     };
 
     getUsers();
-
-    // return () => {
-    //   console.log("aborted");
-    //   isMounted = false;
-    //   controller.abort();
-    // };
   }, []);
 
   return (

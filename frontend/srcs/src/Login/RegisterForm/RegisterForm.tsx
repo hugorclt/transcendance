@@ -152,7 +152,6 @@ function RegisterForm() {
         password: password,
       })
       .then(function (response: any) {
-        // console.log(JSON.stringify(response));
         setUsername("");
         setEmail("");
         setPassword("");

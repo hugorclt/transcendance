@@ -8,7 +8,6 @@ export class RoomsService {
   constructor(private prisma: PrismaService) {}
 
   create(createRoomDto: CreateRoomDto) {
-    console.log(createRoomDto);
     return this.prisma.room.create({
       data: createRoomDto
     })
