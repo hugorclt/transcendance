@@ -56,43 +56,44 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any, @Response({passthrough: true}) res ) {
-      const payload = {username: user.username, sub: user.id};
-      const jwtToken = await this.jwtService.signAsync(payload)
-      const refreshToken = uid(256);
-      this.usersService.updateRefreshToken(user.id, refreshToken)
-      
-      res.cookie('jwt', refreshToken, {httpOnly:true})
-      return {access_token: jwtToken};
+  async login(user: any, @Response({ passthrough: true }) res) {
+    const payload = { username: user.username, sub: user.id };
+    const jwtToken = await this.jwtService.signAsync(payload);
+    const refreshToken = uid(256);
+    this.usersService.updateRefreshToken(user.id, refreshToken);
+
+    res.cookie('jwt', refreshToken, { httpOnly: true });
+    return { access_token: jwtToken };
   }
 
-    //====================== GOOGLE ===================
-  async checkGoogleToken(token: string): Promise<LoginTicket>{
-      const ticket = await googleClient.verifyIdToken({
-          idToken: token,
-          audience: process.env['GOOGLE_CLIENT_ID']
-      })
-      if (!ticket)
-          throw new UnauthorizedException();
-      return (ticket);
+  //====================== GOOGLE ===================
+  async checkGoogleToken(token: string): Promise<LoginTicket> {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env['GOOGLE_CLIENT_ID'],
+    });
+    if (!ticket) throw new UnauthorizedException();
+    return ticket;
   }
 
-  async handleGoogleLogin(googleTokenDto: GoogleTokenDto, @Response({passthrough: true}) res): Promise<any> {
-      //----- CHECK AUTHENTICITY OF GOOGLE TOKENID -----
-      const ticket = await this.checkGoogleToken(googleTokenDto.token);
-      const payload = ticket.getPayload();
-      try{
-          const user = await this.usersService.findOneGoogleUser(payload.email)
-          return this.login(user, res);
-      }
-      catch(err){
-          const user = await this.usersService.createGoogle({
-              email: payload.email,
-              username: payload.name,
-              password: "none",
-              type: Type.GOOGLE,
-          })
-          return this.login(user, res);
-      }
+  async handleGoogleLogin(
+    googleTokenDto: GoogleTokenDto,
+    @Response({ passthrough: true }) res,
+  ): Promise<any> {
+    //----- CHECK AUTHENTICITY OF GOOGLE TOKENID -----
+    const ticket = await this.checkGoogleToken(googleTokenDto.token);
+    const payload = ticket.getPayload();
+    try {
+      const user = await this.usersService.findOneGoogleUser(payload.email);
+      return this.login(user, res);
+    } catch (err) {
+      const user = await this.usersService.createGoogle({
+        email: payload.email,
+        username: payload.name,
+        password: 'none',
+        type: Type.GOOGLE,
+      });
+      return this.login(user, res);
+    }
   }
 }

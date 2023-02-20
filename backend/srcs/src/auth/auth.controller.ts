@@ -44,7 +44,7 @@ export class AuthController {
     @Request() req,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    return this.authService.login(req, res);
+    return this.authService.login(req.user, res);
   }
 
   @Post('register')

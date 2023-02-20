@@ -75,9 +75,9 @@ function LoginForm() {
         const accessToken = response?.data?.access_token;
         console.log("accessToken = ", accessToken);
         console.log("username = ", username);
+        setAuth({ username, accessToken });
         console.log(auth.username);
         console.log(auth.accessToken);
-        setAuth({ username, accessToken });
         setUsername("");
         setPassword("");
         // navigate("/")
