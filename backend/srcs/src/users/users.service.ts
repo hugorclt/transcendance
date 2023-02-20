@@ -13,18 +13,18 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.create({ data: createUserDto });
-    return exclude(user, ["password", "type"]);
+    return exclude(user, ["password", "type", "refreshToken"]);
   }
 
   async createGoogle(createGoogleUserDto: CreateGoogleUserDto) : Promise<ReturnUserEntity> {
     const user:UserEntity = await this.prisma.user.create({ data: createGoogleUserDto });
-    return exclude(user, ["password", "type"]);
+    return exclude(user, ["password", "type", "refreshToken"]);
   }
 
   async findAll() : Promise<ReturnUserEntity[]> {
     const users:UserEntity[] = await this.prisma.user.findMany({});
     if (users)
-      return users.map(x => exclude(x, ["password", "type"]));
+      return users.map(x => exclude(x, ["password", "type", "refreshToken"]));
     throw new NotFoundException();
   }
 
@@ -33,7 +33,7 @@ export class UsersService {
       where: { id }
     });
     if (user)
-      return exclude(user, ["password", "type"]);
+      return exclude(user, ["password", "type", "refreshToken"]);
     throw new NotFoundException();
   }
 
@@ -42,7 +42,7 @@ export class UsersService {
       where: { username }
     });
     if (user)
-      return exclude(user, ["password", "type"]);
+      return exclude(user, ["password", "type", "refreshToken"]);
     throw new NotFoundException();
   }
 
@@ -60,7 +60,7 @@ export class UsersService {
       where: { email }
     });
     if (user)
-      return exclude(user, ["password", "type"]);
+      return exclude(user, ["password", "type", "refreshToken"]);
     throw new NotFoundException();
   }
 
@@ -72,7 +72,7 @@ export class UsersService {
       }
     });
     if (user)
-      return exclude(user, ["password", "type"]);
+      return exclude(user, ["password", "type", "refreshToken"]);
     throw new NotFoundException();
   }
 
@@ -81,7 +81,7 @@ export class UsersService {
       where: { status: Status.CONNECTED }
     });
     if (users)
-      return users.map(x => exclude(x, ["password", "type"]));
+      return users.map(x => exclude(x, ["password", "type", "refreshToken"]));
     throw new NotFoundException();
   }
 
@@ -91,7 +91,17 @@ export class UsersService {
       data: updateUserDto,
     })
     if (user)
-      return exclude(user, ["password", "type"]);
+      return exclude(user, ["password", "type", "refreshToken"]);
+    throw new NotFoundException();
+  }
+
+  async updateRefreshToken(id: string, refreshToken: string) {
+    const user:UserEntity = await this.prisma.user.update({
+      where: { id },
+      data: { refreshToken: refreshToken},
+    })
+    if (user)
+      return exclude(user, ["password", "type", "refreshToken"]);
     throw new NotFoundException();
   }
 
@@ -100,7 +110,7 @@ export class UsersService {
       where: { id }
     });
     if (user)
-      return exclude(user, ["password", "type"]);
+      return exclude(user, ["password", "type", "refreshToken"]);
     throw new NotFoundException();
   }
 }

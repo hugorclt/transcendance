@@ -18,7 +18,7 @@ export const PrivateRoute: React.FC<Props> = ({
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    axios.get("/auth/me", {withCredentials: true });
+    axios.get("/auth/me", { withCredentials: true });
 
     axios.interceptors.response.use(
       function (response) {

@@ -9,6 +9,7 @@ import { ReturnUserEntity } from "src/users/entities/return-user.entity";
 import { JwtService } from '@nestjs/jwt'
 import { LoginTicket, OAuth2Client } from "google-auth-library";
 import { Type } from "@prisma/client";
+import { uid } from 'rand-token';
 
 const googleClient = new OAuth2Client(
     process.env['GOOGLE_CLIENT_ID'],
@@ -55,14 +56,13 @@ export class AuthService {
     async login(user: any, @Response({passthrough: true}) res ) {
         const payload = {username: user.username, sub: user.id};
         const jwtToken = await this.jwtService.signAsync(payload)
+        const refreshToken = uid(256);
 
-        let secretData = {
-            jwtToken,
-            refreshToken: ''
-        }
+        this.usersService.updateRefreshToken(user.id, refreshToken)
+        
+        res.cookie('jwt', refreshToken, {httpOnly:true})
 
-        res.cookie('jwt', secretData, {httpOnly:true})
-        return payload;
+        return {access_token: jwtToken};
     }
 
     //====================== GOOGLE ===================
