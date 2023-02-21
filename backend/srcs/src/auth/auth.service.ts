@@ -17,7 +17,8 @@ import { LoginTicket, OAuth2Client } from 'google-auth-library';
 import { Type } from '@prisma/client';
 import { Api42LogDto, Api42CodeDto } from './dto/api42-log.dto';
 import { HttpService } from '@nestjs/axios';
-import { map, tap } from 'rxjs';
+import { catchError, firstValueFrom, lastValueFrom, map, tap } from 'rxjs';
+import { AxiosError, AxiosResponse } from 'axios';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -210,22 +211,38 @@ export class AuthService {
   }
 
   async check42Code(code: string): Promise<any> {
-    const response = await this.httpService
-      .post(process.env['42POST_URL'], {
-        grant_type: 'authorization_code',
-        client_id: process.env['42UID'],
-        client_secret: process.env['42SECRET'],
-        code: code,
-        redirect_uri: process.env['42CALLBACK'],
-      })
-      .pipe(
-        tap((response) => {
-          console.log(response);
-        }),
-        map((response) => {
-          console.log(response);
-        }),
-      );
+    console.log('42 post url: ', process.env['API42_POST_URL']);
+
+    const headersRequest = {
+      'Content-Type': 'application/json',
+    };
+    const responseData = await lastValueFrom(
+      this.httpService
+        .post(
+          process.env['API42_POST_URL'],
+          {
+            grant_type: 'authorization_code',
+            client_id: process.env['API42_ID'],
+            client_secret: process.env['API42_SECRET'],
+            code: code,
+            redirect_uri: process.env['API42_CALLBACK'],
+          },
+          { headers: headersRequest },
+        )
+        .pipe(
+          map((response: AxiosResponse) => {
+            // console.log('response: ', response.data);
+            return response.data;
+          }),
+        )
+        .pipe(
+          catchError((error: AxiosError) => {
+            console.log(error);
+            // console.log(error.cause);
+            throw 'An error occurred!';
+          }),
+        ),
+    );
     console.log('post sent to 42 API');
   }
 }
