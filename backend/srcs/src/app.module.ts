@@ -9,10 +9,19 @@ import { ItemsModule } from './items/items.module';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RoomsModule } from './rooms/rooms.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [AuthModule, PrismaModule, ItemsModule, UsersModule, RoomsModule, JwtModule],
+  imports: [
+    AuthModule,
+    PrismaModule,
+    ItemsModule,
+    UsersModule,
+    RoomsModule,
+    JwtModule,
+    HttpModule,
+  ],
   controllers: [AppController],
   providers: [AppService, AuthService, PrismaService],
 })
-export class AppModule { }
+export class AppModule {}

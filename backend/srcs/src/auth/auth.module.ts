@@ -8,26 +8,27 @@ import { LocalStrategy } from './utils/local-strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { refreshStrategy } from './utils/refresh-strategy';
 import { accessStrategy } from './utils/access-strategy';
-
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-    imports: [
-        UsersModule,
-        PassportModule,
-        JwtModule.register({
-            secret: process.env["AT_SECRET"],
-            signOptions: {
-              expiresIn: "20s",
-            },
-        }),
-    ],
-    controllers: [AuthController],
-    providers: [
-        PrismaService,
-        AuthService,
-        LocalStrategy,
-        refreshStrategy,
-        accessStrategy,
-    ],
+  imports: [
+    UsersModule,
+    PassportModule,
+    HttpModule,
+    JwtModule.register({
+      secret: process.env['AT_SECRET'],
+      signOptions: {
+        expiresIn: '20s',
+      },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [
+    PrismaService,
+    AuthService,
+    LocalStrategy,
+    refreshStrategy,
+    accessStrategy,
+  ],
 })
 export class AuthModule {}

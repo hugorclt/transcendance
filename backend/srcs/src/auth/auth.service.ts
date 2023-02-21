@@ -15,6 +15,9 @@ import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginTicket, OAuth2Client } from 'google-auth-library';
 import { Type } from '@prisma/client';
+import { Api42LogDto, Api42CodeDto } from './dto/api42-log.dto';
+import { HttpService } from '@nestjs/axios';
+import { map, tap } from 'rxjs';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -27,6 +30,7 @@ export class AuthService {
     private usersService: UsersService,
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private readonly httpService: HttpService,
   ) {}
 
   /* ---------------------------------- Local --------------------------------- */
@@ -41,6 +45,34 @@ export class AuthService {
       email: credentials.email,
       password: hash,
     });
+  }
+  /* ----------------------------------- 42 ----------------------------------- */
+  async handle42Login(
+    api42CodeDto: Api42CodeDto,
+    @Response({ passthrough: true }) res,
+  ): Promise<any> {
+    console.log('received 42 login request');
+    console.log(api42CodeDto.code);
+    //----- CHECK FOR CODE AUTHENTICITY BY POSTING CODE TO GET ACCESS TOKEN -----
+    const payload = await this.check42Code(api42CodeDto.code);
+    // if (!payload) {
+    //   console.log('code is invalid');
+    //   throw new UnauthorizedException();
+    // }
+    // try {
+    //   const user = await this.usersService.findOne42User(payload.email);
+    //   console.log('found 42 user in db');
+    //   return this.login(user, res);
+    // } catch (err) {
+    //   console.log('creating new 42 user in db');
+    //   const user = await this.usersService.create42({
+    //     email: payload.email,
+    //     username: payload.username,
+    //     password: 'none',
+    //     type: Type.API42,
+    //   });
+    //   return this.login(user, res);
+    // }
   }
 
   /* --------------------------------- google --------------------------------- */
@@ -72,15 +104,16 @@ export class AuthService {
     });
 
     if (user) {
-      // bcrypt.compare(localLogDto.password, user.password, function(err, result){
-      //     if (result)
-      //         return exclude(user, ['password'])
-      //     else
-      //         //failure
-      // });
-      return exclude(user, ['password']);
+      const passMatches = await bcrypt.compare(
+        localLogDto.password,
+        user.password,
+      );
+      if (!passMatches) {
+        return null;
+      } else {
+        return exclude(user, ['password']);
+      }
     }
-    //else
     return null;
   }
 
@@ -126,7 +159,7 @@ export class AuthService {
     if (!user || !user.refreshToken)
       throw new UnauthorizedException('Access Denied');
 
-    const rtMatches = bcrypt.compare(rt, user.refreshToken);
+    const rtMatches = await bcrypt.compare(rt, user.refreshToken);
     if (!rtMatches) throw new UnauthorizedException('Access Denied');
 
     const newAt = await this.jwtService.signAsync({
@@ -174,5 +207,25 @@ export class AuthService {
     });
     if (!ticket) throw new UnauthorizedException();
     return ticket;
+  }
+
+  async check42Code(code: string): Promise<any> {
+    const response = await this.httpService
+      .post(process.env['42POST_URL'], {
+        grant_type: 'authorization_code',
+        client_id: process.env['42UID'],
+        client_secret: process.env['42SECRET'],
+        code: code,
+        redirect_uri: process.env['42CALLBACK'],
+      })
+      .pipe(
+        tap((response) => {
+          console.log(response);
+        }),
+        map((response) => {
+          console.log(response);
+        }),
+      );
+    console.log('post sent to 42 API');
   }
 }

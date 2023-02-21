@@ -31,10 +31,20 @@ export class AuthController {
     return this.authService.handleGoogleLogin({ token: token }, res);
   }
 
-  @Get('42/login')
-  @UseGuards(Auth42Guard)
-  handle42Login() {
-    return { msg: '42 OK' };
+  @Get('42/callback')
+  async handle42callback(
+    @Request() req,
+    @Response({ passthrough: true }) res,
+  ): Promise<any> {
+    console.log(JSON.stringify(req.data));
+  }
+
+  @Post('42/login')
+  async handle42Login(
+    @Body('code') code,
+    @Response({ passthrough: true }) res,
+  ): Promise<any> {
+    return this.authService.handle42Login({ code: code }, res);
   }
 
   @Post('login')
