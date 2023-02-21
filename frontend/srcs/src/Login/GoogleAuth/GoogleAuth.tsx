@@ -26,7 +26,7 @@ function GoogleAuth() {
           className="text-green"
           style={
             {
-              visibility: isVisible,
+              display: isVisible,
               color: "green",
             } as CSSProperties
           }
@@ -40,7 +40,7 @@ function GoogleAuth() {
           className="text-red"
           style={
             {
-              visibility: isVisible,
+              display: isVisible,
               color: "red",
             } as CSSProperties
           }
@@ -64,7 +64,9 @@ function GoogleAuth() {
   return (
     <div>
       <GoogleOAuthProvider clientId={clientId}>
-        <GoogleLogin
+        <GoogleLogin 
+          shape="circle"
+          type="icon" 
           onSuccess={onSuccess}
           onError={() => {
             setErrMsg("Google Auth failed");

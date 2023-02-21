@@ -15,6 +15,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { ReturnUserEntity } from './entities/return-user.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
+import { Request } from '@nestjs/common';
 
 @Controller('users')
 @UseGuards(AccessAuthGard)
@@ -39,6 +40,20 @@ export class UsersController {
   findConnected(): Promise<ReturnUserEntity[]> {
     return this.usersService.findConnected();
   }
+
+  @Get('me')
+  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
+  findInfo(@Request() req): Promise<ReturnUserEntity> {
+    return this.usersService.findOne(req.user.sub);
+  }
+
+  @Post('me/status')
+  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
+  updateStatus(@Request() req): Promise<ReturnUserEntity> {
+    console.log(req)
+    return this.usersService.updateStatus(req.user.sub, req.status);
+  }
+
 
   @Get(':id')
   @ApiOkResponse({ type: ReturnUserEntity })
