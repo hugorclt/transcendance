@@ -10,6 +10,7 @@ import Missing from "./Missing/Missing";
 import Shop from "./Shop/Shop";
 import RequireAuth from "./newComponents/RequireAuth";
 import PersistLogin from "./Login/PersistLogin";
+import Login42 from "./Login/Auth42/Login42";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       {/* <Route path="/" element={<Layout />}> */}
       {/* Public route */}
       <Route path="/login" element={<Login />} />
+      <Route path="/login/42" element={<Login42 />} />
 
       <Route element={<PersistLogin />}>
         {/* Protected routes */}
