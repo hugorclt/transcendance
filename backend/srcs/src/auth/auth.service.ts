@@ -123,17 +123,16 @@ export class AuthService {
         id: userId,
       },
     });
-    if (!user) throw new ForbiddenException('Access Denied');
+    if (!user || !user.refreshToken)
+      throw new UnauthorizedException('Access Denied');
 
     const rtMatches = bcrypt.compare(rt, user.refreshToken);
-    if (!rtMatches) throw new ForbiddenException('Access Denied');
+    if (!rtMatches) throw new UnauthorizedException('Access Denied');
 
-    const newAt = await this.jwtService.signAsync(
-      {
-        sub: userId,
-        username: user.username,
-      }
-    )
+    const newAt = await this.jwtService.signAsync({
+      sub: userId,
+      username: user.username,
+    });
     return { access_token: newAt };
   }
 
@@ -142,12 +141,10 @@ export class AuthService {
   /* -------------------------------------------------------------------------- */
   async getTokens(userId: string, username: string) {
     const [at, rt] = await Promise.all([
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          username,
-        },
-      ),
+      this.jwtService.signAsync({
+        sub: userId,
+        username,
+      }),
       this.jwtService.signAsync(
         {
           sub: userId,
