@@ -32,8 +32,8 @@ function ProfilBox() {
             <option value="absent">Absent</option>
             <option value="invisible">Invisible</option>
           </select>
-          <LogoutButton />
         </div>
+        <LogoutButton />
       </div>
     </a>
   );

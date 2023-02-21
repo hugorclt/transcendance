@@ -72,15 +72,16 @@ export class AuthService {
     });
 
     if (user) {
-      // bcrypt.compare(localLogDto.password, user.password, function(err, result){
-      //     if (result)
-      //         return exclude(user, ['password'])
-      //     else
-      //         //failure
-      // });
-      return exclude(user, ['password']);
+      const passMatches = await bcrypt.compare(
+        localLogDto.password,
+        user.password,
+      );
+      if (!passMatches) {
+        return null;
+      } else {
+        return exclude(user, ['password']);
+      }
     }
-    //else
     return null;
   }
 
@@ -126,7 +127,7 @@ export class AuthService {
     if (!user || !user.refreshToken)
       throw new UnauthorizedException('Access Denied');
 
-    const rtMatches = bcrypt.compare(rt, user.refreshToken);
+    const rtMatches = await bcrypt.compare(rt, user.refreshToken);
     if (!rtMatches) throw new UnauthorizedException('Access Denied');
 
     const newAt = await this.jwtService.signAsync({
