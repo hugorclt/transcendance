@@ -31,6 +31,14 @@ export class AuthController {
     return this.authService.handleGoogleLogin({ token: token }, res);
   }
 
+  @Get('42/callback')
+  async handle42callback(
+    @Request() req,
+    @Response({ passthrough: true }) res,
+  ): Promise<any> {
+    console.log(JSON.stringify(req.data));
+  }
+
   @Post('42/login')
   async handle42Login(
     @Body('code') code,

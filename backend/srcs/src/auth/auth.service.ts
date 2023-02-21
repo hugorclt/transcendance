@@ -17,6 +17,7 @@ import { LoginTicket, OAuth2Client } from 'google-auth-library';
 import { Type } from '@prisma/client';
 import { Api42LogDto, Api42CodeDto } from './dto/api42-log.dto';
 import { HttpService } from '@nestjs/axios';
+import { map, tap } from 'rxjs';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -53,25 +54,25 @@ export class AuthService {
     console.log('received 42 login request');
     console.log(api42CodeDto.code);
     //----- CHECK FOR CODE AUTHENTICITY BY POSTING CODE TO GET ACCESS TOKEN -----
-    const check = checkCodeAuthenticity({ code: api42CodeDto.code });
-    if (!check) {
-      console.log('code is invalid');
-      throw new UnauthorizedException();
-    }
-    try {
-      const user = await this.usersService.findOne42User('');
-      console.log('found 42 user in db');
-      return this.login(user, res);
-    } catch (err) {
-      console.log('creating new 42 user in db');
-      const user = await this.usersService.create42({
-        email: '',
-        username: '',
-        password: 'none',
-        type: Type.API42,
-      });
-      return this.login(user, res);
-    }
+    const payload = await this.check42Code(api42CodeDto.code);
+    // if (!payload) {
+    //   console.log('code is invalid');
+    //   throw new UnauthorizedException();
+    // }
+    // try {
+    //   const user = await this.usersService.findOne42User(payload.email);
+    //   console.log('found 42 user in db');
+    //   return this.login(user, res);
+    // } catch (err) {
+    //   console.log('creating new 42 user in db');
+    //   const user = await this.usersService.create42({
+    //     email: payload.email,
+    //     username: payload.username,
+    //     password: 'none',
+    //     type: Type.API42,
+    //   });
+    //   return this.login(user, res);
+    // }
   }
 
   /* --------------------------------- google --------------------------------- */
@@ -206,5 +207,25 @@ export class AuthService {
     });
     if (!ticket) throw new UnauthorizedException();
     return ticket;
+  }
+
+  async check42Code(code: string): Promise<any> {
+    const response = await this.httpService
+      .post(process.env['42POST_URL'], {
+        grant_type: 'authorization_code',
+        client_id: process.env['42UID'],
+        client_secret: process.env['42SECRET'],
+        code: code,
+        redirect_uri: process.env['42CALLBACK'],
+      })
+      .pipe(
+        tap((response) => {
+          console.log(response);
+        }),
+        map((response) => {
+          console.log(response);
+        }),
+      );
+    console.log('post sent to 42 API');
   }
 }
