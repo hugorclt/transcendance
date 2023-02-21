@@ -57,7 +57,6 @@ function GoogleAuth() {
     });
     setSuccess(true);
     setIsVisible("block");
-    console.log("from: ", from)
     navigate(from, { replace: true });
   }
 
@@ -74,6 +73,7 @@ function GoogleAuth() {
           }}
         />
       </GoogleOAuthProvider>
+
       <SubmitNote />
     </div>
   );

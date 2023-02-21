@@ -62,7 +62,7 @@ export class AuthController {
     return this.authService.refreshToken(req.user.sub, req.user.refreshToken, res);
   }
 
-  @Post('logout')
+  @Get('logout')
   @UseGuards(AccessAuthGard)
   logout(@Request() req) {
     this.authService.logout(req.sub);
