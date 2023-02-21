@@ -15,6 +15,8 @@ import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginTicket, OAuth2Client } from 'google-auth-library';
 import { Type } from '@prisma/client';
+import { Api42LogDto, Api42CodeDto } from './dto/api42-log.dto';
+import { HttpService } from '@nestjs/axios';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -27,6 +29,7 @@ export class AuthService {
     private usersService: UsersService,
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private readonly httpService: HttpService,
   ) {}
 
   /* ---------------------------------- Local --------------------------------- */
@@ -41,6 +44,34 @@ export class AuthService {
       email: credentials.email,
       password: hash,
     });
+  }
+  /* ----------------------------------- 42 ----------------------------------- */
+  async handle42Login(
+    api42CodeDto: Api42CodeDto,
+    @Response({ passthrough: true }) res,
+  ): Promise<any> {
+    console.log('received 42 login request');
+    console.log(api42CodeDto.code);
+    //----- CHECK FOR CODE AUTHENTICITY BY POSTING CODE TO GET ACCESS TOKEN -----
+    const check = checkCodeAuthenticity({ code: api42CodeDto.code });
+    if (!check) {
+      console.log('code is invalid');
+      throw new UnauthorizedException();
+    }
+    try {
+      const user = await this.usersService.findOne42User('');
+      console.log('found 42 user in db');
+      return this.login(user, res);
+    } catch (err) {
+      console.log('creating new 42 user in db');
+      const user = await this.usersService.create42({
+        email: '',
+        username: '',
+        password: 'none',
+        type: Type.API42,
+      });
+      return this.login(user, res);
+    }
   }
 
   /* --------------------------------- google --------------------------------- */

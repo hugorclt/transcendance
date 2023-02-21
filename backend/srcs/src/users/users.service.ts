@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto, CreateGoogleUserDto } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  CreateGoogleUserDto,
+  Create42UserDto,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Status, Type } from '@prisma/client';
@@ -23,6 +27,13 @@ export class UsersService {
   ): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
       data: createGoogleUserDto,
+    });
+    return exclude(user, ['password', 'type', 'refreshToken']);
+  }
+
+  async create42(create42UserDto: Create42UserDto): Promise<ReturnUserEntity> {
+    const user: UserEntity = await this.prisma.user.create({
+      data: create42UserDto,
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
@@ -71,6 +82,17 @@ export class UsersService {
       where: {
         email: email,
         type: Type.GOOGLE,
+      },
+    });
+    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    throw new NotFoundException();
+  }
+
+  async findOne42User(email: string): Promise<ReturnUserEntity> {
+    const user: UserEntity = await this.prisma.user.findFirst({
+      where: {
+        email: email,
+        type: Type.API42,
       },
     });
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);

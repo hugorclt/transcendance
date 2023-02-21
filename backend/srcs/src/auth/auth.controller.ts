@@ -31,10 +31,12 @@ export class AuthController {
     return this.authService.handleGoogleLogin({ token: token }, res);
   }
 
-  @Get('42/login')
-  @UseGuards(Auth42Guard)
-  handle42Login() {
-    return { msg: '42 OK' };
+  @Post('42/login')
+  async handle42Login(
+    @Body('code') code,
+    @Response({ passthrough: true }) res,
+  ): Promise<any> {
+    return this.authService.handle42Login({ code: code }, res);
   }
 
   @Post('login')
