@@ -231,7 +231,7 @@ export class AuthService {
         )
         .pipe(
           map((response: AxiosResponse) => {
-            console.log('response: ', response.data);
+            // console.log('response: ', response.data);
             return response.data;
           }),
         )

@@ -36,7 +36,7 @@ export class AuthController {
     @Request() req,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    console.log(JSON.stringify(req.data));
+    // console.log(JSON.stringify(req.data));
   }
 
   @Post('42/login')
