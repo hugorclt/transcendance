@@ -73,7 +73,6 @@ function GoogleAuth() {
           }}
         />
       </GoogleOAuthProvider>
-
       <SubmitNote />
     </div>
   );
