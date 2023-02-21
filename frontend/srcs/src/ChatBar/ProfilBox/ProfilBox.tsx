@@ -1,7 +1,8 @@
 import React from "react";
-import {  CircularProgressbarWithChildren } from "react-circular-progressbar";
+import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import logo from "../../assets/42.jpg";
+import LogoutButton from "../LogoutButton.tsx/LogoutButton";
 
 function ProfilBox() {
   return (
@@ -21,9 +22,7 @@ function ProfilBox() {
           </div>
         </div>
         <div className="mx-6">
-            <p className="text-lg font-semibold text-orange-100 mb-0">
-              hrecolet
-            </p>
+          <p className="text-lg font-semibold text-orange-100 mb-0">hrecolet</p>
           <select
             className="outline-none bg-gray-900 text-orange-100 opacity-60 text-sm font-extralight"
             name="status"
@@ -33,6 +32,7 @@ function ProfilBox() {
             <option value="absent">Absent</option>
             <option value="invisible">Invisible</option>
           </select>
+          <LogoutButton />
         </div>
       </div>
     </a>

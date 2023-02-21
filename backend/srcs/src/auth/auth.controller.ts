@@ -55,11 +55,12 @@ export class AuthController {
 
   @Get('refresh')
   @UseGuards(RefreshAuthGard)
-  refreshToken(
-    @Request() req,
-    @Response({ passthrough: true }) res
-  ) {
-    return this.authService.refreshToken(req.user.sub, req.user.refreshToken, res);
+  refreshToken(@Request() req, @Response({ passthrough: true }) res) {
+    return this.authService.refreshToken(
+      req.user.sub,
+      req.user.refreshToken,
+      res,
+    );
   }
 
   @Get('logout')
