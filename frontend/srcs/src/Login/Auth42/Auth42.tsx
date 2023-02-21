@@ -1,25 +1,25 @@
 import React from "react";
-import Login42 from "react-42-login";
+
+function dec2hex (dec : number) {
+  return dec.toString(16).padStart(2, "0")
+}
+
+function generateId (len : number) {
+  var arr = new Uint8Array((len || 40) / 2)
+  window.crypto.getRandomValues(arr)
+  return Array.from(arr, dec2hex).join('')
+}
 
 function Auth42() {
-  const id42: string = process.env["REACT_APP_42UID"]!;
+  const reqUrl: string = process.env["REACT_APP_42URL"]!;
 
   return (
     <div>
-      <Login42
-        clientId={id42}
-        onFailure={() => {
-          console.log("NOO")
-        }}
-        onSuccess={() => {
-          console.log("Yes")
-
-        }}
-        route="/auth/42/login"
-        redirectUri="http://localhost:3002/"
-      >
-        42
-      </Login42>
+      <a href={reqUrl}>
+        <button>
+          42Login
+        </button>
+      </a>
     </div>
   );
 }
