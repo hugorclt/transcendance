@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RoomsModule } from './rooms/rooms.module';
 import { HttpModule } from '@nestjs/axios';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { HttpModule } from '@nestjs/axios';
     RoomsModule,
     JwtModule,
     HttpModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService, PrismaService],
