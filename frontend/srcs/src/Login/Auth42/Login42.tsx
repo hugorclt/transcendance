@@ -13,7 +13,7 @@ function Login42() {
 
     useEffect(() => {
         const code = queryParameters.get("code")
-        axios.post("/auth/login/42", {
+        axios.post("/auth/42/login", {
             code: code,
         }).then((res: AxiosResponse) => {
             navigate(from, { replace: true });

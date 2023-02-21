@@ -2,16 +2,19 @@
 import LoginForm from "./LoginForm/LoginForm";
 import Icon42 from "./Icon42";
 import GoogleAuth from "./GoogleAuth/GoogleAuth";
-import Auth42 from "./Auth42/Auth42";
 
 function Signin() {
+  const url42: string = process.env["REACT_APP_42URL"]!
+
   return (
     <div>
       <div className="form-container sign-in-container">
         <h1>Sign in</h1>
-        <div className="social-container">
+        <div className="flex social-container">
           <GoogleAuth />
-          <Auth42 />
+          <a href={url42} className="social">
+            <Icon42 />
+          </a>
         </div>
         <span>or use your account</span>
         <LoginForm />
