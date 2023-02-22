@@ -3,6 +3,7 @@ import axios from "../../../services/axios";
 import { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import Loading from "../../Loading/Loading";
+import useAuth from "../../../hooks/useAuth";
 
 function Login42() {
   const queryParameters = new URLSearchParams(window.location.search);
@@ -10,6 +11,7 @@ function Login42() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
   const querySent = useRef(false);
+  const { setAuth } = useAuth();
 
   useEffect(() => {
     if (!querySent.current) {
@@ -18,7 +20,10 @@ function Login42() {
         .post("/auth/42/login", {
           code: code,
         })
-        .then((res: AxiosResponse) => {
+        .then((response: AxiosResponse) => {
+          const username = response?.data.username;
+          const accessToken = response?.data.access_token;
+          setAuth({ username, accessToken });
           navigate(from, { replace: true });
         })
         .catch((err: AxiosError) => {
