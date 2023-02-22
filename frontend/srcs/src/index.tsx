@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { AuthProvider } from "./services/AuthProvider";
+import { AuthProvider } from "./services/Auth/AuthProvider";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
