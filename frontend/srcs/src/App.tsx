@@ -12,6 +12,7 @@ import MissingPage from "./views/MissingPage/MissingPage";
 import RequireAuth from "./services/Auth/RequireAuth";
 import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Auth42/Login42";
+import ChatView from "./views/ChatView/ChatView";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/lobby" element={<LobbyPage />} />
           <Route path="/leaderboards" element={<LeaderboardsPage />} />
+          <Route path="/chat" element={<ChatView />} />
         </Route>
       </Route>
 

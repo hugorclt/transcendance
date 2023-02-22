@@ -28,8 +28,8 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(AccessAuthGard)
-  async me(@Request() req): Promise<ReturnUserEntity> {
-    return this.usersService.findOne(req.user.sub);
+  async me(@Request() req) {
+    return await this.usersService.findOne(req.user.sub);
   }
 
   @Post('google/login')
@@ -78,6 +78,6 @@ export class AuthController {
   @UseGuards(AccessAuthGard)
   logout(@Request() req) {
     this.authService.logout(req.user.sub);
-    return req.user.sub;
+    return req.sub;
   }
 }
