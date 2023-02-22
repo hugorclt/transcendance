@@ -7,7 +7,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  Auth42Guard,
   AccessAuthGard,
   RefreshAuthGard,
   LocalAuthGuard,
@@ -29,14 +28,6 @@ export class AuthController {
     @Response({ passthrough: true }) res,
   ): Promise<any> {
     return this.authService.handleGoogleLogin({ token: token }, res);
-  }
-
-  @Get('42/callback')
-  async handle42callback(
-    @Request() req,
-    @Response({ passthrough: true }) res,
-  ): Promise<any> {
-    // console.log(JSON.stringify(req.data));
   }
 
   @Post('42/login')

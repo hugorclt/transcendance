@@ -18,7 +18,6 @@ export class accessStrategy extends PassportStrategy(Strategy, 'access') {
   }
 
   async validate(payload: jwtPayload): Promise<any> {
-    console.log('access');
     if (payload === null) {
       throw new UnauthorizedException();
     }

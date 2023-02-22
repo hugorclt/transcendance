@@ -6,7 +6,6 @@ function RequireAuth() {
   const { auth } = useAuth();
   const location = useLocation();
 
-  console.log(auth.accessToken);
   return auth?.accessToken ? (
     <Outlet />
   ) : (

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import axios from "../../../services/axios";
 import { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -9,20 +9,23 @@ function Login42() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
+  const querySent = useRef(false);
 
   useEffect(() => {
-    const code = queryParameters.get("code");
-    axios
-      .post("/auth/42/login", {
-        code: code,
-      })
-      .then((res: AxiosResponse) => {
-        navigate(from, { replace: true });
-      })
-      .catch((err: AxiosError) => {
-        console.log("Error from server");
-        navigate("/login", { replace: true });
-      });
+    if (!querySent.current) {
+      const code = queryParameters.get("code");
+      axios
+        .post("/auth/42/login", {
+          code: code,
+        })
+        .then((res: AxiosResponse) => {
+          navigate(from, { replace: true });
+        })
+        .catch((err: AxiosError) => {
+          navigate("/login", { replace: true });
+        });
+    }
+    querySent.current = true;
   }, []);
 
   return (
