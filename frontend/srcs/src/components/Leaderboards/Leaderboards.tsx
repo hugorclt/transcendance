@@ -18,7 +18,6 @@ function Leaderboards() {
     const getUsers = async () => {
       try {
         const response = await axiosPrivate.get("/users");
-        console.log(response.data);
         setUsers(response.data);
       } catch (err) {
         console.error(err);
