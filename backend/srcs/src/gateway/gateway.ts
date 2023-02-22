@@ -7,10 +7,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @WebSocketGateway()
 export class MyGateway implements OnModuleInit {
 
-    constructor (
-        private readonly prisma : PrismaService
+    // constructor (
+    //     private readonly prisma : PrismaService
 
-    ) {}
+    // ) {}
 
     @WebSocketServer()
     server: Server;
@@ -22,15 +22,15 @@ export class MyGateway implements OnModuleInit {
         });
      }
 
-    @SubscribeMessage('newMessage')
-    onNewMessage(@MessageBody() body : any) {
-        console.log(body);
-        this.server.emit('onMessage',{
-            // user: username,
-            msg: 'New Message',
-            content: body,
-        });
-    }
+     @SubscribeMessage('newMessage')
+     onNewMessage(@MessageBody() payload: {username: string, content: string}) {
+       console.log(payload);
+       this.server.emit('onMessage', {
+         username: payload.username,
+         msg: 'New Message',
+         content: payload.content,
+       });
+     }
 }
 
 // Chat (userInterface) needs to send  events to the websocket gateway using the websocket protocol (not http)

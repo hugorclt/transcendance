@@ -9,18 +9,23 @@ type MessagePayload = {
   msg: string;
 };
 
+
 export const Websocket = () => {
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState<MessagePayload[]>([]);
   const socket = useContext(WebsocketContext);
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
+  const [username, setUsername] = useState("");
+  // let username : string;
 
   useEffect(() => {
     axiosPrivate
       .get("/auth/me")
       .then((response: AxiosResponse) => {
         console.log("reponse: ", response.data);
+        setUsername(response.data.username);
+        console.log(username);
       })
       .catch((error: AxiosError) => {
         console.log(error.message);
@@ -30,11 +35,9 @@ export const Websocket = () => {
     });
     socket.on("onMessage", (newMessage: MessagePayload) => {
       console.log("onMessage event received!");
-      console.log(auth.username);
       console.log(newMessage);
       setMessages((prev) => [...prev, newMessage]);
     });
-
     return () => {
       console.log("Unregistering events...");
       socket.off("connect"); // if you take of this line connection happens twice
@@ -49,13 +52,17 @@ export const Websocket = () => {
   };
 
   const onSubmit = () => {
-    socket.emit("newMessage", value);
+    socket.emit("newMessage", {
+      username: username,
+      content: value
+    });
     setValue("");
   };
+  
 
   return (
     <div>
-      <div>
+      <div> 
         <h1>Websocket Component</h1>
         <div>
           {messages.length === 0 ? (
@@ -64,7 +71,7 @@ export const Websocket = () => {
             <div>
               {messages.map((msg) => (
                 <div>
-                  <p>{msg.content}</p>
+                  <p>{msg.content} : {msg.content}</p>
                 </div>
               ))}
             </div>
