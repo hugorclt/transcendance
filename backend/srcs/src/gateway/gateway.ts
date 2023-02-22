@@ -1,9 +1,16 @@
 import { OnModuleInit } from '@nestjs/common';
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io'
+import { PrismaService } from 'src/prisma/prisma.service';
+
 
 @WebSocketGateway()
 export class MyGateway implements OnModuleInit {
+
+    constructor (
+        private readonly prisma : PrismaService
+
+    ) {}
 
     @WebSocketServer()
     server: Server;
@@ -19,6 +26,7 @@ export class MyGateway implements OnModuleInit {
     onNewMessage(@MessageBody() body : any) {
         console.log(body);
         this.server.emit('onMessage',{
+            // user: username,
             msg: 'New Message',
             content: body,
         });
