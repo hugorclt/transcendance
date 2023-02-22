@@ -30,7 +30,7 @@ export const Websocket = () => {
     });
     socket.on("onMessage", (newMessage: MessagePayload) => {
       console.log("onMessage event received!");
-      console.log(auth.accessToken);
+      console.log(auth.username);
       console.log(newMessage);
       setMessages((prev) => [...prev, newMessage]);
     });
