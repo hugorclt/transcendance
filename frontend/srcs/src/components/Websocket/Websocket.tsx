@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../../services/WebSocket/WebsocketContext";
 import useAuth from "../../hooks/useAuth";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
 
 type MessagePayload = {
   content: string;
@@ -11,9 +13,18 @@ export const Websocket = () => {
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState<MessagePayload[]>([]);
   const socket = useContext(WebsocketContext);
-  const {auth} = useAuth()
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
+    axiosPrivate
+      .get("/auth/me")
+      .then((response: AxiosResponse) => {
+        console.log("reponse: ", response.data);
+      })
+      .catch((error: AxiosError) => {
+        console.log(error.message);
+      });
     socket.on("connect", () => {
       console.log("Connected!");
     });
@@ -31,7 +42,7 @@ export const Websocket = () => {
     };
   }, []);
 
-  const onKeyDown = (e : any) => {
+  const onKeyDown = (e: any) => {
     if (e.keyCode === 13) {
       onSubmit();
     }
@@ -70,8 +81,6 @@ export const Websocket = () => {
     </div>
   );
 };
-
-
 
 // export type Auth = {
 //   username: string;
