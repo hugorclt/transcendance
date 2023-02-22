@@ -5,6 +5,8 @@ import {
     OnGatewayConnection,
     OnGatewayDisconnect
 } from '@nestjs/websockets';
+import { Socket } from 'dgram';
+import { Server } from 'http';
 
 type Player = {
     posX : number
@@ -22,10 +24,11 @@ type Ball = {
     radius : number
 }
 
-@WebSocketGateway()
+@WebSocketGateway({
+    namespace: '/game',
+})
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-    @WebSocketServer() server;
-    users: number = 0;
+    @WebSocketServer() wss: Server;
 
     initBall() {
         var ball: Ball = { 
@@ -182,21 +185,25 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
     }
     
+    afterInit(server: any) {
+        console.log("initialized");
+    }
 
     async handleConnection() {
-        this.users++;
-
-        this.server.emit('users', this.users);
+        console.log("new connection")
     }
 
     async handleDisconnect() {
-        this.users--;
-        
-        this.server.emit('users', this.users);
+        console.log("user disconnected")
     }
 
-    @SubscribeMessage('chat')
-    async onChat(client, message) {
-        client.broadcast.emit('chat', message);
+    @SubscribeMessage("sendUp") 
+    handleMoveUp (client: Socket){
+        console.log("Up received")
+    }
+
+    @SubscribeMessage("sendDown") 
+    handleMoveDown (client: Socket){
+        console.log("Down received")
     }
 }

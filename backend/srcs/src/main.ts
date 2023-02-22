@@ -4,18 +4,41 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-client-exception.filter';
 import cookieParser from 'cookie-parser';
+import { IoAdapter } from '@nestjs/platform-socket.io';
+import { ServerOptions } from 'socket.io';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import {join} from 'path'
 
 declare const module: any;
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+export class SocketAdapter extends IoAdapter {
+  createIOServer(port: number, options?: ServerOptions & {
+    namespace?: string;
+    server?: any;
+    },
+  ) {
+    const server = super.createIOServer(port, {
+      ...options,
+      cors: {
+        origin: "http://localhost:3002/",
+        methods: ['GET', "POST"],
+      },
+    });
+    return server
+  }
+}
 
+async function bootstrap() {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useStaticAssets(join(__dirname, '..', 'static'));
+  
   app.use(cookieParser());
   app.enableCors({
     allowedHeaders: ['content-type', 'Authorization'],
     origin: 'http://localhost:3002',
     credentials: true,
   });
+  app.useWebSocketAdapter(new SocketAdapter(app));
 
   //===== Validation Pipe to check for input errors =====
   app.useGlobalPipes(new ValidationPipe({ whitelist: true}));

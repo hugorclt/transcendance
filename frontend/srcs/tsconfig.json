@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "hooks/useAuth.tsx", "src/components/Login/RequireAuth/RequireAuth.tsx"  ]
 }
