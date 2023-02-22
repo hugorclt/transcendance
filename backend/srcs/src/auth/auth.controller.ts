@@ -16,11 +16,21 @@ import { Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { LocalRegisterDto } from './dto/log-user.dto';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 @ApiTags('login')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
+
+  @Get('me')
+  @UseGuards(AccessAuthGard)
+  async me(@Request() req): Promise<ReturnUserEntity> {
+    return this.usersService.findOne(req.sub);
+  }
 
   @Post('google/login')
   async googleLogin(
