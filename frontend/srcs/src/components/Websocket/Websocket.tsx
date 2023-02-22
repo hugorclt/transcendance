@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../../services/WebSocket/WebsocketContext";
 import useAuth from "../../hooks/useAuth";
+import { axiosPrivate } from "../../services/axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 type MessagePayload = {
   content: string;
@@ -14,12 +16,17 @@ export const Websocket = () => {
   const {auth} = useAuth()
 
   useEffect(() => {
+    axiosPrivate.get('/auth/me').then((response : AxiosResponse) => {
+      console.log(response.data);
+    }).catch((error : AxiosError) => {
+      console.log(error);
+    })
     socket.on("connect", () => {
       console.log("Connected!");
     });
     socket.on("onMessage", (newMessage: MessagePayload) => {
       console.log("onMessage event received!");
-      console.log(auth.accessToken);
+      console.log(auth.username);
       console.log(newMessage);
       setMessages((prev) => [...prev, newMessage]);
     });
