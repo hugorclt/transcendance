@@ -100,29 +100,9 @@ export const Websocket = () => {
     );
   };
 
-  const renderUsernameForm = () => {
-    const onSubmit = (e : any) => {
-      e.preventDefault();
-      setUsername(e.target.elements.username.value);
-    };
-
-    return (
-      <form onSubmit={onSubmit}>
-        <label>
-          Please enter your username:
-          <input type="text" name="username" />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
-    );
-  };
-
   return (
     <div className="app-container">
-      {username ? renderChat() : renderUsernameForm()}
+      {renderChat()}
     </div>
   );
-
-
-
 };
