@@ -1,14 +1,20 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import ChatBar from "../ChatBar/ChatBar";
-import Games from "../Game/Game";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
 
+  function handleClick() {
+    navigate("/game");
+  }
+
   return (
     <div>
-      HomePage
+      Home
+      <br />
+      <button type="button" onClick={handleClick}>
+        Play
+      </button>
     </div>
   );
 }

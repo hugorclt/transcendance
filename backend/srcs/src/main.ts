@@ -7,31 +7,33 @@ import cookieParser from 'cookie-parser';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ServerOptions } from 'socket.io';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import {join} from 'path'
+import { join } from 'path';
 
 declare const module: any;
 
 export class SocketAdapter extends IoAdapter {
-  createIOServer(port: number, options?: ServerOptions & {
-    namespace?: string;
-    server?: any;
+  createIOServer(
+    port: number,
+    options?: ServerOptions & {
+      namespace?: string;
+      server?: any;
     },
   ) {
     const server = super.createIOServer(port, {
       ...options,
       cors: {
-        origin: "http://localhost:3002/",
-        methods: ['GET', "POST"],
+        origin: 'http://localhost:3002/',
+        methods: ['GET', 'POST'],
       },
     });
-    return server
+    return server;
   }
 }
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, '..', 'static'));
-  
+
   app.use(cookieParser());
   app.enableCors({
     allowedHeaders: ['content-type', 'Authorization'],
@@ -41,7 +43,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new SocketAdapter(app));
 
   //===== Validation Pipe to check for input errors =====
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true}));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   //===== Swagger Documentation of our API =====
   const config = new DocumentBuilder()

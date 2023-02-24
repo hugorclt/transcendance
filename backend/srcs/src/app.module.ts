@@ -11,7 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { RoomsModule } from './rooms/rooms.module';
 import { HttpModule } from '@nestjs/axios';
 import { GameModule } from './game/game.module';
-import { GatewayModule } from './gateway/gateway.module';
+import { SocketModule } from './socket/socket-module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { GatewayModule } from './gateway/gateway.module';
     JwtModule,
     HttpModule,
     GameModule,
-    GatewayModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService, PrismaService],

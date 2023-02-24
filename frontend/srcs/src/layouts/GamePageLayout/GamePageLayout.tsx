@@ -1,9 +1,9 @@
 import React from "react";
-import ChatBar from "../../components/ChatBar/ChatBar";
 import Game from "../../components/Game/Game";
-import Home from "../../components/Home/Home";
+import GameTest from "../../components/Game/GameTest";
+import ChatBar from "../../components/ChatBar/ChatBar";
 
-function HomePageLayout() {
+function GamePageLayout() {
   return (
     <main>
       <div
@@ -11,7 +11,7 @@ function HomePageLayout() {
         style={{ width: "85vw" }}
       >
         {/* <Game /> Temporary component */}
-        <Home />
+        <GameTest />
       </div>
       <div
         className="inline-block align-top box-border"
@@ -25,4 +25,4 @@ function HomePageLayout() {
   );
 }
 
-export default HomePageLayout;
+export default GamePageLayout;
