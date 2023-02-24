@@ -3,10 +3,12 @@ import { WebsocketContext } from "../../services/WebSocket/WebsocketContext";
 import useAuth from "../../hooks/useAuth";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import "./Websocket.css"
 
 type MessagePayload = {
   content: string;
   msg: string;
+  username: string;
 };
 
 export const Websocket = () => {
@@ -15,60 +17,77 @@ export const Websocket = () => {
   const socket = useContext(WebsocketContext);
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
+  const [username, setUsername] = useState("");
+  // let username : string;
 
   useEffect(() => {
     axiosPrivate
       .get("/auth/me")
       .then((response: AxiosResponse) => {
-        console.log("reponse: ", response.data);
+        console.log(response.data);
+        setUsername(response.data.username);
       })
       .catch((error: AxiosError) => {
         console.log(error.message);
       });
     socket.on("connect", () => {
-      console.log("Connected!");
+      // console.log("Connected!");
     });
     socket.on("onMessage", (newMessage: MessagePayload) => {
-      console.log("onMessage event received!");
-      console.log(auth.username);
-      console.log(newMessage);
       setMessages((prev) => [...prev, newMessage]);
     });
-
     return () => {
-      console.log("Unregistering events...");
-      socket.off("connect"); // if you take of this line connection happens twice
+      socket.off("connect");
       socket.off("onMessage");
     };
   }, []);
 
   const onKeyDown = (e: any) => {
     if (e.keyCode === 13) {
+      e.preventDefault();
       onSubmit();
     }
   };
 
   const onSubmit = () => {
-    socket.emit("newMessage", value);
+    socket.emit("newMessage", {
+      username: username,
+      content: value,
+    });
     setValue("");
   };
 
-  return (
-    <div>
-      <div>
-        <h1>Websocket Component</h1>
-        <div>
+  const renderMessage = (msg : any, index : any) => {
+    const isMe = msg.username === username;
+    const sender = isMe ? "" : <div className="sender">{msg.username}</div>;
+
+    return (
+      <div key={index} className={`chat-message ${isMe ? "me" : ""}`}>
+        <img
+          className="avatar"
+          src={`https://picsum.photos/id/${index + 10}/50/50`}
+          alt="Avatar"
+        />
+        <div className="message-container">
+          {sender}
+          <div className="message">{msg.content}</div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderChat = () => {
+    return (
+      <div className="chat-container">
+        <div className="chat-header">Chat Component</div>
+        <div className="chat-messages">
           {messages.length === 0 ? (
             <div></div>
           ) : (
-            <div>
-              {messages.map((msg) => (
-                <div>
-                  <p>{msg.content}</p>
-                </div>
-              ))}
-            </div>
+            <div>{messages.map(renderMessage)}</div>
           )}
+        </div>
+        <div className="chat-input">
           <input
             type="text"
             value={value}
@@ -78,11 +97,12 @@ export const Websocket = () => {
           <button onClick={onSubmit}>Submit</button>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="app-container">
+      {renderChat()}
     </div>
   );
 };
-
-// export type Auth = {
-//   username: string;
-//   accessToken: string;
-// };
