@@ -10,7 +10,6 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RoomsModule } from './rooms/rooms.module';
 import { HttpModule } from '@nestjs/axios';
-import { GameModule } from './game/game.module';
 import { SocketModule } from './socket/socket-module';
 
 @Module({
@@ -22,7 +21,6 @@ import { SocketModule } from './socket/socket-module';
     RoomsModule,
     JwtModule,
     HttpModule,
-    GameModule,
     SocketModule,
   ],
   controllers: [AppController],

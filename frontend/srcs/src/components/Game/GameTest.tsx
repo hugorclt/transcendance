@@ -6,6 +6,7 @@ export const GameTest = () => {
 
   useEffect(() => {
     console.log("game component mounted");
+    console.log(socket.id);
     socket.on("connect", () => {
       console.log("Connected to game socket!");
     });

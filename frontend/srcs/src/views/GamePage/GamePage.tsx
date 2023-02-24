@@ -9,7 +9,7 @@ import {
 function GamePage() {
   return (
     <WebSocketGameProvider value={socket}>
-      <GamePageLayout />
+      <GameTest />
     </WebSocketGameProvider>
   );
 }

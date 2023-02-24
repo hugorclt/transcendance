@@ -11,36 +11,16 @@ import { join } from 'path';
 
 declare const module: any;
 
-export class SocketAdapter extends IoAdapter {
-  createIOServer(
-    port: number,
-    options?: ServerOptions & {
-      namespace?: string;
-      server?: any;
-    },
-  ) {
-    const server = super.createIOServer(port, {
-      ...options,
-      cors: {
-        origin: 'http://localhost:3002/',
-        methods: ['GET', 'POST'],
-      },
-    });
-    return server;
-  }
-}
-
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, '..', 'static'));
 
   app.use(cookieParser());
   app.enableCors({
+    credentials: true,
     allowedHeaders: ['content-type', 'Authorization'],
     origin: 'http://localhost:3002',
-    credentials: true,
   });
-  app.useWebSocketAdapter(new SocketAdapter(app));
 
   //===== Validation Pipe to check for input errors =====
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
@@ -58,12 +38,12 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
-  await app.listen(3000);
-
   //===== Hot Reload Module =====
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }
+
+  await app.listen(3000);
 }
 bootstrap();
