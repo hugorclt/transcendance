@@ -14,14 +14,17 @@ function FriendsList() {
     axiosPrivate
       .get("friendship/friends")
       .then((res: AxiosResponse) => {
-        res.data.forEach((element: any) => {
-          setFriendList([{name: element.username, avatar: element.avatar, status: element.status}]);
-        });
+        const friends = res.data.map((element: any) => ({
+          name: element.username,
+          avatar: element.avatar,
+          status: element.status,
+        }));
+        setFriendList(friends);
       })
       .catch((err: AxiosError) => {
         console.log("Error while fetching friendlist");
       });
-      
+
     socket?.on("on-status-update", (new_status_update) => {
       console.log(new_status_update);
       setFriendList((prev) => [
@@ -35,7 +38,7 @@ function FriendsList() {
     return () => {
       socket?.off("on-status-update");
     };
-  });
+  }, [socket]);
 
   return (
     <div>

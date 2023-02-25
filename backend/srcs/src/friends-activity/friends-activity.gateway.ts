@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 import { OnModuleInit } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FriendshipService } from 'src/friendship/friendship.service';
+import { UsersService } from 'src/users/users.service';
 
 @WebSocketGateway({
   namespace: '/status-update',
@@ -13,7 +14,7 @@ import { FriendshipService } from 'src/friendship/friendship.service';
   },
 })
 export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection {
-  constructor(private prisma: PrismaService, private friendShip: FriendshipService) {};
+  constructor(private prisma: PrismaService, private friendShip: FriendshipService, private usersService: UsersService) {};
 
   @WebSocketServer()
   server: Server;
@@ -33,7 +34,11 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
   async onStatusUpdate(@MessageBody() payload: {userId: string, status: string}): Promise<string> {
     const friends = await this.friendShip.findManyForOneUser(payload.userId);
     friends.forEach(friend => {
-      this.server.to(friend.id).emit("on-status-update", {username: friend.username, avatar: friend.avatar, status: payload.status})
+      console.log(friend.id != payload.userId)
+      if (friend.id != payload.userId) {
+        console.log(friend);
+        this.server.to(friend.id).emit("on-status-update", {username: friend.username, avatar: friend.avatar, status: payload.status})
+      }
     });
     return 'Hello world!';
   }
