@@ -1,5 +1,5 @@
 // import LoginForm from "./LoginForm/LoginForm";
-import LoginForm from "../LoginForm/LoginForm";
+import LoginForm from "./LoginForm/LoginForm";
 import Icon42 from "../Icons/Icon42";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
 

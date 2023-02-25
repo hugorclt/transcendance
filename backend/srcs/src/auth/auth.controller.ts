@@ -7,7 +7,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  Auth42Guard,
   AccessAuthGard,
   RefreshAuthGard,
   LocalAuthGuard,
@@ -17,11 +16,21 @@ import { Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { LocalRegisterDto } from './dto/log-user.dto';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 @ApiTags('login')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
+
+  @Get('me')
+  @UseGuards(AccessAuthGard)
+  async me(@Request() req) {
+    return await this.usersService.findOne(req.user.sub);
+  }
 
   @Post('google/login')
   async googleLogin(
@@ -29,14 +38,6 @@ export class AuthController {
     @Response({ passthrough: true }) res,
   ): Promise<any> {
     return this.authService.handleGoogleLogin({ token: token }, res);
-  }
-
-  @Get('42/callback')
-  async handle42callback(
-    @Request() req,
-    @Response({ passthrough: true }) res,
-  ): Promise<any> {
-    // console.log(JSON.stringify(req.data));
   }
 
   @Post('42/login')
@@ -76,7 +77,7 @@ export class AuthController {
   @Get('logout')
   @UseGuards(AccessAuthGard)
   logout(@Request() req) {
-    this.authService.logout(req.sub);
+    this.authService.logout(req.user.sub);
     return req.sub;
   }
 }

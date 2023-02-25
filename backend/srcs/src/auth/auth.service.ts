@@ -1,10 +1,4 @@
-import { uid } from 'rand-token';
-import {
-  ForbiddenException,
-  Injectable,
-  Response,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Response, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { LocalLogDto, LocalRegisterDto } from './dto/log-user.dto';
 import { GoogleTokenDto, GoogleLogDto } from './dto/google-log.dto';
@@ -15,10 +9,11 @@ import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginTicket, OAuth2Client } from 'google-auth-library';
 import { Type } from '@prisma/client';
-import { Api42LogDto, Api42CodeDto } from './dto/api42-log.dto';
+import { Api42CodeDto, Api42LogDto } from './dto/api42-log.dto';
 import { HttpService } from '@nestjs/axios';
-import { catchError, firstValueFrom, lastValueFrom, map, tap } from 'rxjs';
+import { catchError, lastValueFrom, map, throwError } from 'rxjs';
 import { AxiosError, AxiosResponse } from 'axios';
+import { Api42TokenEntity } from './entities/api42-token.entity';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -52,28 +47,27 @@ export class AuthService {
     api42CodeDto: Api42CodeDto,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    console.log('received 42 login request');
-    console.log(api42CodeDto.code);
     //----- CHECK FOR CODE AUTHENTICITY BY POSTING CODE TO GET ACCESS TOKEN -----
-    const payload = await this.check42Code(api42CodeDto.code);
-    // if (!payload) {
-    //   console.log('code is invalid');
-    //   throw new UnauthorizedException();
-    // }
-    // try {
-    //   const user = await this.usersService.findOne42User(payload.email);
-    //   console.log('found 42 user in db');
-    //   return this.login(user, res);
-    // } catch (err) {
-    //   console.log('creating new 42 user in db');
-    //   const user = await this.usersService.create42({
-    //     email: payload.email,
-    //     username: payload.username,
-    //     password: 'none',
-    //     type: Type.API42,
-    //   });
-    //   return this.login(user, res);
-    // }
+    const tokenEntity = await this.check42Code(api42CodeDto.code);
+    if (!tokenEntity) {
+      throw new UnauthorizedException('42 code is invalid');
+    }
+    const userInfo = await this.get42User(tokenEntity);
+    if (!userInfo) {
+      throw new UnauthorizedException('could not get 42 user info from 42API');
+    }
+    try {
+      const user = await this.usersService.findOne42User(userInfo.email);
+      return this.login(user, res);
+    } catch (err) {
+      const user = await this.usersService.create42({
+        email: userInfo.email,
+        username: userInfo.username,
+        password: 'none',
+        type: Type.API42,
+      });
+      return this.login(user, res);
+    }
   }
 
   /* --------------------------------- google --------------------------------- */
@@ -210,39 +204,69 @@ export class AuthService {
     return ticket;
   }
 
-  async check42Code(code: string): Promise<any> {
-    console.log('42 post url: ', process.env['API42_POST_URL']);
+  // --------------------  42 UTILS ------------------------
+  async get42User(tokenEntity: Api42TokenEntity): Promise<Api42LogDto | null> {
+    const headersRequest = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${tokenEntity.access_token}`,
+    };
+    try {
+      const responseData = await lastValueFrom(
+        this.httpService
+          .get(process.env['API42_ME'], { headers: headersRequest })
+          .pipe(
+            map((response: AxiosResponse) => {
+              return response.data;
+            }),
+          )
+          .pipe(
+            catchError((error: AxiosError) => {
+              return throwError(() => new Error('test'));
+            }),
+          ),
+      );
+      const userInfo: Api42LogDto = {
+        username: responseData.login,
+        email: responseData.email,
+      };
+      return userInfo;
+    } catch (error) {
+      return null;
+    }
+  }
 
+  async check42Code(code: string): Promise<Api42TokenEntity | null> {
     const headersRequest = {
       'Content-Type': 'application/json',
     };
-    const responseData = await lastValueFrom(
-      this.httpService
-        .post(
-          process.env['API42_POST_URL'],
-          {
-            grant_type: 'authorization_code',
-            client_id: process.env['API42_ID'],
-            client_secret: process.env['API42_SECRET'],
-            code: code,
-            redirect_uri: process.env['API42_CALLBACK'],
-          },
-          { headers: headersRequest },
-        )
-        .pipe(
-          map((response: AxiosResponse) => {
-            // console.log('response: ', response.data);
-            return response.data;
-          }),
-        )
-        .pipe(
-          catchError((error: AxiosError) => {
-            console.log(error);
-            // console.log(error.cause);
-            throw 'An error occurred!';
-          }),
-        ),
-    );
-    console.log('post sent to 42 API');
+    try {
+      const responseData = await lastValueFrom(
+        this.httpService
+          .post(
+            process.env['API42_POST_URL'],
+            {
+              grant_type: 'authorization_code',
+              client_id: process.env['API42_ID'],
+              client_secret: process.env['API42_SECRET'],
+              code: code,
+              redirect_uri: process.env['API42_CALLBACK'],
+            },
+            { headers: headersRequest },
+          )
+          .pipe(
+            map((response: AxiosResponse) => {
+              return response.data;
+            }),
+          )
+          .pipe(
+            catchError((error: AxiosError) => {
+              return throwError(() => new Error('test'));
+            }),
+          ),
+      );
+      return responseData;
+    } catch (error) {
+      return null;
+    }
   }
 }

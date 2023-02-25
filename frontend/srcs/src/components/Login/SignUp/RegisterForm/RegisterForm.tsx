@@ -2,8 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import React, { CSSProperties } from "react";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../Login.css";
-import axios from "../../../services/axios";
+import "../../Login.css";
+import axios from "../../../../services/axios";
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PASSWORD_REGEX =

@@ -1,54 +1,54 @@
-import { PrismaClient, Status } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const dominique = await prisma.user.create({
+    data: {
+      username: "Dominique",
+      email: "dominique@example.com",
+      password: await bcrypt.hash("password", 10),
+    },
+  });
+  const hugo = await prisma.user.create({
+    data: {
+      username: "Hugo",
+      email: "hugo@example.com",
+      password: await bcrypt.hash("password", 10),
+    },
+  });
+  const dylan = await prisma.user.create({
+    data: {
+      username: "Dylan",
+      email: "dylan@example.com",
+      password: await bcrypt.hash("password", 10),
+    },
+  });
+  const ryad = await prisma.user.create({
+    data: {
+      username: "Ryad",
+      email: "ryad@example.com",
+      password: await bcrypt.hash("password", 10),
+    },
+  });
 
-    const user1 = await prisma.user.upsert({
-        where: { username: 'Dylanus'},
-        update: {},
-        create: {
-            username: 'Dylanus',
-            email: 'bidon@gmail.com',
-            password: 'grosmdpbb',
-            avatar: 'none',
-            status: Status.CONNECTED,
-            balance: 100000000,
-        },
-    });
-
-    const user2 = await prisma.user.upsert({
-        where: { username: 'Hugus'},
-        update: {},
-        create: {
-            username: 'Hugus',
-            email: 'hugrecolet@gmail.com',
-            password: 'grosmdpbb',
-            avatar: 'none',
-            status: Status.CONNECTED,
-            balance: 100000000,
-        },
-    });
-
-    const user3 = await prisma.user.upsert({
-        where: { username: 'Dominus'},
-        update: {},
-        create: {
-            username: 'Dominus',
-            email: 'dominus@gmail.com',
-            password: 'grosmdpbb',
-            avatar: 'none',
-            balance: 100000000,
-        },
-    });
-
+  const hugoFriendship = await prisma.friendShip.create({
+    data: {
+      userOneId: dominique.id,
+      userTwoId: hugo.id,
+    },
+  });
+  const dylanFriendship = await prisma.friendShip.create({
+    data: {
+      userOneId: dylan.id,
+      userTwoId: ryad.id,
+    },
+  });
 }
 
 main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+  .catch((e) => console.error(e))
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

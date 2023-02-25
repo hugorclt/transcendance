@@ -23,7 +23,6 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   }
 
   async validate(req: Request, payload: any): Promise<any> {
-    console.log('refresh guard');
     const refreshToken = req?.cookies['jwt'];
 
     if (!refreshToken) throw new UnauthorizedException();

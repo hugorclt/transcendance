@@ -1,11 +1,11 @@
 import React, { CSSProperties, useState } from "react";
-import {axiosClient} from "../../../services/axios";
+import { axiosClient } from "../../../../services/axios";
 
-import "../Login.css";
+import "../../Login.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { AxiosError, AxiosResponse } from "axios";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "../../../../hooks/useAuth";
 
 function LoginForm() {
   const { setAuth } = useAuth();
