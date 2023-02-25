@@ -11,6 +11,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { RoomsModule } from './rooms/rooms.module';
 import { HttpModule } from '@nestjs/axios';
 import { GameModule } from './game/game.module';
+import { FriendshipController } from './friendship/friendship.controller';
+import { FriendshipModule } from './friendship/friendship.module';
+import { FriendshipService } from './friendship/friendship.service';
 
 @Module({
   imports: [
@@ -22,8 +25,9 @@ import { GameModule } from './game/game.module';
     JwtModule,
     HttpModule,
     GameModule,
+    FriendshipModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, AuthService, PrismaService],
+  controllers: [AppController, FriendshipController],
+  providers: [AppService, AuthService, PrismaService, FriendshipService],
 })
 export class AppModule {}

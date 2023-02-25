@@ -31,7 +31,7 @@ function ManageBar() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        axiosPrivate.post("/users/befriend", { username: username })
+        axiosPrivate.post("/friendship/create", { username: username })
     }
 
   return (
