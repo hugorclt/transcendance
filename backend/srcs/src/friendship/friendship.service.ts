@@ -10,7 +10,6 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { exclude } from 'src/utils/exclude';
 import { CreateFriendshipDto } from './dto/create-friendship.dto';
 import { UpdateFriendshipDto } from './dto/update-friendship.dto';
-import { Friendship } from './entities/friendship.entity';
 
 @Injectable()
 export class FriendshipService {

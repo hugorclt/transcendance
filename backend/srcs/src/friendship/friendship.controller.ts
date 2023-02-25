@@ -5,7 +5,6 @@ import { UpdateFriendshipDto } from './dto/update-friendship.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { ApiTags } from '@nestjs/swagger';
 import { FriendShip } from '@prisma/client';
-import { UserEntity } from 'src/users/entities/user.entity';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 
 @Controller('friendship')

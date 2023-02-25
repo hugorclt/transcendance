@@ -35,7 +35,7 @@ function ProfilBox() {
   var changeStatus: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const optionSelected = event.target.value;
     const color: string[] = ["#19e650", "#e6b319", "#8a8a8a"];
-    const status: string[] = ["CONNECTED", "ASBENT", "AWAY"];
+    const status: string[] = ["CONNECTED", "AWAY", "DISCONNECTED"];
 
     color.map((color, index) => {
       if (status[index] === optionSelected) {
@@ -80,8 +80,8 @@ function ProfilBox() {
             onChange={changeStatus}
           >
             <option value="CONNECTED">Online</option>
-            <option value="ASBENT">Absent</option>
-            <option value="AWAY">Invisible</option>
+            <option value="AWAY">Absent</option>
+            <option value="DISCONNECTED">Invisible</option>
           </select>
         </div>
         <LogoutButton />
