@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ChangeEventHandler, SyntheticEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, ChangeEventHandler, SyntheticEvent, useContext, useEffect, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import logo from "../../../assets/images/42.jpg";
@@ -6,6 +6,7 @@ import LogoutButton from "../LogoutButton.tsx/LogoutButton";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
+import { StatusContext } from "../../../statusPageContext";
 
 type User = {
   id: string;
@@ -20,6 +21,7 @@ function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useState<User>();
   const [color, setColor] = useState("#19e650");
+  const socket = useContext(StatusContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,7 +46,11 @@ function ProfilBox() {
           .post("/users/me/status", {
             status: status[index],
           })
-          .then((res: AxiosResponse) => setUser(res.data))
+          .then((res: AxiosResponse) => {
+            console.log("je emit mon status");
+            socket?.emit("status-update", {id: res.data.id, status: status[index]})
+            setUser(res.data)
+          })
           .catch((res: AxiosError) =>
             navigate("/login", { state: { from: location }, replace: true })
           );

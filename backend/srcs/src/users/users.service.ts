@@ -118,12 +118,10 @@ export class UsersService {
   }
 
   async updateStatus(id: string, status: string) {
-    console.log("status", status);
     const user: UserEntity = await this.prisma.user.update({
       where: { id },
       data: { status: status as Status },
     });
-    console.log(user);
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);
     throw new NotFoundException();
   }
