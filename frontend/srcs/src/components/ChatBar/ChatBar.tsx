@@ -9,7 +9,7 @@ function ChatBar() {
         <div className="pt-4 pb-2 px-6">
           <ProfilBox />
         </div>
-        <hr className="bg-orange-200 my-2" />
+        <hr className="bg-orange-200" />
         <FriendsList />
       </div>
     </div>

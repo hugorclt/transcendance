@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ChangeEventHandler, SyntheticEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, ChangeEventHandler, SyntheticEvent, useContext, useEffect, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import logo from "../../../assets/images/42.jpg";
@@ -6,6 +6,7 @@ import LogoutButton from "../LogoutButton.tsx/LogoutButton";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
+import { StatusContext } from "../../../statusPageContext";
 
 type User = {
   id: string;
@@ -20,6 +21,7 @@ function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useState<User>();
   const [color, setColor] = useState("#19e650");
+  const socket = useContext(StatusContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,7 +37,7 @@ function ProfilBox() {
   var changeStatus: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const optionSelected = event.target.value;
     const color: string[] = ["#19e650", "#e6b319", "#8a8a8a"];
-    const status: string[] = ["CONNECTED", "ASBENT", "AWAY"];
+    const status: string[] = ["CONNECTED", "AWAY", "DISCONNECTED"];
 
     color.map((color, index) => {
       if (status[index] === optionSelected) {
@@ -44,7 +46,10 @@ function ProfilBox() {
           .post("/users/me/status", {
             status: status[index],
           })
-          .then((res: AxiosResponse) => setUser(res.data))
+          .then((res: AxiosResponse) => {
+            socket?.emit("status-update", {id: res.data.id, status: status[index]})
+            setUser(res.data)
+          })
           .catch((res: AxiosError) =>
             navigate("/login", { state: { from: location }, replace: true })
           );
@@ -80,8 +85,8 @@ function ProfilBox() {
             onChange={changeStatus}
           >
             <option value="CONNECTED">Online</option>
-            <option value="ASBENT">Absent</option>
-            <option value="AWAY">Invisible</option>
+            <option value="AWAY">Absent</option>
+            <option value="DISCONNECTED">Invisible</option>
           </select>
         </div>
         <LogoutButton />

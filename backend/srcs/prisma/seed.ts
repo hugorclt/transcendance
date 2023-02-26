@@ -33,18 +33,18 @@ async function main() {
     },
   });
 
-  const hugoFriendship = await prisma.friendShip.create({
-    data: {
-      userOneId: dominique.id,
-      userTwoId: hugo.id,
-    },
-  });
-  const dylanFriendship = await prisma.friendShip.create({
-    data: {
-      userOneId: dylan.id,
-      userTwoId: ryad.id,
-    },
-  });
+  // const hugoFriendship = await prisma.friendShip.create({
+  //   data: {
+  //     userOneId: dominique.id,
+  //     userTwoId: hugo.id,
+  //   },
+  // });
+  // const dylanFriendship = await prisma.friendShip.create({
+  //   data: {
+  //     userOneId: dylan.id,
+  //     userTwoId: ryad.id,
+  //   },
+  // });
 }
 
 main()
