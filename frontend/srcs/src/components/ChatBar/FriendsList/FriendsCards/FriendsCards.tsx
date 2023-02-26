@@ -1,28 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/42.jpg";
 import { TFriendsProps } from "./FriendsType";
 import { TbMessageCircle2 } from "react-icons/tb";
 import { IconContext } from "react-icons/lib";
 
 function FriendsCards(props: TFriendsProps) {
-  const [show, setShow] = useState("false");
+  const [color, setColor] = useState("");
 
-  const showMessageButton = () => {
-    setShow("true");
-  };
-  const hideMessageButton = () => {
-    setShow("false");
-  };
+  useEffect(() => {
+    console.log("yolo");
+    if (props.status == "CONNECTED") setColor("#19e650");
+    else if (props.status == "AWAY") setColor("#e6b319");
+    else setColor("#8a8a8a");
+  }, []);
+  
   return (
     <div>
       <div className="pt-4 pb-2 px-4">
-        <div
-          className="flex items-center justify-between"
-          onMouseEnter={showMessageButton}
-          onMouseLeave={hideMessageButton}>
+        <div className="flex items-center justify-between">
           <div className="relative">
             <img className="rounded-full w-10" src={props.avatar}></img>
-            <div className="absolute outline outline-2 outline-orange-100 rounded-full bottom-0 right-0 w-2 h-2 bg-lime-500"></div>
+            <div
+              style={{ backgroundColor: color }}
+              className="absolute outline outline-2 outline-orange-100 rounded-full bottom-0 right-0 w-2 h-2"></div>
           </div>
           <a href="#!">
             <div className="flex flex-col mx-3">
@@ -34,13 +34,9 @@ function FriendsCards(props: TFriendsProps) {
               </p>
             </div>
           </a>
-          {show && (
-            <button className="px-3">
-              <IconContext.Provider value={{ color: "#E8C47C" }}>
-                <TbMessageCircle2></TbMessageCircle2>
-              </IconContext.Provider>
-            </button>
-          )}
+          <IconContext.Provider value={{ color: "#E8C47C" }}>
+            <TbMessageCircle2></TbMessageCircle2>
+          </IconContext.Provider>
         </div>
       </div>
     </div>

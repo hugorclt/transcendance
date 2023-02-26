@@ -1,4 +1,5 @@
 export type TFriendsProps = {
+    key: string,
     avatar: string,
     name: string,
     status: string,
