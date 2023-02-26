@@ -48,7 +48,6 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
     try {
       const toUser = await this.usersService.findOneByUsername(payload.toUsername);
       this.server.to(toUser.id).emit("on-friend-request", fromUser.username);
-      console.log("to user:", toUser);
     } catch (NotFoundException) {
       // return;
     }
