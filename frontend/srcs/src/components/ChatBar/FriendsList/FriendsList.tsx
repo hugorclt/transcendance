@@ -4,7 +4,7 @@ import { axiosPrivate } from "../../../services/axios";
 import FriendsCards from "./FriendsCards/FriendsCards";
 import ManageBar from "./ManageBar";
 import { StatusContext } from "../../../statusPageContext";
-import { nanoid } from 'nanoid';
+import { nanoid } from "nanoid";
 import { TFriendsProps } from "./FriendsCards/FriendsType";
 
 function FriendsList() {
@@ -22,7 +22,10 @@ function FriendsList() {
           ...prev.slice(index + 1),
         ];
       } else {
-        return [...prev, { key:nanoid(), name: username, avatar: avatar, status: status }];
+        return [
+          ...prev,
+          { key: nanoid(), name: username, avatar: avatar, status: status },
+        ];
       }
     });
   }
@@ -35,7 +38,7 @@ function FriendsList() {
           name: element.username,
           avatar: element.avatar,
           status: element.status,
-          key:nanoid(),
+          key: nanoid(),
         }));
         setFriendList(friends);
       })

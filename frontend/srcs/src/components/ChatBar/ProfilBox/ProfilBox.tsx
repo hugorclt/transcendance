@@ -1,4 +1,11 @@
-import React, { ChangeEvent, ChangeEventHandler, SyntheticEvent, useContext, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import logo from "../../../assets/images/42.jpg";
@@ -34,7 +41,9 @@ function ProfilBox() {
       );
   }, []);
 
-  var changeStatus: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
+  var changeStatus: ChangeEventHandler = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
     const optionSelected = event.target.value;
     const color: string[] = ["#19e650", "#e6b319", "#8a8a8a"];
     const status: string[] = ["CONNECTED", "AWAY", "DISCONNECTED"];
@@ -47,8 +56,11 @@ function ProfilBox() {
             status: status[index],
           })
           .then((res: AxiosResponse) => {
-            socket?.emit("status-update", {id: res.data.id, status: status[index]})
-            setUser(res.data)
+            socket?.emit("status-update", {
+              id: res.data.id,
+              status: status[index],
+            });
+            setUser(res.data);
           })
           .catch((res: AxiosError) =>
             navigate("/login", { state: { from: location }, replace: true })
@@ -64,7 +76,9 @@ function ProfilBox() {
           <div className="w-14">
             <CircularProgressbarWithChildren value={70} text="">
               <img className="rounded-full w-12" src={logo}></img>
-              <div style={{backgroundColor: color}}className="absolute outline outline-2 outline-orange-100 rounded-full bottom-0 right-0 w-3 h-3"></div>
+              <div
+                style={{ backgroundColor: color }}
+                className="absolute outline outline-2 outline-orange-100 rounded-full bottom-0 right-0 w-3 h-3"></div>
               <div className="absolute outline outline-2 outline-cyan-600 bg-white rounded-full top-0 right-0 w-4 h-4">
                 <div className="flex items-center justify-center w-4 h-4">
                   <p className="text-gray-900 text-bold text-xs">1</p>
@@ -74,16 +88,17 @@ function ProfilBox() {
           </div>
         </div>
         <div className="mx-6">
-          <p style={{color:"#E8C47C"}}className="text-lg font-semibold mb-0">
+          <p
+            style={{ color: "#E8C47C" }}
+            className="text-lg font-semibold mb-0">
             {user?.username}
           </p>
           <select
-            style={{color:"#E8C47C"}}
+            style={{ color: "#E8C47C" }}
             className="outline-none bg-gray-900 opacity-60 text-sm font-extralight"
             name="status"
             id="status"
-            onChange={changeStatus}
-          >
+            onChange={changeStatus}>
             <option value="CONNECTED">Online</option>
             <option value="AWAY">Absent</option>
             <option value="DISCONNECTED">Invisible</option>

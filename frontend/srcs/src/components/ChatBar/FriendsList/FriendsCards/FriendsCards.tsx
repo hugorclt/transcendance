@@ -13,7 +13,7 @@ function FriendsCards(props: TFriendsProps) {
     else if (props.status == "AWAY") setColor("#e6b319");
     else setColor("#8a8a8a");
   }, []);
-  
+
   return (
     <div>
       <div className="pt-4 pb-2 px-4">
