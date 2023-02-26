@@ -26,6 +26,7 @@ type Ball = {
 
 @WebSocketGateway({
     namespace: '/game',
+    cors: true,
 })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() wss: Server;

@@ -10,7 +10,6 @@ function ChatView() {
     <WebsocketProvider value={socket}>
       <Websocket/>
     </WebsocketProvider>
-    // <ChatViewLayout />
   )
 }
 

@@ -1,7 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-//# ----------------------------- General_settings ----------------------------- #
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,51 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//# ----------------------------------- User ----------------------------------- #
 model User {
-  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username       String  @unique
-  email          String  @unique
-  password       String
-  avatar         String?
-  refreshToken   String? 
-  type           Type    @default(LOCAL)
-  status         Status? @default(DISCONNECTED)
-  balance        Int?    @default(0)
-
-  hasBloqued  Bloqued[]     @relation("user")
-  isBloqued   Bloqued[]     @relation("bloqued")
-  friendOne   FriendShip[]  @relation("friendOne")
-  friendTwo   FriendShip[]  @relation("friendTwo")
-  winner      Match[]       @relation("winner")
-  playerOne   Match[]       @relation("playerOne")
-  playerTwo   Match[]       @relation("playerTwo")
-  user        UserItem[]    @relation("owner")
-  admin       Room[]        @relation("admin")
-  participant Participant[]
-  banned      Banned[]
-  sender      Message[]
-}
-
-enum Type {
-  LOCAL
-  GOOGLE
-  API42
-}
-
-enum Status {
-  DISCONNECTED
-  CONNECTED
-  IN_GAME
-  AWAY
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username     String        @unique
+  email        String        @unique
+  password     String
+  avatar       String?
+  refreshToken String?
+  type         Type          @default(LOCAL)
+  status       Status?       @default(DISCONNECTED)
+  balance      Int?          @default(0)
+  banned       Banned[]
+  isBloqued    Bloqued[]     @relation("bloqued")
+  hasBloqued   Bloqued[]     @relation("user")
+  friendOne    FriendShip[]  @relation("friendOne")
+  friendTwo    FriendShip[]  @relation("friendTwo")
+  playerOne    Match[]       @relation("playerOne")
+  playerTwo    Match[]       @relation("playerTwo")
+  winner       Match[]       @relation("winner")
+  sender       Message[]
+  participant  Participant[]
+  admin        Room[]        @relation("admin")
+  user         UserItem[]    @relation("owner")
 }
 
 model Bloqued {
   id        String @id @default(uuid())
   userId    String @db.Uuid
   bloquedId String @db.Uuid
-  user      User   @relation("user", fields: [userId], references: [id])
   bloqued   User   @relation("bloqued", fields: [bloquedId], references: [id])
+  user      User   @relation("user", fields: [userId], references: [id])
 }
 
 model FriendShip {
@@ -66,7 +47,6 @@ model FriendShip {
   friendTwo User   @relation("friendTwo", fields: [userTwoId], references: [id])
 }
 
-//# ----------------------------------- Match ---------------------------------- #
 model Match {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   date        DateTime @default(now())
@@ -74,40 +54,36 @@ model Match {
   winnerId    String   @db.Uuid
   playerOneId String   @db.Uuid
   playerTwoId String   @db.Uuid
-  winner      User     @relation("winner", fields: [winnerId], references: [id])
   playerOne   User     @relation("playerOne", fields: [playerOneId], references: [id])
   playerTwo   User     @relation("playerTwo", fields: [playerTwoId], references: [id])
+  winner      User     @relation("winner", fields: [winnerId], references: [id])
 }
 
-//# ----------------------------------- Item ---------------------------------- #
 model Item {
-  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name  String
   price Int
   image String
-
-  item UserItem[]
+  item  UserItem[]
 }
 
 model UserItem {
   id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId  String @db.Uuid
   itemsId String @db.Uuid
-  user    User   @relation("owner", fields: [userId], references: [id])
   items   Item   @relation(fields: [itemsId], references: [id])
+  user    User   @relation("owner", fields: [userId], references: [id])
 }
 
-//# ------------------------------------ Chat ------------------------------------- #
 model Room {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name    String @unique
+  id      String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String        @unique
   type    Int
-  adminId String @db.Uuid
-  admin   User   @relation("admin", fields: [adminId], references: [id])
-
-  room    Participant[]
+  adminId String        @db.Uuid
   roomBan Banned[]
   roomMsg Message[]
+  room    Participant[]
+  admin   User          @relation("admin", fields: [adminId], references: [id])
 }
 
 model Participant {
@@ -117,11 +93,6 @@ model Participant {
   userId String @db.Uuid
   room   Room   @relation(fields: [roomId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
-}
-
-enum Role {
-  BASIC
-  ADMIN
 }
 
 model Banned {
@@ -138,6 +109,24 @@ model Message {
   date     DateTime @default(now())
   senderId String   @db.Uuid
   roomId   String   @db.Uuid
-  sender   User     @relation(fields: [senderId], references: [id])
   room     Room     @relation(fields: [roomId], references: [id])
+  sender   User     @relation(fields: [senderId], references: [id])
+}
+
+enum Type {
+  LOCAL
+  GOOGLE
+  API42
+}
+
+enum Status {
+  DISCONNECTED
+  CONNECTED
+  IN_GAME
+  AWAY
+}
+
+enum Role {
+  BASIC
+  ADMIN
 }
