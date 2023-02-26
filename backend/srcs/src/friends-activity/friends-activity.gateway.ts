@@ -60,8 +60,10 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
     const user1 = await this.usersService.findOneByUsername(payload.fromUsername);
     const user2 = await this.usersService.findOne(payload.toId);
     if (payload.isReplyTrue === true)
+    {
       this.friendShip.create({username : payload.fromUsername}, payload.toId);
-    this.server.to(user1.id).emit("on-status-update", {username : user2.username, avatar : user2.avatar, status : user2.status});
-    this.server.to(user2.id).emit("on-status-update", {username : user1.username, avatar : user1.avatar, status : user1.status});
+      this.server.to(user1.id).emit("on-status-update", {username : user2.username, avatar : user2.avatar, status : user2.status});
+      this.server.to(user2.id).emit("on-status-update", {username : user1.username, avatar : user1.avatar, status : user1.status});
+    }
   }
 }
