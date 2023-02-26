@@ -5,10 +5,12 @@ import { IconContext } from "react-icons/lib";
 import { StatusContext } from "../../../statusPageContext";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { NotifListContext } from "./NotificationsContext";
 
 function NotificationsMessage(props: { username: string }) {
   const socket = useContext(StatusContext);
   const axiosPrivate = useAxiosPrivate();
+  const {notifList, setNotifList} = useContext(NotifListContext);
 
   const acceptRequest = () => {
     axiosPrivate
@@ -19,6 +21,7 @@ function NotificationsMessage(props: { username: string }) {
           toId: res.data.id,
           isReplyTrue: true,
         });
+        setNotifList(notifList.filter((username) => username !== props.username));
       })
       .catch((err: AxiosError) => {
         console.log("error: login required!");
@@ -34,6 +37,7 @@ function NotificationsMessage(props: { username: string }) {
           toId: res.data.id,
           isReplyTrue: false,
         });
+        setNotifList(notifList.filter((username) => username !== props.username));
       })
       .catch((err: AxiosError) => {
         console.log("error: login required!");

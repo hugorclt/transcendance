@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IconContext } from "react-icons/lib";
 import { StatusContext } from "../../../statusPageContext";
+import { NotifListContext } from "./NotificationsContext";
 import NotificationsMessage from "./NotificationsMessage";
 
 function NotificationsBar() {
@@ -28,9 +29,11 @@ function NotificationsBar() {
       {dropUp && (
         <div className="absolute inset-x-0 bottom-16 w-full">
           <li className="list-none">
-            {notifList.map((val, index) => {
-              return <NotificationsMessage key={index} username={val} />;
-            })}
+            <NotifListContext.Provider value={{ notifList, setNotifList }}>
+              {notifList.map((val, index) => {
+                return <NotificationsMessage key={index} username={val} />;
+              })}
+            </NotifListContext.Provider>
           </li>
         </div>
       )}

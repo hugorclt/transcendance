@@ -1,13 +1,13 @@
 import React, { createContext, Dispatch } from "react";
 
 const defaultValue = {
-  isSignIn: true,
-  setIsSignIn: () => {},
+  notifList: [],
+  setNotifList: () => {},
 };
 
-type TLoginPageContext = {
-  isSignIn: boolean;
-  setIsSignIn: Dispatch<React.SetStateAction<boolean>>;
+type TNotifs = {
+  notifList: string[];
+  setNotifList: Dispatch<React.SetStateAction<string[]>>;
 };
 
-export const LoginPageContext = createContext<TLoginPageContext>(defaultValue);
+export const NotifListContext = createContext<TNotifs>(defaultValue);
