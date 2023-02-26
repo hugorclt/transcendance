@@ -48,5 +48,3 @@ function FriendsCards(props: TFriendsProps) {
 }
 
 export default FriendsCards;
-
-export default FriendsCards
