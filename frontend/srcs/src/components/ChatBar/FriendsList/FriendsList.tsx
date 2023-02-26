@@ -10,6 +10,22 @@ function FriendsList() {
   const [friendList, setFriendList] = useState<TFriendsProps[]>([]);
   const socket = useContext(StatusContext);
 
+  function updateFriendList(status: string, username: string, avatar: string) {
+    setFriendList((prev) => {
+      const index = prev.findIndex((friend) => friend.name === username);
+      if (index !== -1) {
+        const updatedFriend = { ...prev[index], status: status };
+        return [
+          ...prev.slice(0, index),
+          updatedFriend,
+          ...prev.slice(index + 1),
+        ];
+      } else {
+        return [...prev, { name: username, avatar: avatar, status: status }];
+      }
+    });
+  }
+
   useEffect(() => {
     axiosPrivate
       .get("friendship/friends")
@@ -26,14 +42,11 @@ function FriendsList() {
       });
 
     socket?.on("on-status-update", (new_status_update) => {
-      console.log(new_status_update);
-      setFriendList((prev) => [
-        {
-          avatar: new_status_update.avatar,
-          name: new_status_update.username,
-          status: new_status_update.status,
-        },
-      ]);
+      updateFriendList(
+        new_status_update.status,
+        new_status_update.username,
+        new_status_update.avatar
+      );
     });
     return () => {
       socket?.off("on-status-update");

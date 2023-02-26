@@ -31,17 +31,12 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
   }
   
   @SubscribeMessage('status-update')
-  async onStatusUpdate(@MessageBody() payload: {userId: string, status: string}): Promise<string> {
-    const friends = await this.friendShip.findManyForOneUser(payload.userId);
+  async onStatusUpdate(@MessageBody() payload: {id: string, status: string}): Promise<string> {
+    const friends = await this.friendShip.findManyForOneUser(payload.id);
+    const user = await this.usersService.findOne(payload.id);
     friends.forEach(friend => {
-      console.log(friend.id != payload.userId)
-      if (friend.id != payload.userId) {
-        console.log(friend);
-        this.server.to(friend.id).emit("on-status-update", {username: friend.username, avatar: friend.avatar, status: payload.status})
-      }
+      this.server.to(friend.id).emit("on-status-update", {username: user.username, avatar: user.avatar, status: payload.status})
     });
     return 'Hello world!';
   }
-
-  // @SubscribeMessage("joinFriendsUpdate")
 }

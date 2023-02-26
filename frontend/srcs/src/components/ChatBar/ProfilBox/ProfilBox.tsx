@@ -47,7 +47,6 @@ function ProfilBox() {
             status: status[index],
           })
           .then((res: AxiosResponse) => {
-            console.log("je emit mon status");
             socket?.emit("status-update", {id: res.data.id, status: status[index]})
             setUser(res.data)
           })

@@ -1,16 +1,8 @@
 import { AxiosError } from "axios";
 import React, { useRef, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
-import { BiSearchAlt2 } from "react-icons/bi";
 import { IconContext } from "react-icons/lib";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import axios from "../../../services/axios";
-
-// <button onClick={handleSearch}>
-//     <IconContext.Provider value={{ color: "#E8C47C" }}>
-//         <BiSearchAlt2 />
-//     </IconContext.Provider>
-// </button>
 
 function ManageBar() {
   const [widthInvite, setWidthInvite] = useState("0%");
@@ -36,9 +28,8 @@ function ManageBar() {
     axiosPrivate
       .post("/friendship/create", { username: username })
       .catch((err: AxiosError) => {
-        if (err.response?.status === 404)
-          alert("Username doesn't exist");
-        else if(err.response?.status === 409)
+        if (err.response?.status === 404) alert("Username doesn't exist");
+        else if (err.response?.status === 409)
           alert("User already in your friendList");
       });
   };
@@ -49,12 +40,11 @@ function ManageBar() {
         <div>
           <h2
             className="text-orange-100 mx-3 mt-1 transition-all"
-            style={{ display: display }}
-          >
+            style={{ display: display }}>
             Friends
           </h2>
         </div>
-        <form onSubmit={handleSubmit} style={{width: widthInvite}}>
+        <form onSubmit={handleSubmit} style={{ width: widthInvite }}>
           <input
             onChange={(e) => {
               setUsername(e.target.value);
@@ -75,8 +65,7 @@ function ManageBar() {
           <button
             style={{ display: display }}
             className="mx-3 transition-all"
-            onClick={handleInvite}
-          >
+            onClick={handleInvite}>
             <IconContext.Provider value={{ color: "#E8C47C" }}>
               <AiOutlineUsergroupAdd />
             </IconContext.Provider>
