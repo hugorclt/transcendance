@@ -42,10 +42,13 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
 
   @SubscribeMessage('friend-request')
   async onFriendRequest(@MessageBody() payload : {fromId: string, toUsername: string}) : Promise<any> {
+    console.log("DEMANDE DE GROS BROUTEUR : feliciations vous aveicjweiuhqweiu ", payload);
+
     const fromUser = await this.usersService.findOne(payload.fromId);
     try {
       const toUser = await this.usersService.findOneByUsername(payload.toUsername);
-      this.server.to(toUser.id).emit("on-friend-request", {fromUser: fromUser.username});
+      this.server.to(toUser.id).emit("on-friend-request", fromUser.username);
+      console.log("to user:", toUser);
     } catch (NotFoundException) {
       // return;
     }

@@ -28,8 +28,8 @@ function NotificationsBar() {
       {dropUp && (
         <div className="absolute inset-x-0 bottom-16 w-full">
           <li className="list-none">
-            {notifList.map((val) => {
-              return <NotificationsMessage username={val} />;
+            {notifList.map((val, index) => {
+              return <NotificationsMessage key={index} username={val} />;
             })}
           </li>
         </div>
