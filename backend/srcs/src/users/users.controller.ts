@@ -50,7 +50,7 @@ export class UsersController {
   @Post('me/status')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   updateStatus(@Request() req): Promise<ReturnUserEntity> {
-    return this.usersService.updateStatus(req.user.sub, req.status);
+    return this.usersService.updateStatus(req.user.sub, req.body.status);
   }
 
 

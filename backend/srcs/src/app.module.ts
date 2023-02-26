@@ -10,11 +10,20 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RoomsModule } from './rooms/rooms.module';
 import { HttpModule } from '@nestjs/axios';
+<<<<<<< HEAD
 import { SocketModule } from './socket/socket-module';
 // import { GameModule } from './game/game.module';
 import { FriendshipController } from './friendship/friendship.controller';
 import { FriendshipModule } from './friendship/friendship.module';
 import { FriendshipService } from './friendship/friendship.service';
+=======
+import { GameModule } from './game/game.module';
+import { FriendshipController } from './friendship/friendship.controller';
+import { FriendshipModule } from './friendship/friendship.module';
+import { FriendshipService } from './friendship/friendship.service';
+import { GatewayModule } from './gateway/gateway.module';
+import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
+>>>>>>> main
 
 @Module({
   imports: [
@@ -25,10 +34,16 @@ import { FriendshipService } from './friendship/friendship.service';
     RoomsModule,
     JwtModule,
     HttpModule,
+<<<<<<< HEAD
     SocketModule,
     FriendshipModule,
+=======
+    GameModule,
+    FriendshipModule,
+    GatewayModule,
+>>>>>>> main
   ],
   controllers: [AppController, FriendshipController],
-  providers: [AppService, AuthService, PrismaService, FriendshipService],
+  providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityGateway],
 })
 export class AppModule {}

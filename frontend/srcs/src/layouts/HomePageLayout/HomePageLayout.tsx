@@ -11,10 +11,9 @@ function HomePageLayout() {
         style={{ width: "85vw" }}
       >
         {/* <Game /> Temporary component */}
-        <Home />
       </div>
       <div
-        className="inline-block align-top box-border"
+        className="absolute inset-y-0 right-0"
         style={{
           width: "15vw",
         }}

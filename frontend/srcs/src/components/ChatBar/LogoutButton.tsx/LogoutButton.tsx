@@ -31,7 +31,7 @@ function LogoutButton() {
 
   return (
     <button onClick={logout}>
-      <IconContext.Provider value={{ color: "#ffedd5" }}>
+      <IconContext.Provider value={{ color: "#E8C47C" }}>
         <HiOutlineLogout />
       </IconContext.Provider>
     </button>
