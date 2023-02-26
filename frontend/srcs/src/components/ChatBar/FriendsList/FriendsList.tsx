@@ -4,6 +4,7 @@ import { axiosPrivate } from "../../../services/axios";
 import FriendsCards from "./FriendsCards/FriendsCards";
 import ManageBar from "./ManageBar";
 import { StatusContext } from "../../../statusPageContext";
+import { nanoid } from "nanoid";
 import { TFriendsProps } from "./FriendsCards/FriendsType";
 
 function FriendsList() {
@@ -14,14 +15,17 @@ function FriendsList() {
     setFriendList((prev) => {
       const index = prev.findIndex((friend) => friend.name === username);
       if (index !== -1) {
-        const updatedFriend = { ...prev[index], status: status };
+        const updatedFriend = { ...prev[index], status: status, key: nanoid() };
         return [
           ...prev.slice(0, index),
           updatedFriend,
           ...prev.slice(index + 1),
         ];
       } else {
-        return [...prev, { name: username, avatar: avatar, status: status }];
+        return [
+          ...prev,
+          { key: nanoid(), name: username, avatar: avatar, status: status },
+        ];
       }
     });
   }
@@ -34,6 +38,7 @@ function FriendsList() {
           name: element.username,
           avatar: element.avatar,
           status: element.status,
+          key: nanoid(),
         }));
         setFriendList(friends);
       })
@@ -59,7 +64,7 @@ function FriendsList() {
       {friendList.map((val, index) => {
         return (
           <FriendsCards
-            key={index}
+            key={val.key}
             name={val.name}
             avatar={val.avatar}
             status={val.status}

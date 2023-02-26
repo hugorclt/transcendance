@@ -1,8 +1,9 @@
-import { AxiosError } from "axios";
-import React, { useRef, useState } from "react";
+import { AxiosError, AxiosResponse } from "axios";
+import React, { useContext, useRef, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { StatusContext } from "../../../statusPageContext";
 
 function ManageBar() {
   const [widthInvite, setWidthInvite] = useState("0%");
@@ -10,6 +11,7 @@ function ManageBar() {
   const [username, setUsername] = useState("");
   const focusRef = useRef<HTMLInputElement>(null);
   const axiosPrivate = useAxiosPrivate();
+  const socket = useContext(StatusContext);
 
   const handleInvite = () => {
     setWidthInvite("100%");
@@ -26,7 +28,13 @@ function ManageBar() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     axiosPrivate
-      .post("/friendship/create", { username: username })
+      .get("/auth/me")
+      .then((res: AxiosResponse) => {
+        socket?.emit("friend-request", {
+          fromId: res.data.id,
+          toUsername: username,
+        }); 
+      })
       .catch((err: AxiosError) => {
         if (err.response?.status === 404) alert("Username doesn't exist");
         else if (err.response?.status === 409)
