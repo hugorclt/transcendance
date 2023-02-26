@@ -15,9 +15,9 @@ function FriendsCards(props: TFriendsProps) {
   };
   return (
     <div>
-      <div className="pt-4 pb-2 px-8">
+      <div className="pt-4 pb-2 px-4">
         <div
-          className="flex items-center"
+          className="flex items-center justify-between"
           onMouseEnter={showMessageButton}
           onMouseLeave={hideMessageButton}>
           <div className="relative">
