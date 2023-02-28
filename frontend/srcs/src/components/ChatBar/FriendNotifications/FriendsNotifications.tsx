@@ -55,14 +55,6 @@ function FriendNotifications() {
 
   return (
     <div>
-      <div className="bg-red-700 w-10 h-10">
-        <button
-          onClick={() => {
-            notify("salut");
-          }}>
-          yo le s
-        </button>
-      </div>
       <ToastContainer theme="dark" />
     </div>
   );
