@@ -1,11 +1,46 @@
-import React from 'react'
+import React, { useContext, useState } from "react";
+import { ChatContext } from "../ChatContext";
+import ChatTab from "./ChatTab";
+import { nanoid } from "nanoid";
 
 function Chat() {
-  return (
-    <div style={{right: "18rem"}} className='absolute bottom-0 right-0 w-72 h-80 bg-dark-blue opacity-80'>
+  const { openChat, setOpenChat } = useContext(ChatContext);
+  const [activeTab, setActiveTab] = useState(0);
 
+  return (
+    <div>
+      {openChat.length && (
+        <div
+          style={{ right: "18rem" }}
+          className="absolute bottom-0 right-0 w-72 h-80 bg-dark-blue opacity-80">
+          {openChat.map((tab, idx) => {
+            return (
+                <button
+                  key={idx}
+                  className={`py-2 border-b-4 text-gold px-2 transition-colors duration-300 ${
+                    idx === activeTab
+                      ? "border-gold"
+                      : "border-transparent hover:border-sky-blue"
+                  }`}
+                  // Change the active tab on click.
+                  onClick={() => setActiveTab(idx)}>
+                  {tab}
+                  <button
+                    onClick={() => {
+                      openChat.splice(idx, 1);
+                      idx++;
+                    }}
+                    className="text-gold">
+                      X
+                  </button>
+                </button>
+            );
+          })}
+          <ChatTab name={openChat[activeTab]} />
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default Chat
+export default Chat;

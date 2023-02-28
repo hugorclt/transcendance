@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import logo from "../../assets/42.jpg";
+import React, { useContext, useEffect, useState } from "react";
 import { TFriendsProps } from "./FriendsType";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IconContext } from "react-icons/lib";
+import { ChatContext } from "../../ChatContext";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
   const [openDD, setOpenDD] = useState(false);
+  const { setOpenChat } = useContext(ChatContext);
 
   useEffect(() => {
     if (props.status == "CONNECTED") setColor("#19e650");
@@ -48,7 +49,18 @@ function FriendsCards(props: TFriendsProps) {
           {openDD && (
             <ul className="absolute list-none right-12 border rounded border-gold bg-dark-blue-200">
               <li className="p-1 relative hover:bg-dark-blue">
-                <button className="text-gold text-xs">Send message</button>
+                <button
+                  onMouseDown={() => {
+                    setOpenChat((prev) => {
+                      if (!prev.includes(props.name)) {
+                        return [...prev, props.name];
+                      }
+                      return prev;
+                    });
+                  }}
+                  className="text-gold text-xs">
+                  Send message
+                </button>
               </li>
               <li className="p-1 relative hover:bg-dark-blue">
                 <button className="text-gold text-xs">Remove friend</button>
