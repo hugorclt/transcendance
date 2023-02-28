@@ -47,7 +47,7 @@ function ManageBar() {
       <div className="flex justify-between items-center">
         <div>
           <h2
-            className="text-orange-100 mx-3 mt-1 transition-all"
+            className="text-gold mx-3 mt-1 transition-all"
             style={{ display: display }}>
             Friends
           </h2>
