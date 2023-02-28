@@ -65,4 +65,13 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
       this.server.to(user2.id).emit("on-status-update", {username : user1.username, avatar : user1.avatar, status : user1.status});
     }
   }
+
+  @SubscribeMessage('message-sent')
+  async onMessageSent(@MessageBody() payload: {message: string, userFromId: string, userToName: string})
+  {
+    console.log("jsuiis la")
+    const user2 = await this.usersService.findOneByUsername(payload.userToName);
+    const user1 = await this.usersService.findOne(payload.userFromId);
+    this.server.to(user2.id).emit("on-message-sent", {message: payload.message, sender: user1.username})
+  }
 }
