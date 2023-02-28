@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import Lobby from "../../components/Lobby/Lobby";
 
 function LobbyLayout() {
   return (
-    <div>LobbyLayout</div>
-  )
+    <div>
+      <Lobby />
+    </div>
+  );
 }
 
-export default LobbyLayout
+export default LobbyLayout;

@@ -17,6 +17,7 @@ import { FriendshipService } from './friendship/friendship.service';
 import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
 import { GameGateway } from './game/game.gateway';
 import { GameModule } from './game/game.module';
+import { LobbyModule } from './lobby/lobby.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { GameModule } from './game/game.module';
     SocketModule,
     FriendshipModule,
     FriendshipModule,
-    GameModule
+    GameModule,
+    LobbyModule
   ],
   controllers: [AppController, FriendshipController],
   providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityGateway, GameGateway],
