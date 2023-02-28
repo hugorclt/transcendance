@@ -6,9 +6,9 @@ import { IconContext } from "react-icons/lib";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
+  const [openDD, setOpenDD] = useState(false);
 
   useEffect(() => {
-    console.log("yolo");
     if (props.status == "CONNECTED") setColor("#19e650");
     else if (props.status == "AWAY") setColor("#e6b319");
     else setColor("#8a8a8a");
@@ -35,8 +35,26 @@ function FriendsCards(props: TFriendsProps) {
             </div>
           </a>
           <IconContext.Provider value={{ color: "#E8C47C" }}>
-            <BsThreeDotsVertical />
+            <button
+              onClick={() => {
+                setOpenDD(true);
+              }}
+              onBlur={() => {
+                setOpenDD(false);
+              }}>
+              <BsThreeDotsVertical />
+            </button>
           </IconContext.Provider>
+          {openDD && (
+            <ul className="absolute list-none right-12 border rounded border-gold bg-dark-blue-200">
+              <li className="p-1 relative hover:bg-dark-blue">
+                <button className="text-gold text-xs">Send message</button>
+              </li>
+              <li className="p-1 relative hover:bg-dark-blue">
+                <button className="text-gold text-xs">Remove friend</button>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
     </div>

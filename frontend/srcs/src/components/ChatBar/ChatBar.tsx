@@ -1,7 +1,8 @@
 import React from "react";
 import FriendsList from "./FriendsList/FriendsList";
 import ProfilBox from "./ProfilBox/ProfilBox";
-import FriendNotifications from "./FriendNotifications/FriendsNotifications";
+import FriendNotifications from "./FriendsList/FriendNotifications/FriendsNotifications";
+import Chat from "./Chat/Chat";
 
 function ChatBar() {
   return (
@@ -14,6 +15,7 @@ function ChatBar() {
         <FriendsList />
         <FriendNotifications />
       </div>
+      <Chat />
     </div>
   );
 }

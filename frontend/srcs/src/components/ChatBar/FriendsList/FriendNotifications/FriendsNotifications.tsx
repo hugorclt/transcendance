@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { StatusContext } from "../../../statusPageContext";
+import { StatusContext } from "../../../../statusPageContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 
 function FriendNotifications() {
