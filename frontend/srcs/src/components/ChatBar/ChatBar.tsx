@@ -1,7 +1,7 @@
 import React from "react";
 import FriendsList from "./FriendsList/FriendsList";
 import ProfilBox from "./ProfilBox/ProfilBox";
-import NotificationsBar from "./NotificationsBar/NotificationsBar";
+import FriendNotifications from "./FriendNotifications/FriendsNotifications";
 
 function ChatBar() {
   return (
@@ -12,7 +12,7 @@ function ChatBar() {
         </div>
         <hr className="bg-orange-200" />
         <FriendsList />
-        <NotificationsBar />
+        <FriendNotifications />
       </div>
     </div>
   );
