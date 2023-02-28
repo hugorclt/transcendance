@@ -27,6 +27,8 @@ model User {
   winner       Match[]       @relation("winner")
   sender       Message[]
   participant  Participant[]
+  lobbyParticipant LobbyParticipant[]
+  lobbySpectator LobbySpectator[]
   admin        Room[]        @relation("admin")
   user         UserItem[]    @relation("owner")
   owner        Lobby[] @relation("lobbyOwner") 
@@ -50,20 +52,31 @@ model FriendShip {
 
 //================== GAME =================
 model Lobby {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  mode      Mode    @default(CLASSIC)
-  ownerId   String  @db.Uuid
-  owner     User    @relation("lobbyOwner", fields: [ownerId], references: [id])
-  config    GameConfig?
-}
-
-model GameConfig {
   id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId     String  @db.Uuid
   nbPlayers   Int     @default(2)
   maxDuration Int     @default(180) 
+  mode        Mode    @default(CLASSIC)
   map         MapName @default(CLASSIC)
-  lobbyId     String  @unique @db.Uuid
-  lobby       Lobby   @relation(fields: [lobbyId], references: [id])
+  owner       User    @relation("lobbyOwner", fields: [ownerId], references: [id])
+  players     LobbyParticipant[]
+  spectators  LobbySpectator[]
+}
+
+model LobbyParticipant {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lobbyId String @db.Uuid
+  userId  String @db.Uuid
+  lobby   Lobby  @relation(fields: [lobbyId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model LobbySpectator {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lobbyId String @db.Uuid
+  userId  String @db.Uuid
+  lobby   Lobby  @relation(fields: [lobbyId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
 }
 
 enum MapName {
