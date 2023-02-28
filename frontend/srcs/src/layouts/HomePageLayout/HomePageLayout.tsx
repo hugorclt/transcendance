@@ -14,10 +14,7 @@ function HomePageLayout() {
         <Home />
       </div>
       <div
-        className="absolute inset-y-0 right-0"
-        style={{
-          width: "15vw",
-        }}
+        className="absolute inset-y-0 right-0 w-72"
       >
         <ChatBar />
       </div>
