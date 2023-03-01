@@ -7,7 +7,7 @@ async function initializeSocket(axiosPrivate: any) {
   try {
     const res: AxiosResponse = await axiosPrivate.get("auth/me");
     const userId = res.data.id;
-    const socket = io('http://localhost:3000/status-update', {
+    const socket = io('http://localhost:3000/status', {
       query: { userId },
     });
     return (socket);

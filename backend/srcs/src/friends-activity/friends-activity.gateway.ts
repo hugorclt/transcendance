@@ -1,18 +1,21 @@
-import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { OnModuleInit } from '@nestjs/common';
+import { OnModuleInit, UseGuards } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FriendshipService } from 'src/friendship/friendship.service';
 import { UsersService } from 'src/users/users.service';
+import { AccessAuthGard } from 'src/auth/utils/guards';
+import { Socket } from 'socket.io';
 
 @WebSocketGateway({
-  namespace: '/status-update',
+  namespace: '/status',
   cors: {
     credentials: true,
     origin: ['http://localhost:3002'],
     methods: ['GET', 'POST'],
   },
 })
+// @UseGuards(AccessAuthGard) // a rajouter plus tard
 export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection {
   constructor(private prisma: PrismaService, private friendShip: FriendshipService, private usersService: UsersService) {};
 
@@ -31,36 +34,43 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
   }
   
   @SubscribeMessage('status-update')
-  async onStatusUpdate(@MessageBody() payload: {id: string, status: string}): Promise<string> {
-    const friends = await this.friendShip.findManyForOneUser(payload.id);
-    const user = await this.usersService.findOne(payload.id);
+  async onStatusUpdate(@ConnectedSocket() client: Socket, @MessageBody() status): Promise<string> {
+    if (typeof(client.handshake.query.userId) != "string")
+      return ;
+    const userId: string = client.handshake.query.userId
+    const friends = await this.friendShip.findManyForOneUser(userId);
+    const user = await this.usersService.findOne(userId);
     friends.forEach(friend => {
-      this.server.to(friend.id).emit("on-status-update", {username: user.username, avatar: user.avatar, status: payload.status})
+      this.server.to(friend.id).emit("on-status-update", {username: user.username, avatar: user.avatar, status: status})
     });
-    return 'Hello world!';
+    return 'Hello world!'; // change return value
   }
 
   @SubscribeMessage('friend-request')
-  async onFriendRequest(@MessageBody() payload : {fromId: string, toUsername: string}) : Promise<any> {
-    console.log("DEMANDE DE GROS BROUTEUR : feliciations vous aveicjweiuhqweiu ", payload);
-
-    const fromUser = await this.usersService.findOne(payload.fromId);
+  async onFriendRequest(@ConnectedSocket() client: Socket, @MessageBody() toUsername) : Promise<any> {
+    if (typeof(client.handshake.query.userId) != "string")
+      return ;
+    const userId: string = client.handshake.query.userId;
+    const fromUser = await this.usersService.findOne(userId);
     try {
-      const toUser = await this.usersService.findOneByUsername(payload.toUsername);
+      const toUser = await this.usersService.findOneByUsername(toUsername);
       this.server.to(toUser.id).emit("on-friend-request", fromUser.username);
     } catch (NotFoundException) {
-      // return;
+      return ; // return error
     }
     return;
   }
 
   @SubscribeMessage('friend-request-reply')
-  async onFriendRequestReply(@MessageBody() payload : {fromUsername : string, toId: string, isReplyTrue: boolean}) : Promise <any> {
+  async onFriendRequestReply(@ConnectedSocket() client: Socket, @MessageBody() payload : {fromUsername : string, isReplyTrue: boolean}) : Promise <any> {
+    if (typeof(client.handshake.query.userId) != "string")
+      return ;
+    const userId: string = client.handshake.query.userId;
     const user1 = await this.usersService.findOneByUsername(payload.fromUsername);
-    const user2 = await this.usersService.findOne(payload.toId);
+    const user2 = await this.usersService.findOne(userId);
     if (payload.isReplyTrue === true)
     {
-      this.friendShip.create({username : payload.fromUsername}, payload.toId);
+      this.friendShip.create({username : payload.fromUsername}, userId);
       this.server.to(user1.id).emit("on-status-update", {username : user2.username, avatar : user2.avatar, status : user2.status});
       this.server.to(user2.id).emit("on-status-update", {username : user1.username, avatar : user1.avatar, status : user1.status});
     }
@@ -69,7 +79,6 @@ export class FriendsActivityGateway implements OnModuleInit, OnGatewayConnection
   @SubscribeMessage('message-sent')
   async onMessageSent(@MessageBody() payload: {message: string, userFromId: string, userToName: string})
   {
-    console.log("jsuiis la")
     const user2 = await this.usersService.findOneByUsername(payload.userToName);
     const user1 = await this.usersService.findOne(payload.userFromId);
     this.server.to(user2.id).emit("on-message-sent", {message: payload.message, sender: user1.username})

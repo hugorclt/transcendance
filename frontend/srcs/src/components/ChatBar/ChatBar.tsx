@@ -15,10 +15,10 @@ function ChatBar() {
         </div>
         <div className="bg-gold h-px" />
         <ManageBar />
-        <div className="overflow-scroll w-96">
+        <div className="overflow-y-scroll w-96 scrollbar-hide">
           <FriendsList />
         </div>
-        <div className="overflow-scroll">
+        <div className="overflow-y-scroll scrollbar-hide">
           <ChatHistory />
         </div>
         <FriendNotifications />
