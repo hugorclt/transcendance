@@ -25,7 +25,7 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ type: ReturnUserEntity })
-  create(@Body() createUserDto: CreateUserDto): Promise<ReturnUserEntity>{
+  create(@Body() createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
     return this.usersService.create(createUserDto);
   }
 
@@ -52,7 +52,6 @@ export class UsersController {
   updateStatus(@Request() req): Promise<ReturnUserEntity> {
     return this.usersService.updateStatus(req.user.sub, req.body.status);
   }
-
 
   @Get(':id')
   @ApiOkResponse({ type: ReturnUserEntity })
