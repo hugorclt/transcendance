@@ -19,7 +19,7 @@ export class ParticipantController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.participantService.findOne(+id);
+    return this.participantService.findOne(id);
   }
 
   @Patch(':id')

@@ -14,11 +14,13 @@ export class ParticipantService {
   }
 
   findAll() {
-    return `This action returns all participant`;
+    return this.prisma.participant.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} participant`;
+  findOne(id: string) {
+    return this.prisma.participant.findUnique({
+      where: {id}
+    })
   }
 
   update(id: number, updateParticipantDto: UpdateParticipantDto) {
