@@ -7,7 +7,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { OnModuleInit, UseGuards } from '@nestjs/common';
+import { OnModuleInit } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FriendshipService } from 'src/friendship/friendship.service';
 import { UsersService } from 'src/users/users.service';
@@ -47,43 +47,52 @@ export class FriendsActivityGateway
     var clientId = client.handshake.query.userId;
     client.join(clientId);
   }
+  
+
+  async emitToFriends(
+    userId: string,
+    eventName: string,
+    data: any,
+  ): Promise<void> {
+    const friends = await this.friendShip.findManyForOneUser(userId);
+    const user = await this.usersService.findOne(userId);
+    friends.forEach((friend) => {
+      this.server.to(friend.id).emit(eventName, {
+        username: user.username,
+        avatar: user.avatar,
+        ...data,
+      });
+    });
+  }
 
   @SubscribeMessage('status-update')
   async onStatusUpdate(
     @ConnectedSocket() client: Socket,
     @MessageBody() status,
-  ): Promise<string> {
+  ): Promise<void> {
     if (typeof client.handshake.query.userId != 'string') return;
     const userId: string = client.handshake.query.userId;
-    const friends = await this.friendShip.findManyForOneUser(userId);
+    // const friends = await this.friendShip.findManyForOneUser(userId);
     const user = await this.usersService.findOne(userId);
-    friends.forEach((friend) => {
-      this.server
-        .to(friend.id)
-        .emit('on-status-update', {
-          username: user.username,
-          avatar: user.avatar,
-          status: status,
-        });
+    this.emitToFriends(userId, 'on-status-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: status,
     });
-    return 'Hello world!'; // change return value
   }
 
   @SubscribeMessage('friend-request')
   async onFriendRequest(
     @ConnectedSocket() client: Socket,
     @MessageBody() toUsername,
-  ): Promise<any> {
+  ): Promise<void> {
     if (typeof client.handshake.query.userId != 'string') return;
     const userId: string = client.handshake.query.userId;
     const fromUser = await this.usersService.findOne(userId);
     try {
       const toUser = await this.usersService.findOneByUsername(toUsername);
       this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
-    } catch (NotFoundException) {
-      return; // return error
-    }
-    return;
+    } catch (NotFoundException) {}
   }
 
   @SubscribeMessage('friend-request-reply')
@@ -140,3 +149,5 @@ export class FriendsActivityGateway
 // const room = await this.roomsService.create({name: user1.username + "_room", type: 0, adminId: user1.id});
 // this.participantService.create({roomId: room.id, userId: user1.id, role: Role.ADMIN });
 // this.participantService.create({roomId: room.id, userId: user2.id, role: Role.BASIC });
+
+
