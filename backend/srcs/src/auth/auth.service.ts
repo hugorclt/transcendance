@@ -121,6 +121,14 @@ export class AuthService {
       httpOnly: true,
     });
 
+    await this.prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        status: "CONNECTED"
+      }
+    });
     this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
@@ -136,6 +144,7 @@ export class AuthService {
       },
       data: {
         refreshToken: null,
+        status : "DISCONNECTED",
       },
     });
   }
