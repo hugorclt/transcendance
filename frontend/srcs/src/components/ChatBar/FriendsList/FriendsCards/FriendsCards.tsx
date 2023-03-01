@@ -16,7 +16,7 @@ function FriendsCards(props: TFriendsProps) {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="pt-4 pb-2 px-4">
         <div className="flex items-center justify-around">
           <div className="relative">
@@ -69,7 +69,7 @@ function FriendsCards(props: TFriendsProps) {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -59,7 +59,7 @@ function FriendsList() {
   }, [socket]);
 
   return (
-    <div>
+    <>
       <ManageBar />
       {friendList.map((val, index) => {
         return (
@@ -71,7 +71,7 @@ function FriendsList() {
           />
         );
       })}
-    </div>
+    </>
   );
 }
 

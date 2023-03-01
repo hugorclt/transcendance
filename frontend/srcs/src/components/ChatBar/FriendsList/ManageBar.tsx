@@ -43,7 +43,7 @@ function ManageBar() {
   };
 
   return (
-    <div>
+    <>
       <div className="flex justify-between items-center">
         <div>
           <h2
@@ -80,7 +80,7 @@ function ManageBar() {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

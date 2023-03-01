@@ -26,7 +26,7 @@ function FriendNotifications() {
 
   const notify = (username: string) =>
     toast(
-      <div>
+      <>
         <p>
           <strong>{username}</strong> has sent you a friend request
         </p>
@@ -40,7 +40,7 @@ function FriendNotifications() {
           </button>
           <button className="text-red-800">Refuse</button>
         </div>
-      </div>
+      </>
     );
 
   useEffect(() => {

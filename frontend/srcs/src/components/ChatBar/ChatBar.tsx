@@ -7,7 +7,7 @@ import { ChatContext } from "../../views/ChatPage/ChatContext";
 
 function ChatBar() {
   return (
-    <div>
+    <>
       <div className="shadow-md bg-dark-blue h-screen w-full">
         <div className="pt-4 pb-2 px-6">
           <ProfilBox />
@@ -17,7 +17,7 @@ function ChatBar() {
         <FriendNotifications />
       </div>
       <Chat />
-    </div>
+    </>
   );
 }
 
