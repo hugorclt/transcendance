@@ -52,8 +52,8 @@ function FriendsCards(props: TFriendsProps) {
                 <button
                   onMouseDown={() => {
                     setOpenChat((prev) => {
-                      if (!prev.includes(props.name)) {
-                        return [...prev, props.name];
+                      if (!prev.includes(props.name + "_room")) {
+                        return [...prev, props.name + "_room"];
                       }
                       return prev;
                     });
