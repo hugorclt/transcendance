@@ -3,7 +3,8 @@ import FriendsList from "./FriendsList/FriendsList";
 import ProfilBox from "./ProfilBox/ProfilBox";
 import FriendNotifications from "./FriendsList/FriendNotifications/FriendsNotifications";
 import Chat from "./Chat/Chat";
-import { ChatContext } from "../../views/ChatPage/ChatContext";
+import ChatHistory from "./ChatHistory/ChatHistory";
+import ManageBar from "./FriendsList/ManageBar";
 
 function ChatBar() {
   return (
@@ -13,7 +14,13 @@ function ChatBar() {
           <ProfilBox />
         </div>
         <div className="bg-gold h-px" />
-        <FriendsList />
+        <ManageBar />
+        <div className="overflow-scroll w-96">
+          <FriendsList />
+        </div>
+        <div className="overflow-scroll">
+          <ChatHistory />
+        </div>
         <FriendNotifications />
       </div>
       <Chat />
