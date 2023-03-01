@@ -4,7 +4,7 @@ import ChatCards from './ChatCards/ChatCards'
 function ChatHistory() {
   return (
     <>
-     <ChatCards />
+     <ChatCards avatar="" roomName="Hugo" lastMessage='salut la team' />
     </>
   )
 }

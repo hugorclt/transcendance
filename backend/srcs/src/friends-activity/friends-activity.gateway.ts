@@ -1,4 +1,5 @@
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   SubscribeMessage,
@@ -10,6 +11,11 @@ import { OnModuleInit } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FriendshipService } from 'src/friendship/friendship.service';
 import { UsersService } from 'src/users/users.service';
+import { AccessAuthGard } from 'src/auth/utils/guards';
+import { Socket } from 'socket.io';
+import { RoomsService } from 'src/rooms/rooms.service';
+import { ParticipantService } from 'src/rooms/participant/participant.service';
+import { Role } from '@prisma/client';
 
 @WebSocketGateway({
   namespace: '/status',
@@ -19,13 +25,15 @@ import { UsersService } from 'src/users/users.service';
     methods: ['GET', 'POST'],
   },
 })
+// @UseGuards(AccessAuthGard) // a rajouter plus tard
 export class FriendsActivityGateway
   implements OnModuleInit, OnGatewayConnection
 {
   constructor(
-    // private prisma: PrismaService,
     private friendShip: FriendshipService,
     private usersService: UsersService,
+    private roomsService: RoomsService,
+    private participantService: ParticipantService,
   ) {}
 
   @WebSocketServer()
@@ -39,128 +47,107 @@ export class FriendsActivityGateway
     var clientId = client.handshake.query.userId;
     client.join(clientId);
   }
+  
 
-  async emitToUser(userId: string, event: string, data: any): Promise<void> {
-    this.server.to(userId).emit(event, data);
-  }
-
-  async emitToFriends(userId: string, event: string, data: any): Promise<void> {
+  async emitToFriends(
+    userId: string,
+    eventName: string,
+    data: any,
+  ): Promise<void> {
     const friends = await this.friendShip.findManyForOneUser(userId);
+    const user = await this.usersService.findOne(userId);
     friends.forEach((friend) => {
-      this.server.to(friend.id).emit(event, data);
+      this.server.to(friend.id).emit(eventName, {
+        username: user.username,
+        avatar: user.avatar,
+        ...data,
+      });
     });
   }
-
-  // @SubscribeMessage('status-update')
-  // async onStatusUpdate(@MessageBody() payload: {id: string, status: string}): Promise<string> {
-  //   const friends = await this.friendShip.findManyForOneUser(payload.id);
-  //   const user = await this.usersService.findOne(payload.id);
-  //   this.emitToFriends(payload.id, "on-status-update", {username: user.username, avatar: user.avatar, status: payload.status})
-  //   friends.forEach(friend => {
-  //     this.server.to(friend.id).emit("on-status-update", {username: user.username, avatar: user.avatar, status: payload.status})
-  //   });
-  //   return 'Hello world!';
-  // }
 
   @SubscribeMessage('status-update')
   async onStatusUpdate(
-    @MessageBody() payload: { id: string; status: string },
+    @ConnectedSocket() client: Socket,
+    @MessageBody() status,
   ): Promise<void> {
-    const user = await this.usersService.findOne(payload.id);
-    this.emitToFriends(payload.id, 'on-status-update', {
+    if (typeof client.handshake.query.userId != 'string') return;
+    const userId: string = client.handshake.query.userId;
+    // const friends = await this.friendShip.findManyForOneUser(userId);
+    const user = await this.usersService.findOne(userId);
+    this.emitToFriends(userId, 'on-status-update', {
       username: user.username,
       avatar: user.avatar,
-      status: payload.status,
+      status: status,
     });
   }
 
-  // @SubscribeMessage('friend-request')
-  // async onFriendRequest(
-  //   @MessageBody() payload: { fromId: string; toUsername: string },
-  // ): Promise<void> {
-  //   const fromUser = await this.usersService.findOne(payload.fromId);
-  //   try {
-  //     const toUser = await this.usersService.findOneByUsername(
-  //       payload.toUsername,
-  //     );
-  //     this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
-  //   } catch (NotFoundException) {
-  //     // return;
-  //   }
-  // }
-
   @SubscribeMessage('friend-request')
   async onFriendRequest(
-    @MessageBody() payload: { fromId: string; toUsername: string },
+    @ConnectedSocket() client: Socket,
+    @MessageBody() toUsername,
   ): Promise<void> {
-    const fromUser = await this.usersService.findOne(payload.fromId);
+    if (typeof client.handshake.query.userId != 'string') return;
+    const userId: string = client.handshake.query.userId;
+    const fromUser = await this.usersService.findOne(userId);
     try {
-      const toUser = await this.usersService.findOneByUsername(
-        payload.toUsername,
-      );
-      this.emitToUser(toUser.id, 'on-friend-request', fromUser.username);
-    } catch (NotFoundException) {
-      // return;
-    }
+      const toUser = await this.usersService.findOneByUsername(toUsername);
+      this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
+    } catch (NotFoundException) {}
   }
-
-  // @SubscribeMessage('friend-request-reply')
-  // async onFriendRequestReply(
-  //   @MessageBody()
-  //   payload: {
-  //     fromUsername: string;
-  //     toId: string;
-  //     isReplyTrue: boolean;
-  //   },
-  // ): Promise<void> {
-  //   const user1 = await this.usersService.findOneByUsername(
-  //     payload.fromUsername,
-  //   );
-  //   const user2 = await this.usersService.findOne(payload.toId);
-  //   if (payload.isReplyTrue === true) {
-  //     this.friendShip.create({ username: payload.fromUsername }, payload.toId);
-  //     this.server
-  //       .to(user1.id)
-  //       .emit('on-status-update', {
-  //         username: user2.username,
-  //         avatar: user2.avatar,
-  //         status: user2.status,
-  //       });
-  //     this.server
-  //       .to(user2.id)
-  //       .emit('on-status-update', {
-  //         username: user1.username,
-  //         avatar: user1.avatar,
-  //         status: user1.status,
-  //       });
-  //   }
-  // }
 
   @SubscribeMessage('friend-request-reply')
   async onFriendRequestReply(
-    @MessageBody()
-    payload: {
-      fromUsername: string;
-      toId: string;
-      isReplyTrue: boolean;
-    },
-  ): Promise<void> {
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
+  ): Promise<any> {
+    if (typeof client.handshake.query.userId != 'string') return;
+    const userId: string = client.handshake.query.userId;
     const user1 = await this.usersService.findOneByUsername(
       payload.fromUsername,
     );
-    const user2 = await this.usersService.findOne(payload.toId);
+    const user2 = await this.usersService.findOne(userId);
     if (payload.isReplyTrue === true) {
-      this.friendShip.create({ username: payload.fromUsername }, payload.toId);
-      this.emitToUser(user1.id, 'on-status-update', {
-        username: user2.username,
-        avatar: user2.avatar,
-        status: user2.status,
-      });
-      this.emitToUser(user2.id, 'on-status-update', {
-        username: user1.username,
-        avatar: user1.avatar,
-        status: user1.status,
-      });
+      this.friendShip.create({ username: payload.fromUsername }, userId);
+      this.server
+        .to(user1.id)
+        .emit('on-status-update', {
+          username: user2.username,
+          avatar: user2.avatar,
+          status: user2.status,
+        });
+      this.server
+        .to(user2.id)
+        .emit('on-status-update', {
+          username: user1.username,
+          avatar: user1.avatar,
+          status: user1.status,
+        });
     }
   }
+
+  @SubscribeMessage('message-sent')
+  async onMessageSent(
+    @MessageBody()
+    payload: {
+      message: string;
+      userFromId: string;
+      userToName: string;
+    },
+  ) {
+    const user2 = await this.usersService.findOneByUsername(payload.userToName);
+    const user1 = await this.usersService.findOne(payload.userFromId);
+
+    this.server
+      .to(user2.id)
+      .emit('on-message-sent', {
+        message: payload.message,
+        sender: user1.username,
+      });
+  }
 }
+
+// const room = await this.roomsService.create({name: user1.username + "_room", type: 0, adminId: user1.id});
+// this.participantService.create({roomId: room.id, userId: user1.id, role: Role.ADMIN });
+// this.participantService.create({roomId: room.id, userId: user2.id, role: Role.BASIC });
+
+
