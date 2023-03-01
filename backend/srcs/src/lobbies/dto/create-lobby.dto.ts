@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Mode, MapName } from '@prisma/client';
+import { User, Mode, MapName } from '@prisma/client';
 import {
   IsNotEmpty,
   IsNumber,
@@ -13,7 +13,7 @@ export class CreateLobbyDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  ownerID: string;
+  ownerId: string;
 
   @ApiProperty()
   @IsNotEmpty()
