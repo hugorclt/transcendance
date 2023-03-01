@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { StatusContext } from "../../../../statusPageContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { ChatSocketContext } from "../../../../views/ChatPage/ChatSocketContext";
 
 function FriendNotifications() {
-  const socket = useContext(StatusContext);
+  const socket = useContext(ChatSocketContext);
   const axiosPrivate = useAxiosPrivate();
 
   const acceptRequest = (username: string) => {

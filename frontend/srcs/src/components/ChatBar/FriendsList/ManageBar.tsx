@@ -3,7 +3,7 @@ import React, { useContext, useRef, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { StatusContext } from "../../../statusPageContext";
+import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 
 function ManageBar() {
   const [widthInvite, setWidthInvite] = useState("0%");
@@ -11,7 +11,7 @@ function ManageBar() {
   const [username, setUsername] = useState("");
   const focusRef = useRef<HTMLInputElement>(null);
   const axiosPrivate = useAxiosPrivate();
-  const socket = useContext(StatusContext);
+  const socket = useContext(ChatSocketContext);
 
   const handleInvite = () => {
     setWidthInvite("100%");

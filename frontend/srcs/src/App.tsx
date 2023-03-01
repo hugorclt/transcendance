@@ -12,24 +12,24 @@ import MissingPage from "./views/MissingPage/MissingPage";
 import RequireAuth from "./services/Auth/RequireAuth";
 import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Auth42/Login42";
-import ChatView from "./views/ChatView/ChatView";
+import MainLayout from "./layouts/MainLayout/MainLayout";
+import LoginLayout from "./layouts/LoginLayout/LoginLayout";
 
 function App() {
   return (
     <Routes>
       {/* Public route */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/login/42" element={<Login42 />} />
+      <Route path="/login" element={<LoginLayout><LoginPage /></LoginLayout>} />
+      <Route path="/login/42" element={<LoginLayout><Login42 /></LoginLayout>} />
 
       <Route element={<PersistLogin />}>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/lobby" element={<LobbyPage />} />
-          <Route path="/leaderboards" element={<LeaderboardsPage />} />
-          <Route path="/chat" element={<ChatView />} />
+          <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
+          <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
+          <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
+          <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
+          <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
         </Route>
       </Route>
 

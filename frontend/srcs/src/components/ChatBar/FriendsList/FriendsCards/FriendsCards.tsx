@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { TFriendsProps } from "./FriendsType";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IconContext } from "react-icons/lib";
-import { ChatContext } from "../../ChatContext";
+import { ChatContext } from "../../../../views/ChatPage/ChatContext";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
