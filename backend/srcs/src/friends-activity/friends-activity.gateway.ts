@@ -136,3 +136,7 @@ export class FriendsActivityGateway
       });
   }
 }
+
+// const room = await this.roomsService.create({name: user1.username + "_room", type: 0, adminId: user1.id});
+// this.participantService.create({roomId: room.id, userId: user1.id, role: Role.ADMIN });
+// this.participantService.create({roomId: room.id, userId: user2.id, role: Role.BASIC });
