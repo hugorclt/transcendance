@@ -3,9 +3,9 @@ import GameScreen from "./GameScreen";
 
 function Game() {
   return (
-    <div>
+    <>
       <GameScreen />
-    </div>
+    </>
   );
 }
 

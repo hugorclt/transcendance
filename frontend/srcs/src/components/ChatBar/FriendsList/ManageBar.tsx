@@ -3,7 +3,7 @@ import React, { useContext, useRef, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { StatusContext } from "../../../statusPageContext";
+import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 
 function ManageBar() {
   const [widthInvite, setWidthInvite] = useState("0%");
@@ -11,7 +11,7 @@ function ManageBar() {
   const [username, setUsername] = useState("");
   const focusRef = useRef<HTMLInputElement>(null);
   const axiosPrivate = useAxiosPrivate();
-  const socket = useContext(StatusContext);
+  const socket = useContext(ChatSocketContext);
 
   const handleInvite = () => {
     setWidthInvite("100%");
@@ -27,27 +27,15 @@ function ManageBar() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    axiosPrivate
-      .get("/auth/me")
-      .then((res: AxiosResponse) => {
-        socket?.emit("friend-request", {
-          fromId: res.data.id,
-          toUsername: username,
-        }); 
-      })
-      .catch((err: AxiosError) => {
-        if (err.response?.status === 404) alert("Username doesn't exist");
-        else if (err.response?.status === 409)
-          alert("User already in your friendList");
-      });
+    socket?.emit("friend-request", username);
   };
 
   return (
-    <div>
+    <>
       <div className="flex justify-between items-center">
         <div>
           <h2
-            className="text-orange-100 mx-3 mt-1 transition-all"
+            className="text-gold mx-3 mt-1 transition-all"
             style={{ display: display }}>
             Friends
           </h2>
@@ -80,7 +68,7 @@ function ManageBar() {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

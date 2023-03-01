@@ -1,14 +1,13 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import React, { createContext } from 'react';
 import { io, Socket } from 'socket.io-client';
-import useAxiosPrivate from './hooks/useAxiosPrivate';
-
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 async function initializeSocket(axiosPrivate: any) {
   try {
     const res: AxiosResponse = await axiosPrivate.get("auth/me");
     const userId = res.data.id;
-    const socket = io('http://localhost:3000/status-update', {
+    const socket = io('http://localhost:3000/status', {
       query: { userId },
     });
     return (socket);
@@ -17,9 +16,9 @@ async function initializeSocket(axiosPrivate: any) {
   }
 }
 
-export const StatusContext = createContext<Socket | null>(null);
+export const ChatSocketContext = createContext<Socket | null>(null);
 
-export function StatusProvider({ children }: { children: React.ReactNode }) {
+export function ChatSocketProvider({ children }: { children: React.ReactNode }) {
   const [socket, setSocket] = React.useState<Socket | null>(null);
   const axiosPrivate = useAxiosPrivate();
 
@@ -32,8 +31,8 @@ export function StatusProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <StatusContext.Provider value={socket}>
+    <ChatSocketContext.Provider value={socket}>
       {children}
-    </StatusContext.Provider>
+    </ChatSocketContext.Provider>
   );
 }

@@ -16,6 +16,10 @@ import { FriendshipModule } from './friendship/friendship.module';
 import { FriendshipService } from './friendship/friendship.service';
 import { GatewayModule } from './gateway/gateway.module';
 import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
+import { ParticipantModule } from './rooms/participant/participant.module';
+import { RoomsService } from './rooms/rooms.service';
+import { ParticipantService } from './rooms/participant/participant.service';
+import { MessagesModule } from './rooms/messages/messages.module';
 
 @Module({
   imports: [
@@ -29,8 +33,10 @@ import { FriendsActivityGateway } from './friends-activity/friends-activity.gate
     GameModule,
     FriendshipModule,
     GatewayModule,
+    ParticipantModule,
+    MessagesModule,
   ],
   controllers: [AppController, FriendshipController],
-  providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityGateway],
+  providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityGateway, RoomsService, ParticipantService],
 })
 export class AppModule {}

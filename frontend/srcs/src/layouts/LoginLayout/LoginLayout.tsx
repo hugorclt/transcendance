@@ -1,8 +1,15 @@
-import Login from "../../components/Login/Login";
+import LoginPage from "../../views/LoginPage/LoginPage";
 
-function LoginLayout() {
+interface LoginLayoutProps {
+  children: React.ReactNode;
+}
+
+
+const LoginLayout = (props: LoginLayoutProps) => {
   return (
-    <Login />
+    <main>
+      {props.children}
+    </main>
   );
 }
 
