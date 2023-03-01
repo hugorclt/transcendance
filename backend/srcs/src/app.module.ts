@@ -16,6 +16,7 @@ import { FriendshipModule } from './friendship/friendship.module';
 import { FriendshipService } from './friendship/friendship.service';
 import { GatewayModule } from './gateway/gateway.module';
 import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
+import { ParticipantModule } from './rooms/participant/participant.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { FriendsActivityGateway } from './friends-activity/friends-activity.gate
     GameModule,
     FriendshipModule,
     GatewayModule,
+    ParticipantModule,
   ],
   controllers: [AppController, FriendshipController],
   providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityGateway],
