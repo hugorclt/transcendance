@@ -47,31 +47,31 @@ function ChatTab(props: { name: string }) {
     const sender = isMe ? "" : <div className="sender">{msg.sender}</div>;
     console.log("wtf", index);
     return (
-      <div key={index} className={`${isMe ? "float-right" : "float-left"}`}>
+      <div key={index} className={`scrollbar-hide overflow-y-scroll ${isMe ? "float-right" : "float-left"}`}>
         {/* <img
           className="avatar"
           src={`https://picsum.photos/id/${index + 10}/50/50`}
           alt="Avatar"
         /> */}
-        <div className="">
-          <div className="text-gold">{msg.message}</div>
+        <div className="scrollbar-hide overflow-y-scroll">
+          <div className="text-gold scrollbar-hide overflow-y-scroll">{msg.message}</div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="h-full w-full overflow-scroll">
+    <div className="h-52 overflow-y-scroll scrollbar-hide">
       {messageList.map((val, index) => {
         return renderMessage(val, index);
       })}
       <form
-        className=" mx-2 absolute inset-x-0 bottom-0"
+        className="mx-2 absolute inset-x-0 bottom-0 scrollbar-hide"
         onSubmit={sendMessage}
         autoComplete="off">
         <input
           value={message}
-          className="relative inset-x-0 bottom-0 w-full my-2"
+          className="relative inset-x-0 bottom-0 w-full my-2 scrollbar-hide"
           onChange={(e) => {
             setMessage(e.target.value);
           }}
