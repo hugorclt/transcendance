@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { StatusContext } from "../../../statusPageContext";
+import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 import { TMessage } from "./ChatType";
 
 function ChatTab(props: { name: string }) {
@@ -9,7 +9,7 @@ function ChatTab(props: { name: string }) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
   const [username, setUsername] = useState("");
-  const socket = useContext(StatusContext);
+  const socket = useContext(ChatSocketContext);
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();

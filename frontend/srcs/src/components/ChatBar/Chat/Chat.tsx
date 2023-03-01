@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { ChatContext } from "../ChatContext";
+import { ChatContext } from "../../../views/ChatPage/ChatContext";
 import ChatTab from "./ChatTab";
 import { nanoid } from "nanoid";
 
@@ -8,7 +8,7 @@ function Chat() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div>
+    <>
       {openChat.length && (
         <div
           style={{ right: "18rem" }}
@@ -41,7 +41,7 @@ function Chat() {
           <ChatTab name={openChat[activeTab]} />
         </div>
       )}
-    </div>
+    </>
   );
 }
 

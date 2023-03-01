@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { TFriendsProps } from "./FriendsType";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IconContext } from "react-icons/lib";
-import { ChatContext } from "../../ChatContext";
+import { ChatContext } from "../../../../views/ChatPage/ChatContext";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
@@ -16,7 +16,7 @@ function FriendsCards(props: TFriendsProps) {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="pt-4 pb-2 px-4">
         <div className="flex items-center justify-around">
           <div className="relative">
@@ -69,7 +69,7 @@ function FriendsCards(props: TFriendsProps) {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

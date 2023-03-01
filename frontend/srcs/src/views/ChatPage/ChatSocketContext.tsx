@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
 import { io, Socket } from "socket.io-client";
-import useId from "./hooks/useId";
+import useId from "../../hooks/useId";
 
 function initializeSocket(id: Promise<string>) {
   const userId = id;
@@ -10,9 +10,9 @@ function initializeSocket(id: Promise<string>) {
   return socket;
 }
 
-export const OffGameSocketContext = createContext<Socket | null>(null);
+export const ChatSocketContext = createContext<Socket | null>(null);
 
-export function StatusProvider({ children }: { children: React.ReactNode }) {
+export function ChatSocketProvider({ children }: { children: React.ReactNode }) {
   const [socket, setSocket] = React.useState<Socket | null>(null);
   const id = useId();
 
@@ -25,8 +25,8 @@ export function StatusProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <OffGameSocketContext.Provider value={socket}>
+    <ChatSocketContext.Provider value={socket}>
       {children}
-    </OffGameSocketContext.Provider>
+    </ChatSocketContext.Provider>
   );
 }
