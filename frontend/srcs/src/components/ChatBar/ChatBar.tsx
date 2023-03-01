@@ -9,15 +9,16 @@ import ManageBar from "./FriendsList/ManageBar";
 function ChatBar() {
   return (
     <>
-      <div className="shadow-md bg-dark-blue h-screen w-full">
-        <div className="pt-4 pb-2 px-6">
+      <div className="shadow-md bg-dark-blue h-screen w-full flex flex-col">
+        <div className="pt-4 pb-2 px-6 flex-shrink-0">
           <ProfilBox />
         </div>
-        <div className="bg-gold h-px" />
+        <div className="bg-gold h-px flex-shrink-0" />
         <ManageBar />
-        <div className="overflow-y-scroll h-96 scrollbar-hide">
+        <div className="overflow-y-scroll scrollbar-hide h-5/6">
           <FriendsList />
         </div>
+        <div className="bg-gold h-px" />
         <div className="overflow-y-scroll scrollbar-hide">
           <ChatHistory />
         </div>

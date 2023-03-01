@@ -22,7 +22,7 @@ function ChatCards(props: {
       <img className="rounded-full w-10 h-10" src={Logo} alt=""></img>
       <div className="ml-5 flex flex-col">
         <h1 className="text-gold pb-1">{props.roomName}</h1>
-        <p className="text-gold opacity-75">{props.lastMessage}</p>
+        <p className="text-gold opacity-75">{(props.lastMessage.length > 20) ? props.lastMessage.slice(0, 20-1) + '...' : props.lastMessage}</p>
       </div>
     </div>
   );

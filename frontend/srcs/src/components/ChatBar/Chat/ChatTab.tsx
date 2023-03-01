@@ -14,12 +14,12 @@ function ChatTab(props: { name: string }) {
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
     axiosPrivate
-      .get("auth/me")
+    .get("auth/me")
       .then((res: AxiosResponse) => {
         setUsername(res.data.username);
         setMessageList((prev) => [
           ...prev,
-          { message: message, sender: username },
+          { message: message , sender:username},
         ]);
         socket?.emit("message-sent", {
           message: message,
