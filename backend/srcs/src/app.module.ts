@@ -14,7 +14,6 @@ import { GameModule } from './game/game.module';
 import { FriendshipController } from './friendship/friendship.controller';
 import { FriendshipModule } from './friendship/friendship.module';
 import { FriendshipService } from './friendship/friendship.service';
-import { GatewayModule } from './gateway/gateway.module';
 import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
 import { ParticipantModule } from './rooms/participant/participant.module';
 import { RoomsService } from './rooms/rooms.service';
@@ -32,7 +31,6 @@ import { MessagesModule } from './rooms/messages/messages.module';
     HttpModule,
     GameModule,
     FriendshipModule,
-    GatewayModule,
     ParticipantModule,
     MessagesModule,
   ],

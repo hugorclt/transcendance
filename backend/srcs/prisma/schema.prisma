@@ -91,6 +91,7 @@ model Participant {
   role   Role   @default(BASIC)
   roomId String @db.Uuid
   userId String @db.Uuid
+  joinedAt     DateTime @default(now())
   room   Room   @relation(fields: [roomId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
 }
