@@ -16,6 +16,7 @@ import { Socket } from 'socket.io';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { ParticipantService } from 'src/rooms/participant/participant.service';
 import { Role } from '@prisma/client';
+import { FriendsActivityService } from './friends-activity.service';
 
 @WebSocketGateway({
   namespace: '/status',
@@ -32,16 +33,22 @@ export class FriendsActivityGateway
   constructor(
     private friendShip: FriendshipService,
     private usersService: UsersService,
-    private roomsService: RoomsService,
-    private participantService: ParticipantService,
+    // private roomsService: RoomsService,
+    // private participantService: ParticipantService,
+    private friendsActivityService: FriendsActivityService,
   ) {}
 
   @WebSocketServer()
-  server: Server;
+  public server: Server;
 
   onModuleInit() {
     this.server.on('connection', (socket) => {});
   }
+
+  afterInit(server: Server) {
+    this.friendsActivityService.socket = server;
+  }
+
 
   async handleConnection(client: any) {
     var clientId = client.handshake.query.userId;

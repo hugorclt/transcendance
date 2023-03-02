@@ -14,14 +14,16 @@ import { GameModule } from './game/game.module';
 import { FriendshipController } from './friendship/friendship.controller';
 import { FriendshipModule } from './friendship/friendship.module';
 import { FriendshipService } from './friendship/friendship.service';
-import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
+// import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
 import { ParticipantModule } from './rooms/participant/participant.module';
 import { RoomsService } from './rooms/rooms.service';
 import { ParticipantService } from './rooms/participant/participant.service';
 import { MessagesModule } from './rooms/messages/messages.module';
-
+import { WebsocketModule } from './friends-activity/friend-activity.module';
+import {FriendsActivityService}  from './friends-activity/friends-activity.service';
 @Module({
   imports: [
+    // FriendsActivityGateway,
     AuthModule,
     PrismaModule,
     ItemsModule,
@@ -33,8 +35,9 @@ import { MessagesModule } from './rooms/messages/messages.module';
     FriendshipModule,
     ParticipantModule,
     MessagesModule,
+    WebsocketModule,
   ],
   controllers: [AppController, FriendshipController],
-  providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityGateway, RoomsService, ParticipantService],
+  providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityService, RoomsService, ParticipantService],
 })
 export class AppModule {}

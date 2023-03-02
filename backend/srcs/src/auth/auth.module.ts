@@ -9,10 +9,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { refreshStrategy } from './utils/refresh-strategy';
 import { accessStrategy } from './utils/access-strategy';
 import { HttpModule } from '@nestjs/axios';
-import { FriendsActivityGateway } from 'src/friends-activity/friends-activity.gateway';
 import { FriendshipService } from 'src/friendship/friendship.service';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { ParticipantService } from 'src/rooms/participant/participant.service';
+import {FriendsActivityService} from 'src/friends-activity/friends-activity.service';
 
 @Module({
   imports: [
@@ -33,10 +33,10 @@ import { ParticipantService } from 'src/rooms/participant/participant.service';
     LocalStrategy,
     refreshStrategy,
     accessStrategy,
-    FriendsActivityGateway,
     FriendshipService,
     RoomsService,
-    ParticipantService
+    ParticipantService,
+    FriendsActivityService,
   ],
 })
 export class AuthModule {}
