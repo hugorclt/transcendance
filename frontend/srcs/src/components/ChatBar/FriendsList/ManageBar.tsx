@@ -27,19 +27,7 @@ function ManageBar() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    axiosPrivate
-      .get("/auth/me")
-      .then((res: AxiosResponse) => {
-        socket?.emit("friend-request", {
-          fromId: res.data.id,
-          toUsername: username,
-        }); 
-      })
-      .catch((err: AxiosError) => {
-        if (err.response?.status === 404) alert("Username doesn't exist");
-        else if (err.response?.status === 409)
-          alert("User already in your friendList");
-      });
+    socket?.emit("friend-request", username);
   };
 
   return (

@@ -60,7 +60,6 @@ function FriendsList() {
 
   return (
     <>
-      <ManageBar />
       {friendList.map((val, index) => {
         return (
           <FriendsCards

@@ -47,13 +47,13 @@ function FriendsCards(props: TFriendsProps) {
             </button>
           </IconContext.Provider>
           {openDD && (
-            <ul className="absolute list-none right-12 border rounded border-gold bg-dark-blue-200">
-              <li className="p-1 relative hover:bg-dark-blue">
+            <ul className="absolute list-none right-12 border rounded border-gold bg-dark-blue">
+              <li className="p-1 relative hover:bg-dark-blue-200">
                 <button
                   onMouseDown={() => {
                     setOpenChat((prev) => {
-                      if (!prev.includes(props.name)) {
-                        return [...prev, props.name];
+                      if (!prev.includes(props.name + "_room")) {
+                        return [...prev, props.name + "_room"];
                       }
                       return prev;
                     });
@@ -62,7 +62,7 @@ function FriendsCards(props: TFriendsProps) {
                   Send message
                 </button>
               </li>
-              <li className="p-1 relative hover:bg-dark-blue">
+              <li className="p-1 relative hover:bg-dark-blue-200">
                 <button className="text-gold text-xs">Remove friend</button>
               </li>
             </ul>

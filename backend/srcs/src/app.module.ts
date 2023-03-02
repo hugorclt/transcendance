@@ -18,6 +18,10 @@ import { FriendsActivityGateway } from './friends-activity/friends-activity.gate
 import { GameGateway } from './game/game.gateway';
 import { GameModule } from './game/game.module';
 import { LobbiesModule } from './lobbies/lobbies.module';
+import { ParticipantModule } from './rooms/participant/participant.module';
+import { RoomsService } from './rooms/rooms.service';
+import { ParticipantService } from './rooms/participant/participant.service';
+import { MessagesModule } from './rooms/messages/messages.module';
 
 @Module({
   imports: [
@@ -33,6 +37,9 @@ import { LobbiesModule } from './lobbies/lobbies.module';
     FriendshipModule,
     GameModule,
     LobbiesModule,
+    ParticipantModule,
+    MessagesModule,
+    GameGateway,
   ],
   controllers: [AppController, FriendshipController],
   providers: [
@@ -41,7 +48,8 @@ import { LobbiesModule } from './lobbies/lobbies.module';
     PrismaService,
     FriendshipService,
     FriendsActivityGateway,
-    GameGateway,
+    RoomsService,
+    ParticipantService,
   ],
 })
 export class AppModule {}

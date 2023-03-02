@@ -54,16 +54,10 @@ function ProfilBox() {
           .post("/users/me/status", {
             status: status[index],
           })
-          .then((res: AxiosResponse) => {
-            socket?.emit("status-update", {
-              id: res.data.id,
-              status: status[index],
-            });
-            setUser(res.data);
-          })
           .catch((res: AxiosError) =>
             navigate("/login", { state: { from: location }, replace: true })
           );
+        socket?.emit("status-update", status[index]);
       }
     });
   };

@@ -10,18 +10,10 @@ function FriendNotifications() {
   const axiosPrivate = useAxiosPrivate();
 
   const acceptRequest = (username: string) => {
-    axiosPrivate
-      .get("auth/me")
-      .then((res: AxiosResponse) => {
-        socket?.emit("friend-request-reply", {
-          fromUsername: username,
-          toId: res.data.id,
-          isReplyTrue: true,
-        });
-      })
-      .catch((err: AxiosError) => {
-        console.log("error: login required!");
-      });
+    socket?.emit("friend-request-reply", {
+      fromUsername: username,
+      isReplyTrue: true,
+    });
   };
 
   const notify = (username: string) =>
