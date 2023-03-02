@@ -1,17 +1,8 @@
 import React from "react";
-import GameTest from "../../components/Game/GameTest";
-import GamePageLayout from "../../layouts/GamePageLayout/GamePageLayout";
-import {
-  socket,
-  WebSocketGameProvider,
-} from "../../services/WebSocket/WebsocketGameContext";
+import Game from "../../components/Game/Game";
 
 function GamePage() {
-  return (
-    <WebSocketGameProvider value={socket}>
-      <GameTest />
-    </WebSocketGameProvider>
-  );
+  return <Game />;
 }
 
 export default GamePage;

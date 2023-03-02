@@ -9,7 +9,6 @@ import ShopPage from "./views/ShopPage/ShopPage";
 import LobbyPage from "./views/LobbyPage/LobbyPage";
 import MissingPage from "./views/MissingPage/MissingPage";
 import GamePage from "./views/GamePage/GamePage";
-
 import RequireAuth from "./services/Auth/RequireAuth";
 import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Auth42/Login42";
