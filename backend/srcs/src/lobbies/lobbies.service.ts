@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
+import { JoinLobbyDto } from './dto/join-lobby.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LobbyEntity } from './entities/lobby.entity';
+
 @Injectable()
 export class LobbiesService {
   constructor(private readonly prisma: PrismaService) {}
@@ -10,6 +12,13 @@ export class LobbiesService {
   //may be used in conjunction with security services to find information about user
   async create(createLobbyDto: CreateLobbyDto): Promise<LobbyEntity> {
     return await this.prisma.lobby.create({ data: createLobbyDto });
+  }
+
+  async joinLobby(joinLobbyDto: JoinLobbyDto): Promise<LobbyEntity> {
+    return await this.prisma.lobby.update({
+      where: { id: joinLobbyDto.lobbyId },
+      data: {},
+    });
   }
 
   //will be used in matchmaking

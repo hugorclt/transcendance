@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import React, { createContext } from "react";
+import React, { createContext, useRef, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
@@ -16,6 +16,8 @@ async function initializeSocket(axiosPrivate: any) {
   }
 }
 
+export var socket: Socket;
+
 export const ChatSocketContext = createContext<Socket | null>(null);
 
 export function ChatSocketProvider({
@@ -25,13 +27,17 @@ export function ChatSocketProvider({
 }) {
   const [socket, setSocket] = React.useState<Socket | null>(null);
   const axiosPrivate = useAxiosPrivate();
+  const isInit = useRef(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function initSocket() {
       const s: any = await initializeSocket(axiosPrivate);
       setSocket(s);
     }
-    initSocket();
+    if (!isInit.current) {
+      initSocket();
+    }
+    isInit.current = true;
   }, []);
 
   return (
@@ -40,3 +46,7 @@ export function ChatSocketProvider({
     </ChatSocketContext.Provider>
   );
 }
+
+export const useChatSocket = () => React.useContext(ChatSocketContext);
+
+export default ChatSocketProvider;

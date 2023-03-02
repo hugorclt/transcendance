@@ -36,7 +36,8 @@ function ManageBar() {
         <div>
           <h2
             className="text-gold mx-3 mt-1 transition-all"
-            style={{ display: display }}>
+            style={{ display: display }}
+          >
             Friends
           </h2>
         </div>
@@ -61,7 +62,8 @@ function ManageBar() {
           <button
             style={{ display: display }}
             className="mx-3 transition-all"
-            onClick={handleInvite}>
+            onClick={handleInvite}
+          >
             <IconContext.Provider value={{ color: "#E8C47C" }}>
               <AiOutlineUsergroupAdd />
             </IconContext.Provider>

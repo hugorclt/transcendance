@@ -8,30 +8,30 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username     String        @unique
-  email        String        @unique
-  password     String
-  avatar       String?
-  refreshToken String?
-  type         Type          @default(LOCAL)
-  status       Status?       @default(DISCONNECTED)
-  balance      Int?          @default(0)
-  banned       Banned[]
-  isBloqued    Bloqued[]     @relation("bloqued")
-  hasBloqued   Bloqued[]     @relation("user")
-  friendOne    FriendShip[]  @relation("friendOne")
-  friendTwo    FriendShip[]  @relation("friendTwo")
-  playerOne    Match[]       @relation("playerOne")
-  playerTwo    Match[]       @relation("playerTwo")
-  winner       Match[]       @relation("winner")
-  sender       Message[]
-  participant  Participant[]
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username         String             @unique
+  email            String             @unique
+  password         String
+  avatar           String?
+  refreshToken     String?
+  type             Type               @default(LOCAL)
+  status           Status?            @default(DISCONNECTED)
+  balance          Int?               @default(0)
+  banned           Banned[]
+  isBloqued        Bloqued[]          @relation("bloqued")
+  hasBloqued       Bloqued[]          @relation("user")
+  friendOne        FriendShip[]       @relation("friendOne")
+  friendTwo        FriendShip[]       @relation("friendTwo")
+  playerOne        Match[]            @relation("playerOne")
+  playerTwo        Match[]            @relation("playerTwo")
+  winner           Match[]            @relation("winner")
+  sender           Message[]
+  participant      Participant[]
   lobbyParticipant LobbyParticipant[]
-  lobbySpectator LobbySpectator[]
-  admin        Room[]        @relation("admin")
-  user         UserItem[]    @relation("owner")
-  owner        Lobby[] @relation("lobbyOwner") 
+  lobbySpectator   LobbySpectator[]
+  admin            Room[]             @relation("admin")
+  user             UserItem[]         @relation("owner")
+  owner            Lobby[]            @relation("lobbyOwner")
 }
 
 model Bloqued {
@@ -52,13 +52,13 @@ model FriendShip {
 
 //================== GAME =================
 model Lobby {
-  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ownerId     String  @db.Uuid
-  nbPlayers   Int     @default(2)
-  maxDuration Int     @default(180) 
-  mode        Mode    @default(CLASSIC)
-  map         MapName @default(CLASSIC)
-  owner       User    @relation("lobbyOwner", fields: [ownerId], references: [id])
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId     String             @unique @db.Uuid
+  nbPlayers   Int                @default(2)
+  maxDuration Int                @default(180)
+  mode        Mode               @default(CLASSIC)
+  map         MapName            @default(CLASSIC)
+  owner       User               @relation("lobbyOwner", fields: [ownerId], references: [id])
   players     LobbyParticipant[]
   spectators  LobbySpectator[]
 }

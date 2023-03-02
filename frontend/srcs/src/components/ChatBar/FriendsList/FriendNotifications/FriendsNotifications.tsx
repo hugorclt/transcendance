@@ -7,6 +7,7 @@ import { ChatSocketContext } from "../../../../views/ChatPage/ChatSocketContext"
 
 function FriendNotifications() {
   const socket = useContext(ChatSocketContext);
+
   const axiosPrivate = useAxiosPrivate();
 
   const acceptRequest = (username: string) => {
@@ -27,7 +28,8 @@ function FriendNotifications() {
             className="text-green-800"
             onClick={() => {
               acceptRequest(username);
-            }}>
+            }}
+          >
             Accept
           </button>
           <button className="text-red-800">Refuse</button>

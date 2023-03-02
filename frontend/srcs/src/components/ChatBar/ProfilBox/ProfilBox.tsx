@@ -13,6 +13,7 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
 import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
+
 type User = {
   id: string;
   username: string;

@@ -14,12 +14,12 @@ function ChatTab(props: { name: string }) {
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
     axiosPrivate
-    .get("auth/me")
+      .get("auth/me")
       .then((res: AxiosResponse) => {
         setUsername(res.data.username);
         setMessageList((prev) => [
           ...prev,
-          { message: message , sender:username},
+          { message: message, sender: username },
         ]);
         socket?.emit("message-sent", {
           message: message,
@@ -47,14 +47,21 @@ function ChatTab(props: { name: string }) {
     const sender = isMe ? "" : <div className="sender">{msg.sender}</div>;
     console.log("wtf", index);
     return (
-      <div key={index} className={`scrollbar-hide overflow-y-scroll ${isMe ? "float-right" : "float-left"}`}>
+      <div
+        key={index}
+        className={`scrollbar-hide overflow-y-scroll ${
+          isMe ? "float-right" : "float-left"
+        }`}
+      >
         {/* <img
           className="avatar"
           src={`https://picsum.photos/id/${index + 10}/50/50`}
           alt="Avatar"
         /> */}
         <div className="scrollbar-hide overflow-y-scroll">
-          <div className="text-gold scrollbar-hide overflow-y-scroll">{msg.message}</div>
+          <div className="text-gold scrollbar-hide overflow-y-scroll">
+            {msg.message}
+          </div>
         </div>
       </div>
     );
@@ -68,7 +75,8 @@ function ChatTab(props: { name: string }) {
       <form
         className="mx-2 absolute inset-x-0 bottom-0 scrollbar-hide"
         onSubmit={sendMessage}
-        autoComplete="off">
+        autoComplete="off"
+      >
         <input
           value={message}
           className="relative inset-x-0 bottom-0 w-full my-2 scrollbar-hide"
