@@ -9,7 +9,7 @@ import React, {
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import logo from "../../../assets/images/42.jpg";
-import LogoutButton from "../LogoutButton.tsx/LogoutButton";
+import LogoutButton from "./LogoutButton/LogoutButton";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
