@@ -2,6 +2,7 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -28,7 +29,7 @@ import { FriendsActivityService } from './friends-activity.service';
 })
 // @UseGuards(AccessAuthGard) // a rajouter plus tard
 export class FriendsActivityGateway
-  implements OnModuleInit, OnGatewayConnection
+  implements OnModuleInit, OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(
     private friendShip: FriendshipService,
@@ -51,10 +52,39 @@ export class FriendsActivityGateway
 
 
   async handleConnection(client: any) {
+    console.log("handle connect called");
     var clientId = client.handshake.query.userId;
     client.join(clientId);
+    const userId: string = client.handshake.query.userId;
+    // const friends = await this.friendShip.findManyForOneUser(userId);
+    const user = await this.usersService.findOne(userId);
+    if (user) {
+    this.emitToFriends(userId, 'on-status-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: "CONNECTED",
+    });
+    }
   }
   
+  // async handleDisconnect(client: any) { 
+  //   console.log("handleDisconnect called");
+  //   var clientId = client.handshake.query.userId;
+  //   const userId: string = client.handshake.query.userId;
+  //   // const friends = await this.friendShip.findManyForOneUser(userId);
+  //   const user = await this.usersService.findOne(userId);
+  //   console.log("disconnect");
+  //   if (user) {
+  //     console.log("user", user);
+  //   this.emitToFriends(userId, 'on-status-update', {
+  //     username: user.username,
+  //     avatar: user.avatar,
+  //     status: "DISCONNECTED",
+  //   });
+  //   console.log("user", user);
+  //   }
+  //   client.leave(clientId);
+  // }
 
   async emitToFriends(
     userId: string,

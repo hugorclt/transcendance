@@ -9,7 +9,7 @@ export class FriendsActivityService {
     constructor(private readonly friendshipService: FriendshipService,
                 private readonly usersService: UsersService ) { }
 
-    public socket: Server = null;
+    public socket: Server;
 
 
     async emitToFriends(
@@ -20,11 +20,14 @@ export class FriendsActivityService {
         const friends = await this.friendshipService.findManyForOneUser(userId);
         const user = await this.usersService.findOne(userId);
         friends.forEach((friend) => {
+            console.log("socket", this.socket);
+          if (this.socket) {
           this.socket.to(friend.id).emit(eventName, {
             username: user.username,
             avatar: user.avatar,
             ...data,
           });
+        }
         });
       }
 
