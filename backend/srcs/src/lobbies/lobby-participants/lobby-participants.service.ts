@@ -1,26 +1,50 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLobbyParticipantDto } from './dto/create-lobby-participant.dto';
 import { UpdateLobbyParticipantDto } from './dto/update-lobby-participant.dto';
+import { LobbyParticipantEntity } from './entities/lobby-participant.entity';
 
 @Injectable()
 export class LobbyParticipantsService {
-  create(createLobbyParticipantDto: CreateLobbyParticipantDto) {
-    return 'This action adds a new lobbyParticipant';
+  constructor(private prisma: PrismaService) {}
+
+  async create(
+    createLobbyParticipantDto: CreateLobbyParticipantDto,
+  ): Promise<LobbyParticipantEntity> {
+    return await this.prisma.lobbyParticipant.create({
+      data: createLobbyParticipantDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all lobbyParticipants`;
+  async findAll(): Promise<LobbyParticipantEntity[]> {
+    return await this.prisma.lobbyParticipant.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lobbyParticipant`;
+  async findByLobby(id: string): Promise<LobbyParticipantEntity[]> {
+    return await this.prisma.lobbyParticipant.findMany({
+      where: {
+        lobbyId: id,
+      },
+    });
   }
 
-  update(id: number, updateLobbyParticipantDto: UpdateLobbyParticipantDto) {
-    return `This action updates a #${id} lobbyParticipant`;
+  async findOne(id: string): Promise<LobbyParticipantEntity> {
+    return await this.prisma.lobbyParticipant.findUnique({
+      where: { id },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} lobbyParticipant`;
+  async update(
+    id: string,
+    updateLobbyParticipantDto: UpdateLobbyParticipantDto,
+  ): Promise<LobbyParticipantEntity> {
+    return await this.prisma.lobbyParticipant.update({
+      where: { id },
+      data: updateLobbyParticipantDto,
+    });
+  }
+
+  async remove(id: string): Promise<LobbyParticipantEntity> {
+    return await this.prisma.lobbyParticipant.delete({ where: { id } });
   }
 }

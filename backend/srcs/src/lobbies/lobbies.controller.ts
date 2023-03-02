@@ -14,42 +14,52 @@ import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { LobbyEntity } from './entities/lobby.entity';
+import { LobbyParticipantEntity } from './lobby-participants/entities/lobby-participant.entity';
+
 @Controller('lobbies')
-@UseGuards(AccessAuthGard)
+// @UseGuards(AccessAuthGard)
 @ApiTags('lobbies')
 export class LobbiesController {
   constructor(private readonly lobbiesService: LobbiesService) {}
 
   @Post()
   @ApiCreatedResponse({ type: LobbyEntity })
-  create(@Body() createLobbyDto: CreateLobbyDto): Promise<LobbyEntity> {
-    return this.lobbiesService.create(createLobbyDto);
+  async create(@Body() createLobbyDto: CreateLobbyDto): Promise<LobbyEntity> {
+    return await this.lobbiesService.create(createLobbyDto);
   }
 
   @Get()
   @ApiOkResponse({ type: LobbyEntity, isArray: true })
-  findAll(): Promise<LobbyEntity[]> {
-    return this.lobbiesService.findAll();
+  async findAll(): Promise<LobbyEntity[]> {
+    return await this.lobbiesService.findAll();
   }
 
   @Get(':id')
   @ApiOkResponse({ type: LobbyEntity })
-  findOne(@Param('id') id: string): Promise<LobbyEntity> {
-    return this.lobbiesService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<LobbyEntity> {
+    return await this.lobbiesService.findOne(id);
+  }
+
+  @Get(':id/participants')
+  @ApiOkResponse({ type: LobbyParticipantEntity, isArray: true })
+  async findLobbyParticipants(
+    @Param('id') id: string,
+  ): Promise<LobbyParticipantEntity[]> {
+    return this.lobbiesService.findLobbyParticipants(id);
   }
 
   @Patch(':id')
   @ApiOkResponse({ type: LobbyEntity })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateLobbyDto: UpdateLobbyDto,
   ): Promise<LobbyEntity> {
-    return this.lobbiesService.update(id, updateLobbyDto);
+    return await this.lobbiesService.update(id, updateLobbyDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: LobbyEntity })
-  remove(@Param('id') id: string): Promise<LobbyEntity> {
-    return this.lobbiesService.remove(id);
+  async remove(@Param('id') id: string): Promise<LobbyEntity> {
+    return await this.lobbiesService.remove(id);
   }
 }
