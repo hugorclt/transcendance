@@ -7,7 +7,7 @@
 
 .flip-card {
   width: 100%;
-  height: 100%;
+  height: 80%;
   -webkit-transform: translateZ( 0px);
   transform: translateZ( 0px);
   -webkit-transition: -webkit-transform .7s, margin .4s;
@@ -23,7 +23,6 @@
 }
 
 .flip-card figure {
-  margin: 0;
   position: absolute;
   width: 90%;
   height: 100%;

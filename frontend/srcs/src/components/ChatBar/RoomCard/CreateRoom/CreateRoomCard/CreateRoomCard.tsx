@@ -1,6 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
+import { ChatHistoryContext } from "../../../../../views/ChatPage/ChatHistoryContext";
 import { FriendsListContext } from "../../../../../views/ChatPage/FriendsListContext";
 
 function CreateRoomCard() {
@@ -9,6 +10,7 @@ function CreateRoomCard() {
   const [privateRoom, setPrivateRoom] = useState(false);
   const [roomName, setRoomName] = useState("");
   const [friendRoom, setFriendRoom] = useState<string[]>([]);
+  const {setChatHistory} = useContext(ChatHistoryContext);
   const axiosPrivate = useAxiosPrivate();
 
   const addFriendToRoom = (name: string) => {
@@ -30,7 +32,13 @@ function CreateRoomCard() {
         isPrivate: privateRoom,
       })
       .then((e: AxiosResponse) => {
-        console.log("nice");
+        setChatHistory((prev) => {
+          if (!prev.some((item) => item.name === roomName)) {
+            return [...prev, {avatar: "", lastMessage: "", name: roomName}];
+          }
+          return prev;
+        });
+        
       })
       .catch((e: AxiosError) => {
         console.log("error");
@@ -43,6 +51,7 @@ function CreateRoomCard() {
         {friendList.map((friend) => {
           return (
             <div
+              key={friend.name}
               onClick={() => addFriendToRoom(friend.name)}
               className={
                 friendRoom.includes(friend.name)
@@ -81,7 +90,7 @@ function CreateRoomCard() {
                 Make private
               </label>
             </div>
-            <input type="submit" className="text-gold" />
+            <input type="submit" value="Create" className="text-gold" />
           </form>
         </div>
       </div>

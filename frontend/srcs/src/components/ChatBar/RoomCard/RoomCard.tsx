@@ -11,10 +11,10 @@ function RoomCards() {
   const { isActive } = useContext(CreateRoomContext);
 
   return (
-    <div className="form-card-container">
+    <div className="w-full h-full form-card-container">
       <div
         className={
-          isActive ? "px-3 mt-2 flip-card flipped" : "px-3 mt-2 flip-card"
+          isActive ? "px-3 h-full flip-card flipped" : "px-3 h-full flip-card"
         }>
         <ChatHistory />
         <CreateRoom />

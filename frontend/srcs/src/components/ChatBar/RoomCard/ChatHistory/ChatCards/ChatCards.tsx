@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import Logo from "../../../../assets/images/42.jpg";
 import { ChatContext } from "../../../../../views/ChatPage/ChatContext";
 
 function ChatCards(props: {
@@ -19,7 +18,7 @@ function ChatCards(props: {
   };
   return (
     <div onClick={addChatToTab} className="pt-4 pb-2 px-4 flex items-center">
-      <img className="rounded-full w-10 h-10" src={Logo} alt=""></img>
+      <img className="rounded-full w-10 h-10" src="" alt=""></img>
       <div className="ml-5 flex flex-col">
         <h1 className="text-gold pb-1">{props.roomName}</h1>
         <p className="text-gold opacity-75">

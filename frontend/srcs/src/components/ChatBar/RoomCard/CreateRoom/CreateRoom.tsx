@@ -12,35 +12,32 @@ function CreateRoom() {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
-    <figure className="create-group-side">
-      <div>
-        <IconContext.Provider value={{ color: "#E8C47C" }}>
-          <BiArrowBack
-            size={20}
-            onClick={() => {
-              setIsActive(!isActive);
-              setCreateNewRoom(false);
-              setJoinRoom(false);
-              setIsClicked(false);
-            }}
-          />
-        </IconContext.Provider>
-      </div>
+    <figure className="pt-2 w-full h-full create-group-side">
+      <IconContext.Provider value={{ color: "#E8C47C", size: "20" }}>
+        <BiArrowBack
+          onClick={() => {
+            setIsActive(!isActive);
+            setCreateNewRoom(false);
+            setJoinRoom(false);
+            setIsClicked(false);
+          }}
+        />
+      </IconContext.Provider>
       {!isClicked && (
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex h-full flex-col justify-center items-center">
           <button
             onClick={() => {
               setCreateNewRoom(true);
               setIsClicked(true);
             }}>
-            <h2 className="text-gold">Create a new room</h2>
+            <h2 className="text-gold p-2">Create a new room</h2>
           </button>
           <button
             onClick={() => {
               setJoinRoom(true);
               setIsClicked(true);
             }}>
-            <h2 className="text-gold">Join a new Room</h2>
+            <h2 className="text-gold p-2">Join a new Room</h2>
           </button>
         </div>
       )}

@@ -10,16 +10,16 @@ function ChatBarLayout() {
   return (
     <>
       <div className="shadow-md bg-dark-blue h-screen w-full flex flex-col">
-        <div className="pt-4 pb-2 px-6 flex-shrink-0">
+        <div className="pt-4 pb-2 px-6 flex-shrink-0 1/6">
           <ProfilBox />
         </div>
         <div className="bg-gold h-px flex-shrink-0" />
         <ManageBar />
-        <div className="overflow-y-scroll scrollbar-hide h-5/6">
+        <div className="overflow-y-scroll scrollbar-hide h-3/6">
           <FriendsList />
         </div>
         <div className="bg-gold h-0.5" />
-        <div className="overflow-y-scroll scrollbar-hide h-3/4 screen:h-1/2">
+        <div className="h-2/6">
           <ChatHistory />
         </div>
         <FriendNotifications />
