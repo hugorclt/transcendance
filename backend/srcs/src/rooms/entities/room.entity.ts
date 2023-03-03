@@ -6,6 +6,9 @@ export class RoomEntity implements Room {
     id: string;
 
     @ApiProperty()
+    isPrivate: boolean;
+
+    @ApiProperty()
     name: string;
 
     @ApiProperty()
@@ -16,7 +19,4 @@ export class RoomEntity implements Room {
 
     @ApiProperty()
     password: string;
-
-    @ApiProperty()
-    isPrivate: boolean;
 }

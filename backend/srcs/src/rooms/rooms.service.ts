@@ -35,12 +35,12 @@ export class RoomsService {
     });
   }
 
-  update(id: string, updateRoomDto: UpdateRoomDto) {
-    return this.prisma.room.update({
-      where: {id},
-      data: updateRoomDto,
-    });
-  }
+  // update(id: string, updateRoomDto: UpdateRoomDto) {
+  //   return this.prisma.room.update({
+  //     where: {id},
+      // data: updateRoomDto,
+  //   });
+  // }
 
   remove(id: string) {
     return this.prisma.room.delete({
