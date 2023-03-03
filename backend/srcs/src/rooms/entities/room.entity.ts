@@ -13,4 +13,10 @@ export class RoomEntity implements Room {
 
     @ApiProperty()
     adminId: string;
+
+    @ApiProperty()
+    password: string;
+
+    @ApiProperty()
+    isPrivate: boolean;
 }
