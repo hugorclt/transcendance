@@ -19,7 +19,7 @@ function App() {
   return (
     <Routes>
       {/* Public route */}
-      <Route path="/login" element={<LoginLayout><LoginPage /></LoginLayout>} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/login/42" element={<LoginLayout><Login42 /></LoginLayout>} />
 
       <Route element={<PersistLogin />}>
