@@ -1,19 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoomEntity } from './entities/room.entity';
+import { AccessAuthGard } from 'src/auth/utils/guards';
 
 @Controller('rooms')
 @ApiTags('rooms')
+@UseGuards(AccessAuthGard)
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
-  @Post()
+  @Post('/create')
   @ApiCreatedResponse({ type: RoomEntity })
-  create(@Body() createRoomDto: CreateRoomDto) {
-    return this.roomsService.create(createRoomDto);
+  create(@Request() req) {
+    return this.roomsService.create(req);
   }
 
   @Get()

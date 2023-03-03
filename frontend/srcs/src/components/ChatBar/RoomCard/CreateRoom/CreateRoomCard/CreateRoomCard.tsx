@@ -6,7 +6,7 @@ import { FriendsListContext } from "../../../../../views/ChatPage/FriendsListCon
 function CreateRoomCard() {
   const { friendList } = useContext(FriendsListContext);
   const [password, setPassword] = useState("");
-  const [privateRoom, setPrivateRoom] = useState("unchecked");
+  const [privateRoom, setPrivateRoom] = useState(false);
   const [roomName, setRoomName] = useState("");
   const [friendRoom, setFriendRoom] = useState<string[]>([]);
   const axiosPrivate = useAxiosPrivate();
@@ -45,40 +45,44 @@ function CreateRoomCard() {
             <div
               onClick={() => addFriendToRoom(friend.name)}
               className={
-                friendRoom.includes(friend.name) ? "bg-white p-3 py-1" : "bg-dark-blue px-3 py-1"
+                friendRoom.includes(friend.name)
+                  ? "bg-white p-3 py-1"
+                  : "bg-dark-blue px-3 py-1"
               }>
               <h2 className="text-gold">{friend.name}</h2>
             </div>
           );
         })}
         <div className="p-3 flex flex-col placeholder-dark-blue">
-          <input
-            type="text"
-            value={roomName}
-            onChange={(e) => setRoomName(e.target.value)}
-            placeholder="room name"
-          />
-          <div className="flex">
+          <form onSubmit={handleSubmit} autoComplete="off">
             <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="password"
-              className="w-2/3"
+              required
+              type="text"
+              value={roomName}
+              onChange={(e) => setRoomName(e.target.value)}
+              placeholder="room name"
+              className="w-3/5 h-6 p-2 rounded"
             />
-            <input
-              type="checkbox"
-              id="privateRoom"
-              onChange={(e) => setPrivateRoom(e.target.value)}
-              value={privateRoom}
-            />
-            <label htmlFor="privateRoom" className="text-gold">
-              Make private
-            </label>
-          </div>
-          <button className="text-gold" onClick={handleSubmit}>
-            Create Room
-          </button>
+            <div className="flex items-center">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="password"
+                className="w-3/5 h-6 p-2 mr-4 rounded"
+                disabled={privateRoom? false : true}
+              />
+              <input
+                type="checkbox"
+                id="privateRoom"
+                onChange={(e) => setPrivateRoom(e.target.checked)}
+              />
+              <label htmlFor="privateRoom" className="text-gold">
+                Make private
+              </label>
+            </div>
+            <input type="submit" className="text-gold" />
+          </form>
         </div>
       </div>
     </>

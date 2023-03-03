@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Request } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,10 +8,11 @@ import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 export class RoomsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createRoomDto: CreateRoomDto) {
-    return this.prisma.room.create({
-      data: createRoomDto
-    })
+  create(@Request() req) {
+    console.log(req);
+    // return this.prisma.room.create({
+    //   data: 
+    // })
   }
 
   findAll() {
