@@ -29,7 +29,7 @@ import { FriendsActivityService } from './friends-activity.service';
 })
 // @UseGuards(AccessAuthGard) // a rajouter plus tard
 export class FriendsActivityGateway
-  implements OnModuleInit, OnGatewayConnection, OnGatewayDisconnect
+  implements OnModuleInit, OnGatewayConnection
 {
   constructor(
     private friendShip: FriendshipService,
@@ -180,6 +180,19 @@ export class FriendsActivityGateway
         message: payload.message,
         sender: user1.username,
       });
+  }
+
+  @SubscribeMessage('logout')
+  async onLogout(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() userId,
+  ): Promise<void> {
+    const user = await this.usersService.findOne(userId);
+    this.emitToFriends(userId, 'on-status-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: 'DISCONNECTED',
+    });
   }
 }
 
