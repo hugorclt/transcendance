@@ -18,8 +18,8 @@ function ChatBar() {
         <div className="overflow-y-scroll scrollbar-hide h-5/6">
           <FriendsList />
         </div>
-        <div className="bg-gold h-px" />
-        <div className="overflow-y-scroll scrollbar-hide h-1/2 screen:h-5/6">
+        <div className="bg-gold h-0.5" />
+        <div className="overflow-y-scroll scrollbar-hide h-3/4 screen:h-1/2">
           <ChatHistory />
         </div>
         <FriendNotifications />
