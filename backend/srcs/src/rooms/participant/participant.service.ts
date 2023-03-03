@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { CreateParticipantDto } from './dto/create-participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
 
@@ -9,8 +10,8 @@ export class ParticipantService {
 
   create(createParticipantDto: CreateParticipantDto) {
     return this.prisma.participant.create({
-      data: createParticipantDto
-    })
+      data: createParticipantDto,
+    });
   }
 
   findAll() {
@@ -19,8 +20,8 @@ export class ParticipantService {
 
   findOne(id: string) {
     return this.prisma.participant.findUnique({
-      where: {id}
-    })
+      where: { id },
+    });
   }
 
   update(id: number, updateParticipantDto: UpdateParticipantDto) {
