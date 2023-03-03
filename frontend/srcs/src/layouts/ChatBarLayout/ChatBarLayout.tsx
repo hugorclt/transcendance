@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import FriendsList from "./FriendsList/FriendsList";
-import ProfilBox from "./ProfilBox/ProfilBox";
-import FriendNotifications from "./FriendsList/FriendNotifications/FriendsNotifications";
-import Chat from "./Chat/Chat";
-import ChatHistory from "./ChatHistory/ChatHistory";
-import ManageBar from "./FriendsList/ManageBar";
+import FriendsList from "../../components/ChatBar/FriendsList/FriendsList";
+import ProfilBox from "../../components/ChatBar/ProfilBox/ProfilBox";
+import FriendNotifications from "../../components/ChatBar/FriendsList/FriendNotifications/FriendsNotifications";
+import Chat from "../../components/ChatBar/Chat/Chat";
+import ChatHistory from "../../components/ChatBar/RoomCard/RoomCard";
+import ManageBar from "../../components/ChatBar/FriendsList/ManageBar";
 
-function ChatBar() {
+function ChatBarLayout() {
   return (
     <>
       <div className="shadow-md bg-dark-blue h-screen w-full flex flex-col">
@@ -29,4 +29,4 @@ function ChatBar() {
   );
 }
 
-export default ChatBar;
+export default ChatBarLayout;

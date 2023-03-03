@@ -63,7 +63,7 @@ function ManageBar() {
             className="mx-3 transition-all"
             onClick={handleInvite}>
             <IconContext.Provider value={{ color: "#E8C47C" }}>
-              <AiOutlineUsergroupAdd />
+              <AiOutlineUsergroupAdd size={20} />
             </IconContext.Provider>
           </button>
         </div>

@@ -6,9 +6,10 @@ import ManageBar from "./ManageBar";
 import { nanoid } from "nanoid";
 import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 import { TFriendsProps } from "./FriendsCards/FriendsType";
+import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
 
 function FriendsList() {
-  const [friendList, setFriendList] = useState<TFriendsProps[]>([]);
+  const {friendList, setFriendList} = useContext(FriendsListContext);
   const socket = useContext(ChatSocketContext);
 
   function updateFriendList(status: string, username: string, avatar: string) {
