@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers, Request, UseGuards } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
@@ -12,11 +12,28 @@ import { AccessAuthGard } from 'src/auth/utils/guards';
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
+  // @Post()
+  // @ApiCreatedResponse({ type: RoomEntity })
+  // create(@Body() createRoomDto: CreateRoomDto) {
+  //   return this.roomsService.create(createRoomDto);
+  // }
+
   @Post('/create')
   @ApiCreatedResponse({ type: RoomEntity })
-  create(@Request() req) {
-    return this.roomsService.create(req);
+  create(
+    @Request() req,
+    @Body() CreateRoomDto: CreateRoomDto,
+  ) {
+    const creatorId = req.user.sub;
+    CreateRoomDto.creatorId = creatorId;
+    console.log(req);
+    // console.log(creatorId);
+    console.log("DTO, room creation :", CreateRoomDto);
+    return this.roomsService.create(CreateRoomDto);
   }
+  
+
+
 
   @Get()
   @ApiOkResponse({ type: RoomEntity, isArray: true})
@@ -30,11 +47,11 @@ export class RoomsController {
     return this.roomsService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiOkResponse({ type: RoomEntity })
-  update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
-    return this.roomsService.update(id, updateRoomDto);
-  }
+  // @Patch(':id')
+  // @ApiOkResponse({ type: RoomEntity })
+  // update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
+  //   return this.roomsService.update(id, updateRoomDto);
+  // }
 
   @Delete(':id')
   @ApiOkResponse({ type: RoomEntity })

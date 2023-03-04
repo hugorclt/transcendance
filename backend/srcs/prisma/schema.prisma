@@ -76,14 +76,16 @@ model UserItem {
 }
 
 model Room {
-  id      String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name    String        @unique
-  type    Int
-  adminId String        @db.Uuid
-  roomBan Banned[]
-  roomMsg Message[]
-  room    Participant[]
-  admin   User          @relation("admin", fields: [adminId], references: [id])
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String        @unique
+  type      Int
+  adminId   String        @db.Uuid
+  password  String
+  isPrivate Boolean
+  roomBan   Banned[]
+  roomMsg   Message[]
+  room      Participant[]
+  admin     User          @relation("admin", fields: [adminId], references: [id])
 }
 
 model Participant {
