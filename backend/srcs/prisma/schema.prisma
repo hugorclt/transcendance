@@ -27,8 +27,8 @@ model User {
   winner       Match[]       @relation("winner")
   sender       Message[]
   participant  Participant[]
-  admin        Room[]        @relation("admin")
-  user         UserItem[]    @relation("owner")
+  owner        Room[]        @relation("owner")
+  user         UserItem[]    @relation("ownerItem")
 }
 
 model Bloqued {
@@ -72,20 +72,20 @@ model UserItem {
   userId  String @db.Uuid
   itemsId String @db.Uuid
   items   Item   @relation(fields: [itemsId], references: [id])
-  user    User   @relation("owner", fields: [userId], references: [id])
+  user    User   @relation("ownerItem", fields: [userId], references: [id])
 }
 
 model Room {
   id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String        @unique
   type      Int
-  adminId   String        @db.Uuid
+  ownerId   String        @db.Uuid
   password  String
   isPrivate Boolean
   roomBan   Banned[]
   roomMsg   Message[]
   room      Participant[]
-  admin     User          @relation("admin", fields: [adminId], references: [id])
+  owner     User          @relation("owner", fields: [ownerId], references: [id])
 }
 
 model Participant {
@@ -132,4 +132,5 @@ enum Status {
 enum Role {
   BASIC
   ADMIN
+  OWNER
 }

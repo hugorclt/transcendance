@@ -1,13 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IconContext } from "react-icons/lib";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { CreateRoomContext } from "../../../../views/ChatPage/CreateRoomContext";
-import { ChatHistoryContext } from "../../../../views/ChatPage/ChatHistoryContext";
+import { ChatHistoryContext, TChatHistoryType } from "../../../../views/ChatPage/ChatHistoryContext";
 import ChatCards from "./ChatCards/ChatCards";
+import { ChatSocketContext } from "../../../../views/ChatPage/ChatSocketContext";
 
 function ChatHistory() {
   const { isActive, setIsActive } = useContext(CreateRoomContext);
-  const { chatHistory, setChatHistory } = useContext(ChatHistoryContext);
+  const [ chatHistory, setChatHistory ] = useState<TChatHistoryType[]>([]);
+  const socket = useContext(ChatSocketContext);
+
+  useEffect(() => {
+    socket?.on("on-new-chat", (data: TChatHistoryType) => {
+      console.log(data);
+      setChatHistory((prev) => [...prev, data]);
+    })
+    return () => {
+      socket?.off("on-new-chat");
+    }
+  }, [socket])
 
   return (
     <figure className="flex flex-col h-full history-side">

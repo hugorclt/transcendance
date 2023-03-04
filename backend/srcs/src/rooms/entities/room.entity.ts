@@ -15,7 +15,7 @@ export class RoomEntity implements Room {
     type: number;
 
     @ApiProperty()
-    adminId: string;
+    ownerId: string;
 
     @ApiProperty()
     password: string;

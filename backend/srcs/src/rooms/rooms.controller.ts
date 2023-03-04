@@ -12,12 +12,6 @@ import { AccessAuthGard } from 'src/auth/utils/guards';
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
-  // @Post()
-  // @ApiCreatedResponse({ type: RoomEntity })
-  // create(@Body() createRoomDto: CreateRoomDto) {
-  //   return this.roomsService.create(createRoomDto);
-  // }
-
   @Post('/create')
   @ApiCreatedResponse({ type: RoomEntity })
   create(
@@ -26,8 +20,6 @@ export class RoomsController {
   ) {
     const creatorId = req.user.sub;
     CreateRoomDto.creatorId = creatorId;
-    console.log(req);
-    // console.log(creatorId);
     console.log("DTO, room creation :", CreateRoomDto);
     return this.roomsService.create(CreateRoomDto);
   }
