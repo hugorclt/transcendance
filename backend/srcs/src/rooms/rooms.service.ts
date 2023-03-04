@@ -46,7 +46,7 @@ export class RoomsService {
       }
     })
 
-    this.friendActivity.socket.to(owner.id).emit("on-new-chat", {avatar: owner.avatar, name: createRoomDto.name, lastMessage: ""})
+    this.friendActivity.server.to(owner.id).emit("on-new-chat", {avatar: owner.avatar, name: createRoomDto.name, lastMessage: ""})
     return room;
   }
 

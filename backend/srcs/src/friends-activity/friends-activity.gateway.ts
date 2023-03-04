@@ -27,13 +27,11 @@ import { FriendsActivityService } from './friends-activity.service';
     methods: ['GET', 'POST'],
   },
 })
-@UseGuards(AccessAuthGard)
+// @UseGuards(AccessAuthGard) to add
 export class FriendsActivityGateway
   implements OnModuleInit, OnGatewayConnection
 {
   constructor(
-    private friendShip: FriendshipService,
-    private usersService: UsersService,
     private friendsActivityService: FriendsActivityService,
   ) {}
 
