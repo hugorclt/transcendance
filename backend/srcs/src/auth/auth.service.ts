@@ -14,8 +14,6 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, lastValueFrom, map, throwError } from 'rxjs';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Api42TokenEntity } from './entities/api42-token.entity';
-import { FriendsActivityGateway } from 'src/friends-activity/friends-activity.gateway';
-import { FriendsActivityService } from 'src/friends-activity/friends-activity.service';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -29,7 +27,6 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private readonly httpService: HttpService,
-    private friendsActivityService : FriendsActivityService,
   ) {}
 
   /* ---------------------------------- Local --------------------------------- */

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import {
   CreateUserDto,
   CreateGoogleUserDto,
@@ -141,5 +141,37 @@ export class UsersService {
     });
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);
     throw new NotFoundException();
+  }
+
+  async addFriend(userId1: string, userId2: string): Promise<void> {
+    const existingFriends = await this.prisma.user.findUnique({
+      where: { id: userId1 },
+      include: { friends: { where: { id: userId2 } } },
+    });
+
+    if (existingFriends?.friends.length > 0) {
+      throw new ConflictException('These users are already friends');
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId1 },
+      data: { friends: { connect: { id: userId2 } } },
+    });
+
+    await this.prisma.user.update({
+      where: { id: userId2 },
+      data: { friends: { connect: { id: userId1 } } },
+    });
+  }
+
+  async getUserFriends(userId: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { friends: true },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user.friends;
   }
 }

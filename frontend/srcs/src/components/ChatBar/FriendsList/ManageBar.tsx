@@ -27,7 +27,9 @@ function ManageBar() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(username);
     socket?.emit("friend-request", username);
+    setUsername("");
   };
 
   return (

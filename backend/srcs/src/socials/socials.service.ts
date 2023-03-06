@@ -1,16 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ConnectedSocket } from '@nestjs/websockets';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Server } from 'socket.io';
-import { FriendshipService } from 'src/friendship/friendship.service';
 import { UsersService } from 'src/users/users.service';
 import { Socket } from 'socket.io';
 
 @Injectable()
-export class FriendsActivityService {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly friendShipService: FriendshipService,
-  ) {}
+export class SocialsService {
+  constructor(private readonly usersService: UsersService) {}
 
   public server: Server;
 
@@ -34,6 +33,7 @@ export class FriendsActivityService {
 
     const userId: string = client.handshake.query.userId;
     const user = await this.usersService.findOne(userId);
+    console.log('user: ' + user.username);
     this.emitToFriends(userId, 'on-status-update', {
       username: user.username,
       avatar: user.avatar,
@@ -52,6 +52,7 @@ export class FriendsActivityService {
     try {
       const toUser = await this.usersService.findOneByUsername(toUsername);
       this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
+      console.log(toUsername);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException('User not found');
@@ -71,7 +72,7 @@ export class FriendsActivityService {
     );
     const user2 = await this.usersService.findOne(userId);
     if (payload.isReplyTrue === true) {
-      this.friendShipService.create({ username: payload.fromUsername }, userId);
+      this.usersService.addFriend(user1.id, user2.id);
       this.server.to(user1.id).emit('on-status-update', {
         username: user2.username,
         avatar: user2.avatar,
@@ -103,12 +104,13 @@ export class FriendsActivityService {
     eventName: string,
     data: any,
   ): Promise<void> {
-    const friends = await this.friendShipService.findManyForOneUser(userId);
+    const friends = await this.usersService.getUserFriends(userId);
     const user = await this.usersService.findOne(userId);
     friends.forEach((friend) => {
+      console.log('userId: ', user.username, 'send to: ', friend.username);
       if (this.server) {
         this.server.to(friend.id).emit(eventName, {
-          data,
+          ...data,
         });
       }
     });
@@ -121,9 +123,8 @@ export class FriendsActivityService {
   ): Promise<void> {
     if (this.server) {
       this.server.to(userId).emit(eventName, {
-        data,
+        ...data,
       });
     }
   }
-  public async sendMessage(client: Socket, payload: any): Promise<void> {}
 }

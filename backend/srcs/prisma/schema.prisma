@@ -8,43 +8,27 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username     String        @unique
-  email        String        @unique
-  password     String
-  avatar       String?
-  refreshToken String?
-  type         Type          @default(LOCAL)
-  status       Status?       @default(DISCONNECTED)
-  balance      Int?          @default(0)
-  banned       Banned[]
-  isBloqued    Bloqued[]     @relation("bloqued")
-  hasBloqued   Bloqued[]     @relation("user")
-  friendOne    FriendShip[]  @relation("friendOne")
-  friendTwo    FriendShip[]  @relation("friendTwo")
-  playerOne    Match[]       @relation("playerOne")
-  playerTwo    Match[]       @relation("playerTwo")
-  winner       Match[]       @relation("winner")
-  sender       Message[]
-  participant  Participant[]
-  owner        Room[]        @relation("owner")
-  user         UserItem[]    @relation("ownerItem")
-}
-
-model Bloqued {
-  id        String @id @default(uuid())
-  userId    String @db.Uuid
-  bloquedId String @db.Uuid
-  bloqued   User   @relation("bloqued", fields: [bloquedId], references: [id])
-  user      User   @relation("user", fields: [userId], references: [id])
-}
-
-model FriendShip {
-  id        String @id @default(uuid())
-  userOneId String @db.Uuid
-  userTwoId String @db.Uuid
-  friendOne User   @relation("friendOne", fields: [userOneId], references: [id])
-  friendTwo User   @relation("friendTwo", fields: [userTwoId], references: [id])
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username         String        @unique
+  email            String        @unique
+  password         String
+  avatar           String?
+  refreshToken     String?
+  type             Type          @default(LOCAL)
+  status           Status?       @default(DISCONNECTED)
+  balance          Int?          @default(0)
+  friends          User[]        @relation("friends")
+  symmetricFriends User[]        @relation("friends")
+  isBloqued        User[]        @relation("bloqued")
+  hasBloqued       User[]        @relation("bloqued")
+  playerOne        Match[]       @relation("playerOne")
+  playerTwo        Match[]       @relation("playerTwo")
+  winner           Match[]       @relation("winner")
+  isBanned         Room[]        @relation("Banned")
+  sender           Message[]
+  participant      Participant[]
+  owner            Room[]        @relation("owner")
+  user             UserItem[]    @relation("ownerItem")
 }
 
 model Match {
@@ -76,35 +60,27 @@ model UserItem {
 }
 
 model Room {
-  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String        @unique
-  password  String
-  avatar    String
-  type      Int
-  ownerId   String        @db.Uuid
-  isPrivate Boolean
-  roomBan   Banned[]
-  roomMsg   Message[]
-  room      Participant[]
-  owner     User          @relation("owner", fields: [ownerId], references: [id])
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String        @unique
+  password         String
+  avatar           String
+  type             Int
+  ownerId          String        @db.Uuid
+  isPrivate        Boolean
+  userBanSymmetric User[]        @relation("Banned")
+  roomMsg          Message[]
+  room             Participant[]
+  owner            User          @relation("owner", fields: [ownerId], references: [id])
 }
 
 model Participant {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  role   Role   @default(BASIC)
-  roomId String @db.Uuid
-  userId String @db.Uuid
-  joinedAt     DateTime @default(now())
-  room   Room   @relation(fields: [roomId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
-}
-
-model Banned {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId String @db.Uuid
-  userId String @db.Uuid
-  room   Room   @relation(fields: [roomId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role     Role     @default(BASIC)
+  roomId   String   @db.Uuid
+  userId   String   @db.Uuid
+  joinedAt DateTime @default(now())
+  room     Room     @relation(fields: [roomId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
 }
 
 model Message {

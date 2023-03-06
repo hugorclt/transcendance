@@ -10,8 +10,8 @@ import {
 import { Server } from 'socket.io';
 import { OnModuleInit, UseGuards } from '@nestjs/common';
 import { Socket } from 'socket.io';
-import { FriendsActivityService } from './friends-activity.service';
-import { RoomsService } from 'src/rooms/rooms.service';
+import { SocialsService } from './socials.service';
+import { RoomsService } from './rooms/rooms.service';
 
 @WebSocketGateway({
   namespace: '/status',
@@ -22,10 +22,8 @@ import { RoomsService } from 'src/rooms/rooms.service';
   },
 })
 // @UseGuards(AccessAuthGard) to add
-export class FriendsActivityGateway
-  implements OnModuleInit, OnGatewayConnection
-{
-  constructor(private friendsActivityService: FriendsActivityService, private roomService: RoomsService) {}
+export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
+  constructor(private friendsActivityService: SocialsService, private roomService: RoomsService) {}
 
   @WebSocketServer()
   public server: Server;
@@ -80,6 +78,6 @@ export class FriendsActivityGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: { message: string; users: string[] },
   ) {
-    this.friendsActivityService.sendMessage(client, payload);
+    // this.friendsActivityService.sendMessage(client, payload);
   }
 }
