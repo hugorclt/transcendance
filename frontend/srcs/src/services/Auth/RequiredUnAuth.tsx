@@ -1,16 +1,15 @@
-import React from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useGlobal } from "../Global/GlobalProvider";
 
-function RequireAuth() {
+function RequireUnAuth() {
   const { auth } = useGlobal();
   const location = useLocation();
 
   return auth?.accessToken ? (
-    <Outlet />
+    <Navigate to="/" state={{ from: location }} replace />
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Outlet />
   );
 }
 
-export default RequireAuth;
+export default RequireUnAuth;

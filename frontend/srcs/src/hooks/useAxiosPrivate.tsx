@@ -1,11 +1,11 @@
 import { axiosPrivate } from "../services/axios";
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
-import useAuth from "./useAuth";
+import { useGlobal } from "../services/Global/GlobalProvider";
 
 function useAxiosPrivate() {
   const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const { auth } = useGlobal();
 
   //this hook will attach the interceptors to the axios instance
   useEffect(() => {

@@ -7,8 +7,8 @@ import {
 } from "@react-oauth/google";
 import axios from "../../../services/axios";
 import { useNavigate, useLocation } from "react-router";
-import useAuth from "../../../hooks/useAuth";
 import { AxiosError, AxiosResponse } from "axios";
+import { useGlobal } from "../../../services/Global/GlobalProvider";
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
@@ -18,7 +18,7 @@ function GoogleAuth() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
-  const { setAuth } = useAuth();
+  const { setAuth } = useGlobal();
 
   //----- DEFINING SUCCESS/ERROR MESSAGE ON SUBMIT -----
   const SubmitNote = () => {

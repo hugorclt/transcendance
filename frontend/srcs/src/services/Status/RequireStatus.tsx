@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useGameContext } from "./GameProvider";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { useGlobal } from "../Global/GlobalProvider";
 
-function IsInGame() {
-  const { status, setStatus } = useGameContext();
+function RequireStatus() {
+  const { status, setStatus } = useGlobal();
   const location = useLocation();
   const querySent = useRef(false);
   const axiosPrivate = useAxiosPrivate();
@@ -25,11 +25,11 @@ function IsInGame() {
     }
   }, []);
 
-  return inGame ? (
+  return (status == "GAME") ? (
     <Navigate to="/game" state={{ from: location }} replace />
   ) : (
     <Outlet />
   );
 }
 
-export default IsInGame;
+export default RequireStatus;

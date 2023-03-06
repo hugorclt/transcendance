@@ -15,32 +15,36 @@ import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Auth42/Login42";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import LoginLayout from "./layouts/LoginLayout/LoginLayout";
-import IsInGame from "./services/Game/IsInGame";
+import RequireStatus from "./services/Status/RequireStatus";
+import RequireInGameStatus from "./services/Status/RequireInGameStatus";
+import RequireUnAuth from "./services/Auth/RequiredUnAuth";
 
 function App() {
   return (
     <Routes>
-      {/* Public route */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/login/42" element={<LoginLayout><Login42 /></LoginLayout>} />
-
       <Route element={<PersistLogin />}>
+         {/* Public route */}
+        <Route element={<RequireUnAuth/>}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login/42" element={<LoginLayout><Login42 /></LoginLayout>} />
+        </Route>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
-          <Route element={<IsInGame/>}>
+          <Route element={<RequireStatus/>}>
             <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
             <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
             <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
             <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
             <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
           </Route>
-          <Route path="/game" element={<GamePage />} />
+          <Route element={<RequireInGameStatus />}>
+            <Route path="/game" element={<GamePage />} />
+          </Route>
         </Route>
       </Route>
 
       {/* Catch all (404)*/}
       <Route path="*" element={<MissingPage />} />
-      {/* </Route> */}
     </Routes>
   );
 }

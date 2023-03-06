@@ -4,10 +4,11 @@ import { LobbyProvider } from "./LobbyContext";
 import LobbyLayout from "../../layouts/LobbyLayout/LobbyLayout";
 import Lobby from "../../components/Lobby/Lobby";
 import { Navigate } from "react-router-dom";
-import { useGameContext } from "../../services/Game/GameProvider";
+import { useGlobal } from "../../services/Global/GlobalProvider";
+import GameModeSelector from "../../components/Lobby/GameModeSelector/GameModeSelector";
 
 function LobbyPage() {
-  const { status } = useGameContext();
+  const { status } = useGlobal();
 
   return (
     <LobbySocketProvider>

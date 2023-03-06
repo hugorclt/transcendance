@@ -1,8 +1,8 @@
 import axios from "../services/axios";
-import useAuth from "./useAuth";
+import { useGlobal } from "../services/Global/GlobalProvider";
 
 function useRefreshToken() {
-  const { setAuth } = useAuth();
+  const { setAuth } = useGlobal();
 
   const refresh = async () => {
     const response = await axios.get("/auth/refresh");

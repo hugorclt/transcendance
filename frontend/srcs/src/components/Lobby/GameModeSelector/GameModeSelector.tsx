@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import GameModeCard from "./GameModeSelector/GameModeCard/GameModeCard";
-import { useLobbyContext } from "../../views/LobbyPage/LobbyContext";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import GameModeCard from "./GameModeCard/GameModeCard";
+import { useLobbyContext } from "../../../views/LobbyPage/LobbyContext";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 
-function Lobby() {
+function GameModeSelector() {
   const axiosPrivate = useAxiosPrivate();
   const [errMsg, setErrMsg] = useState<string>("");
   const {
@@ -31,7 +31,7 @@ function Lobby() {
       })
       .catch((error: AxiosError) => {
         if (error.response?.data) {
-          setErrMsg(JSON.stringify(error.response.data.message));
+          setErrMsg(JSON.stringify(error.response.data?.message));
         }
       });
   };
@@ -67,4 +67,4 @@ function Lobby() {
   );
 }
 
-export default Lobby;
+export default GameModeSelector;

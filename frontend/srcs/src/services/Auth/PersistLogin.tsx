@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import useRefreshToken from "../../hooks/useRefreshToken";
-import useAuth from "../../hooks/useAuth";
+import { useGlobal } from "../Global/GlobalProvider";
 import Loading from "../../components/Loading/Loading";
 
 function PersistLogin() {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const { auth } = useGlobal();
 
   useEffect(() => {
     const verifyRefreshToken = async () => {

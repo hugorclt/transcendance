@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useLobbyContext } from "../../../views/LobbyPage/LobbyContext";
+import { useLobbyContext } from "../../../../views/LobbyPage/LobbyContext";
 
 interface Props {
   mode: string;
