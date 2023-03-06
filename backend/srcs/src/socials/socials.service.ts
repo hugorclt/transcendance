@@ -6,10 +6,11 @@ import {
 import { Server } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
 import { Socket } from 'socket.io';
+import { SocialsGateway } from './socials.gateway';
 
 @Injectable()
 export class SocialsService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private socialGateway: SocialsGateway) {}
 
   public server: Server;
 

@@ -8,11 +8,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { OnModuleInit, UseGuards } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit, UseGuards } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { SocialsService } from './socials.service';
 import { RoomsService } from './rooms/rooms.service';
 
+// @UseGuards(AccessAuthGard) to add
+@Injectable()
 @WebSocketGateway({
   namespace: '/status',
   cors: {
@@ -21,7 +23,6 @@ import { RoomsService } from './rooms/rooms.service';
     methods: ['GET', 'POST'],
   },
 })
-// @UseGuards(AccessAuthGard) to add
 export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
   constructor(private friendsActivityService: SocialsService, private roomService: RoomsService) {}
 
@@ -34,7 +35,6 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
 
   afterInit(server: Server) {
     this.friendsActivityService.server = server;
-    this.roomService.server = server;
   }
 
   async handleConnection(client: Socket) {

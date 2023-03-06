@@ -6,6 +6,7 @@ import { ParticipantService } from './participant/participant.service';
 import { Role } from '@prisma/client';
 import { Server } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
+import { SocialsGateway } from '../socials.gateway';
 
 @Injectable()
 export class RoomsService {
@@ -13,9 +14,8 @@ export class RoomsService {
     private prisma: PrismaService,
     private participant: ParticipantService,
     private usersService: UsersService,
+    private socialsGateway: SocialsGateway,
   ) {}
-
-  public server: Server;
 
   async create(createRoomDto: CreateRoomDto) {
     const salt = await bcrypt.genSalt();
@@ -47,8 +47,7 @@ export class RoomsService {
       role: Role.OWNER,
     });
 
-    console.log(this.server)
-    this.server.to(owner.id).emit('on-new-chat', {
+    this.socialsGateway.server.to(owner.id).emit('on-new-chat', {
       avatar: room.avatar,
       name: createRoomDto.name,
       lastMessage: '',

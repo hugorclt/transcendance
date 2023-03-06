@@ -5,6 +5,7 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoomEntity } from './entities/room.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
+import { SocialsGateway } from '../socials.gateway';
 
 @Controller('rooms')
 @ApiTags('rooms')
