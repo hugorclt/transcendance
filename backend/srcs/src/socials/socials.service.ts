@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,9 +11,12 @@ import { SocialsGateway } from './socials.gateway';
 
 @Injectable()
 export class SocialsService {
-  constructor(private readonly usersService: UsersService, private socialGateway: SocialsGateway) {}
+  constructor(
+    private readonly usersService: UsersService,
+    @Inject(SocialsGateway) private socialsGateway: SocialsGateway
+  ) {}
 
-  public server: Server;
+  // public server: Server;
 
   public async handleConnection(client: any) {
     console.log('newConnection on FriendsActivitySocket');
@@ -52,7 +56,9 @@ export class SocialsService {
     const fromUser = await this.usersService.findOne(userId);
     try {
       const toUser = await this.usersService.findOneByUsername(toUsername);
-      this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
+      this.socialsGateway.server
+        .to(toUser.id)
+        .emit('on-friend-request', fromUser.username);
       console.log(toUsername);
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -74,12 +80,12 @@ export class SocialsService {
     const user2 = await this.usersService.findOne(userId);
     if (payload.isReplyTrue === true) {
       this.usersService.addFriend(user1.id, user2.id);
-      this.server.to(user1.id).emit('on-status-update', {
+      this.socialsGateway.server.to(user1.id).emit('on-status-update', {
         username: user2.username,
         avatar: user2.avatar,
         status: user2.status,
       });
-      this.server.to(user2.id).emit('on-status-update', {
+      this.socialsGateway.server.to(user2.id).emit('on-status-update', {
         username: user1.username,
         avatar: user1.avatar,
         status: user1.status,
@@ -109,8 +115,8 @@ export class SocialsService {
     const user = await this.usersService.findOne(userId);
     friends.forEach((friend) => {
       console.log('userId: ', user.username, 'send to: ', friend.username);
-      if (this.server) {
-        this.server.to(friend.id).emit(eventName, {
+      if (this.socialsGateway.server) {
+        this.socialsGateway.server.to(friend.id).emit(eventName, {
           ...data,
         });
       }
@@ -122,8 +128,8 @@ export class SocialsService {
     eventName: string,
     data: any,
   ): Promise<void> {
-    if (this.server) {
-      this.server.to(userId).emit(eventName, {
+    if (this.socialsGateway.server) {
+      this.socialsGateway.server.to(userId).emit(eventName, {
         ...data,
       });
     }

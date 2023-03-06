@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcrypt';
@@ -7,6 +7,7 @@ import { Role } from '@prisma/client';
 import { Server } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
 import { SocialsGateway } from '../socials.gateway';
+import { SocialsService } from '../socials.service';
 
 @Injectable()
 export class RoomsService {
@@ -14,7 +15,7 @@ export class RoomsService {
     private prisma: PrismaService,
     private participant: ParticipantService,
     private usersService: UsersService,
-    private socialsGateway: SocialsGateway,
+    @Inject(SocialsGateway) private socialsGateway: SocialsGateway,
   ) {}
 
   async create(createRoomDto: CreateRoomDto) {
