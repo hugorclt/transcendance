@@ -29,7 +29,7 @@ import { FriendsActivityService } from './friends-activity.service';
 })
 // @UseGuards(AccessAuthGard) // a rajouter plus tard
 export class FriendsActivityGateway
-  implements OnModuleInit, OnGatewayConnection, OnGatewayDisconnect
+  implements OnModuleInit, OnGatewayConnection
 {
   constructor(
     private friendShip: FriendshipService,
@@ -50,24 +50,23 @@ export class FriendsActivityGateway
     this.friendsActivityService.socket = server;
   }
 
-
   async handleConnection(client: any) {
-    console.log("handle connect called");
+    console.log('handle connect called');
     var clientId = client.handshake.query.userId;
     client.join(clientId);
     const userId: string = client.handshake.query.userId;
     // const friends = await this.friendShip.findManyForOneUser(userId);
     const user = await this.usersService.findOne(userId);
     if (user) {
-    this.emitToFriends(userId, 'on-status-update', {
-      username: user.username,
-      avatar: user.avatar,
-      status: "CONNECTED",
-    });
+      this.emitToFriends(userId, 'on-status-update', {
+        username: user.username,
+        avatar: user.avatar,
+        status: 'CONNECTED',
+      });
     }
   }
-  
-  // async handleDisconnect(client: any) { 
+
+  // async handleDisconnect(client: any) {
   //   console.log("handleDisconnect called");
   //   var clientId = client.handshake.query.userId;
   //   const userId: string = client.handshake.query.userId;
@@ -145,20 +144,16 @@ export class FriendsActivityGateway
     const user2 = await this.usersService.findOne(userId);
     if (payload.isReplyTrue === true) {
       this.friendShip.create({ username: payload.fromUsername }, userId);
-      this.server
-        .to(user1.id)
-        .emit('on-status-update', {
-          username: user2.username,
-          avatar: user2.avatar,
-          status: user2.status,
-        });
-      this.server
-        .to(user2.id)
-        .emit('on-status-update', {
-          username: user1.username,
-          avatar: user1.avatar,
-          status: user1.status,
-        });
+      this.server.to(user1.id).emit('on-status-update', {
+        username: user2.username,
+        avatar: user2.avatar,
+        status: user2.status,
+      });
+      this.server.to(user2.id).emit('on-status-update', {
+        username: user1.username,
+        avatar: user1.avatar,
+        status: user1.status,
+      });
     }
   }
 
@@ -174,17 +169,13 @@ export class FriendsActivityGateway
     const user2 = await this.usersService.findOneByUsername(payload.userToName);
     const user1 = await this.usersService.findOne(payload.userFromId);
 
-    this.server
-      .to(user2.id)
-      .emit('on-message-sent', {
-        message: payload.message,
-        sender: user1.username,
-      });
+    this.server.to(user2.id).emit('on-message-sent', {
+      message: payload.message,
+      sender: user1.username,
+    });
   }
 }
 
 // const room = await this.roomsService.create({name: user1.username + "_room", type: 0, adminId: user1.id});
 // this.participantService.create({roomId: room.id, userId: user1.id, role: Role.ADMIN });
 // this.participantService.create({roomId: room.id, userId: user2.id, role: Role.BASIC });
-
-

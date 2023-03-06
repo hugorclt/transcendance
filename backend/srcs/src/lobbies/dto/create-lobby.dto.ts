@@ -7,14 +7,10 @@ import {
   IsString,
   Min,
   Max,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateLobbyDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  ownerId: string;
-
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
@@ -24,7 +20,7 @@ export class CreateLobbyDto {
   nbPlayers: number;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @IsPositive()
   @Min(60)
@@ -35,6 +31,7 @@ export class CreateLobbyDto {
   mode: Mode;
 
   @ApiProperty()
+  @IsOptional()
   @IsNotEmpty()
   map: MapName;
 }

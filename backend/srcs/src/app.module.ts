@@ -14,16 +14,18 @@ import { GameModule } from './game/game.module';
 import { FriendshipController } from './friendship/friendship.controller';
 import { FriendshipModule } from './friendship/friendship.module';
 import { FriendshipService } from './friendship/friendship.service';
-// import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
 import { ParticipantModule } from './rooms/participant/participant.module';
 import { RoomsService } from './rooms/rooms.service';
 import { ParticipantService } from './rooms/participant/participant.service';
 import { MessagesModule } from './rooms/messages/messages.module';
 import { WebsocketModule } from './friends-activity/friend-activity.module';
-import {FriendsActivityService}  from './friends-activity/friends-activity.service';
+import { FriendsActivityService } from './friends-activity/friends-activity.service';
+import { LobbiesModule } from './lobbies/lobbies.module';
+import { LobbiesService } from './lobbies/lobbies.service';
+import { LobbyParticipantsModule } from './lobbies/lobby-participants/lobby-participants.module';
+import { LobbyParticipantsService } from './lobbies/lobby-participants/lobby-participants.service';
 @Module({
   imports: [
-    // FriendsActivityGateway,
     AuthModule,
     PrismaModule,
     ItemsModule,
@@ -36,8 +38,20 @@ import {FriendsActivityService}  from './friends-activity/friends-activity.servi
     ParticipantModule,
     MessagesModule,
     WebsocketModule,
+    LobbiesModule,
+    LobbyParticipantsModule,
   ],
   controllers: [AppController, FriendshipController],
-  providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityService, RoomsService, ParticipantService],
+  providers: [
+    AppService,
+    AuthService,
+    LobbiesService,
+    LobbyParticipantsService,
+    PrismaService,
+    FriendshipService,
+    FriendsActivityService,
+    RoomsService,
+    ParticipantService,
+  ],
 })
 export class AppModule {}

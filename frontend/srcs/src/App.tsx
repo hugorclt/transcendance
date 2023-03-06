@@ -8,12 +8,14 @@ import ProfilePage from "./views/ProfilePage/ProfilePage";
 import ShopPage from "./views/ShopPage/ShopPage";
 import LobbyPage from "./views/LobbyPage/LobbyPage";
 import MissingPage from "./views/MissingPage/MissingPage";
+import GamePage from "./views/GamePage/GamePage";
 
 import RequireAuth from "./services/Auth/RequireAuth";
 import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Auth42/Login42";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import LoginLayout from "./layouts/LoginLayout/LoginLayout";
+import IsInGame from "./services/Game/IsInGame";
 
 function App() {
   return (
@@ -25,11 +27,14 @@ function App() {
       <Route element={<PersistLogin />}>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
-          <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
-          <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-          <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
-          <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
+          <Route element={<IsInGame/>}>
+            <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
+            <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
+            <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
+            <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
+            <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
+          </Route>
+          <Route path="/game" element={<GamePage />} />
         </Route>
       </Route>
 

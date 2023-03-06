@@ -42,13 +42,22 @@ export class LobbiesService {
     return true;
   }
 
-  async create(createLobbyDto: CreateLobbyDto): Promise<LobbyEntity> {
-    const canCreate = await this.canUserCreateLobbies(createLobbyDto.ownerId);
+  async create(
+    ownerId: string,
+    createLobbyDto: CreateLobbyDto,
+  ): Promise<LobbyEntity> {
+    const canCreate = await this.canUserCreateLobbies(ownerId);
     if (!canCreate) {
       return null;
     }
     const lobby = await this.prisma.lobby.create({
-      data: createLobbyDto,
+      data: {
+        ownerId: ownerId,
+        nbPlayers: createLobbyDto.nbPlayers,
+        maxDuration: createLobbyDto.maxDuration,
+        mode: createLobbyDto.mode,
+        map: createLobbyDto.map,
+      },
     });
     return lobby;
   }

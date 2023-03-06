@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LobbiesService } from './lobbies.service';
@@ -17,15 +18,19 @@ import { LobbyEntity } from './entities/lobby.entity';
 import { LobbyParticipantEntity } from './lobby-participants/entities/lobby-participant.entity';
 
 @Controller('lobbies')
-// @UseGuards(AccessAuthGard)
+@UseGuards(AccessAuthGard)
 @ApiTags('lobbies')
 export class LobbiesController {
   constructor(private readonly lobbiesService: LobbiesService) {}
 
   @Post()
   @ApiCreatedResponse({ type: LobbyEntity })
-  async create(@Body() createLobbyDto: CreateLobbyDto): Promise<LobbyEntity> {
-    return await this.lobbiesService.create(createLobbyDto);
+  async create(
+    @Request() req: any,
+    @Body() createLobbyDto: CreateLobbyDto,
+  ): Promise<LobbyEntity> {
+    console.log(createLobbyDto);
+    return await this.lobbiesService.create(req.user.sub, createLobbyDto);
   }
 
   @Get()

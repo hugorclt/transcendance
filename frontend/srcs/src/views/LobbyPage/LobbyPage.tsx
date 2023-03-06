@@ -1,19 +1,22 @@
 import React, { useState } from "react";
-import { LobbyContext } from "./LobbyContext";
 import { LobbySocketProvider } from "./LobbySocketContext";
+import { LobbyProvider } from "./LobbyContext";
 import LobbyLayout from "../../layouts/LobbyLayout/LobbyLayout";
 import Lobby from "../../components/Lobby/Lobby";
+import { Navigate } from "react-router-dom";
+import { useGameContext } from "../../services/Game/GameProvider";
 
 function LobbyPage() {
-  const [selectedMode, setSelectedMode] = useState<number>(0);
+  const { status } = useGameContext();
 
   return (
     <LobbySocketProvider>
-      <LobbyContext.Provider value={{ selectedMode, setSelectedMode }}>
+      <LobbyProvider>
         <LobbyLayout>
-          <Lobby />
+          {status === "LOBBY" ?
+          <Lobby /> : <GameModeSelector />}
         </LobbyLayout>
-      </LobbyContext.Provider>
+      </LobbyProvider>
     </LobbySocketProvider>
   );
 }

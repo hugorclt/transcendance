@@ -86,6 +86,7 @@ enum MapName {
 enum Mode {
   CLASSIC
   CHAMPIONS
+  GRAVITY
 }
 
 model Match {
