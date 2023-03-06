@@ -21,30 +21,30 @@ export class SocketIoAdapter extends IoAdapter {
     };
     const jwtService = this.app.get(JwtService);
     //will create a socket.io server with cors enabled
-    const server = super.createIOServer(port, optionsWithCors);
-
     console.log('Configuring SocketIO with custom cors');
 
+    return super.createIOServer(port, optionsWithCors);
+
     //This will use our jwt verification middleware for the namespace Lobbies
-    server.of('lobbies').use(createSocketAccessGuard(jwtService));
+    // server.of('lobbies').use(createSocketAccessGuard(jwtService));
   }
 }
 
-const createSocketAccessGuard =
-  (jwtService: JwtService) => (socket: SocketWithAuth, next) => {
-    // for Postman testing support, fallback to token header
-    const token =
-      socket.handshake.auth.token || socket.handshake.headers['token'];
+// const createSocketAccessGuard =
+//   (jwtService: JwtService) => (socket: SocketWithAuth, next) => {
+//     // for Postman testing support, fallback to token header
+//     const token =
+//       socket.handshake.auth.token || socket.handshake.headers['token'];
 
-    console.log(`Validating auth token before connection: ${token}`);
+//     console.log(`Validating auth token before connection: ${token}`);
 
-    try {
-      const payload = jwtService.verify(token);
-      socket.userID = payload.sub;
-      socket.pollID = payload.pollID;
-      socket.name = payload.name;
-      next();
-    } catch {
-      next(new Error('FORBIDDEN'));
-    }
-  };
+//     try {
+//       const payload = jwtService.verify(token);
+//       socket.userID = payload.sub;
+//       socket.pollID = payload.pollID;
+//       socket.name = payload.name;
+//       next();
+//     } catch {
+//       next(new Error('FORBIDDEN'));
+//     }
+//   };

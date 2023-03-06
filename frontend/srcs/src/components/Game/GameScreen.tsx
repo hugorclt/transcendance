@@ -1,13 +1,9 @@
-import React, {
-  FC,
-  useEffect,
-  useRef,
-  useState,
-  KeyboardEventHandler,
-} from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import * as io from "socket.io-client";
 
-const socket = io.connect("http://localhost:3000/game", { transports: ['websocket'] });
+const socket = io.connect("http://localhost:3000/game", {
+  transports: ["websocket"],
+});
 
 const GameScreen: FC = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -36,7 +32,7 @@ const GameScreen: FC = (props) => {
   const handleInput = (event: KeyboardEvent) => {
     if (event.key === "ArrowDown") {
       setPos({ posX: pos.posX, posY: pos.posY + 3 });
-      socket.emit("sendUp")
+      socket.emit("sendUp");
     } else if (event.key == "ArrowUp") {
       setPos({ posX: pos.posX, posY: pos.posY - 3 });
       socket.emit("sendDown");

@@ -1,8 +1,6 @@
-import { AxiosError, AxiosResponse } from "axios";
 import React, { useContext, useRef, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 
 function ManageBar() {
@@ -10,7 +8,6 @@ function ManageBar() {
   const [display, setDisplay] = useState("block");
   const [username, setUsername] = useState("");
   const focusRef = useRef<HTMLInputElement>(null);
-  const axiosPrivate = useAxiosPrivate();
   const socket = useContext(ChatSocketContext);
 
   const handleInvite = () => {
@@ -27,7 +24,9 @@ function ManageBar() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("je emit");
     socket?.emit("friend-request", username);
+    setUsername("");
   };
 
   return (
@@ -36,7 +35,8 @@ function ManageBar() {
         <div>
           <h2
             className="text-gold mx-3 mt-1 transition-all"
-            style={{ display: display }}>
+            style={{ display: display }}
+          >
             Friends
           </h2>
         </div>
@@ -61,9 +61,10 @@ function ManageBar() {
           <button
             style={{ display: display }}
             className="mx-3 transition-all"
-            onClick={handleInvite}>
+            onClick={handleInvite}
+          >
             <IconContext.Provider value={{ color: "#E8C47C" }}>
-              <AiOutlineUsergroupAdd />
+              <AiOutlineUsergroupAdd size={20} />
             </IconContext.Provider>
           </button>
         </div>

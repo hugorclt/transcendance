@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User, Mode, MapName } from '@prisma/client';
+import { Mode, MapName } from '@prisma/client';
 import {
   IsNotEmpty,
   IsNumber,
   IsPositive,
-  IsString,
   Min,
   Max,
   IsOptional,

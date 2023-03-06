@@ -1,5 +1,3 @@
-import Lobby from "../../components/Lobby/Lobby";
-
 interface LobbyLayoutProps {
   children: React.ReactNode;
 }

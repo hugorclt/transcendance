@@ -78,6 +78,6 @@ export class AuthController {
   @UseGuards(AccessAuthGard)
   logout(@Request() req) {
     this.authService.logout(req.user.sub);
-    return req.sub;
+    return req.user.sub;
   }
 }

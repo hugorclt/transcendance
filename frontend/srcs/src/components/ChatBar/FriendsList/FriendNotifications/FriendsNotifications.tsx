@@ -1,13 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { AxiosError, AxiosResponse } from "axios";
 import { ChatSocketContext } from "../../../../views/ChatPage/ChatSocketContext";
 
 function FriendNotifications() {
   const socket = useContext(ChatSocketContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const acceptRequest = (username: string) => {
     socket?.emit("friend-request-reply", {
@@ -27,7 +24,8 @@ function FriendNotifications() {
             className="text-green-800"
             onClick={() => {
               acceptRequest(username);
-            }}>
+            }}
+          >
             Accept
           </button>
           <button className="text-red-800">Refuse</button>

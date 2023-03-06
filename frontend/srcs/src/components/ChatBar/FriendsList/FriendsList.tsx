@@ -1,14 +1,13 @@
 import { AxiosError, AxiosResponse } from "axios";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { axiosPrivate } from "../../../services/axios";
 import FriendsCards from "./FriendsCards/FriendsCards";
-import ManageBar from "./ManageBar";
 import { nanoid } from "nanoid";
 import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
-import { TFriendsProps } from "./FriendsCards/FriendsType";
+import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
 
 function FriendsList() {
-  const [friendList, setFriendList] = useState<TFriendsProps[]>([]);
+  const { friendList, setFriendList } = useContext(FriendsListContext);
   const socket = useContext(ChatSocketContext);
 
   function updateFriendList(status: string, username: string, avatar: string) {
@@ -32,7 +31,7 @@ function FriendsList() {
 
   useEffect(() => {
     axiosPrivate
-      .get("friendship/friends")
+      .get("users/friends")
       .then((res: AxiosResponse) => {
         const friends = res.data.map((element: any) => ({
           name: element.username,
@@ -47,6 +46,8 @@ function FriendsList() {
       });
 
     socket?.on("on-status-update", (new_status_update) => {
+      console.log(new_status_update);
+
       updateFriendList(
         new_status_update.status,
         new_status_update.username,

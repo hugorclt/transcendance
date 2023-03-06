@@ -17,37 +17,21 @@ model User {
   type             Type               @default(LOCAL)
   status           Status?            @default(DISCONNECTED)
   balance          Int?               @default(0)
-  banned           Banned[]
-  isBloqued        Bloqued[]          @relation("bloqued")
-  hasBloqued       Bloqued[]          @relation("user")
-  friendOne        FriendShip[]       @relation("friendOne")
-  friendTwo        FriendShip[]       @relation("friendTwo")
-  playerOne        Match[]            @relation("playerOne")
-  playerTwo        Match[]            @relation("playerTwo")
-  winner           Match[]            @relation("winner")
   sender           Message[]
   participant      Participant[]
   lobbyParticipant LobbyParticipant[]
   lobbySpectator   LobbySpectator[]
-  admin            Room[]             @relation("admin")
-  user             UserItem[]         @relation("owner")
-  owner            Lobby[]            @relation("lobbyOwner")
-}
-
-model Bloqued {
-  id        String @id @default(uuid())
-  userId    String @db.Uuid
-  bloquedId String @db.Uuid
-  bloqued   User   @relation("bloqued", fields: [bloquedId], references: [id])
-  user      User   @relation("user", fields: [userId], references: [id])
-}
-
-model FriendShip {
-  id        String @id @default(uuid())
-  userOneId String @db.Uuid
-  userTwoId String @db.Uuid
-  friendOne User   @relation("friendOne", fields: [userOneId], references: [id])
-  friendTwo User   @relation("friendTwo", fields: [userTwoId], references: [id])
+  user             UserItem[]         @relation("ownerItem")
+  lobbyOwner       Lobby[]            @relation("lobbyOwner")
+  friends          User[]             @relation("friends")
+  symmetricFriends User[]             @relation("friends")
+  isBloqued        User[]             @relation("bloqued")
+  hasBloqued       User[]             @relation("bloqued")
+  playerOne        Match[]            @relation("playerOne")
+  playerTwo        Match[]            @relation("playerTwo")
+  winner           Match[]            @relation("winner")
+  isBanned         Room[]             @relation("Banned")
+  roomOwner        Room[]             @relation("owner")
 }
 
 //================== GAME =================
@@ -115,18 +99,21 @@ model UserItem {
   userId  String @db.Uuid
   itemsId String @db.Uuid
   items   Item   @relation(fields: [itemsId], references: [id])
-  user    User   @relation("owner", fields: [userId], references: [id])
+  user    User   @relation("ownerItem", fields: [userId], references: [id])
 }
 
 model Room {
-  id      String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name    String        @unique
-  type    Int
-  adminId String        @db.Uuid
-  roomBan Banned[]
-  roomMsg Message[]
-  room    Participant[]
-  admin   User          @relation("admin", fields: [adminId], references: [id])
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String        @unique
+  password         String
+  avatar           String
+  type             Int
+  ownerId          String        @db.Uuid
+  isPrivate        Boolean
+  userBanSymmetric User[]        @relation("Banned")
+  roomMsg          Message[]
+  room             Participant[]
+  owner            User          @relation("owner", fields: [ownerId], references: [id])
 }
 
 model Participant {
@@ -137,14 +124,6 @@ model Participant {
   joinedAt DateTime @default(now())
   room     Room     @relation(fields: [roomId], references: [id])
   user     User     @relation(fields: [userId], references: [id])
-}
-
-model Banned {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  roomId String @db.Uuid
-  userId String @db.Uuid
-  room   Room   @relation(fields: [roomId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Message {
@@ -173,4 +152,5 @@ enum Status {
 enum Role {
   BASIC
   ADMIN
+  OWNER
 }

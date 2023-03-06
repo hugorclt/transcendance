@@ -2,56 +2,32 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { PrismaService } from './prisma/prisma.service';
-import { AuthService } from './auth/auth.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { ItemsModule } from './items/items.module';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
-import { RoomsModule } from './rooms/rooms.module';
 import { HttpModule } from '@nestjs/axios';
-import { GameModule } from './game/game.module';
-import { FriendshipController } from './friendship/friendship.controller';
-import { FriendshipModule } from './friendship/friendship.module';
-import { FriendshipService } from './friendship/friendship.service';
-import { ParticipantModule } from './rooms/participant/participant.module';
-import { RoomsService } from './rooms/rooms.service';
-import { ParticipantService } from './rooms/participant/participant.service';
-import { MessagesModule } from './rooms/messages/messages.module';
-import { WebsocketModule } from './friends-activity/friend-activity.module';
-import { FriendsActivityService } from './friends-activity/friends-activity.service';
 import { LobbiesModule } from './lobbies/lobbies.module';
-import { LobbiesService } from './lobbies/lobbies.service';
 import { LobbyParticipantsModule } from './lobbies/lobby-participants/lobby-participants.module';
-import { LobbyParticipantsService } from './lobbies/lobby-participants/lobby-participants.service';
+import { RoomsModule } from './socials/rooms/rooms.module';
+import { ParticipantModule } from './socials/rooms/participant/participant.module';
+import { SocialsModule } from './socials/socials.module';
+import { MessagesModule } from './socials/rooms/messages/messages.module';
+import { SocialsGateway } from './socials/socials.gateway';
 @Module({
   imports: [
     AuthModule,
     PrismaModule,
-    ItemsModule,
     UsersModule,
-    RoomsModule,
     JwtModule,
     HttpModule,
-    GameModule,
-    FriendshipModule,
+    RoomsModule,
     ParticipantModule,
+    SocialsModule,
     MessagesModule,
-    WebsocketModule,
     LobbiesModule,
     LobbyParticipantsModule,
   ],
-  controllers: [AppController, FriendshipController],
-  providers: [
-    AppService,
-    AuthService,
-    LobbiesService,
-    LobbyParticipantsService,
-    PrismaService,
-    FriendshipService,
-    FriendsActivityService,
-    RoomsService,
-    ParticipantService,
-  ],
+  controllers: [AppController],
+  providers: [AppService, SocialsGateway],
 })
 export class AppModule {}
