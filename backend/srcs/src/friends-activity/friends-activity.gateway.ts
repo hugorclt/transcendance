@@ -9,15 +9,9 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { OnModuleInit, UseGuards } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { FriendshipService } from 'src/friendship/friendship.service';
-import { UsersService } from 'src/users/users.service';
-import { AccessAuthGard } from 'src/auth/utils/guards';
 import { Socket } from 'socket.io';
-import { RoomsService } from 'src/rooms/rooms.service';
-import { ParticipantService } from 'src/rooms/participant/participant.service';
-import { Role } from '@prisma/client';
 import { FriendsActivityService } from './friends-activity.service';
+import { RoomsService } from 'src/rooms/rooms.service';
 
 @WebSocketGateway({
   namespace: '/status',
@@ -81,6 +75,13 @@ export class FriendsActivityGateway
   ): Promise<void> {
     this.friendsActivityService.onLogout(client, userId);
   }
+
+  @SubscribeMessage("send-message")
+  async sendMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: { message: string, users: string[]}) {
+      this.friendsActivityService.sendMessage(client, payload);
+    }
 }
 
 

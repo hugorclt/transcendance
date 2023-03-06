@@ -7,10 +7,15 @@ import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
 import { Role } from '@prisma/client';
 import { FriendsActivityService } from 'src/friends-activity/friends-activity.service';
+import { Server } from 'socket.io';
 
 @Injectable()
 export class RoomsService {
-  constructor(private prisma: PrismaService, private participant: ParticipantService, private friendActivity: FriendsActivityService) {}
+  constructor(
+    private prisma: PrismaService,
+    private participant: ParticipantService,
+    private friendActivity: FriendsActivityService,
+  ) {}
 
   async create(createRoomDto: CreateRoomDto) {
     const salt = await bcrypt.genSalt();
@@ -26,7 +31,7 @@ export class RoomsService {
         room: {
           create: createRoomDto.users.map((user) => ({
             user: { connect: { username: user } },
-          })), 
+          })),
         },
       },
       include: {
@@ -43,10 +48,16 @@ export class RoomsService {
     const owner = await this.prisma.user.findUnique({
       where: {
         id: createRoomDto.creatorId,
-      }
-    })
+      },
+    });
 
-    this.friendActivity.server.to(owner.id).emit("on-new-chat", {avatar: owner.avatar, name: createRoomDto.name, lastMessage: ""})
+    this.friendActivity.server
+      .to(owner.id)
+      .emit('on-new-chat', {
+        avatar: owner.avatar,
+        name: createRoomDto.name,
+        lastMessage: '',
+      });
     return room;
   }
 

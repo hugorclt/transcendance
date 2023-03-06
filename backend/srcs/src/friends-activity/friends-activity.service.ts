@@ -111,4 +111,8 @@ export class FriendsActivityService {
       }
     });
   }
+
+  public async sendMessage(client: Socket, payload: any): Promise<void> {
+
+  }
 }
