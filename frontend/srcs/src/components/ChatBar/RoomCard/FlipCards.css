@@ -1,0 +1,45 @@
+.form-card-container {
+  -webkit-perspective: 2000px;
+  perspective: 2000px;
+  position: relative;
+  z-index: 100;
+}
+
+.flip-card {
+  width: 100%;
+  height: 80%;
+  -webkit-transform: translateZ( 0px);
+  transform: translateZ( 0px);
+  -webkit-transition: -webkit-transform .7s, margin .4s;
+  transition: transform .7s, margin .4s;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  position: absolute;
+}
+
+.flip-card.flipped {
+  -webkit-transform: rotateY( 180deg);
+  transform: rotateY( 180deg);
+}
+
+.flip-card figure {
+  position: absolute;
+  width: 90%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+}
+
+.flip-card .history-side {
+  -webkit-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+}
+
+.flip-card .create-group-side {
+  -webkit-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+  -webkit-transform: rotateY( 180deg);
+  transform: rotateY( 180deg);
+}

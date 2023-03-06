@@ -27,7 +27,9 @@ function ManageBar() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("je emit");
     socket?.emit("friend-request", username);
+    setUsername("");
   };
 
   return (
@@ -65,7 +67,7 @@ function ManageBar() {
             onClick={handleInvite}
           >
             <IconContext.Provider value={{ color: "#E8C47C" }}>
-              <AiOutlineUsergroupAdd />
+              <AiOutlineUsergroupAdd size={20} />
             </IconContext.Provider>
           </button>
         </div>
