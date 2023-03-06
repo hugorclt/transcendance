@@ -6,8 +6,7 @@ import { ParticipantService } from './participant/participant.service';
 import { Role } from '@prisma/client';
 import { Server } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
-import { SocialsGateway } from '../socials.gateway';
-import { SocialsService } from '../socials.service';
+import { last } from 'rxjs';
 
 @Injectable()
 export class RoomsService {
@@ -15,7 +14,6 @@ export class RoomsService {
     private prisma: PrismaService,
     private participant: ParticipantService,
     private usersService: UsersService,
-    @Inject(SocialsGateway) private socialsGateway: SocialsGateway,
   ) {}
 
   async create(createRoomDto: CreateRoomDto) {
@@ -47,12 +45,6 @@ export class RoomsService {
       userId: createRoomDto.ownerId,
       role: Role.OWNER,
     });
-
-    this.socialsGateway.server.to(owner.id).emit('on-new-chat', {
-      avatar: room.avatar,
-      name: createRoomDto.name,
-      lastMessage: '',
-    });
     return room;
   }
 
@@ -67,28 +59,23 @@ export class RoomsService {
       },
     });
 
-    return list.map(async (room) => {
-      const lastMessage = await this.prisma.room.findMany({
+    const test = Promise.all(list.map(async (room) => {
+      const lastMessage = await this.prisma.message.findFirst({
         where: {
-          id: room.id,
+          roomId: room.id,
         },
-        include: {
-          roomMsg: {
-            orderBy: {
-              date: 'desc',
-            },
-            take: 1,
-          },
+        orderBy: {
+          date: 'desc',
         },
       });
 
-      console.log(lastMessage);
       return {
         avatar: room.avatar,
         name: room.name,
-        lastMessage: lastMessage,
+        lastMessage: lastMessage == null ? "" : lastMessage,
       };
-    });
+    }));
+    return (test);
   }
 
   findAll() {

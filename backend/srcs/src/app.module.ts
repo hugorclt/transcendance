@@ -11,6 +11,7 @@ import { RoomsModule } from './socials/rooms/rooms.module';
 import { ParticipantModule } from './socials/rooms/participant/participant.module';
 import { SocialsModule } from './socials/socials.module';
 import { MessagesModule } from './socials/rooms/messages/messages.module';
+import { SocialsGateway } from './socials/socials.gateway';
 @Module({
   imports: [
     AuthModule,
@@ -25,6 +26,6 @@ import { MessagesModule } from './socials/rooms/messages/messages.module';
     MessagesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SocialsGateway],
 })
 export class AppModule {}

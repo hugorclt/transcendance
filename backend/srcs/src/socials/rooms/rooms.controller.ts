@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Headers, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Headers,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
@@ -15,19 +26,15 @@ export class RoomsController {
 
   @Post('/create')
   @ApiCreatedResponse({ type: RoomEntity })
-  create(
-    @Request() req,
-    @Body() CreateRoomDto: CreateRoomDto,
-  ) {
+  async create(@Request() req, @Body() createRoomDto: CreateRoomDto) {
     const creatorId = req.user.sub;
-    CreateRoomDto.ownerId = creatorId;
-    console.log("DTO, room creation :", CreateRoomDto);
-    return this.roomsService.create(CreateRoomDto);
+    createRoomDto.ownerId = creatorId;
+    return await this.roomsService.create(createRoomDto);
   }
 
-  @Get("/history")
+  @Get('/history')
   @ApiCreatedResponse({ type: [RoomEntity] })
-  findHistory(@Request() req) {
-    return this.roomsService.findHistory(req.user.sub);
+  async findHistory(@Request() req) {
+    return await this.roomsService.findHistory(req.user.sub);
   }
 }

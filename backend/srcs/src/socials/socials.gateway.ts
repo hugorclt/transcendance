@@ -32,7 +32,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
   }
 
   afterInit(server: Server) {
-    // this.friendsActivityService.server = server;
+    this.friendsActivityService.server = server;
   }
 
   async handleConnection(client: Socket) {
@@ -52,6 +52,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() toUsername,
   ): Promise<void> {
+    console.log("je receive");
     this.friendsActivityService.onFriendRequest(client, toUsername);
   }
 

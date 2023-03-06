@@ -9,7 +9,9 @@ import { SocialsService } from './socials.service';
 
 @Module({
   imports: [PrismaModule, UsersModule],
-  providers: [SocialsService, SocialsGateway],
+  providers: [
+    SocialsService,
+  ],
   controllers: [],
   exports: [SocialsService],
 })

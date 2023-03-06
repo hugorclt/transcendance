@@ -38,7 +38,6 @@ function CreateRoomCard() {
           }
           return prev;
         });
-        
       })
       .catch((e: AxiosError) => {
         console.log("error");

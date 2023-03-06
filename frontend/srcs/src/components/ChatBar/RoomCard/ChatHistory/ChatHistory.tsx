@@ -12,26 +12,18 @@ import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 
 function ChatHistory() {
   const { isActive, setIsActive } = useContext(CreateRoomContext);
-  const [chatHistory, setChatHistory] = useState<TChatHistoryType[]>([]);
+  const {chatHistory, setChatHistory} = useContext(ChatHistoryContext);
   const socket = useContext(ChatSocketContext);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     console.log("alllo");
-    // axiosPrivate.get("/rooms/history").then((res) => {
-      // setChatHistory(res.data);
-    // });
-  }, []);
-
-  useEffect(() => {
-    socket?.on("on-new-chat", (data: TChatHistoryType) => {
-      console.log(data);
-      setChatHistory((prev) => [...prev, data]);
+    axiosPrivate.get("/rooms/history").then((res) => {
+      console.log(res.data);
+      // const data = res.data;
+      setChatHistory(res.data);
     });
-    return () => {
-      socket?.off("on-new-chat");
-    };
-  }, [socket]);
+  }, []);
 
   return (
     <figure className="flex flex-col h-full history-side">
