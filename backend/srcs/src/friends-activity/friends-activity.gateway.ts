@@ -1,22 +1,14 @@
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { OnModuleInit } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { FriendshipService } from 'src/friendship/friendship.service';
 import { UsersService } from 'src/users/users.service';
-import { AccessAuthGard } from 'src/auth/utils/guards';
 import { Socket } from 'socket.io';
-import { RoomsService } from 'src/rooms/rooms.service';
-import { ParticipantService } from 'src/rooms/participant/participant.service';
-import { Role } from '@prisma/client';
 import { FriendsActivityService } from './friends-activity.service';
 
 @WebSocketGateway({
@@ -27,15 +19,10 @@ import { FriendsActivityService } from './friends-activity.service';
     methods: ['GET', 'POST'],
   },
 })
-// @UseGuards(AccessAuthGard) // a rajouter plus tard
-export class FriendsActivityGateway
-  implements OnModuleInit, OnGatewayConnection
-{
+export class FriendsActivityGateway {
   constructor(
     private friendShip: FriendshipService,
     private usersService: UsersService,
-    // private roomsService: RoomsService,
-    // private participantService: ParticipantService,
     private friendsActivityService: FriendsActivityService,
   ) {}
 
@@ -49,41 +36,6 @@ export class FriendsActivityGateway
   afterInit(server: Server) {
     this.friendsActivityService.socket = server;
   }
-
-  async handleConnection(client: any) {
-    console.log('handle connect called');
-    var clientId = client.handshake.query.userId;
-    client.join(clientId);
-    const userId: string = client.handshake.query.userId;
-    // const friends = await this.friendShip.findManyForOneUser(userId);
-    const user = await this.usersService.findOne(userId);
-    if (user) {
-      this.emitToFriends(userId, 'on-status-update', {
-        username: user.username,
-        avatar: user.avatar,
-        status: 'CONNECTED',
-      });
-    }
-  }
-
-  // async handleDisconnect(client: any) {
-  //   console.log("handleDisconnect called");
-  //   var clientId = client.handshake.query.userId;
-  //   const userId: string = client.handshake.query.userId;
-  //   // const friends = await this.friendShip.findManyForOneUser(userId);
-  //   const user = await this.usersService.findOne(userId);
-  //   console.log("disconnect");
-  //   if (user) {
-  //     console.log("user", user);
-  //   this.emitToFriends(userId, 'on-status-update', {
-  //     username: user.username,
-  //     avatar: user.avatar,
-  //     status: "DISCONNECTED",
-  //   });
-  //   console.log("user", user);
-  //   }
-  //   client.leave(clientId);
-  // }
 
   async emitToFriends(
     userId: string,
@@ -108,7 +60,6 @@ export class FriendsActivityGateway
   ): Promise<void> {
     if (typeof client.handshake.query.userId != 'string') return;
     const userId: string = client.handshake.query.userId;
-    // const friends = await this.friendShip.findManyForOneUser(userId);
     const user = await this.usersService.findOne(userId);
     this.emitToFriends(userId, 'on-status-update', {
       username: user.username,
@@ -175,7 +126,3 @@ export class FriendsActivityGateway
     });
   }
 }
-
-// const room = await this.roomsService.create({name: user1.username + "_room", type: 0, adminId: user1.id});
-// this.participantService.create({roomId: room.id, userId: user1.id, role: Role.ADMIN });
-// this.participantService.create({roomId: room.id, userId: user2.id, role: Role.BASIC });

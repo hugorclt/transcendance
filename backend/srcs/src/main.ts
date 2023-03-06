@@ -6,6 +6,7 @@ import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-cl
 import cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { SocketIoAdapter } from './lobbies/socket-io-adapter';
 
 declare const module: any;
 
@@ -19,6 +20,7 @@ async function bootstrap() {
     allowedHeaders: ['content-type', 'Authorization'],
     origin: 'http://localhost:3002',
   });
+  app.useWebSocketAdapter(new SocketIoAdapter(app));
 
   //===== Validation Pipe to check for input errors =====
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
