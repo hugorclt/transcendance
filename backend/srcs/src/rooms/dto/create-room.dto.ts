@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, ValidateIf } from "class-validator";
 
 export class CreateRoomDto {
   @IsNotEmpty()
   @ApiProperty()
   name: string;
 
-  @IsNotEmpty()
+  @ValidateIf((e) => (e !== undefined && e !== null))
   @ApiProperty()
   password: string;
 
@@ -19,5 +19,8 @@ export class CreateRoomDto {
   isPrivate: boolean;
 
   @ApiProperty()
-  creatorId: string;
+  ownerId?: string;
+
+  @ApiProperty()
+  avatar?: string;
 }

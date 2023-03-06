@@ -25,9 +25,7 @@ import { RoomsService } from 'src/rooms/rooms.service';
 export class FriendsActivityGateway
   implements OnModuleInit, OnGatewayConnection
 {
-  constructor(
-    private friendsActivityService: FriendsActivityService,
-  ) {}
+  constructor(private friendsActivityService: FriendsActivityService, private roomService: RoomsService) {}
 
   @WebSocketServer()
   public server: Server;
@@ -38,6 +36,7 @@ export class FriendsActivityGateway
 
   afterInit(server: Server) {
     this.friendsActivityService.server = server;
+    this.roomService.server = server;
   }
 
   async handleConnection(client: Socket) {
@@ -76,12 +75,11 @@ export class FriendsActivityGateway
     this.friendsActivityService.onLogout(client, userId);
   }
 
-  @SubscribeMessage("send-message")
+  @SubscribeMessage('send-message')
   async sendMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() payload: { message: string, users: string[]}) {
-      this.friendsActivityService.sendMessage(client, payload);
-    }
+    @MessageBody() payload: { message: string; users: string[] },
+  ) {
+    this.friendsActivityService.sendMessage(client, payload);
+  }
 }
-
-

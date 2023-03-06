@@ -1,32 +1,34 @@
-import { Injectable, Request } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { UpdateRoomDto } from './dto/update-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
 import { Role } from '@prisma/client';
-import { FriendsActivityService } from 'src/friends-activity/friends-activity.service';
 import { Server } from 'socket.io';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class RoomsService {
   constructor(
     private prisma: PrismaService,
     private participant: ParticipantService,
-    private friendActivity: FriendsActivityService,
+    private usersService: UsersService,
   ) {}
+
+  public server: Server;
 
   async create(createRoomDto: CreateRoomDto) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createRoomDto.password, salt);
+    const owner = await this.usersService.findOne(createRoomDto.ownerId);
 
     const room = await this.prisma.room.create({
       data: {
         name: createRoomDto.name,
         password: hash,
+        avatar: "", //owner.avatar,
         isPrivate: createRoomDto.isPrivate,
-        ownerId: createRoomDto.creatorId,
+        ownerId: createRoomDto.ownerId,
         type: 0,
         room: {
           create: createRoomDto.users.map((user) => ({
@@ -41,24 +43,52 @@ export class RoomsService {
 
     await this.participant.create({
       roomId: room.id,
-      userId: createRoomDto.creatorId,
+      userId: createRoomDto.ownerId,
       role: Role.OWNER,
     });
 
-    const owner = await this.prisma.user.findUnique({
+    console.log(this.server)
+    this.server.to(owner.id).emit('on-new-chat', {
+      avatar: room.avatar,
+      name: createRoomDto.name,
+      lastMessage: '',
+    });
+    return room;
+  }
+
+  async findHistory(userId: string) {
+    const list = await this.prisma.room.findMany({
       where: {
-        id: createRoomDto.creatorId,
+        room: {
+          some: {
+            user: { id: userId },
+          },
+        },
       },
     });
 
-    this.friendActivity.server
-      .to(owner.id)
-      .emit('on-new-chat', {
-        avatar: owner.avatar,
-        name: createRoomDto.name,
-        lastMessage: '',
+    return list.map(async (room) => {
+      const lastMessage = await this.prisma.room.findMany({
+        where: {
+          id: room.id,
+        },
+        include: {
+          roomMsg: {
+            orderBy: {
+              date: 'desc',
+            },
+            take: 1,
+          },
+        },
       });
-    return room;
+
+      console.log(lastMessage);
+      return {
+        avatar: room.avatar,
+        name: room.name,
+        lastMessage: lastMessage,
+      };
+    });
   }
 
   findAll() {

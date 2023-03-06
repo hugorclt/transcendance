@@ -19,8 +19,9 @@ import { ParticipantModule } from './rooms/participant/participant.module';
 import { RoomsService } from './rooms/rooms.service';
 import { ParticipantService } from './rooms/participant/participant.service';
 import { MessagesModule } from './rooms/messages/messages.module';
-import { WebsocketModule } from './friends-activity/friend-activity.module';
+import { FriendsActivityModule } from './friends-activity/friend-activity.module';
 import {FriendsActivityService}  from './friends-activity/friends-activity.service';
+import { FriendsActivityGateway } from './friends-activity/friends-activity.gateway';
 @Module({
   imports: [
     // FriendsActivityGateway,
@@ -35,9 +36,9 @@ import {FriendsActivityService}  from './friends-activity/friends-activity.servi
     FriendshipModule,
     ParticipantModule,
     MessagesModule,
-    WebsocketModule,
+    FriendsActivityModule,
   ],
   controllers: [AppController, FriendshipController],
-  providers: [AppService, AuthService, PrismaService, FriendshipService, FriendsActivityService, RoomsService, ParticipantService],
+  providers: [FriendsActivityGateway, AppService, AuthService, PrismaService, FriendshipService, FriendsActivityService, RoomsService, ParticipantService],
 })
 export class AppModule {}

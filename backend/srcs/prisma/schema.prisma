@@ -78,9 +78,10 @@ model UserItem {
 model Room {
   id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String        @unique
+  password  String
+  avatar    String
   type      Int
   ownerId   String        @db.Uuid
-  password  String
   isPrivate Boolean
   roomBan   Banned[]
   roomMsg   Message[]

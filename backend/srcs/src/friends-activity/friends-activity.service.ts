@@ -94,6 +94,10 @@ export class FriendsActivityService {
     });
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                    utils                                   */
+  /* -------------------------------------------------------------------------- */
+
   public async emitToFriends(
     userId: string,
     eventName: string,
@@ -104,15 +108,22 @@ export class FriendsActivityService {
     friends.forEach((friend) => {
       if (this.server) {
         this.server.to(friend.id).emit(eventName, {
-          username: user.username,
-          avatar: user.avatar,
-          ...data,
+          data,
         });
       }
     });
   }
 
-  public async sendMessage(client: Socket, payload: any): Promise<void> {
-
+  public async emitToUser(
+    userId: string,
+    eventName: string,
+    data: any,
+  ): Promise<void> {
+    if (this.server) {
+      this.server.to(userId).emit(eventName, {
+        data,
+      });
+    }
   }
+  public async sendMessage(client: Socket, payload: any): Promise<void> {}
 }

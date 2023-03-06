@@ -19,35 +19,14 @@ export class RoomsController {
     @Body() CreateRoomDto: CreateRoomDto,
   ) {
     const creatorId = req.user.sub;
-    CreateRoomDto.creatorId = creatorId;
+    CreateRoomDto.ownerId = creatorId;
     console.log("DTO, room creation :", CreateRoomDto);
     return this.roomsService.create(CreateRoomDto);
   }
-  
 
-
-
-  @Get()
-  @ApiOkResponse({ type: RoomEntity, isArray: true})
-  findAll() {
-    return this.roomsService.findAll();
-  }
-
-  @Get(':id')
-  @ApiOkResponse({ type: RoomEntity })
-  findOne(@Param('id') id: string) {
-    return this.roomsService.findOne(id);
-  }
-
-  // @Patch(':id')
-  // @ApiOkResponse({ type: RoomEntity })
-  // update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
-  //   return this.roomsService.update(id, updateRoomDto);
-  // }
-
-  @Delete(':id')
-  @ApiOkResponse({ type: RoomEntity })
-  remove(@Param('id') id: string) {
-    return this.roomsService.remove(id);
+  @Get("/history")
+  @ApiCreatedResponse({ type: [RoomEntity] })
+  findHistory(@Request() req) {
+    return this.roomsService.findHistory(req.user.sub);
   }
 }

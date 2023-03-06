@@ -6,6 +6,9 @@ export class RoomEntity implements Room {
     id: string;
 
     @ApiProperty()
+    avatar: string;
+
+    @ApiProperty()
     isPrivate: boolean;
 
     @ApiProperty()
