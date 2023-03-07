@@ -14,13 +14,13 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <GlobalProvider>
-          <Routes>
-            <Route path="/*" element={<App />} />
-          </Routes>
-      </GlobalProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <BrowserRouter>
+    <GlobalProvider>
+      <Routes>
+        <Route path="/*" element={<App />} />
+      </Routes>
+    </GlobalProvider>
+  </BrowserRouter>
+  // </React.StrictMode>
 );

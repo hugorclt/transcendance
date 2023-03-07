@@ -14,7 +14,6 @@ function ChatHistory() {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    console.log("alllo");
     axiosPrivate.get("/rooms/history").then((res) => {
       console.log(res.data);
       // const data = res.data;

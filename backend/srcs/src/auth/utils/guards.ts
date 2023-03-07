@@ -21,16 +21,3 @@ export class AccessAuthGard extends AuthGuard('access') {}
 
 @Injectable()
 export class RefreshAuthGard extends AuthGuard('refresh') {}
-
-@Injectable()
-export class JWTAccessAuthGard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
-
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-
-    console.log('Checking JWT access');
-
-    return true;
-  }
-}

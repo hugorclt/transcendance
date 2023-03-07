@@ -6,7 +6,7 @@ import { PrismaClientExceptionFilter } from './prisma/prisma-client-exception/pr
 import cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import { SocketIoAdapter } from './lobbies/socket-io-adapter';
+import { SocketIoAdapter } from './socket-adapter/socket-io-adapter';
 
 declare const module: any;
 
