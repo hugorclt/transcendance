@@ -1,11 +1,9 @@
 import { AxiosError, AxiosResponse } from "axios";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { axiosPrivate } from "../../../services/axios";
 import FriendsCards from "./FriendsCards/FriendsCards";
-import ManageBar from "./ManageBar";
 import { nanoid } from "nanoid";
 import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
-import { TFriendsProps } from "./FriendsCards/FriendsType";
 import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
 
 function FriendsList() {

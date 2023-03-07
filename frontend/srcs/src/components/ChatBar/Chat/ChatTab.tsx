@@ -1,13 +1,14 @@
 import { AxiosError, AxiosResponse } from "axios";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { GlobalContext } from "../../../services/Global/GlobalProvider";
 import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 import { TMessage } from "./ChatType";
 
 function ChatTab(props: { name: string }) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
-  const [username, setUsername] = useState("");
+  const {auth} = useContext(GlobalContext)
   const socket = useContext(ChatSocketContext);
   const axiosPrivate = useAxiosPrivate();
 

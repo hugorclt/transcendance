@@ -8,27 +8,69 @@ datasource db {
 }
 
 model User {
-  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username         String        @unique
-  email            String        @unique
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username         String             @unique
+  email            String             @unique
   password         String
   avatar           String?
   refreshToken     String?
-  type             Type          @default(LOCAL)
-  status           Status?       @default(DISCONNECTED)
-  balance          Int?          @default(0)
-  friends          User[]        @relation("friends")
-  symmetricFriends User[]        @relation("friends")
-  isBloqued        User[]        @relation("bloqued")
-  hasBloqued       User[]        @relation("bloqued")
-  playerOne        Match[]       @relation("playerOne")
-  playerTwo        Match[]       @relation("playerTwo")
-  winner           Match[]       @relation("winner")
-  isBanned         Room[]        @relation("Banned")
+  type             Type               @default(LOCAL)
+  status           Status?            @default(DISCONNECTED)
+  balance          Int?               @default(0)
   sender           Message[]
   participant      Participant[]
-  owner            Room[]        @relation("owner")
-  user             UserItem[]    @relation("ownerItem")
+  lobbyParticipant LobbyParticipant[]
+  lobbySpectator   LobbySpectator[]
+  user             UserItem[]         @relation("ownerItem")
+  lobbyOwner       Lobby[]            @relation("lobbyOwner")
+  friends          User[]             @relation("friends")
+  symmetricFriends User[]             @relation("friends")
+  isBloqued        User[]             @relation("bloqued")
+  hasBloqued       User[]             @relation("bloqued")
+  playerOne        Match[]            @relation("playerOne")
+  playerTwo        Match[]            @relation("playerTwo")
+  winner           Match[]            @relation("winner")
+  isBanned         Room[]             @relation("Banned")
+  roomOwner        Room[]             @relation("owner")
+}
+
+//================== GAME =================
+model Lobby {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId     String             @unique @db.Uuid
+  nbPlayers   Int                @default(2)
+  maxDuration Int                @default(180)
+  mode        Mode               @default(CLASSIC)
+  map         MapName            @default(CLASSIC)
+  owner       User               @relation("lobbyOwner", fields: [ownerId], references: [id])
+  players     LobbyParticipant[]
+  spectators  LobbySpectator[]
+}
+
+model LobbyParticipant {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lobbyId String @db.Uuid
+  userId  String @db.Uuid
+  lobby   Lobby  @relation(fields: [lobbyId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model LobbySpectator {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lobbyId String @db.Uuid
+  userId  String @db.Uuid
+  lobby   Lobby  @relation(fields: [lobbyId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+enum MapName {
+  CLASSIC
+}
+
+enum Mode {
+  CLASSIC
+  CHAMPIONS
+  GRAVITY
 }
 
 model Match {
@@ -43,6 +85,7 @@ model Match {
   winner      User     @relation("winner", fields: [winnerId], references: [id])
 }
 
+//================== SHOP =======================
 model Item {
   id    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name  String

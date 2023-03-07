@@ -1,13 +1,12 @@
-import React from 'react'
-import * as  PingPongGif from '../assets/PingPongGif.gif'
-import './Loading.css'
+import React from "react";
+import "./Loading.css";
 
 function Loading() {
   return (
-    <div className=' h-screen opacity-60'>
-      <div className='loading w-60 h-80 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'></div>
+    <div className=" h-screen opacity-60">
+      <div className="loading w-60 h-80 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
     </div>
-  )
+  );
 }
 
-export default Loading
+export default Loading;

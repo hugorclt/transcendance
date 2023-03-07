@@ -5,10 +5,10 @@ import "../../Login.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { AxiosError, AxiosResponse } from "axios";
-import useAuth from "../../../../hooks/useAuth";
+import { useGlobal } from "../../../../services/Global/GlobalProvider";
 
 function LoginForm() {
-  const { setAuth } = useAuth();
+  const { setAuth } = useGlobal();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

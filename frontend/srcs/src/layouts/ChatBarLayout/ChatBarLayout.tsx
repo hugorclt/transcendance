@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import FriendsList from "../../components/ChatBar/FriendsList/FriendsList";
 import ProfilBox from "../../components/ChatBar/ProfilBox/ProfilBox";
 import FriendNotifications from "../../components/ChatBar/FriendsList/FriendNotifications/FriendsNotifications";

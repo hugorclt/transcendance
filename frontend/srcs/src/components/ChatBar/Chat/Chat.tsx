@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ChatContext } from "../../../views/ChatPage/ChatContext";
 import ChatTab from "./ChatTab";
-import { nanoid } from "nanoid";
+import { nanoid } from 'nanoid'
 
 function Chat() {
   const { openChat, setOpenChat } = useContext(ChatContext);
@@ -12,7 +12,8 @@ function Chat() {
       {openChat.length != 0 && (
         <div
           style={{ right: "18rem" }}
-          className="absolute bottom-0 right-0 w-72 h-80 bg-dark-blue opacity-80">
+          className="absolute bottom-0 right-0 w-72 h-80 bg-dark-blue opacity-80"
+        >
           {openChat.map((tab, idx) => {
             return (
               <div key={nanoid()}>

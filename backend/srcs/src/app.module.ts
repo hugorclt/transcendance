@@ -6,7 +6,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpModule } from '@nestjs/axios';
-import { GameModule } from './garbage/game/game.module';
+import { LobbiesModule } from './lobbies/lobbies.module';
+import { LobbyParticipantsModule } from './lobbies/lobby-participants/lobby-participants.module';
 import { RoomsModule } from './socials/rooms/rooms.module';
 import { ParticipantModule } from './socials/rooms/participant/participant.module';
 import { SocialsModule } from './socials/socials.module';
@@ -19,11 +20,12 @@ import { SocialsGateway } from './socials/socials.gateway';
     UsersModule,
     JwtModule,
     HttpModule,
-    GameModule,
     RoomsModule,
     ParticipantModule,
     SocialsModule,
     MessagesModule,
+    LobbiesModule,
+    LobbyParticipantsModule,
   ],
   controllers: [AppController],
   providers: [AppService, SocialsGateway],

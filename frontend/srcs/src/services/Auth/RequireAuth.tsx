@@ -1,9 +1,9 @@
 import React from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { useGlobal } from "../Global/GlobalProvider";
 
 function RequireAuth() {
-  const { auth } = useAuth();
+  const { auth } = useGlobal();
   const location = useLocation();
 
   return auth?.accessToken ? (

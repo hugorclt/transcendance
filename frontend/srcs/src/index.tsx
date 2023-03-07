@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { AuthProvider } from "./services/Auth/AuthProvider";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import GlobalProvider from "./services/Global/GlobalProvider";
 
 if (process.env["ENV_MODE"] === "production") {
   disableReactDevTools();
@@ -16,11 +16,11 @@ const root = ReactDOM.createRoot(
 root.render(
   // <React.StrictMode>
     <BrowserRouter>
-      <AuthProvider>
+      <GlobalProvider>
           <Routes>
             <Route path="/*" element={<App />} />
           </Routes>
-      </AuthProvider>
+      </GlobalProvider>
     </BrowserRouter>
   // </React.StrictMode>
 );

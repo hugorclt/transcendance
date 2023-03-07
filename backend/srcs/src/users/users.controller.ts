@@ -25,7 +25,7 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ type: ReturnUserEntity })
-  create(@Body() createUserDto: CreateUserDto): Promise<ReturnUserEntity>{
+  create(@Body() createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
     return this.usersService.create(createUserDto);
   }
 
@@ -49,9 +49,17 @@ export class UsersController {
   }
 
   @Get('me')
-  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
+  @ApiOkResponse({ type: ReturnUserEntity })
   findInfo(@Request() req): Promise<ReturnUserEntity> {
     return this.usersService.findOne(req.user.sub);
+  }
+
+  @Get('status')
+  @ApiOkResponse({ type: ReturnUserEntity })
+  async findStatus(@Request() req): Promise<ReturnUserEntity> {
+    const user = await this.usersService.findOne(req.user.sub);
+    console.log('Asked for user status: ', user.status);
+    return user;
   }
 
   @Post('me/status')
@@ -59,7 +67,6 @@ export class UsersController {
   updateStatus(@Request() req): Promise<ReturnUserEntity> {
     return this.usersService.updateStatus(req.user.sub, req.body.status);
   }
-
 
   @Get(':id')
   @ApiOkResponse({ type: ReturnUserEntity })
