@@ -4,6 +4,7 @@ import { UsersModule } from 'src/users/users.module';
 import { SocialsGateway } from '../socials.gateway';
 import { SocialsModule } from '../socials.module';
 import { SocialsService } from '../socials.service';
+import { MessagesService } from './messages/messages.service';
 import { ParticipantService } from './participant/participant.service';
 import { RoomsController } from './rooms.controller';
 import { RoomsService } from './rooms.service';
@@ -15,6 +16,7 @@ import { RoomsService } from './rooms.service';
     RoomsService,
     ParticipantService,
     SocialsService,
+    MessagesService,
   ],
   exports: [RoomsService],
 })

@@ -1,7 +1,8 @@
 import { AxiosError, AxiosResponse } from "axios";
-import React, { FormEvent, useContext, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import { ChatHistoryContext } from "../../../../../views/ChatPage/ChatHistoryContext";
+import { ChatSocketContext } from "../../../../../views/ChatPage/ChatSocketContext";
 import { FriendsListContext } from "../../../../../views/ChatPage/FriendsListContext";
 
 function CreateRoomCard() {
@@ -12,6 +13,7 @@ function CreateRoomCard() {
   const [friendRoom, setFriendRoom] = useState<string[]>([]);
   const {setChatHistory} = useContext(ChatHistoryContext);
   const axiosPrivate = useAxiosPrivate();
+  const socket = useContext(ChatSocketContext);
 
   const addFriendToRoom = (name: string) => {
     setFriendRoom((prev) => {
@@ -31,13 +33,14 @@ function CreateRoomCard() {
         users: friendRoom,
         isPrivate: privateRoom,
       })
-      .then((e: AxiosResponse) => {
+      .then((res: AxiosResponse) => {
         setChatHistory((prev) => {
           if (!prev.some((item) => item.name === roomName)) {
             return [...prev, {avatar: "", lastMessage: "", name: roomName}];
           }
           return prev;
         });
+        socket?.emit("connect-client", {usersList: friendRoom, roomId: res.data.roomId})
       })
       .catch((e: AxiosError) => {
         console.log("error");

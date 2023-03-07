@@ -5,39 +5,24 @@ import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 import { TMessage } from "./ChatType";
 
 function ChatTab(props: { name: string }) {
-  const axiosPrivate = useAxiosPrivate();
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
   const [username, setUsername] = useState("");
   const socket = useContext(ChatSocketContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
-    axiosPrivate
-    .get("auth/me")
-      .then((res: AxiosResponse) => {
-        setUsername(res.data.username);
-        setMessageList((prev) => [
-          ...prev,
-          { message: message , sender:username},
-        ]);
-        socket?.emit("message-sent", {
-          message: message,
-          userFromId: res.data.id,
-          userToName: props.name,
-        });
-        setMessage("");
-      })
-      .catch((err: AxiosError) => {
-        console.log("error while sending the message");
-      });
+    socket?.emit("new-message", {message: message, roomName: props.name})
+    setMessage(""); 
   };
 
   useEffect(() => {
-    socket?.on("on-message-sent", (newMessage: TMessage) => {
-      setMessageList((prev) => [...prev, newMessage]);
+    socket?.on("on-new-message", (newMessage: TMessage) => {
+      if (newMessage.roomName === props.name)
+        setMessageList((prev) => {return [...prev, newMessage]});
       return () => {
-        socket?.off("on-message-sent");
+        socket?.off("on-new-message");
       };
     });
   }, [socket]);
@@ -45,7 +30,6 @@ function ChatTab(props: { name: string }) {
   const renderMessage = (msg: any, index: any) => {
     const isMe = msg.sender === username;
     const sender = isMe ? "" : <div className="sender">{msg.sender}</div>;
-    console.log("wtf", index);
     return (
       <div key={index} className={`scrollbar-hide overflow-y-scroll ${isMe ? "float-right" : "float-left"}`}>
         {/* <img

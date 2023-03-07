@@ -37,6 +37,7 @@ function FriendNotifications() {
 
   useEffect(() => {
     socket?.on("on-friend-request", (username) => {
+      console.log("recu une fois");
       notify(username);
     });
 

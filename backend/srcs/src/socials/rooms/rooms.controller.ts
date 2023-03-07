@@ -29,7 +29,8 @@ export class RoomsController {
   async create(@Request() req, @Body() createRoomDto: CreateRoomDto) {
     const creatorId = req.user.sub;
     createRoomDto.ownerId = creatorId;
-    return await this.roomsService.create(createRoomDto);
+    const room = await this.roomsService.create(createRoomDto);
+    return {roomId: room.id}
   }
 
   @Get('/history')

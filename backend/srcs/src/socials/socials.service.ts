@@ -8,21 +8,26 @@ import { Server } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
 import { Socket } from 'socket.io';
 import { SocialsGateway } from './socials.gateway';
+import { RoomsService } from './rooms/rooms.service';
 
 @Injectable()
 export class SocialsService {
   constructor(
     private readonly usersService: UsersService,
-    // @Inject(SocialsGateway) private socialsGateway: SocialsGateway
+    private roomService: RoomsService,
   ) {}
 
   public server: Server;
+  public clientsSocket: Map<string, any> = new Map();
 
   public async handleConnection(client: any) {
     var clientId = client.handshake.query.userId;
-    client.join(clientId);
-    if (typeof clientId !== 'string') return;
     const user = await this.usersService.findOne(clientId);
+
+    this.clientsSocket.set(clientId, client);
+    client.join(clientId);
+    this.joinRoom(client);
+
     if (user) {
       this.emitToFriends(clientId, 'on-status-update', {
         username: user.username,
@@ -32,10 +37,15 @@ export class SocialsService {
     }
   }
 
-  public async onStatusUpdate(client: Socket, status: string): Promise<void> {
-    if (typeof client.handshake.query.userId != 'string') return;
+  public async handleDisconnect(client: any) {
+    var clientId = client.handshake.query.userId as string;
+    this.clientsSocket.delete(clientId);
+    client.leave(clientId);
+    this.leaveRoom(client);
+  }
 
-    const userId: string = client.handshake.query.userId;
+  public async onStatusUpdate(client: Socket, status: string): Promise<void> {
+    const userId: string = client.handshake.query.userId as string;
     const user = await this.usersService.findOne(userId);
     this.emitToFriends(userId, 'on-status-update', {
       username: user.username,
@@ -48,18 +58,15 @@ export class SocialsService {
     client: Socket,
     toUsername: string,
   ): Promise<void> {
-    if (typeof client.handshake.query.userId != 'string') return;
-
-    const userId: string = client.handshake.query.userId;
+    console.log("friend request received");
+    const userId: string = client.handshake.query.userId as string;
     const fromUser = await this.usersService.findOne(userId);
     try {
       const toUser = await this.usersService.findOneByUsername(toUsername);
-      this.server
-        .to(toUser.id)
-        .emit('on-friend-request', fromUser.username);
+      this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new NotFoundException('User not found');
+
       }
     }
   }
@@ -68,9 +75,7 @@ export class SocialsService {
     client: Socket,
     payload: { fromUsername: string; isReplyTrue: boolean },
   ): Promise<void> {
-    if (typeof client.handshake.query.userId != 'string') return;
-
-    const userId: string = client.handshake.query.userId;
+    const userId: string = client.handshake.query.userId as string;
     const user1 = await this.usersService.findOneByUsername(
       payload.fromUsername,
     );
@@ -97,6 +102,27 @@ export class SocialsService {
       avatar: user.avatar,
       status: 'DISCONNECTED',
     });
+  }
+
+  public async connectClient(
+    client: Socket,
+    usersList: string[],
+    roomId: string,
+  ) {
+    const userId = client.handshake.query.userId as string;
+    const userList = await this.usersService.getUsers(usersList);
+
+    this.clientsSocket.get(userId).join(roomId);
+    userList.forEach(user => {
+      this.clientsSocket.get(user.id).join(roomId);
+    });
+  }
+
+  public async newMessage(client, message: string, roomName: string) {
+    const userId = client.handshake.query.userId as string;
+    const user = await this.usersService.findOne(userId);
+    const room = await this.roomService.findOneByName(roomName);
+    this.server.to(room.id).emit('on-new-message', {message: message, sender: user.username, roomName: room.name});
   }
 
   /* -------------------------------------------------------------------------- */
@@ -129,5 +155,21 @@ export class SocialsService {
         ...data,
       });
     }
+  }
+
+  public async joinRoom(clientSocket) {
+    const userId = clientSocket.handshake.query.userId;
+    const rooms = await this.roomService.findRoomsForUser(userId);
+    rooms.forEach((room) => {
+      clientSocket.join(room.id);
+    });
+  }
+
+  public async leaveRoom(clientSocket) {
+    const userId = clientSocket.handshake.query.userId;
+    const rooms = await this.roomService.findRoomsForUser(userId);
+    rooms.forEach((room) => {
+      clientSocket.leave(room.id);
+    });
   }
 }

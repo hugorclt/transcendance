@@ -22,7 +22,7 @@ import { SocialsService } from './socials.service';
   },
 })
 export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
-  constructor(private friendsActivityService: SocialsService) {}
+  constructor(private socialServices: SocialsService) {}
 
   @WebSocketServer()
   public server: Server;
@@ -32,11 +32,11 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
   }
 
   afterInit(server: Server) {
-    this.friendsActivityService.server = server;
+    this.socialServices.server = server;
   }
 
   async handleConnection(client: Socket) {
-    this.friendsActivityService.handleConnection(client);
+    this.socialServices.handleConnection(client);
   }
 
   @SubscribeMessage('status-update')
@@ -44,7 +44,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() status,
   ): Promise<void> {
-    this.friendsActivityService.onStatusUpdate(client, status);
+    this.socialServices.onStatusUpdate(client, status);
   }
 
   @SubscribeMessage('friend-request')
@@ -52,8 +52,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() toUsername,
   ): Promise<void> {
-    console.log("je receive");
-    this.friendsActivityService.onFriendRequest(client, toUsername);
+    this.socialServices.onFriendRequest(client, toUsername);
   }
 
   @SubscribeMessage('friend-request-reply')
@@ -61,7 +60,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
   ): Promise<any> {
-    this.friendsActivityService.onFriendRequestReply(client, payload);
+    this.socialServices.onFriendRequestReply(client, payload);
   }
 
   @SubscribeMessage('logout')
@@ -69,14 +68,22 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() userId,
   ): Promise<void> {
-    this.friendsActivityService.onLogout(client, userId);
+    this.socialServices.onLogout(client, userId);
   }
 
-  @SubscribeMessage('send-message')
-  async sendMessage(
+  @SubscribeMessage('new-message')
+  async newMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() payload: { message: string; users: string[] },
+    @MessageBody() payload: { message: string; roomName: string },
   ) {
-    // this.friendsActivityService.sendMessage(client, payload);
+    this.socialServices.newMessage(client, payload.message, payload.roomName);
+  }
+
+  @SubscribeMessage("connect-client")
+  async connectClients(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: { usersList: string[], roomId: string}
+  ) {
+    this.socialServices.connectClient(client, payload.usersList, payload.roomId);
   }
 }

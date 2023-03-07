@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   CreateUserDto,
   CreateGoogleUserDto,
@@ -173,5 +177,13 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     return user.friends;
+  }
+
+  async getUsers(userId: string[]) {
+    console.log("users: ", userId);
+    const users = await this.prisma.user.findMany({
+      where: { username: { in: userId } },
+    });
+    return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
   }
 }
