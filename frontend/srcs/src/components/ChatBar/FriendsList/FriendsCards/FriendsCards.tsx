@@ -51,12 +51,7 @@ function FriendsCards(props: TFriendsProps) {
               <li className="p-1 relative hover:bg-dark-blue-200">
                 <button
                   onMouseDown={() => {
-                    setOpenChat((prev) => {
-                      if (!prev.includes(props.name + "_room")) {
-                        return [...prev, props.name + "_room"];
-                      }
-                      return prev;
-                    });
+                    setOpenChat(props.name);
                   }}
                   className="text-gold text-xs">
                   Send message

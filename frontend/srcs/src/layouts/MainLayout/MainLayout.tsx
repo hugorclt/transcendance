@@ -1,15 +1,20 @@
 import React from "react";
 import ChatPage from "../../views/ChatPage/ChatPage";
+import {
+  MainLayoutStyle,
+  ChatLayoutContainer,
+  MainLayoutContainer,
+} from "./MainLayoutStyle";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex justify-end h-scren">
-      <main className="flex-1">{children}</main>
+    <MainLayoutStyle>
+      <MainLayoutContainer>{children}</MainLayoutContainer>
 
-      <div className="w-72">
+      <ChatLayoutContainer>
         <ChatPage />
-      </div>
-    </div>
+      </ChatLayoutContainer>
+    </MainLayoutStyle>
   );
 };
 

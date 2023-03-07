@@ -5,11 +5,8 @@ import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
 import { Role } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
-<<<<<<< HEAD
 import { last } from 'rxjs';
 import { MessagesService } from './messages/messages.service';
-=======
->>>>>>> main
 
 @Injectable()
 export class RoomsService {
@@ -55,7 +52,6 @@ export class RoomsService {
   async findHistory(userId: string) {
     const list = await this.findRoomsForUser(userId);
 
-<<<<<<< HEAD
     return Promise.all(list.map(async (room) => {
       const lastMessage = await this.messageService.getLastMessage(room.id);
 
@@ -65,27 +61,6 @@ export class RoomsService {
         lastMessage: lastMessage == null ? "" : lastMessage,
       };
     }));
-=======
-    const test = Promise.all(
-      list.map(async (room) => {
-        const lastMessage = await this.prisma.message.findFirst({
-          where: {
-            roomId: room.id,
-          },
-          orderBy: {
-            date: 'desc',
-          },
-        });
-
-        return {
-          avatar: room.avatar,
-          name: room.name,
-          lastMessage: lastMessage == null ? '' : lastMessage,
-        };
-      }),
-    );
-    return test;
->>>>>>> main
   }
 
   findAll() {

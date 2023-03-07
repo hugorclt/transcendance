@@ -9,12 +9,7 @@ function ChatCards(props: {
   const { setOpenChat } = useContext(ChatContext);
 
   const addChatToTab = () => {
-    setOpenChat((prev) => {
-      if (!prev.includes(props.roomName)) {
-        return [...prev, props.roomName];
-      }
-      return prev;
-    });
+    setOpenChat(props.roomName)
   };
   return (
     <div onClick={addChatToTab} className="pt-4 pb-2 px-4 flex items-center">

@@ -8,20 +8,26 @@ import { TMessage } from "./ChatType";
 function ChatTab(props: { name: string }) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
-  const {auth} = useContext(GlobalContext)
+  const { auth } = useContext(GlobalContext);
   const socket = useContext(ChatSocketContext);
   const axiosPrivate = useAxiosPrivate();
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
-    socket?.emit("new-message", {message: message, roomName: props.name})
-    setMessage(""); 
+    socket?.emit("new-message", { message: message, roomName: props.name });
+    setMessage("");
   };
 
   useEffect(() => {
     socket?.on("on-new-message", (newMessage: TMessage) => {
-      if (newMessage.roomName === props.name)
-        setMessageList((prev) => {return [...prev, newMessage]});
+      console.log("msg", newMessage, "props: ", props.name);
+      if (newMessage.roomName === props.name) {
+        console.log(newMessage.roomName, " === ", props.name)
+        setMessageList((prev) => {
+          return [...prev, newMessage];
+        });
+      }
+
       return () => {
         socket?.off("on-new-message");
       };
@@ -29,24 +35,36 @@ function ChatTab(props: { name: string }) {
   }, [socket]);
 
   const renderMessage = (msg: any, index: any) => {
-    const isMe = msg.sender === username;
-    const sender = isMe ? "" : <div className="sender">{msg.sender}</div>;
+    const isMe = msg.sender === auth.username;
+    const sender = isMe ? (
+      <div className="sender">You</div>
+    ) : (
+      <div className="sender">{msg.sender}</div>
+    );
+
     return (
-      <div key={index} className={`scrollbar-hide overflow-y-scroll ${isMe ? "float-right" : "float-left"}`}>
+      <div
+        key={index}
+        className={`w-full flex-col flex scrollbar-hide overflow-y-scroll p-2 ${
+          isMe ? "items-start" : "items-end"
+        }`}>
         {/* <img
           className="avatar"
           src={`https://picsum.photos/id/${index + 10}/50/50`}
           alt="Avatar"
         /> */}
+        {sender}
         <div className="scrollbar-hide overflow-y-scroll">
-          <div className="text-gold scrollbar-hide overflow-y-scroll">{msg.message}</div>
+          <div className="text-gold scrollbar-hide overflow-y-scroll">
+            {msg.message}
+          </div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="h-52 overflow-y-scroll scrollbar-hide">
+    <div className="h-52 w-full overflow-y-scroll scrollbar-hide">
       {messageList.map((val, index) => {
         return renderMessage(val, index);
       })}

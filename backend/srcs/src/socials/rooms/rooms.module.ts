@@ -10,16 +10,12 @@ import { RoomsService } from './rooms.service';
 @Module({
   imports: [PrismaModule, UsersModule],
   controllers: [RoomsController],
-<<<<<<< HEAD
   providers: [
     RoomsService,
     ParticipantService,
     SocialsService,
     MessagesService,
   ],
-=======
-  providers: [RoomsService, ParticipantService, SocialsService],
->>>>>>> main
   exports: [RoomsService],
 })
 export class RoomsModule {}
