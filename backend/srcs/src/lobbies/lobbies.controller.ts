@@ -29,7 +29,6 @@ export class LobbiesController {
     @Request() req: any,
     @Body() createLobbyDto: CreateLobbyDto,
   ): Promise<LobbyEntity> {
-    console.log(createLobbyDto);
     return await this.lobbiesService.create(req.user.sub, createLobbyDto);
   }
 

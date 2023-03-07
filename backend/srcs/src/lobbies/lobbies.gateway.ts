@@ -1,20 +1,26 @@
+import { UseFilters } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Namespace, Socket } from 'socket.io';
+import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
+import { LobbiesService } from './lobbies.service';
 
+@UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
 })
 export class LobbiesGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor() {}
+  constructor(private readonly lobbiesService: LobbiesService) {}
 
   @WebSocketServer()
   io: Namespace;
@@ -38,5 +44,10 @@ export class LobbiesGateway
     console.log(`Number of connected clients: ${sockets.size}`);
     this.io.emit('goodbye', `from ${client.id}`); //emit to all connected clients (including the client itself)
     //todo - remove client from poll and send particpants_updated event
+  }
+
+  @SubscribeMessage('test')
+  async test() {
+    throw new WsException({ filed: 'field', message: 'message' });
   }
 }

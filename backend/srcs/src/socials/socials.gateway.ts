@@ -2,17 +2,18 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { Inject, Injectable, OnModuleInit, UseGuards } from '@nestjs/common';
+import { BadRequestException, OnModuleInit, UseFilters } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { SocialsService } from './socials.service';
+import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
+import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 
-// @UseGuards(AccessAuthGard) to add
+@UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: '/status',
   cors: {
@@ -52,8 +53,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() toUsername,
   ): Promise<void> {
-    console.log("je receive");
-    this.friendsActivityService.onFriendRequest(client, toUsername);
+    await this.friendsActivityService.onFriendRequest(client, toUsername);
   }
 
   @SubscribeMessage('friend-request-reply')

@@ -12,18 +12,14 @@ const WSAuthMiddleware = (
   return async (socket: Socket, next) => {
     const authSocket = socket as AuthSocket;
     try {
-      console.log('middleware called');
-      const jwtPayload = await jwtService.verify(
-        socket.handshake.auth.jwt ?? '',
-      );
-      console.log('middleware payload: ', jwtPayload);
+      const jwtPayload = await jwtService.verify(socket.handshake.auth.jwt);
       const user = await usersService.findOne(jwtPayload.sub);
       if (user) {
         authSocket.userId = user.id;
         authSocket.username = user.username;
         next();
       } else {
-        console.log('User not found');
+        console.log('middleware error: User not found');
         next({
           name: 'Unauthorized',
           message: 'Unauthorized',

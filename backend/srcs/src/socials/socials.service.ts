@@ -1,20 +1,12 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
 import { Socket } from 'socket.io';
-import { SocialsGateway } from './socials.gateway';
+import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 
 @Injectable()
 export class SocialsService {
-  constructor(
-    private readonly usersService: UsersService,
-    // @Inject(SocialsGateway) private socialsGateway: SocialsGateway
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   public server: Server;
 
@@ -52,16 +44,8 @@ export class SocialsService {
 
     const userId: string = client.handshake.query.userId;
     const fromUser = await this.usersService.findOne(userId);
-    try {
-      const toUser = await this.usersService.findOneByUsername(toUsername);
-      this.server
-        .to(toUser.id)
-        .emit('on-friend-request', fromUser.username);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException('User not found');
-      }
-    }
+    const toUser = await this.usersService.findOneByUsername(toUsername);
+    this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
   }
 
   public async onFriendRequestReply(
