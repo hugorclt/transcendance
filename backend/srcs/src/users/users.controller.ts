@@ -35,12 +35,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get("/friends")
+  @Get('/friends')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   getUserFriends(@Request() req): Promise<ReturnUserEntity[]> {
     return this.usersService.getUserFriends(req.user.sub);
   }
-
 
   @Get('connected')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })

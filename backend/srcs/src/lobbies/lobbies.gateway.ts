@@ -13,7 +13,7 @@ import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filt
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { LobbiesService } from './lobbies.service';
 
-@UseFilters(new WsCatchAllFilter())
+// @UseFilters(WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
 })

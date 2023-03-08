@@ -7,11 +7,10 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { BadRequestException, OnModuleInit, UseFilters } from '@nestjs/common';
+import { OnModuleInit, UseFilters } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { SocialsService } from './socials.service';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
-import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -37,7 +36,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
   }
 
   async handleConnection(client: Socket) {
-    this.friendsActivityService.handleConnection(client);
+    await this.friendsActivityService.handleConnection(client);
   }
 
   @SubscribeMessage('status-update')
@@ -45,7 +44,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() status,
   ): Promise<void> {
-    this.friendsActivityService.onStatusUpdate(client, status);
+    await this.friendsActivityService.onStatusUpdate(client, status);
   }
 
   @SubscribeMessage('friend-request')
@@ -61,7 +60,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
   ): Promise<any> {
-    this.friendsActivityService.onFriendRequestReply(client, payload);
+    await this.friendsActivityService.onFriendRequestReply(client, payload);
   }
 
   @SubscribeMessage('logout')
@@ -69,7 +68,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() userId,
   ): Promise<void> {
-    this.friendsActivityService.onLogout(client, userId);
+    await this.friendsActivityService.onLogout(client, userId);
   }
 
   @SubscribeMessage('send-message')

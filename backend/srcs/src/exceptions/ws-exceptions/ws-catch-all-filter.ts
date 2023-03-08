@@ -5,6 +5,7 @@ import {
   ConflictException,
   ExceptionFilter,
   ForbiddenException,
+  HttpException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';

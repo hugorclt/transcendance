@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
 import { Socket } from 'socket.io';
-import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 
 @Injectable()
 export class SocialsService {
@@ -60,7 +59,7 @@ export class SocialsService {
     );
     const user2 = await this.usersService.findOne(userId);
     if (payload.isReplyTrue === true) {
-      this.usersService.addFriend(user1.id, user2.id);
+      await this.usersService.addFriend(user1.id, user2.id);
       this.server.to(user1.id).emit('on-status-update', {
         username: user2.username,
         avatar: user2.avatar,

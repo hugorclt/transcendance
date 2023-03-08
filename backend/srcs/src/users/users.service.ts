@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   CreateUserDto,
   CreateGoogleUserDto,
@@ -150,7 +154,7 @@ export class UsersService {
     });
 
     if (existingFriends?.friends.length > 0) {
-      throw new ConflictException('These users are already friends');
+      throw new ConflictException();
     }
 
     await this.prisma.user.update({
