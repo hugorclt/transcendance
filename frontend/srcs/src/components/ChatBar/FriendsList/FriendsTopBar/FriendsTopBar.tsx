@@ -19,32 +19,30 @@ function FriendsTopBar() {
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState("");
   const socket = useContext(ChatSocketContext);
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("ca part");
+    setOpen(false);
     socket?.emit("friend-request", username);
     setUsername("");
-    setOpen(o => !o)
   };
-  const closeModal = () => setOpen(false);
-  
+
   return (
     <FriendsTopBarContainer>
       <FriendsTopBarTitle>FRIENDS</FriendsTopBarTitle>
       <RightFriendsTopBarBox>
         <Popup
-          open={open}
           trigger={
-            <div onClick={() => setOpen(o => !o)}>
+            <div>
               <AiOutlineUsergroupAdd
+                onClick={() => setOpen(true)}
                 size={22}
                 style={{ color: COLORS.secondary }}
-                
               />
             </div>
           }
           modal
+          open={open}
           nested>
           <ModalBox>
             <AddFriendsForm onSubmit={handleSubmit} autoComplete="off">
@@ -52,7 +50,7 @@ function FriendsTopBar() {
               <AddFriendsInput type="text"></AddFriendsInput>
               <SubmitFriends type="submit" value="Invite" />
             </AddFriendsForm>
-          </ModalBox>{" "}
+          </ModalBox>
         </Popup>
         <AiOutlineSearch size={22} style={{ color: COLORS.secondary }} />
       </RightFriendsTopBarBox>
