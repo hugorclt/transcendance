@@ -22,7 +22,9 @@ export class SocketIoAdapter extends IoAdapter {
     };
 
     console.log('Configuring SocketIO with custom cors');
+
     const server = super.createIOServer(port, optionsWithCors);
+
     const jwtService = this.app.get(JwtService);
     const usersService = this.app.get(UsersService);
 

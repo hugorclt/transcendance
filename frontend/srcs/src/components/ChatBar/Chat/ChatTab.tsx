@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
+import { SocketContext } from "../../../services/Auth/SocketContext";
 import { TMessage } from "./ChatType";
 
 function ChatTab(props: { name: string }) {
@@ -9,17 +9,17 @@ function ChatTab(props: { name: string }) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
   const [username, setUsername] = useState("");
-  const socket = useContext(ChatSocketContext);
+  const socket = useContext(SocketContext);
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
     axiosPrivate
-    .get("auth/me")
+      .get("auth/me")
       .then((res: AxiosResponse) => {
         setUsername(res.data.username);
         setMessageList((prev) => [
           ...prev,
-          { message: message , sender:username},
+          { message: message, sender: username },
         ]);
         socket?.emit("message-sent", {
           message: message,
@@ -44,17 +44,23 @@ function ChatTab(props: { name: string }) {
 
   const renderMessage = (msg: any, index: any) => {
     const isMe = msg.sender === username;
-    const sender = isMe ? "" : <div className="sender">{msg.sender}</div>;
-    console.log("wtf", index);
+    // const sender = isMe ? "" : <div className="sender">{msg.sender}</div>;
     return (
-      <div key={index} className={`scrollbar-hide overflow-y-scroll ${isMe ? "float-right" : "float-left"}`}>
+      <div
+        key={index}
+        className={`scrollbar-hide overflow-y-scroll ${
+          isMe ? "float-right" : "float-left"
+        }`}
+      >
         {/* <img
           className="avatar"
           src={`https://picsum.photos/id/${index + 10}/50/50`}
           alt="Avatar"
         /> */}
         <div className="scrollbar-hide overflow-y-scroll">
-          <div className="text-gold scrollbar-hide overflow-y-scroll">{msg.message}</div>
+          <div className="text-gold scrollbar-hide overflow-y-scroll">
+            {msg.message}
+          </div>
         </div>
       </div>
     );
@@ -68,7 +74,8 @@ function ChatTab(props: { name: string }) {
       <form
         className="mx-2 absolute inset-x-0 bottom-0 scrollbar-hide"
         onSubmit={sendMessage}
-        autoComplete="off">
+        autoComplete="off"
+      >
         <input
           value={message}
           className="relative inset-x-0 bottom-0 w-full my-2 scrollbar-hide"

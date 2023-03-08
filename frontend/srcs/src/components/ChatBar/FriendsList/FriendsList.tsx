@@ -3,12 +3,12 @@ import React, { useEffect, useContext } from "react";
 import { axiosPrivate } from "../../../services/axios";
 import FriendsCards from "./FriendsCards/FriendsCards";
 import { nanoid } from "nanoid";
-import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
+import { SocketContext } from "../../../services/Auth/SocketContext";
 import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
 
 function FriendsList() {
   const { friendList, setFriendList } = useContext(FriendsListContext);
-  const socket = useContext(ChatSocketContext);
+  const socket = useContext(SocketContext);
 
   function updateFriendList(status: string, username: string, avatar: string) {
     setFriendList((prev) => {

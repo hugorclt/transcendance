@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { IconContext } from "react-icons/lib";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { CreateRoomContext } from "../../../../views/ChatPage/CreateRoomContext";
 import { ChatHistoryContext } from "../../../../views/ChatPage/ChatHistoryContext";
 import ChatCards from "./ChatCards/ChatCards";
-import { ChatSocketContext } from "../../../../views/ChatPage/ChatSocketContext";
+import { SocketContext } from "../../../../services/Auth/SocketContext";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 
 function ChatHistory() {
   const { isActive, setIsActive } = useContext(CreateRoomContext);
   const { chatHistory, setChatHistory } = useContext(ChatHistoryContext);
-  const socket = useContext(ChatSocketContext);
+  const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {

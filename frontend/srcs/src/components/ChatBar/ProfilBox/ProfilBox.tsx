@@ -12,7 +12,8 @@ import LogoutButton from "./LogoutButton/LogoutButton";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
-import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
+import { SocketContext } from "../../../services/Auth/SocketContext";
+
 type User = {
   id: string;
   username: string;
@@ -26,7 +27,7 @@ function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useState<User>();
   const [color, setColor] = useState("#19e650");
-  const socket = useContext(ChatSocketContext);
+  const socket = useContext(SocketContext);
   const navigate = useNavigate();
   const location = useLocation();
 

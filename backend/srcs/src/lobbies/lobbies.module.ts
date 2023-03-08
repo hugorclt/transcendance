@@ -15,6 +15,6 @@ import { JwtModule } from '@nestjs/jwt';
   ],
   controllers: [LobbiesController],
   providers: [LobbiesService, LobbiesGateway],
-  exports: [LobbiesService],
+  exports: [LobbiesService, LobbiesGateway],
 })
 export class LobbiesModule {}

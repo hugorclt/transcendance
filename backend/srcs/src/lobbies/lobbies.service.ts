@@ -1,4 +1,5 @@
 import {
+  INestApplication,
   Injectable,
   MethodNotAllowedException,
   NotFoundException,
@@ -11,6 +12,7 @@ import { LobbyEntity } from './entities/lobby.entity';
 import { UsersService } from 'src/users/users.service';
 import { LobbyParticipantEntity } from './lobby-participants/entities/lobby-participant.entity';
 import { LobbyParticipantsService } from './lobby-participants/lobby-participants.service';
+import { LobbiesGateway } from './lobbies.gateway';
 
 @Injectable()
 export class LobbiesService {
@@ -18,6 +20,7 @@ export class LobbiesService {
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
     private readonly lobbyParticipantsService: LobbyParticipantsService,
+    private readonly lobbiesGateway: LobbiesGateway,
   ) {}
 
   // A User can only have one Lobby, it can only be part of one Lobby
@@ -59,6 +62,10 @@ export class LobbiesService {
         map: createLobbyDto.map,
       },
     });
+
+    console.log('lobby created ', lobby);
+    //on aimerait broadcast event
+    this.lobbiesGateway.emitBroadcast('hello', 'world');
     return lobby;
   }
 

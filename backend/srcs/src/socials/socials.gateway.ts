@@ -52,6 +52,7 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() toUsername,
   ): Promise<void> {
+    console.log('friend request received for ', toUsername);
     await this.friendsActivityService.onFriendRequest(client, toUsername);
   }
 

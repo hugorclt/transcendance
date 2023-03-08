@@ -29,14 +29,16 @@ function CreateRoom() {
             onClick={() => {
               setCreateNewRoom(true);
               setIsClicked(true);
-            }}>
+            }}
+          >
             <h2 className="text-gold p-2">Create a new room</h2>
           </button>
           <button
             onClick={() => {
               setJoinRoom(true);
               setIsClicked(true);
-            }}>
+            }}
+          >
             <h2 className="text-gold p-2">Join a new Room</h2>
           </button>
         </div>

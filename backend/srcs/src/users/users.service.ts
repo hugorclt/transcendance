@@ -136,7 +136,7 @@ export class UsersService {
       data: { refreshToken },
     });
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);
-    throw new NotFoundException();
+    throw new NotFoundException('User not found');
   }
 
   async remove(id: string) {
@@ -144,7 +144,7 @@ export class UsersService {
       where: { id },
     });
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);
-    throw new NotFoundException();
+    throw new NotFoundException('User not found');
   }
 
   async addFriend(userId1: string, userId2: string): Promise<void> {
@@ -154,7 +154,7 @@ export class UsersService {
     });
 
     if (existingFriends?.friends.length > 0) {
-      throw new ConflictException();
+      throw new ConflictException('Already friends');
     }
 
     await this.prisma.user.update({

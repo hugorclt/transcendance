@@ -3,6 +3,7 @@ import GameModeCard from "./GameModeCard/GameModeCard";
 import { useLobbyContext } from "../../../views/LobbyPage/LobbyContext";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { useGlobal } from "../../../services/Global/GlobalProvider";
 
 function GameModeSelector() {
   const axiosPrivate = useAxiosPrivate();
@@ -15,6 +16,7 @@ function GameModeSelector() {
     setOnModeSelected,
     setPlayers,
   } = useLobbyContext();
+  const { status, setStatus } = useGlobal();
 
   const createLobby = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ function GameModeSelector() {
         setOnModeSelected(false);
         setPlayers(0);
         console.log(response.data);
+        setStatus("LOBBY");
       })
       .catch((error: AxiosError) => {
         if (error.response?.data) {

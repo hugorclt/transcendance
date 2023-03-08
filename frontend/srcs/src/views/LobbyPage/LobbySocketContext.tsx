@@ -43,6 +43,16 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
     initSocket();
   }, []);
 
+  useEffect(() => {
+    socket?.on("hello", (data) => {
+      console.log(data);
+    });
+
+    return () => {
+      socket?.off("hello");
+    };
+  }, [socket]);
+
   return (
     <LobbySocketContext.Provider value={socket}>
       {children}

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ChatSocketContext } from "../../../../views/ChatPage/ChatSocketContext";
+import { SocketContext } from "../../../../services/Auth/SocketContext";
 
 function FriendNotifications() {
-  const socket = useContext(ChatSocketContext);
+  const socket = useContext(SocketContext);
 
   const acceptRequest = (username: string) => {
     socket?.emit("friend-request-reply", {

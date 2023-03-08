@@ -1,14 +1,14 @@
 import React, { useContext, useRef, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
-import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
+import { SocketContext } from "../../../services/Auth/SocketContext";
 
 function ManageBar() {
   const [widthInvite, setWidthInvite] = useState("0%");
   const [display, setDisplay] = useState("block");
   const [username, setUsername] = useState("");
   const focusRef = useRef<HTMLInputElement>(null);
-  const socket = useContext(ChatSocketContext);
+  const socket = useContext(SocketContext);
 
   const handleInvite = () => {
     setWidthInvite("100%");

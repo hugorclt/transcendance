@@ -18,6 +18,7 @@ import LoginLayout from "./layouts/LoginLayout/LoginLayout";
 import RequireStatus from "./services/Status/RequireStatus";
 import RequireInGameStatus from "./services/Status/RequireInGameStatus";
 import RequireUnAuth from "./services/Auth/RequiredUnAuth";
+import ProvideSocket from "./services/Auth/ProvideSocket";
 
 function App() {
   return (
@@ -30,15 +31,17 @@ function App() {
         </Route>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
-          <Route element={<RequireStatus/>}>
-            <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
-            <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
-            <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-            <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
-            <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
-          </Route>
-          <Route element={<RequireInGameStatus />}>
-            <Route path="/game" element={<GamePage />} />
+          <Route element={<ProvideSocket />}>
+            <Route element={<RequireStatus/>}>
+                <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
+                <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
+                <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
+                <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
+                <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
+            </Route>
+            <Route element={<RequireInGameStatus />}>
+              <Route path="/game" element={<GamePage />} />
+            </Route>
           </Route>
         </Route>
       </Route>

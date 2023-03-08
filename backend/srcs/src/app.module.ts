@@ -13,6 +13,7 @@ import { ParticipantModule } from './socials/rooms/participant/participant.modul
 import { SocialsModule } from './socials/socials.module';
 import { MessagesModule } from './socials/rooms/messages/messages.module';
 import { SocialsGateway } from './socials/socials.gateway';
+import { ItemsModule } from './items/items.module';
 @Module({
   imports: [
     AuthModule,
@@ -26,6 +27,7 @@ import { SocialsGateway } from './socials/socials.gateway';
     MessagesModule,
     LobbiesModule,
     LobbyParticipantsModule,
+    ItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService, SocialsGateway],

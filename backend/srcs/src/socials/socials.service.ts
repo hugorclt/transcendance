@@ -20,7 +20,7 @@ export class SocialsService {
         avatar: user.avatar,
         status: 'CONNECTED',
       });
-    }
+    } else console.log('user not found');
   }
 
   public async onStatusUpdate(client: Socket, status: string): Promise<void> {

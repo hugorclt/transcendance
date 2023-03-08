@@ -3,7 +3,6 @@ import { TFriendsProps } from "../../components/ChatBar/FriendsList/FriendsCards
 import ChatBar from "../../layouts/ChatBarLayout/ChatBarLayout";
 import { ChatContext } from "./ChatContext";
 import { ChatHistoryContext, TChatHistoryType } from "./ChatHistoryContext";
-import { ChatSocketProvider } from "./ChatSocketContext";
 import { CreateRoomContext } from "./CreateRoomContext";
 import { FriendsListContext } from "./FriendsListContext";
 function ChatPage() {
@@ -13,17 +12,15 @@ function ChatPage() {
   const [chatHistory, setChatHistory] = useState<TChatHistoryType[]>([]);
 
   return (
-    <ChatSocketProvider>
-      <ChatContext.Provider value={{ openChat, setOpenChat }}>
-        <CreateRoomContext.Provider value={{ isActive, setIsActive }}>
-          <FriendsListContext.Provider value={{ friendList, setFriendList }}>
-            <ChatHistoryContext.Provider value={{ chatHistory, setChatHistory }}>
-              <ChatBar />
-            </ChatHistoryContext.Provider>
-          </FriendsListContext.Provider>
-        </CreateRoomContext.Provider>
-      </ChatContext.Provider>
-    </ChatSocketProvider>
+    <ChatContext.Provider value={{ openChat, setOpenChat }}>
+      <CreateRoomContext.Provider value={{ isActive, setIsActive }}>
+        <FriendsListContext.Provider value={{ friendList, setFriendList }}>
+          <ChatHistoryContext.Provider value={{ chatHistory, setChatHistory }}>
+            <ChatBar />
+          </ChatHistoryContext.Provider>
+        </FriendsListContext.Provider>
+      </CreateRoomContext.Provider>
+    </ChatContext.Provider>
   );
 }
 
