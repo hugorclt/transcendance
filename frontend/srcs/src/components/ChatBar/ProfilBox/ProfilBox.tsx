@@ -16,11 +16,22 @@ import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 import {
   ExperienceBar,
   ProfilBoxLink,
-  ProfileBoxLeft,
-  ProfileBoxName,
+  ProfilBoxLeft,
+  ProfilBoxTitle,
   ProfileBoxStatus,
   LevelExperienceBar,
+  ExperienceBarContainer,
+  ProfilBoxText,
+  ProfilBoxRight,
+  CurrencyContainer,
+  StyledSelect,
+  SelectBox,
 } from "./ProfilBoxStyle";
+
+import { TbCurrencyShekel } from "react-icons/tb";
+import { GoTriangleDown } from "react-icons/go";
+import { IconContext } from "react-icons/lib";
+import { COLORS } from "../../../colors";
 
 type User = {
   id: string;
@@ -72,15 +83,31 @@ function ProfilBox() {
 
   return (
     <ProfilBoxLink>
-      <ProfileBoxLeft>
-        <ProfileBoxName>
+      <ProfilBoxLeft>
+        <ProfilBoxTitle>
           {user?.username.toLocaleUpperCase()}
-          <ProfileBoxStatus style={{ backgroundColor: "#19e650" }} />
-        </ProfileBoxName>
-        <ExperienceBar>
-          <LevelExperienceBar></LevelExperienceBar>
-        </ExperienceBar>
-      </ProfileBoxLeft>
+          <ProfileBoxStatus style={{ backgroundColor: color }} />
+        </ProfilBoxTitle>
+        <ExperienceBarContainer>
+          <ExperienceBar>
+            <LevelExperienceBar />
+          </ExperienceBar>
+          <ProfilBoxText>10</ProfilBoxText>
+        </ExperienceBarContainer>
+      </ProfilBoxLeft>
+      <ProfilBoxRight>
+        <CurrencyContainer>
+          <ProfilBoxText>{user?.balance}</ProfilBoxText>
+          <TbCurrencyShekel style={{ color: COLORS.secondary }} size={24} />
+        </CurrencyContainer>
+        <SelectBox>
+          <StyledSelect onChange={changeStatus}>
+            <option>CONNECTED</option>
+            <option>AWAY</option>
+            <option>DISCONNECTED</option>
+          </StyledSelect>
+        </SelectBox>
+      </ProfilBoxRight>
     </ProfilBoxLink>
   );
 }

@@ -1,26 +1,21 @@
 import styled from 'styled-components';
 
 export const ChatContainer = styled.div`
-    background-color: white;
+    position: absolute;
+    bottom: 0px;
+    right:270px;
+`
+
+export const ProfilBoxContainer = styled.div`
+    padding-top: 16px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+`
+
+export const ChatBarContainer = styled.div`
     height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
-`
-
-export const ProfilBoxContainer = styled.div`
-    padding-top: 22px;
-    padding-bottom: 15px;
-    padding-left: 7px;
-    padding-right: 7px;
-`
-
-export const FriendListContainer = styled.div`
-`
-
-export const ChatHistoryContainer = styled.div`
-
-`
-
-export const ChatBox = styled.div`
 `

@@ -6,4 +6,5 @@ export const  COLORS = {
     orange: "#FFA800",
     blue: "#075AFC",
     grey: "#A5A5A5",
+    border: "#464545",
 }

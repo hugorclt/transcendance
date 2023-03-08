@@ -12,4 +12,5 @@ export const MainLayoutContainer = styled.main`
 
 export const ChatLayoutContainer = styled.div`
   width: 270px;
+  background-color: #19191A;
 `;

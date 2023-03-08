@@ -3,29 +3,30 @@ import FriendsList from "../../components/ChatBar/FriendsList/FriendsList";
 import ProfilBox from "../../components/ChatBar/ProfilBox/ProfilBox";
 import FriendNotifications from "../../components/ChatBar/FriendsList/FriendNotifications/FriendsNotifications";
 import Chat from "../../components/ChatBar/Chat/Chat";
-import ChatHistory from "../../components/ChatBar/RoomCard/RoomCard";
-import ManageBar from "../../components/ChatBar/FriendsList/ManageBar";
+import FriendsTopBar from "../../components/ChatBar/FriendsList/FriendsTopBar/FriendsTopBar";
 import {
   ProfilBoxContainer,
-  FriendListContainer,
-  ChatHistoryContainer,
+  ChatBarContainer,
   ChatContainer,
-  ChatBox,
 } from "./ChatBarStyle";
+import ChatHistory from "../../components/ChatBar/ChatHistory/ChatHistory";
+import BottomBar from "../../components/ChatBar/BottomBar/BottomBar";
+import ChatBox from "../../components/ChatBar/Chat/ChatBox";
 
 function ChatBarLayout() {
   return (
     <>
-      <ChatContainer>
+      <ChatBarContainer>
         <ProfilBoxContainer>
           <ProfilBox />
         </ProfilBoxContainer>
-        {/* <ManageBar /> */}
-        {/* <FriendsList /> */}
-        {/* <ChatHistory /> */}
-        {/* <FriendNotifications /> */}
-        {/* <Chat /> */}
-      </ChatContainer>
+        <FriendsTopBar />
+        <FriendsList />
+        <ChatHistory />
+        <FriendNotifications />
+        <BottomBar />
+        <ChatBox />
+      </ChatBarContainer>
     </>
   );
 }

@@ -1,28 +1,111 @@
-import React, { useContext, useState } from "react";
-import { ChatContext } from "../../../views/ChatPage/ChatContext";
-import ChatTab from "./ChatTab";
+import { AxiosError, AxiosResponse } from "axios";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { GlobalContext } from "../../../services/Global/GlobalProvider";
+import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
+import {
+  ChatForm,
+  ChatInput,
+  ChatMessageContainer,
+  ChatTabContainer,
+  MessageLine,
+  MessageContent,
+  MessageBox,
+  ChatMiddle,
+  ChatTop,
+  ChatIcon,
+  ChatTitle,
+} from "./ChatStyle";
+import { TMessage } from "./ChatType";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { COLORS } from "../../../colors";
+import { logo42 } from "../../../assets/images/42.jpg";
+import { AiOutlineClose } from "react-icons/ai";
 import { nanoid } from "nanoid";
+import { ChatContext } from "../../../views/ChatPage/ChatContext";
 
-function Chat() {
-  const { openChat, setOpenChat } = useContext(ChatContext);
-  const [activeTab, setActiveTab] = useState(0);
+
+function Chat(props: { name: string }) {
+  const [message, setMessage] = useState<string>("");
+  const [messageList, setMessageList] = useState<TMessage[]>([]);
+  const {openChat, setOpenChat} = useContext(ChatContext);
+  const { auth } = useContext(GlobalContext);
+  const socket = useContext(ChatSocketContext);
+  const axiosPrivate = useAxiosPrivate();
+
+  const sendMessage = (e: FormEvent) => {
+    e.preventDefault();
+    console.log(message);
+    socket?.emit("new-message", { message: message, roomName: props.name });
+    setMessage("");
+  };
+
+  useEffect(() => {
+    socket?.on("on-new-message", (newMessage: TMessage) => {
+      console.log("msg", newMessage, "props: ", props.name);
+      if (newMessage.roomName === props.name) {
+        console.log(newMessage.roomName, " === ", props.name);
+        setMessageList((prev) => {
+          return [...prev, newMessage];
+        });
+      }
+
+      return () => {
+        socket?.off("on-new-message");
+      };
+    });
+  }, [socket]);
+
+  const renderMessage = (msg: any, index: any) => {
+    const isMe = msg.sender === auth.username;
+    const sender = isMe ? (
+      <div className="sender">You</div>
+    ) : (
+      <div className="sender">{msg.sender}</div>
+    );
+
+    return (
+      <MessageLine key={nanoid()} style={{ justifyContent: isMe ? "flex-end" : "flex-start" }}>
+        <MessageBox>
+          <MessageContent>{msg.message}</MessageContent>
+        </MessageBox>
+      </MessageLine>
+    );
+  };
 
   return (
-    <>
-      {openChat != "" && (
-        <div
-          style={{ right: "18rem" }}
-          className="absolute bottom-0 right-0 w-72 h-80 bg-dark-blue opacity-80">
-          <ChatTab name={openChat} />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setOpenChat("");
-            }}
+    <ChatTabContainer>
+      <ChatTop>
+        <ChatMiddle>
+          <ChatIcon src=""/>
+          <ChatTitle>{props.name.toLocaleUpperCase()}</ChatTitle>
+          <BsThreeDotsVertical
+            style={{ color: COLORS.background }}
+            size={22}
           />
-        </div>
-      )}
-    </>
+        </ChatMiddle>
+        <AiOutlineClose
+          onClick={(() => {setOpenChat("")})}
+          style={{ color: COLORS.background }}
+          size={22}
+        />
+      </ChatTop>
+      <ChatMessageContainer>
+        {messageList.map((val, index) => {
+          return renderMessage(val, index);
+        })}
+      </ChatMessageContainer>
+      <ChatForm onSubmit={sendMessage} autoComplete="off">
+        <ChatInput
+          placeholder="send a message here..."
+          value={message}
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
+          type="text"
+        />
+      </ChatForm>
+    </ChatTabContainer>
   );
 }
 

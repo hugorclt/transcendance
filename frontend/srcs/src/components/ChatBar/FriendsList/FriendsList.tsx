@@ -1,10 +1,12 @@
 import { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useContext } from "react";
 import { axiosPrivate } from "../../../services/axios";
-import FriendsCards from "./FriendsCards/FriendsCards";
 import { nanoid } from "nanoid";
 import { ChatSocketContext } from "../../../views/ChatPage/ChatSocketContext";
 import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
+import logo42 from "../../../assets/images/42.jpg";
+import FriendsCards from "./FriendsCards/FriendsCards";
+import { FriendsListBox } from "./FriendsListStyle";
 
 function FriendsList() {
   const { friendList, setFriendList } = useContext(FriendsListContext);
@@ -60,18 +62,18 @@ function FriendsList() {
   }, [socket]);
 
   return (
-    <>
+    <FriendsListBox>
       {friendList.map((val, index) => {
-        return (
-          <FriendsCards
-            key={val.key}
-            name={val.name}
-            avatar={val.avatar}
-            status={val.status}
-          />
-        );
+      return (
+        <FriendsCards
+          key={nanoid()}
+          avatar={val.avatar}
+          name={val.name}
+          status={val.status}
+        />
+      );
       })}
-    </>
+    </FriendsListBox>
   );
 }
 
