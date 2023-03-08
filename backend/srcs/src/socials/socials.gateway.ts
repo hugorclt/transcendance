@@ -79,11 +79,15 @@ export class SocialsGateway implements OnModuleInit, OnGatewayConnection {
     this.socialServices.newMessage(client, payload.message, payload.roomName);
   }
 
-  @SubscribeMessage("connect-client")
+  @SubscribeMessage('connect-client')
   async connectClients(
     @ConnectedSocket() client: Socket,
-    @MessageBody() payload: { usersList: string[], roomId: string}
+    @MessageBody() payload: { usersList: string[]; roomId: string },
   ) {
-    this.socialServices.connectClient(client, payload.usersList, payload.roomId);
+    this.socialServices.connectClient(
+      client,
+      payload.usersList,
+      payload.roomId,
+    );
   }
 }
