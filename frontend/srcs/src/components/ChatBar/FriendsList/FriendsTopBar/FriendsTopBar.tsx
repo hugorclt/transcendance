@@ -47,7 +47,7 @@ function FriendsTopBar() {
           <ModalBox>
             <AddFriendsForm onSubmit={handleSubmit} autoComplete="off">
               <ModalTitle>ENTER USERNAME:</ModalTitle>
-              <AddFriendsInput type="text"></AddFriendsInput>
+              <AddFriendsInput onChange={(e) => setUsername(e.target.value)} type="text"></AddFriendsInput>
               <SubmitFriends type="submit" value="Invite" />
             </AddFriendsForm>
           </ModalBox>

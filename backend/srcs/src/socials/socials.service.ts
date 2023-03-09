@@ -66,7 +66,7 @@ export class SocialsService {
       this.server.to(toUser.id).emit('on-friend-request', fromUser.username);
     } catch (error) {
       if (error instanceof NotFoundException) {
-
+        console.log(toUsername);
       }
     }
   }

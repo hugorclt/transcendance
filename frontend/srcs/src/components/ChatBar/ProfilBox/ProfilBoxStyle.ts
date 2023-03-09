@@ -62,6 +62,7 @@ export const ProfilBoxRight = styled.div`
 export const CurrencyContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   height: 41px;
   margin-bottom:4px;
 `
