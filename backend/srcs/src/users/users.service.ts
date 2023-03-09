@@ -14,6 +14,7 @@ import { Status, Type } from '@prisma/client';
 import { exclude } from 'src/utils/exclude';
 import { UserEntity } from './entities/user.entity';
 import { ReturnUserEntity } from './entities/return-user.entity';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class UsersService {

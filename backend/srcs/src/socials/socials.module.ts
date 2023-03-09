@@ -5,7 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { SocialsGateway } from './socials.gateway';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => UsersModule), forwardRef(() => UsersModule)],
+  imports: [PrismaModule, forwardRef(() => UsersModule)],
   providers: [SocialsGateway],
   exports: [SocialsGateway],
 })
