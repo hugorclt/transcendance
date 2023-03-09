@@ -1,11 +1,29 @@
-export const  COLORS = {
-    background:  "#19191A",
-    primary: "#fdfdfd",
-    secondary: "#D17777",
-    green: "#0CFC07",
-    orange: "#FFA800",
-    blue: "#075AFC",
-    grey: "#A5A5A5",
-    border: "#464545",
-    disabled: "#2d2d2d",
-}
+export const COLORS = {
+  background: "#19191A",
+  primary: "#fdfdfd",
+  secondary: "#D17777",
+  green: "#0CFC07",
+  orange: "#FFA800",
+  blue: "#075AFC",
+  grey: "#A5A5A5",
+  border: "#464545",
+  disabled: "#2d2d2d",
+  purple: "#7c3296",
+};
+
+export const convertStatusColor = (status: string): string => {
+  switch (status) {
+    case "AWAY":
+      return COLORS.orange;
+    case "DISCONNECT":
+      return COLORS.disabled;
+    case "CONNECTED":
+      return COLORS.green;
+    case "GAME":
+      return COLORS.blue;
+    case "LOBBY":
+      return COLORS.purple;
+    default:
+      return COLORS.green;
+  }
+};

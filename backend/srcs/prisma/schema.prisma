@@ -145,7 +145,8 @@ enum Type {
 enum Status {
   DISCONNECTED
   CONNECTED
-  IN_GAME
+  GAME
+  LOBBY
   AWAY
 }
 

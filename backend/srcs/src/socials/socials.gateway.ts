@@ -59,6 +59,7 @@ export class SocialsGateway
       avatar: user.avatar,
       status: user.status,
     });
+    this.emitToUser(user.userId, 'on-self-status-update', user.status);
   }
 
   @SubscribeMessage('friend-request')

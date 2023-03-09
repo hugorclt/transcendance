@@ -25,7 +25,8 @@ import {
 } from "./ProfilBoxStyle";
 
 import { TbCurrencyShekel } from "react-icons/tb";
-import { COLORS } from "../../../colors";
+import { COLORS, convertStatusColor } from "../../../colors";
+import { useGlobal } from "../../../services/Global/GlobalProvider";
 
 type User = {
   id: string;
@@ -36,14 +37,13 @@ type User = {
   balance: number;
 };
 
-//make a function that convert status AWAY, DISCONNECT CONNECTED in color
-
 function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useState<User>();
   const [color, setColor] = useState("#19e650");
   const navigate = useNavigate();
   const location = useLocation();
+  const { status } = useGlobal();
 
   useEffect(() => {
     axiosPrivate
@@ -58,21 +58,14 @@ function ProfilBox() {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const optionSelected = event.target.value;
-    const color: string[] = ["#19e650", "#e6b319", "#8a8a8a"];
-    const status: string[] = ["CONNECTED", "AWAY", "DISCONNECTED"];
-
-    color.map((color, index) => {
-      if (status[index] === optionSelected) {
-        setColor(color);
-        axiosPrivate
-          .post("/users/me/status", {
-            status: status[index],
-          })
-          .catch((res: AxiosError) =>
-            navigate("/login", { state: { from: location }, replace: true })
-          );
-      }
-    });
+    console.log("option selected: ", optionSelected);
+    axiosPrivate
+      .post("/users/me/status", {
+        status: optionSelected,
+      })
+      .catch((res: AxiosError) =>
+        navigate("/login", { state: { from: location }, replace: true })
+      );
   };
 
   return (
@@ -80,7 +73,9 @@ function ProfilBox() {
       <ProfilBoxLeft>
         <ProfilBoxTitle>
           {user?.username.toLocaleUpperCase()}
-          <ProfileBoxStatus style={{ backgroundColor: color }} />
+          <ProfileBoxStatus
+            style={{ backgroundColor: convertStatusColor(status) }}
+          />
         </ProfilBoxTitle>
         <ExperienceBarContainer>
           <ExperienceBar>
@@ -95,10 +90,12 @@ function ProfilBox() {
           <TbCurrencyShekel style={{ color: COLORS.secondary }} size={24} />
         </CurrencyContainer>
         <SelectBox>
-          <StyledSelect onChange={changeStatus}>
+          <StyledSelect value={status.toUpperCase()} onChange={changeStatus}>
             <option>CONNECTED</option>
             <option>AWAY</option>
             <option>DISCONNECTED</option>
+            <option>LOBBY</option>
+            <option>GAME</option>
           </StyledSelect>
         </SelectBox>
       </ProfilBoxRight>
