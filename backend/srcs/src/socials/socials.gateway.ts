@@ -47,15 +47,12 @@ export class SocialsGateway
     client.leave(client.userId);
   }
 
-  async sendStatusUpdate(user: {
-    username: string;
-    userId: string;
-    status: string;
-  }): Promise<void> {
+  async sendStatusUpdate(userId: string): Promise<void> {
+    const user = await this.usersService.findOne(userId);
     this.emitToList(
-      await this.usersService.getUserFriends(user.userId),
+      await this.usersService.getUserFriends(userId),
       'on-status-update',
-      user,
+      { username: user.username, avatar: user.avatar, status: user.status },
     );
   }
 

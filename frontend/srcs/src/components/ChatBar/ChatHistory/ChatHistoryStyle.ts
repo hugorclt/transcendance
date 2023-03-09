@@ -18,10 +18,18 @@ export const ChatHistoryBox = styled.div`
   flex-grow: 1;
 `;
 
+export const ModalCreateJoin = styled.div`
+  width:100%;
+  display:flex;
+  justify-content: space-around;
+`
+
 export const CreateRoomBox = styled.div`
   background-color: ${COLORS.background};
   padding: 8px;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const CreateRoomTitle = styled.h3`
@@ -38,10 +46,15 @@ export const CreateRoomForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  height:100%;
 `;
 
-export const CreateRoomMiddle = styled.form`
+export const CreateRoomButtonBox = styled.button`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-end;
+  border:none;
+  width: 100%;
+  height: 100%;
+  background-color: ${COLORS.background};
 `

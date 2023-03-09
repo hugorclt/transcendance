@@ -30,6 +30,7 @@ export const ModalBox = styled.div`
   background-color: ${COLORS.background};
   padding: 8px;
   border-radius: 5px;
+  border: 1px solid ${COLORS.border};
 `;
 
 export const AddFriendsForm = styled.form``;
