@@ -186,11 +186,4 @@ export class UsersService {
     });
     return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
   }
-
-  async getStatus(id: string) {
-    console.log('getting status...');
-    const user = await this.prisma.user.findUnique({ where: { id: id } });
-    console.log('status: ', user.status);
-    return user.status;
-  }
 }

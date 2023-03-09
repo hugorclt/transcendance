@@ -2,6 +2,7 @@ export type TFriendsProps = {
     key: string,
     name: string,
     status: string,
+    avatar: string,
 }
 
 export type TUser = {

@@ -10,10 +10,10 @@ import {
 } from '@nestjs/websockets';
 import { Namespace } from 'socket.io';
 import { Injectable, UseFilters } from '@nestjs/common';
-import { SocialsService } from './socials.service';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { User } from '@prisma/client';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -23,7 +23,7 @@ import { User } from '@prisma/client';
 export class SocialsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private socialsService: SocialsService) {}
+  constructor(private usersService: UsersService) {}
 
   @WebSocketServer()
   public io: Namespace;
@@ -35,10 +35,11 @@ export class SocialsGateway
 
   async handleConnection(client: AuthSocket) {
     client.join(client.userId);
+    const user = await this.usersService.findOne(client.userId);
     this.emitToList(
-      await this.socialsService.getFriendList(client.userId),
+      await this.usersService.getUserFriends(client.userId),
       'on-status-update',
-      await this.socialsService.getStatus(client.userId),
+      { username: user.username, avatar: user.avatar, status: user.status },
     );
   }
 
@@ -52,11 +53,10 @@ export class SocialsGateway
     status: string;
   }): Promise<void> {
     this.emitToList(
-      await this.socialsService.getFriendList(user.userId),
+      await this.usersService.getUserFriends(user.userId),
       'on-status-update',
       user,
     );
-    // await this.socialsService.onStatusUpdate(client, status);
   }
 
   @SubscribeMessage('friend-request')
@@ -64,14 +64,8 @@ export class SocialsGateway
     @ConnectedSocket() client: AuthSocket,
     @MessageBody() toUsername,
   ): Promise<void> {
-    console.log(
-      'received friend request from ',
-      client.username,
-      ' to ',
-      toUsername,
-    );
-    const id = await this.socialsService.getIdOfUsername(toUsername);
-    this.emitToUser(id, 'on-friend-request', client.username);
+    const user = await this.usersService.findOneByUsername(toUsername);
+    this.emitToUser(user.id, 'on-friend-request', client.username);
   }
 
   @SubscribeMessage('friend-request-reply')
@@ -79,41 +73,32 @@ export class SocialsGateway
     @ConnectedSocket() client: AuthSocket,
     @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
   ): Promise<any> {
-    console.log('friend request reply received');
-    const asker = await this.socialsService.onFriendRequestReply(
-      client,
-      payload,
+    const asker = await this.usersService.findOneByUsername(
+      payload.fromUsername,
     );
-    console.log('asker: ', asker);
-    const replyerStatus = await this.socialsService.getStatus(client.id);
-    console.log("replyer_status: ", replyerStatus)
+    const replyer = await this.usersService.findOne(client.userId);
+    if (payload.isReplyTrue === true)
+      await this.usersService.addFriend(asker.id, replyer.id);
+    else return;
     this.emitToUser(asker.id, 'on-status-update', {
       username: client.username,
-      status: replyerStatus,
+      status: replyer.status,
+      avatar: replyer.avatar,
     });
-    console.log('between emit');
     this.emitToUser(client.id, 'on-status-update', {
       username: asker.username,
       status: asker.status,
+      avatar: replyer.avatar,
     });
-    console.log(
-      'sending new data to:  Asker.username',
-      asker.username,
-      ' replyer.username',
-      client.username,
-    );
   }
 
   emitToUser(receiverId: string, eventName: string, data: any) {
-    console.log("sending data.... data: ", data, "to: ", receiverId);
     this.io.to(receiverId).emit(eventName, data);
-    console.log("end sending data" );
-
   }
 
-  emitToList(userList: string[], eventName: string, data: any) {
-    userList.forEach((user) => {
-      this.emitToUser(user, eventName, data);
+  emitToList(userListId: string[], eventName: string, data: any) {
+    userListId.forEach((userId) => {
+      this.emitToUser(userId, eventName, data);
     });
   }
 }

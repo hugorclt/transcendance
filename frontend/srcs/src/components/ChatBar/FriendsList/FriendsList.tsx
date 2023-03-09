@@ -12,11 +12,11 @@ function FriendsList() {
   const { friendList, setFriendList } = useContext(FriendsListContext);
   const socket = useContext(SocketContext);
 
-  function updateFriendList(status: string, username: string) {
+  function updateFriendList(status: string, username: string, avatar: string) {
     setFriendList((prev) => {
       const index = prev.findIndex((friend) => friend.name === username);
       if (index !== -1) {
-        const updatedFriend = { ...prev[index], status: status, key: nanoid() };
+        const updatedFriend = { ...prev[index], status: status, avatar: avatar, key: nanoid() };
         return [
           ...prev.slice(0, index),
           updatedFriend,
@@ -25,7 +25,7 @@ function FriendsList() {
       } else {
         return [
           ...prev,
-          { key: nanoid(), name: username, status: status },
+          { key: nanoid(), name: username, status: status, avatar: avatar},
         ];
       }
     });
@@ -53,6 +53,7 @@ function FriendsList() {
       updateFriendList(
         newStatus.status,
         newStatus.username,
+        newStatus.avatar,
       );
     });
     return () => {
@@ -66,7 +67,7 @@ function FriendsList() {
       return (
         <FriendsCards
           key={nanoid()}
-          // avatar={val.avatar}
+          avatar={val.avatar}
           name={val.name}
           status={val.status}
         />

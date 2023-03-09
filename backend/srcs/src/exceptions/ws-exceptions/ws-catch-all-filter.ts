@@ -84,6 +84,17 @@ export class WsCatchAllFilter implements ExceptionFilter {
       return;
     }
 
+    if (exception instanceof HttpException) {
+      console.log('Error type not detected');
+      const exceptionData = exception.getResponse();
+
+      const WsException = new WsConflictException(
+        exceptionData['message'] ?? '',
+      );
+      socket.emit('exception', WsException.getError());
+      return;
+    }
+
     const WsException = new WsInternalServerErrorException(exception.message);
     socket.emit('exception', WsException.getError());
   }
