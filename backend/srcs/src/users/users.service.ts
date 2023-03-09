@@ -178,4 +178,12 @@ export class UsersService {
     }
     return user.friends;
   }
+
+  async getUsers(userId: string[]) {
+    console.log("users: ", userId);
+    const users = await this.prisma.user.findMany({
+      where: { username: { in: userId } },
+    });
+    return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
+  }
 }

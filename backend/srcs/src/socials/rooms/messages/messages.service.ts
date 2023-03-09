@@ -30,4 +30,15 @@ export class MessagesService {
   remove(id: number) {
     return `This action removes a #${id} message`;
   }
+
+  async getLastMessage(roomId: string) {
+    return await this.prisma.message.findFirst({
+      where: {
+        roomId: roomId,
+      },
+      orderBy: {
+        date: 'desc',
+      },
+    });
+  }
 }

@@ -16,14 +16,30 @@ export class SocialsService {
     const replyer = await this.usersService.findOne(client.userId);
     if (payload.isReplyTrue === true) {
       await this.usersService.addFriend(asker.id, replyer.id);
-      this.gateway.io.to(asker.id).emit('on-status-update', {
-        username: replyer.username,
-        status: replyer.status,
-      });
-      this.gateway.io.to(replyer.id).emit('on-status-update', {
-        username: asker.username,
-        status: asker.status,
-      });
+      // this.gateway.io.to(asker.id).emit('on-status-update', {
+      //   username: replyer.username,
+      //   status: replyer.status,
+      // });
+      // this.gateway.io.to(replyer.id).emit('on-status-update', {
+      //   username: asker.username,
+      //   status: asker.status,
+      // });
     }
+  }
+
+  public async joinRoom(clientSocket) {
+    const userId = clientSocket.handshake.query.userId;
+    // const rooms = await this.roomService.findRoomsForUser(userId);
+    // rooms.forEach((room) => {
+    //   clientSocket.join(room.id);
+    // });
+  }
+
+  public async leaveRoom(clientSocket) {
+    const userId = clientSocket.handshake.query.userId;
+    // const rooms = await this.roomService.findRoomsForUser(userId);
+    // rooms.forEach((room) => {
+    //   clientSocket.leave(room.id);
+    // });
   }
 }

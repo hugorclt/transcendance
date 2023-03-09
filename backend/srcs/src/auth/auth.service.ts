@@ -131,13 +131,6 @@ export class AuthService {
       }
     });
     this.updateRefreshHash(user.id, tokens.refresh_token);
-
-    // await this.friendsActivityService.emitToFriends(user.id, 'on-status-update', {
-    //   username: user.username,
-    //   avatar: user.avatar,
-    //   status: "CONNECTED",
-    // });
-
     return { access_token: tokens.access_token };
   }
 
@@ -155,13 +148,6 @@ export class AuthService {
         status : "DISCONNECTED",
       },
     });
-    
-    // const user = await this.usersService.findOne(userId);
-    // await this.friendsActivityService.emitToFriends(userId, 'on-status-update', {
-    //   username: user.username,
-    //   avatar: user.avatar,
-    //   status: "DISCONNECTED",
-    // });
   }
 
   /* ------------------------------ refresh_token ----------------------------- */
@@ -185,7 +171,7 @@ export class AuthService {
       sub: userId,
       username: user.username,
     });
-    return { access_token: newAt };
+    return { access_token: newAt , username: user.username};
   }
 
   /* -------------------------------------------------------------------------- */

@@ -11,6 +11,7 @@ function useRefreshToken() {
       return {
         ...prev,
         accessToken: response.data.access_token,
+        username: response.data.username,
       };
     });
     return response.data.access_token;

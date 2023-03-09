@@ -34,59 +34,59 @@ export class SocialsGateway
   }
 
   async handleConnection(client: AuthSocket) {
-    await this.emitToFriends(client.userId, 'on-status-update', {
-      username: client.username,
-      status: 'CONNECTED',
-    });
+    // await this.emitToFriends(client.userId, 'on-status-update', {
+    //   username: client.username,
+    //   status: 'CONNECTED',
+    // });
   }
 
   async handleDisconnect(client: AuthSocket) {
-    await this.emitToFriends(client.userId, 'on-status-update', {
-      username: client.username,
-      status: 'DISCONNECTED',
-    });
+    // await this.emitToFriends(client.userId, 'on-status-update', {
+    //   username: client.username,
+    //   status: 'DISCONNECTED',
+    // });
   }
 
-  @SubscribeMessage('status-update')
-  async onStatusUpdate(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody() status,
-  ): Promise<void> {
-    await this.socialsService.onStatusUpdate(client, status);
-  }
+  // @SubscribeMessage('status-update')
+  // async onStatusUpdate(
+  //   @ConnectedSocket() client: AuthSocket,
+  //   @MessageBody() status,
+  // ): Promise<void> {
+  //   await this.socialsService.onStatusUpdate(client, status);
+  // }
 
-  @SubscribeMessage('friend-request')
-  async onFriendRequest(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody() toUsername,
-  ): Promise<void> {
-    console.log('friend request received for ', toUsername);
-    await this.socialsService.onFriendRequest(client, toUsername);
-  }
+  // @SubscribeMessage('friend-request')
+  // async onFriendRequest(
+  //   @ConnectedSocket() client: AuthSocket,
+  //   @MessageBody() toUsername,
+  // ): Promise<void> {
+  //   console.log('friend request received for ', toUsername);
+  //   await this.socialsService.onFriendRequest(client, toUsername);
+  // }
 
-  @SubscribeMessage('friend-request-reply')
-  async onFriendRequestReply(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
-  ): Promise<any> {
-    await this.socialsService.onFriendRequestReply(client, payload);
-  }
+  // @SubscribeMessage('friend-request-reply')
+  // async onFriendRequestReply(
+  //   @ConnectedSocket() client: AuthSocket,
+  //   @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
+  // ): Promise<any> {
+  //   await this.socialsService.onFriendRequestReply(client, payload);
+  // }
 
-  @SubscribeMessage('send-message')
-  async sendMessage(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody() payload: { message: string; users: string[] },
-  ) {
-    // await this.socialsService.sendMessage(client, payload);
-  }
+  // @SubscribeMessage('send-message')
+  // async sendMessage(
+  //   @ConnectedSocket() client: AuthSocket,
+  //   @MessageBody() payload: { message: string; users: string[] },
+  // ) {
+  //   // await this.socialsService.sendMessage(client, payload);
+  // }
 
-  emitToUser(receiverId: string, eventName: string, data: any) {
-    this.io.to(receiverId).emit(eventName, data);
-  }
+  // emitToUser(receiverId: string, eventName: string, data: any) {
+  //   this.io.to(receiverId).emit(eventName, data);
+  // }
 
-  emitToList(userList: User[], eventName: string, data: any) {
-    userList.forEach((user) => {
-      this.emitToUser(user.id, eventName, data);
-    });
-  }
+  // emitToList(userList: User[], eventName: string, data: any) {
+  //   userList.forEach((user) => {
+  //     this.emitToUser(user.id, eventName, data);
+  //   });
+  // }
 }

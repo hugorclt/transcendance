@@ -6,7 +6,7 @@ import { ChatHistoryContext, TChatHistoryType } from "./ChatHistoryContext";
 import { CreateRoomContext } from "./CreateRoomContext";
 import { FriendsListContext } from "./FriendsListContext";
 function ChatPage() {
-  const [openChat, setOpenChat] = useState<string[]>([]);
+  const [openChat, setOpenChat] = useState<string>("");
   const [isActive, setIsActive] = useState<boolean>(false);
   const [friendList, setFriendList] = useState<TFriendsProps[]>([]);
   const [chatHistory, setChatHistory] = useState<TChatHistoryType[]>([]);

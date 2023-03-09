@@ -4,6 +4,12 @@ import { useLobbyContext } from "../../../views/LobbyPage/LobbyContext";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
+import {
+  GameModeButton,
+  GameModeButtonBody,
+  GameModeCardsBody,
+  GameModeContainer,
+} from "./GamemodeSelectorStyle";
 
 function GameModeSelector() {
   const axiosPrivate = useAxiosPrivate();
@@ -40,8 +46,8 @@ function GameModeSelector() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full justify-center items-center">
-      <div className="flex w-full h-5/6 justify-around items-center">
+    <GameModeContainer>
+      <GameModeCardsBody>
         <GameModeCard
           mode="Classic"
           description="Le Pong originel, berceau du gaming"
@@ -54,19 +60,16 @@ function GameModeSelector() {
           mode="Gravity"
           description="La gravite s'invite dans pong pour vous jouer des tours"
         />
-      </div>
-      <div className="flex flex-col w-full h-1/6 justify-center items-center">
+      </GameModeCardsBody>
+      <GameModeButtonBody>
         {onModeSelected && (
-          <button
-            onClick={createLobby}
-            className=" bg-dark-blue w-32 h-10 hover:bg-gold hover:text-dark-blue text-white rounded-full border-gold border-4"
-          >
+          <GameModeButton onClick={createLobby}>
             {selectedMode + (players == 2 ? " 1v1" : " 2v2")}
-          </button>
+          </GameModeButton>
         )}
         {errMsg && <p className="text-red-500">{errMsg}</p>}
-      </div>
-    </div>
+      </GameModeButtonBody>
+    </GameModeContainer>
   );
 }
 

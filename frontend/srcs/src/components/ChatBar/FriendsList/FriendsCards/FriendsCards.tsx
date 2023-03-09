@@ -3,6 +3,20 @@ import { TFriendsProps } from "./FriendsType";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IconContext } from "react-icons/lib";
 import { ChatContext } from "../../../../views/ChatPage/ChatContext";
+import {
+  FriendsCardsAvatar,
+  FriendsCardsBox,
+  FriendsCardsName,
+  FriendsCardsStatus,
+  FriendsCardsStatusRound,
+  FriendsPopUpButton,
+  InsidePopUpButton,
+  LeftFriendsCardsBox,
+  MiddleFriendsCardsBox,
+  PopUpBox,
+} from "./FriendsCardsStyle";
+import { COLORS } from "../../../../colors";
+import Popup from "reactjs-popup";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
@@ -16,60 +30,37 @@ function FriendsCards(props: TFriendsProps) {
   }, []);
 
   return (
-    <>
-      <div className="pt-4 pb-2 px-4">
-        <div className="flex items-center justify-around">
-          <div className="relative">
-            <img className="rounded-full w-10" src={props.avatar}></img>
-            <div
-              style={{ backgroundColor: color }}
-              className="absolute outline outline-2 outline-gold rounded-full bottom-0 right-0 w-2 h-2"></div>
-          </div>
-          <a href="#!">
-            <div className="flex flex-col mx-3">
-              <p className="text-base font-semibold text-gold mb-0">
-                {props.name}
-              </p>
-              <p className="outline-none bg-dark-blue text-gold opacity-70 text-sm font-light">
-                {props.status}
-              </p>
-            </div>
-          </a>
-          <IconContext.Provider value={{ color: "#E8C47C" }}>
-            <button
-              onClick={() => {
-                setOpenDD(true);
-              }}
-              onBlur={() => {
-                setOpenDD(false);
-              }}>
-              <BsThreeDotsVertical />
-            </button>
-          </IconContext.Provider>
-          {openDD && (
-            <ul className="absolute list-none right-12 border rounded border-gold bg-dark-blue">
-              <li className="p-1 relative hover:bg-dark-blue-200">
-                <button
-                  onMouseDown={() => {
-                    setOpenChat((prev) => {
-                      if (!prev.includes(props.name + "_room")) {
-                        return [...prev, props.name + "_room"];
-                      }
-                      return prev;
-                    });
-                  }}
-                  className="text-gold text-xs">
-                  Send message
-                </button>
-              </li>
-              <li className="p-1 relative hover:bg-dark-blue-200">
-                <button className="text-gold text-xs">Remove friend</button>
-              </li>
-            </ul>
-          )}
-        </div>
-      </div>
-    </>
+    <FriendsCardsBox>
+      <LeftFriendsCardsBox>
+        <FriendsCardsAvatar src={props.avatar} />
+        <MiddleFriendsCardsBox>
+          <FriendsCardsName>
+            <FriendsCardsStatusRound style={{ backgroundColor: color }} />
+            {props.name.toLocaleUpperCase()}
+          </FriendsCardsName>
+          <FriendsCardsStatus>
+            {props.status.toLocaleUpperCase()}
+          </FriendsCardsStatus>
+        </MiddleFriendsCardsBox>
+      </LeftFriendsCardsBox>
+      <Popup
+        position="left center"
+        arrowStyle={{color:COLORS.background}}
+        trigger={
+          <FriendsPopUpButton>
+            <BsThreeDotsVertical
+              style={{ opacity: "50%", color: COLORS.primary }}
+              size={22}
+            />
+          </FriendsPopUpButton>
+        }>
+        <PopUpBox>
+          <InsidePopUpButton onClick={() => {setOpenChat(props.name)}}>Send message</InsidePopUpButton>
+          <InsidePopUpButton>Block friends</InsidePopUpButton>
+          <InsidePopUpButton>Remove friends</InsidePopUpButton>
+        </PopUpBox>
+      </Popup>
+    </FriendsCardsBox>
   );
 }
 

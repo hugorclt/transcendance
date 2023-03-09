@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
 import { Role } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
+import { MessagesService } from './messages/messages.service';
 
 @Injectable()
 export class RoomsService {
@@ -12,6 +13,7 @@ export class RoomsService {
     private prisma: PrismaService,
     private participant: ParticipantService,
     private usersService: UsersService,
+    private messageService: MessagesService,
   ) {}
 
   async create(createRoomDto: CreateRoomDto) {
@@ -47,26 +49,11 @@ export class RoomsService {
   }
 
   async findHistory(userId: string) {
-    const list = await this.prisma.room.findMany({
-      where: {
-        room: {
-          some: {
-            user: { id: userId },
-          },
-        },
-      },
-    });
+    const list = await this.findRoomsForUser(userId);
 
-    const test = Promise.all(
+    return Promise.all(
       list.map(async (room) => {
-        const lastMessage = await this.prisma.message.findFirst({
-          where: {
-            roomId: room.id,
-          },
-          orderBy: {
-            date: 'desc',
-          },
-        });
+        const lastMessage = await this.messageService.getLastMessage(room.id);
 
         return {
           avatar: room.avatar,
@@ -75,7 +62,6 @@ export class RoomsService {
         };
       }),
     );
-    return test;
   }
 
   findAll() {
@@ -85,6 +71,12 @@ export class RoomsService {
   findOne(id: string) {
     return this.prisma.room.findUnique({
       where: { id },
+    });
+  }
+
+  findOneByName(name: string) {
+    return this.prisma.room.findUnique({
+      where: { name },
     });
   }
 
@@ -98,6 +90,18 @@ export class RoomsService {
   remove(id: string) {
     return this.prisma.room.delete({
       where: { id },
+    });
+  }
+
+  async findRoomsForUser(userId: string) {
+    return await this.prisma.room.findMany({
+      where: {
+        room: {
+          some: {
+            user: { id: userId },
+          },
+        },
+      },
     });
   }
 }
