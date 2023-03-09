@@ -7,4 +7,5 @@ export const  COLORS = {
     blue: "#075AFC",
     grey: "#A5A5A5",
     border: "#464545",
+    disabled: "#2d2d2d",
 }

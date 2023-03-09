@@ -49,7 +49,6 @@ function FriendsList() {
       });
 
     socket?.on("on-status-update", (newStatus) => {
-      console.log("I have received information for: ", newStatus);
       updateFriendList(
         newStatus.status,
         newStatus.username,

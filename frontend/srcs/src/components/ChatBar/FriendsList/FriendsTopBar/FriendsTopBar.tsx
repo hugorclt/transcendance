@@ -9,8 +9,8 @@ import {
   FriendsTopBarTitle,
   ModalBox,
   RightFriendsTopBarBox,
-  AddFriendsInput,
-  SubmitFriends,
+  StyledInput,
+  StyledButton,
   ModalTitle,
 } from "./FriendsTopBarStyle";
 import Popup from "reactjs-popup";
@@ -48,10 +48,10 @@ function FriendsTopBar() {
           <ModalBox>
             <AddFriendsForm onSubmit={handleSubmit} autoComplete="off">
               <ModalTitle>ENTER USERNAME:</ModalTitle>
-              <AddFriendsInput
+              <StyledInput
                 onChange={(e) => setUsername(e.target.value)}
-                type="text"></AddFriendsInput>
-              <SubmitFriends type="submit" value="Invite" />
+                type="text"></StyledInput>
+              <StyledButton type="submit" value="Invite" />
             </AddFriendsForm>
           </ModalBox>
         </Popup>
