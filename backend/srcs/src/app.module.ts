@@ -12,7 +12,6 @@ import { RoomsModule } from './socials/rooms/rooms.module';
 import { ParticipantModule } from './socials/rooms/participant/participant.module';
 import { SocialsModule } from './socials/socials.module';
 import { MessagesModule } from './socials/rooms/messages/messages.module';
-import { SocialsGateway } from './socials/socials.gateway';
 import { ItemsModule } from './items/items.module';
 @Module({
   imports: [
@@ -30,6 +29,6 @@ import { ItemsModule } from './items/items.module';
     ItemsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SocialsGateway],
+  providers: [AppService],
 })
 export class AppModule {}

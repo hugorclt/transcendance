@@ -37,6 +37,8 @@ type User = {
   balance: number;
 };
 
+//make a function that convert status AWAY, DISCONNECT CONNECTED in color
+
 function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useState<User>();
@@ -71,7 +73,7 @@ function ProfilBox() {
           .catch((res: AxiosError) =>
             navigate("/login", { state: { from: location }, replace: true })
           );
-        socket?.emit("status-update", status[index]);
+        // socket?.emit("status-update", status[index]);
       }
     });
   };

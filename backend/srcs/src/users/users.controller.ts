@@ -21,7 +21,10 @@ import { Request } from '@nestjs/common';
 @UseGuards(AccessAuthGard)
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+  ) // private readonly socialGateway: SocialsGateway,
+  {}
 
   @Post()
   @ApiCreatedResponse({ type: ReturnUserEntity })
@@ -62,8 +65,17 @@ export class UsersController {
 
   @Post('me/status')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
-  updateStatus(@Request() req): Promise<ReturnUserEntity> {
-    return this.usersService.updateStatus(req.user.sub, req.body.status);
+  async updateStatus(@Request() req): Promise<ReturnUserEntity> {
+    const user = await this.usersService.updateStatus(
+      req.user.sub,
+      req.body.status,
+    );
+    // this.socialGateway.sendStatusUpdate({
+    //   userId: user.id,
+    //   username: user.username,
+    //   status: user.status,
+    // });
+    return user;
   }
 
   @Get(':id')

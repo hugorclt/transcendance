@@ -23,6 +23,7 @@ function FriendsTopBar() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setOpen(false);
+    console.log("sending request");
     socket?.emit("friend-request", username);
     setUsername("");
   };
@@ -43,15 +44,13 @@ function FriendsTopBar() {
           }
           modal
           open={open}
-          nested
-        >
+          nested>
           <ModalBox>
             <AddFriendsForm onSubmit={handleSubmit} autoComplete="off">
               <ModalTitle>ENTER USERNAME:</ModalTitle>
               <AddFriendsInput
                 onChange={(e) => setUsername(e.target.value)}
-                type="text"
-              ></AddFriendsInput>
+                type="text"></AddFriendsInput>
               <SubmitFriends type="submit" value="Invite" />
             </AddFriendsForm>
           </ModalBox>

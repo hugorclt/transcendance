@@ -12,7 +12,7 @@ function FriendsList() {
   const { friendList, setFriendList } = useContext(FriendsListContext);
   const socket = useContext(SocketContext);
 
-  function updateFriendList(status: string, username: string, avatar: string) {
+  function updateFriendList(status: string, username: string) {
     setFriendList((prev) => {
       const index = prev.findIndex((friend) => friend.name === username);
       if (index !== -1) {
@@ -25,7 +25,7 @@ function FriendsList() {
       } else {
         return [
           ...prev,
-          { key: nanoid(), name: username, avatar: avatar, status: status },
+          { key: nanoid(), name: username, status: status },
         ];
       }
     });
@@ -41,19 +41,18 @@ function FriendsList() {
           status: element.status,
           key: nanoid(),
         }));
+        console.log(friends);
         setFriendList(friends);
       })
       .catch((err: AxiosError) => {
         console.log("Error while fetching friendlist");
       });
 
-    socket?.on("on-status-update", (new_status_update) => {
-      console.log(new_status_update);
-
+    socket?.on("on-status-update", (newStatus) => {
+      console.log("I have received information for: ", newStatus);
       updateFriendList(
-        new_status_update.status,
-        new_status_update.username,
-        new_status_update.avatar
+        newStatus.status,
+        newStatus.username,
       );
     });
     return () => {
@@ -67,7 +66,7 @@ function FriendsList() {
       return (
         <FriendsCards
           key={nanoid()}
-          avatar={val.avatar}
+          // avatar={val.avatar}
           name={val.name}
           status={val.status}
         />

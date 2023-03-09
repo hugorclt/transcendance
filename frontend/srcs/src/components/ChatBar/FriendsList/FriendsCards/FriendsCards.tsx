@@ -32,7 +32,7 @@ function FriendsCards(props: TFriendsProps) {
   return (
     <FriendsCardsBox>
       <LeftFriendsCardsBox>
-        <FriendsCardsAvatar src={props.avatar} />
+        <FriendsCardsAvatar src="" /> {/* toaddavatar */}
         <MiddleFriendsCardsBox>
           <FriendsCardsName>
             <FriendsCardsStatusRound style={{ backgroundColor: color }} />

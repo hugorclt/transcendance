@@ -180,10 +180,17 @@ export class UsersService {
   }
 
   async getUsers(userId: string[]) {
-    console.log("users: ", userId);
+    console.log('users: ', userId);
     const users = await this.prisma.user.findMany({
       where: { username: { in: userId } },
     });
     return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
+  }
+
+  async getStatus(id: string) {
+    console.log('getting status...');
+    const user = await this.prisma.user.findUnique({ where: { id: id } });
+    console.log('status: ', user.status);
+    return user.status;
   }
 }

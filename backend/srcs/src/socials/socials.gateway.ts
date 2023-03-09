@@ -34,59 +34,86 @@ export class SocialsGateway
   }
 
   async handleConnection(client: AuthSocket) {
-    // await this.emitToFriends(client.userId, 'on-status-update', {
-    //   username: client.username,
-    //   status: 'CONNECTED',
-    // });
+    client.join(client.userId);
+    this.emitToList(
+      await this.socialsService.getFriendList(client.userId),
+      'on-status-update',
+      await this.socialsService.getStatus(client.userId),
+    );
   }
 
   async handleDisconnect(client: AuthSocket) {
-    // await this.emitToFriends(client.userId, 'on-status-update', {
-    //   username: client.username,
-    //   status: 'DISCONNECTED',
-    // });
+    client.leave(client.userId);
   }
 
-  // @SubscribeMessage('status-update')
-  // async onStatusUpdate(
-  //   @ConnectedSocket() client: AuthSocket,
-  //   @MessageBody() status,
-  // ): Promise<void> {
-  //   await this.socialsService.onStatusUpdate(client, status);
-  // }
+  async sendStatusUpdate(user: {
+    username: string;
+    userId: string;
+    status: string;
+  }): Promise<void> {
+    this.emitToList(
+      await this.socialsService.getFriendList(user.userId),
+      'on-status-update',
+      user,
+    );
+    // await this.socialsService.onStatusUpdate(client, status);
+  }
 
-  // @SubscribeMessage('friend-request')
-  // async onFriendRequest(
-  //   @ConnectedSocket() client: AuthSocket,
-  //   @MessageBody() toUsername,
-  // ): Promise<void> {
-  //   console.log('friend request received for ', toUsername);
-  //   await this.socialsService.onFriendRequest(client, toUsername);
-  // }
+  @SubscribeMessage('friend-request')
+  async onFriendRequest(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody() toUsername,
+  ): Promise<void> {
+    console.log(
+      'received friend request from ',
+      client.username,
+      ' to ',
+      toUsername,
+    );
+    const id = await this.socialsService.getIdOfUsername(toUsername);
+    this.emitToUser(id, 'on-friend-request', client.username);
+  }
 
-  // @SubscribeMessage('friend-request-reply')
-  // async onFriendRequestReply(
-  //   @ConnectedSocket() client: AuthSocket,
-  //   @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
-  // ): Promise<any> {
-  //   await this.socialsService.onFriendRequestReply(client, payload);
-  // }
+  @SubscribeMessage('friend-request-reply')
+  async onFriendRequestReply(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
+  ): Promise<any> {
+    console.log('friend request reply received');
+    const asker = await this.socialsService.onFriendRequestReply(
+      client,
+      payload,
+    );
+    console.log('asker: ', asker);
+    const replyerStatus = await this.socialsService.getStatus(client.id);
+    console.log("replyer_status: ", replyerStatus)
+    this.emitToUser(asker.id, 'on-status-update', {
+      username: client.username,
+      status: replyerStatus,
+    });
+    console.log('between emit');
+    this.emitToUser(client.id, 'on-status-update', {
+      username: asker.username,
+      status: asker.status,
+    });
+    console.log(
+      'sending new data to:  Asker.username',
+      asker.username,
+      ' replyer.username',
+      client.username,
+    );
+  }
 
-  // @SubscribeMessage('send-message')
-  // async sendMessage(
-  //   @ConnectedSocket() client: AuthSocket,
-  //   @MessageBody() payload: { message: string; users: string[] },
-  // ) {
-  //   // await this.socialsService.sendMessage(client, payload);
-  // }
+  emitToUser(receiverId: string, eventName: string, data: any) {
+    console.log("sending data.... data: ", data, "to: ", receiverId);
+    this.io.to(receiverId).emit(eventName, data);
+    console.log("end sending data" );
 
-  // emitToUser(receiverId: string, eventName: string, data: any) {
-  //   this.io.to(receiverId).emit(eventName, data);
-  // }
+  }
 
-  // emitToList(userList: User[], eventName: string, data: any) {
-  //   userList.forEach((user) => {
-  //     this.emitToUser(user.id, eventName, data);
-  //   });
-  // }
+  emitToList(userList: string[], eventName: string, data: any) {
+    userList.forEach((user) => {
+      this.emitToUser(user, eventName, data);
+    });
+  }
 }
