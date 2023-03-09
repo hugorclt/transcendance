@@ -6,6 +6,7 @@ import { LobbyParticipantsModule } from './lobby-participants/lobby-participants
 import { UsersModule } from 'src/users/users.module';
 import { LobbiesGateway } from './lobbies.gateway';
 import { JwtModule } from '@nestjs/jwt';
+
 @Module({
   imports: [
     PrismaModule,

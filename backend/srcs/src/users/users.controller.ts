@@ -57,7 +57,6 @@ export class UsersController {
   @ApiOkResponse({ type: ReturnUserEntity })
   async findStatus(@Request() req): Promise<ReturnUserEntity> {
     const user = await this.usersService.findOne(req.user.sub);
-    console.log('Asked for user status: ', user.status);
     return user;
   }
 
