@@ -9,7 +9,6 @@ import "react-circular-progressbar/dist/styles.css";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
-import { SocketContext } from "../../../services/Auth/SocketContext";
 import {
   ExperienceBar,
   ProfilBoxLink,
@@ -43,7 +42,6 @@ function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useState<User>();
   const [color, setColor] = useState("#19e650");
-  const socket = useContext(SocketContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -73,7 +71,6 @@ function ProfilBox() {
           .catch((res: AxiosError) =>
             navigate("/login", { state: { from: location }, replace: true })
           );
-        // socket?.emit("status-update", status[index]);
       }
     });
   };

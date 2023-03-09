@@ -71,12 +71,14 @@ export class UsersController {
       req.user.sub,
       req.body.status,
     );
-    this.socialGateway.sendStatusUpdate({
-      userId: user.id,
-      username: user.username,
-      avatar: user.avatar,
-      status: user.status,
-    });
+    if (user) {
+      this.socialGateway.sendStatusUpdate({
+        userId: user.id,
+        username: user.username,
+        avatar: user.avatar,
+        status: user.status,
+      });
+    }
     return user;
   }
 
