@@ -12,8 +12,8 @@ import { Namespace } from 'socket.io';
 import { Injectable, UseFilters } from '@nestjs/common';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
-import { User } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -49,14 +49,16 @@ export class SocialsGateway
 
   async sendStatusUpdate(user: {
     username: string;
+    avatar: string;
     userId: string;
     status: string;
   }): Promise<void> {
-    this.emitToList(
-      await this.usersService.getUserFriends(user.userId),
-      'on-status-update',
-      user,
-    );
+    const friends = await this.usersService.getUserFriends(user.userId);
+    this.emitToList(friends, 'on-status-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: user.status,
+    });
   }
 
   @SubscribeMessage('friend-request')
@@ -96,9 +98,9 @@ export class SocialsGateway
     this.io.to(receiverId).emit(eventName, data);
   }
 
-  emitToList(userListId: string[], eventName: string, data: any) {
-    userListId.forEach((userId) => {
-      this.emitToUser(userId, eventName, data);
+  emitToList(userList: User[], eventName: string, data: any) {
+    userList.forEach((user) => {
+      this.emitToUser(user.id, eventName, data);
     });
   }
 }

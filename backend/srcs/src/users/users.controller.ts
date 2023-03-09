@@ -74,6 +74,7 @@ export class UsersController {
     this.socialGateway.sendStatusUpdate({
       userId: user.id,
       username: user.username,
+      avatar: user.avatar,
       status: user.status,
     });
     return user;
