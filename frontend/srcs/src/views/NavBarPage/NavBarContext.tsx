@@ -7,13 +7,13 @@ import React, {
 } from "react";
 
 type TNavBarPageContext = {
-  selectedTab: number;
-  setSelectedTab: Dispatch<React.SetStateAction<number>>;
+  selectedPage: number;
+  setSelectedPage: Dispatch<React.SetStateAction<number>>;
 };
 
 const defaultValue = {
-  selectedTab: 0,
-  setSelectedTab: () => {},
+  selectedPage: 0,
+  setSelectedPage: () => {},
 };
 
 export const NavBarContext = createContext<TNavBarPageContext>(defaultValue);
@@ -23,13 +23,13 @@ type NavBarProviderProps = {
 };
 
 export function NavBarProvider({ children }: NavBarProviderProps) {
-  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [selectedPage, setSelectedPage] = useState<number>(0);
 
   return (
     <NavBarContext.Provider
       value={{
-        selectedTab,
-        setSelectedTab,
+        selectedPage,
+        setSelectedPage,
       }}
     >
       {children}

@@ -1,15 +1,29 @@
-import { NavBarItemStyle, NavBarItemText } from "../NavBarStyle";
-
+import { NavBarItemStyle, NavBarLink } from "../NavBarStyle";
+import { useNavBarContext } from "../../../views/NavBarPage/NavBarContext";
+import { useState, useEffect } from "react";
+import { COLORS } from "../../../colors";
 interface TNavBarItemProps {
   value: string;
-  color: string;
+  index: number;
+  path: string;
   onClick?: React.MouseEventHandler;
 }
 
-export function NavBarItem({ value, color, onClick }: TNavBarItemProps) {
+export function NavBarItem({ value, index, path, onClick }: TNavBarItemProps) {
+  const { selectedPage } = useNavBarContext();
+  const [color, setColor] = useState(
+    selectedPage === index ? COLORS.secondary : COLORS.white
+  );
+
+  useEffect(() => {
+    setColor(selectedPage === index ? COLORS.secondary : COLORS.white);
+  }, [selectedPage]);
+
   return (
-    <NavBarItemStyle onClick={onClick}>
-      <NavBarItemText font-color={color}>{value}</NavBarItemText>
+    <NavBarItemStyle>
+      <NavBarLink onClick={onClick} color={color} to={path}>
+        {value}
+      </NavBarLink>
     </NavBarItemStyle>
   );
 }

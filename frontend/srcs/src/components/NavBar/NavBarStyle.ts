@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { COLORS } from "../../colors";
 
@@ -18,7 +19,13 @@ export const NavBarItemStyle = styled.div`
   align-items: center;
 `;
 
-export const NavBarItemText = styled.h3`
-  color: ${COLORS.primary};
+export const NavBarLink = styled(Link)`
+  color: ${(props) => props.color};
+  font-weight: bold;
   font-size: 2vw;
+  text-decoration: none;
+  &:hover,
+  &:focus {
+    color: ${COLORS.secondary};
+  }
 `;
