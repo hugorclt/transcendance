@@ -15,7 +15,7 @@ export const convertStatusColor = (status: string): string => {
   switch (status) {
     case "AWAY":
       return COLORS.orange;
-    case "DISCONNECT":
+    case "DISCONNECTED":
       return COLORS.disabled;
     case "CONNECTED":
       return COLORS.green;

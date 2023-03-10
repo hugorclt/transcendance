@@ -15,7 +15,7 @@ import {
   MiddleFriendsCardsBox,
   PopUpBox,
 } from "./FriendsCardsStyle";
-import { COLORS } from "../../../../colors";
+import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
 
 function FriendsCards(props: TFriendsProps) {
@@ -24,9 +24,7 @@ function FriendsCards(props: TFriendsProps) {
   const { setOpenChat } = useContext(ChatContext);
 
   useEffect(() => {
-    if (props.status == "CONNECTED") setColor("#19e650");
-    else if (props.status == "AWAY") setColor("#e6b319");
-    else setColor("#8a8a8a");
+    setColor(convertStatusColor(props.status));
   }, []);
 
   return (
@@ -45,7 +43,7 @@ function FriendsCards(props: TFriendsProps) {
       </LeftFriendsCardsBox>
       <Popup
         position="left center"
-        arrowStyle={{color:COLORS.background}}
+        arrowStyle={{ color: COLORS.background }}
         trigger={
           <FriendsPopUpButton>
             <BsThreeDotsVertical
@@ -53,9 +51,16 @@ function FriendsCards(props: TFriendsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }>
+        }
+      >
         <PopUpBox>
-          <InsidePopUpButton onClick={() => {setOpenChat(props.name)}}>Send message</InsidePopUpButton>
+          <InsidePopUpButton
+            onClick={() => {
+              setOpenChat(props.name);
+            }}
+          >
+            Send message
+          </InsidePopUpButton>
           <InsidePopUpButton>Block friends</InsidePopUpButton>
           <InsidePopUpButton>Remove friends</InsidePopUpButton>
         </PopUpBox>
