@@ -9,6 +9,8 @@ export const COLORS = {
   border: "#464545",
   disabled: "#2d2d2d",
   purple: "#7c3296",
+  white: "#ffffff",
+  black: "#000000",
 };
 
 export const convertStatusColor = (status: string): string => {
