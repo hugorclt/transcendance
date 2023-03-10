@@ -121,7 +121,7 @@ export class UsersService {
     throw new NotFoundException();
   }
 
-  async updateStatus(id: string, status: string) {
+  async updateStatus(id: string, status: string): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.update({
       where: { id },
       data: { status: status as Status },

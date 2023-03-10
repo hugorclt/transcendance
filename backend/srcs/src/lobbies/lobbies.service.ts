@@ -10,49 +10,46 @@ import { JoinLobbyDto } from './dto/join-lobby.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LobbyEntity } from './entities/lobby.entity';
 import { UsersService } from 'src/users/users.service';
-import { LobbyParticipantEntity } from './lobby-participants/entities/lobby-participant.entity';
-import { LobbyParticipantsService } from './lobby-participants/lobby-participants.service';
 import { LobbiesGateway } from './lobbies.gateway';
+import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class LobbiesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
-    private readonly lobbyParticipantsService: LobbyParticipantsService,
     private readonly lobbiesGateway: LobbiesGateway,
+    private readonly socialsGateway: SocialsGateway,
   ) {}
 
   // A User can only have one Lobby, it can only be part of one Lobby
-  async canUserCreateLobbies(userId: string): Promise<boolean> {
+  async canUserJoinLobbies(userId: string): Promise<ReturnUserEntity> {
     const user = await this.usersService.findOne(userId);
     if (!user) {
-      throw new MethodNotAllowedException(
-        'You are not allowed to create lobbies',
-      );
+      throw new NotFoundException('User not found');
     }
-    const check = await this.prisma.lobby.findFirst({
-      where: { ownerId: user.id },
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        players: {
+          some: {
+            id: userId,
+          },
+        },
+      },
     });
-    const check2 = await this.prisma.lobbyParticipant.findFirst({
-      where: { userId: user.id },
-    });
-    if (check || check2) {
-      throw new MethodNotAllowedException(
-        'You are not allowed to create lobbies',
-      );
+    if (lobby) {
+      throw new MethodNotAllowedException('User can only be in one lobby');
     }
-    return true;
+    return user;
   }
 
   async create(
     ownerId: string,
     createLobbyDto: CreateLobbyDto,
   ): Promise<LobbyEntity> {
-    const canCreate = await this.canUserCreateLobbies(ownerId);
-    if (!canCreate) {
-      return null;
-    }
+    const user = await this.canUserJoinLobbies(ownerId);
+    console.log('user can create lobby');
     const lobby = await this.prisma.lobby.create({
       data: {
         ownerId: ownerId,
@@ -60,50 +57,66 @@ export class LobbiesService {
         maxDuration: createLobbyDto.maxDuration,
         mode: createLobbyDto.mode,
         map: createLobbyDto.map,
+        players: {
+          connect: { id: ownerId },
+        },
       },
     });
-
+    //need to connect owner to lobby as participant
     console.log('lobby created ', lobby);
-    //on aimerait broadcast event
-    this.lobbiesGateway.emitBroadcast('hello', 'world');
+    await this.usersService.updateStatus(user.id, 'LOBBY');
+    console.log('lobby owner status updated in db');
+    this.socialsGateway.sendStatusUpdate({
+      username: user.username,
+      userId: user.id,
+      avatar: user.avatar,
+      status: 'LOBBY',
+    });
+    console.log('lobby owner status updated in socials');
     return lobby;
   }
 
-  async isUserLobbyOwner(userId: string): Promise<boolean> {
-    const user = await this.usersService.findOne(userId);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    const check = await this.prisma.lobby.findFirst({
-      where: { ownerId: user.id },
+  async isUserLobbyOwner(userId: string, lobbyId: string): Promise<boolean> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+        lobbyOwner: {
+          some: {
+            id: lobbyId,
+          },
+        },
+      },
     });
-    if (!check) {
+    if (!user) {
       return false;
     }
     return true;
   }
 
-  async joinLobby(joinLobbyDto: JoinLobbyDto): Promise<LobbyEntity> {
-    //check is user can join lobby
-    const isOwner = await this.isUserLobbyOwner(joinLobbyDto.userId);
-    if (isOwner) {
-      throw new MethodNotAllowedException(
-        'You are not allowed to join a lobby (you are a lobby owner)',
-      );
-    }
-    const check = await this.prisma.lobbyParticipant.findFirst({
-      where: { userId: joinLobbyDto.userId },
+  async isUserInLobby(userId: string, lobbyId: string): Promise<boolean> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+        lobbyParticipant: {
+          some: {
+            id: lobbyId,
+          },
+        },
+      },
     });
-    if (check) {
-      //if user is already in a lobby, make him quit said lobby and join the new one
-      throw new MethodNotAllowedException(
-        'You are not allowed to join a lobby (already in a lobby)',
-      );
+    if (!user) {
+      return false;
     }
-    return await this.prisma.lobby.update({
-      where: { id: joinLobbyDto.lobbyId },
-      data: {},
-    });
+    return true;
+  }
+
+  async joinLobby(joinLobbyDto: JoinLobbyDto) {
+    //check if user can join a lobby
+    const user = await this.canUserJoinLobbies(joinLobbyDto.userId);
+    //check if lobby is joinable and / or not full
+    //TODO
+    //join lobby
+    //TODO
   }
 
   async findAll(): Promise<LobbyEntity[]> {
@@ -114,18 +127,32 @@ export class LobbiesService {
     return await this.prisma.lobby.findUnique({ where: { id } });
   }
 
-  async findLobbyParticipants(
-    lobbyId: string,
-  ): Promise<LobbyParticipantEntity[]> {
-    //find lobby with lobbyId
-    const check = await this.prisma.lobby.findFirst({
-      where: { id: lobbyId },
+  async findLobbyParticipants(lobbyId: string): Promise<ReturnUserEntity[]> {
+    //find many users who are participants in some lobby with id "lobbyID"
+    const participants = await this.prisma.user.findMany({
+      where: {
+        lobbyParticipant: {
+          some: {
+            id: lobbyId,
+          },
+        },
+      },
     });
-    if (!check) {
-      throw new NotFoundException('Lobby not found');
-    }
-    //return all lobby participants
-    return await this.lobbyParticipantsService.findByLobby(lobbyId);
+    return participants;
+  }
+
+  async findLobbyBanned(lobbyId: string): Promise<ReturnUserEntity[]> {
+    //find many users who are banned in some lobby with id "lobbyID"
+    const participants = await this.prisma.user.findMany({
+      where: {
+        lobbyParticipant: {
+          some: {
+            id: lobbyId,
+          },
+        },
+      },
+    });
+    return participants;
   }
 
   async update(
@@ -139,6 +166,11 @@ export class LobbiesService {
   }
 
   async remove(id: string): Promise<LobbyEntity> {
+    //find lobby with lobbyId
+    //remove all lobby participants and update their status?
+    //remove lobby
+    const lobby = await this.prisma.lobby.findUnique({ where: { id } });
+    // const participants = await this.lobbyParticipantsService.findByLobby;
     return await this.prisma.lobby.delete({ where: { id } });
   }
 }

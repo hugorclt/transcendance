@@ -15,7 +15,7 @@ import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { LobbyEntity } from './entities/lobby.entity';
-import { LobbyParticipantEntity } from './lobby-participants/entities/lobby-participant.entity';
+import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 
 @Controller('lobbies')
 @UseGuards(AccessAuthGard)
@@ -29,7 +29,13 @@ export class LobbiesController {
     @Request() req: any,
     @Body() createLobbyDto: CreateLobbyDto,
   ): Promise<LobbyEntity> {
-    return await this.lobbiesService.create(req.user.sub, createLobbyDto);
+    const lobby = await this.lobbiesService.create(
+      req.user.sub,
+      createLobbyDto,
+    );
+    if (lobby) {
+      return lobby;
+    }
   }
 
   @Get()
@@ -45,11 +51,17 @@ export class LobbiesController {
   }
 
   @Get(':id/participants')
-  @ApiOkResponse({ type: LobbyParticipantEntity, isArray: true })
+  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findLobbyParticipants(
     @Param('id') id: string,
-  ): Promise<LobbyParticipantEntity[]> {
-    return this.lobbiesService.findLobbyParticipants(id);
+  ): Promise<ReturnUserEntity[]> {
+    return await this.lobbiesService.findLobbyParticipants(id);
+  }
+
+  @Get(':id/participants')
+  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
+  async findLobbyBanned(@Param('id') id: string): Promise<ReturnUserEntity[]> {
+    return await this.lobbiesService.findLobbyBanned(id);
   }
 
   @Patch(':id')
