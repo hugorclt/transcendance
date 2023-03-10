@@ -13,7 +13,6 @@ export const NavBarContainer = styled.div`
 export const NavBarItemStyle = styled.div`
   height: 100%;
   flex: 0 0 25%;
-  background-color: #080808;
   display: flex;
   justify-content: center;
   align-items: center;
