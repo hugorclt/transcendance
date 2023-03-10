@@ -19,5 +19,6 @@ export const NavBarItemStyle = styled.div`
 `;
 
 export const NavBarItemText = styled.h3`
+  color: ${COLORS.primary};
   font-size: 2vw;
 `;

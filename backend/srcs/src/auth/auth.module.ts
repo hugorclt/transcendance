@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { refreshStrategy } from './utils/refresh-strategy';
 import { accessStrategy } from './utils/access-strategy';
 import { HttpModule } from '@nestjs/axios';
+import { SocialsModule } from 'src/socials/socials.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { HttpModule } from '@nestjs/axios';
         expiresIn: '20s',
       },
     }),
+    SocialsModule,
   ],
   controllers: [AuthController],
   providers: [
