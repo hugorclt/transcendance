@@ -1,7 +1,7 @@
 import React from "react";
-import { TeamBuilderContainer } from "./TeamBuilder/TeamBuilderStyle";
+import { TeamBuilderContainer } from "./TeamBuilderStyle";
 
-function Lobby() {
+function TeamBuilder() {
   return (
     <TeamBuilderContainer>
       <h1>Lobby</h1>
@@ -9,4 +9,4 @@ function Lobby() {
   );
 }
 
-export default Lobby;
+export default TeamBuilder;

@@ -40,28 +40,23 @@ function GameModeCard(props: Props) {
   return (
     <GameModeCardsContainer
       onMouseOver={() => setOnHover(true)}
-      onMouseOut={() => setOnHover(false)}>
+      onMouseOut={() => setOnHover(false)}
+    >
       <GameModeCardsUpper>
         <GameModeCardsTitleBox>{props.mode}</GameModeCardsTitleBox>
-        {onHover && (
-          <GameModeCardsMain>
-            <GameModeCardsButton onClick={handle1v1Click}>
-              1 vs 1
-            </GameModeCardsButton>
-            <GameModeCardsButton onClick={handle2v2Click}>
-              2 vs 2
-            </GameModeCardsButton>
-          </GameModeCardsMain>
-        )}
+        <GameModeCardsMain>
+          <GameModeCardsButton onClick={handle1v1Click}>
+            1 vs 1
+          </GameModeCardsButton>
+          <GameModeCardsButton onClick={handle2v2Click}>
+            2 vs 2
+          </GameModeCardsButton>
+        </GameModeCardsMain>
       </GameModeCardsUpper>
-      {onHover && (
-        <GameModeCardsBottom>
-          <GameModeCardsGameTitle>
-            {props.mode}
-          </GameModeCardsGameTitle>
-          <GameModeCardsText>{props.description}</GameModeCardsText>
-        </GameModeCardsBottom>
-      )}
+      <GameModeCardsBottom>
+        <GameModeCardsGameTitle>{props.mode}</GameModeCardsGameTitle>
+        <GameModeCardsText>{props.description}</GameModeCardsText>
+      </GameModeCardsBottom>
     </GameModeCardsContainer>
   );
 }

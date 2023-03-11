@@ -11,6 +11,7 @@ export const COLORS = {
   purple: "#7c3296",
   white: "#ffffff",
   black: "#000000",
+  darkgrey: "#737373",
 };
 
 export const convertStatusColor = (status: string): string => {
