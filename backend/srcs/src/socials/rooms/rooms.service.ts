@@ -6,6 +6,7 @@ import { ParticipantService } from './participant/participant.service';
 import { Role } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
+import { SocialsGateway } from '../socials.gateway';
 
 @Injectable()
 export class RoomsService {
@@ -27,23 +28,29 @@ export class RoomsService {
         password: hash,
         avatar: '', //owner.avatar,
         isPrivate: createRoomDto.isPrivate,
-        ownerId: createRoomDto.ownerId,
+        // ownerId: createRoomDto.ownerId,
+        isDm: createRoomDto.isDm,
         type: 0,
         room: {
           create: createRoomDto.users.map((user) => ({
             user: { connect: { username: user } },
+            role: user === createRoomDto.ownerId ? Role.OWNER : Role.BASIC,
           })),
         },
+        owner: { connect: { id: createRoomDto.ownerId } },
       },
       include: {
         room: true,
+        owner: true,
       },
     });
 
-    await this.participant.create({
-      roomId: room.id,
-      userId: createRoomDto.ownerId,
-      role: Role.OWNER,
+    await this.prisma.participant.create({
+      data: {
+        userId: createRoomDto.ownerId,
+        roomId: room.id,
+        role: Role.OWNER,
+      },
     });
     return room;
   }
@@ -52,13 +59,16 @@ export class RoomsService {
     const list = await this.findRoomsForUser(userId);
 
     return Promise.all(
-      list.map(async (room) => {
+      list.flatMap(async (room) => {
         const lastMessage = await this.messageService.getLastMessage(room.id);
+
+        if (room.ownerId != userId && lastMessage == null)
+          return ;
 
         return {
           avatar: room.avatar,
           name: room.name,
-          lastMessage: lastMessage == null ? '' : lastMessage,
+          lastMessage: lastMessage == null ? '' : lastMessage.content,
         };
       }),
     );
@@ -103,5 +113,13 @@ export class RoomsService {
         },
       },
     });
+  }
+
+  async findConvHistory(roomName: string) {
+    const room = await this.findOneByName(roomName);
+    if (!room) return ; //error
+    
+    const messages = await this.messageService.getMessages(room.id);
+    return messages;
   }
 }

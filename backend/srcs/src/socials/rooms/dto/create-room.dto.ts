@@ -18,9 +18,14 @@ export class CreateRoomDto {
   @ApiProperty()
   isPrivate: boolean;
 
+  @IsNotEmpty()
+  @ApiProperty()
+  isDm: boolean;
+
   @ApiProperty()
   ownerId?: string;
 
   @ApiProperty()
   avatar?: string;
+
 }

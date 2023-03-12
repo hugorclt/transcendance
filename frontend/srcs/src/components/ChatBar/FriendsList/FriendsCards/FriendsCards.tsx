@@ -22,7 +22,6 @@ import { AxiosError, AxiosResponse } from "axios";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
-  const [openDD, setOpenDD] = useState(false);
   const { setOpenChat } = useContext(ChatContext);
   const axiosPrivate = useAxiosPrivate();
 
