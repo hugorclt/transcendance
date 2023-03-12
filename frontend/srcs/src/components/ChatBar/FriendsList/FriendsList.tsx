@@ -4,7 +4,6 @@ import { axiosPrivate } from "../../../services/axios";
 import { nanoid } from "nanoid";
 import { SocketContext } from "../../../services/Auth/SocketContext";
 import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
-import logo42 from "../../../assets/images/42.jpg";
 import FriendsCards from "./FriendsCards/FriendsCards";
 import { FriendsListBox } from "./FriendsListStyle";
 
@@ -16,7 +15,12 @@ function FriendsList() {
     setFriendList((prev) => {
       const index = prev.findIndex((friend) => friend.name === username);
       if (index !== -1) {
-        const updatedFriend = { ...prev[index], status: status, avatar: avatar, key: nanoid() };
+        const updatedFriend = {
+          ...prev[index],
+          status: status,
+          avatar: avatar,
+          key: nanoid(),
+        };
         return [
           ...prev.slice(0, index),
           updatedFriend,
@@ -25,7 +29,7 @@ function FriendsList() {
       } else {
         return [
           ...prev,
-          { key: nanoid(), name: username, status: status, avatar: avatar},
+          { key: nanoid(), name: username, status: status, avatar: avatar },
         ];
       }
     });
@@ -48,29 +52,32 @@ function FriendsList() {
         console.log("Error while fetching friendlist");
       });
 
-    socket?.on("on-status-update", (newStatus) => {
-      updateFriendList(
-        newStatus.status,
-        newStatus.username,
-        newStatus.avatar,
+    socket?.on("on-removed-friend", (friendRemoved) => {
+      setFriendList((prev) =>
+        prev.filter((friend) => friend.name !== friendRemoved)
       );
+    });
+
+    socket?.on("on-status-update", (newStatus) => {
+      updateFriendList(newStatus.status, newStatus.username, newStatus.avatar);
     });
     return () => {
       socket?.off("on-status-update");
+      socket?.off("on-removed-friend");
     };
   }, [socket]);
 
   return (
     <FriendsListBox>
       {friendList.map((val, index) => {
-      return (
-        <FriendsCards
-          key={nanoid()}
-          avatar={val.avatar}
-          name={val.name}
-          status={val.status}
-        />
-      );
+        return (
+          <FriendsCards
+            key={nanoid()}
+            avatar={val.avatar}
+            name={val.name}
+            status={val.status}
+          />
+        );
       })}
     </FriendsListBox>
   );

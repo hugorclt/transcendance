@@ -16,6 +16,8 @@ import { UserEntity } from './entities/user.entity';
 import { ReturnUserEntity } from './entities/return-user.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { Request } from '@nestjs/common';
+import { SocialsGateway } from 'src/socials/socials.gateway';
+import { RemoveFriendsDto } from './dto/remove-friend.dto';
 
 @Controller('users')
 @UseGuards(AccessAuthGard)
@@ -23,8 +25,8 @@ import { Request } from '@nestjs/common';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-  ) // private readonly socialGateway: SocialsGateway,
-  {}
+    private readonly socialGateway: SocialsGateway,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({ type: ReturnUserEntity })
@@ -70,11 +72,14 @@ export class UsersController {
       req.user.sub,
       req.body.status,
     );
-    // this.socialGateway.sendStatusUpdate({
-    //   userId: user.id,
-    //   username: user.username,
-    //   status: user.status,
-    // });
+    if (user) {
+      this.socialGateway.sendStatusUpdate({
+        userId: user.id,
+        username: user.username,
+        avatar: user.avatar,
+        status: user.status,
+      });
+    }
     return user;
   }
 
@@ -94,8 +99,17 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: ReturnUserEntity })
   remove(@Param('id') id: string): Promise<ReturnUserEntity> {
     return this.usersService.remove(id);
+  }
+
+  @Post('/friends/remove')
+  @ApiOkResponse({type: ReturnUserEntity })
+  async removeFriends(@Request() req, @Body() removeFriendsDto: RemoveFriendsDto) : Promise<ReturnUserEntity> {
+    const removed = await this.usersService.removeFriends(req.user.sub, removeFriendsDto.usernameToRemove);
+    this.socialGateway.removeFriend(req.user.sub, removeFriendsDto.usernameToRemove);
+    this.socialGateway.removeFriend(removed.id, req.user.username)
+    return removed;
   }
 }

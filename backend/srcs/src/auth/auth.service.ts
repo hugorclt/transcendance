@@ -124,11 +124,11 @@ export class AuthService {
 
     await this.prisma.user.update({
       where: {
-        id: user.id
+        id: user.id,
       },
       data: {
-        status: "CONNECTED"
-      }
+        status: 'CONNECTED',
+      },
     });
     this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
@@ -145,7 +145,7 @@ export class AuthService {
       },
       data: {
         refreshToken: null,
-        status : "DISCONNECTED",
+        status: 'DISCONNECTED',
       },
     });
   }
@@ -171,7 +171,7 @@ export class AuthService {
       sub: userId,
       username: user.username,
     });
-    return { access_token: newAt , username: user.username};
+    return { access_token: newAt, username: user.username };
   }
 
   /* -------------------------------------------------------------------------- */

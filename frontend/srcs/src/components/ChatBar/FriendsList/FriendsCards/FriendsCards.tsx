@@ -15,19 +15,27 @@ import {
   MiddleFriendsCardsBox,
   PopUpBox,
 } from "./FriendsCardsStyle";
-import { COLORS } from "../../../../colors";
+import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
   const [openDD, setOpenDD] = useState(false);
   const { setOpenChat } = useContext(ChatContext);
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    if (props.status == "CONNECTED") setColor("#19e650");
-    else if (props.status == "AWAY") setColor("#e6b319");
-    else setColor("#8a8a8a");
+    setColor(convertStatusColor(props.status));
   }, []);
+
+  const handleRemove = () => {
+    axiosPrivate
+      .post("/users/friends/remove", { usernameToRemove: props.name })
+      .then((res: AxiosResponse) => console.log("user succesfully removed"))
+      .catch((err: AxiosError) => console.log("failed to remove", err));
+  };
 
   return (
     <FriendsCardsBox>
@@ -45,7 +53,7 @@ function FriendsCards(props: TFriendsProps) {
       </LeftFriendsCardsBox>
       <Popup
         position="left center"
-        arrowStyle={{color:COLORS.background}}
+        arrowStyle={{ color: COLORS.background }}
         trigger={
           <FriendsPopUpButton>
             <BsThreeDotsVertical
@@ -55,9 +63,16 @@ function FriendsCards(props: TFriendsProps) {
           </FriendsPopUpButton>
         }>
         <PopUpBox>
-          <InsidePopUpButton onClick={() => {setOpenChat(props.name)}}>Send message</InsidePopUpButton>
+          <InsidePopUpButton
+            onClick={() => {
+              setOpenChat(props.name);
+            }}>
+            Send message
+          </InsidePopUpButton>
           <InsidePopUpButton>Block friends</InsidePopUpButton>
-          <InsidePopUpButton>Remove friends</InsidePopUpButton>
+          <InsidePopUpButton onClick={handleRemove}>
+            Remove friends
+          </InsidePopUpButton>
         </PopUpBox>
       </Popup>
     </FriendsCardsBox>

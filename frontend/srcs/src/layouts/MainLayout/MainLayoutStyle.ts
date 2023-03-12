@@ -8,9 +8,18 @@ export const MainLayoutStyle = styled.div`
 
 export const MainLayoutContainer = styled.main`
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const ChatLayoutContainer = styled.div`
   width: 270px;
-  background-color: #19191A;
+  background-color: #19191a;
+`;
+
+export const NavBarLayoutContainer = styled.div`
+  display: flex;
+  width: full;
+  height: 98px;
+  background-color: #19191a;
 `;

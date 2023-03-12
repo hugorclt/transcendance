@@ -7,7 +7,6 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpModule } from '@nestjs/axios';
 import { LobbiesModule } from './lobbies/lobbies.module';
-import { LobbyParticipantsModule } from './lobbies/lobby-participants/lobby-participants.module';
 import { RoomsModule } from './socials/rooms/rooms.module';
 import { ParticipantModule } from './socials/rooms/participant/participant.module';
 import { SocialsModule } from './socials/socials.module';
@@ -25,7 +24,6 @@ import { ItemsModule } from './items/items.module';
     SocialsModule,
     MessagesModule,
     LobbiesModule,
-    LobbyParticipantsModule,
     ItemsModule,
   ],
   controllers: [AppController],
