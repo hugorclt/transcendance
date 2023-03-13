@@ -20,7 +20,20 @@ export class RoomsService {
   async create(createRoomDto: CreateRoomDto) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createRoomDto.password, salt);
-    const owner = await this.usersService.findOne(createRoomDto.ownerId);
+    // const owner = await this.usersService.findOne(createRoomDto.ownerId);
+
+    if (createRoomDto.isDm == true)
+    {
+      // create room name
+      const id1 = await this.usersService.findOneByUsername(createRoomDto.users[0])  // ID of the target
+      const id2 = createRoomDto.ownerId;
+      const concatenatedID = this.concatenateID(id1.id ,id2);
+
+      const roomExists = await this.findOne(concatenatedID);
+      if (roomExists !== null)
+        return roomExists; // end the process of creation if the room exits
+      createRoomDto.name = concatenatedID;
+    }
 
     const room = await this.prisma.room.create({
       data: {
@@ -140,5 +153,12 @@ export class RoomsService {
         };
       }),
     );
+  }
+
+
+  // UTILS
+ concatenateID(id1 : string, id2 : string) {
+    const sortedIds = [id1, id2].sort();
+    return sortedIds.join("");
   }
 }
