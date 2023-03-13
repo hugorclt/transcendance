@@ -22,7 +22,6 @@ import { AxiosError, AxiosResponse } from "axios";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
-  const [openDD, setOpenDD] = useState(false);
   const { setOpenChat } = useContext(ChatContext);
   const axiosPrivate = useAxiosPrivate();
 
@@ -63,12 +62,12 @@ function FriendsCards(props: TFriendsProps) {
           </FriendsPopUpButton>
         }>
         <PopUpBox>
-          <InsidePopUpButton
+          {/* <InsidePopUpButton
             onClick={() => {
               setOpenChat(props.name);
             }}>
             Send message
-          </InsidePopUpButton>
+          </InsidePopUpButton> */}
           <InsidePopUpButton>Block friends</InsidePopUpButton>
           <InsidePopUpButton onClick={handleRemove}>
             Remove friends

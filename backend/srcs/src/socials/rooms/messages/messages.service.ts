@@ -41,4 +41,19 @@ export class MessagesService {
       },
     });
   }
+
+  async getMessages(roomdId: string) {
+    return await this.prisma.message.findMany({
+      where: {
+        roomId: roomdId,
+      },
+      orderBy: {
+        date: 'asc',
+      },
+      include: {
+        sender: true,
+        room: true,
+      },
+    });
+  }
 }

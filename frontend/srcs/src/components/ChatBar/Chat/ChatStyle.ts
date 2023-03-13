@@ -7,8 +7,8 @@ export const ChatTabContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: ${COLORS.secondary};
-  opacity: 80%;
+  background-color: ${COLORS.background};
+  /* opacity: 100%; */
 `;
 
 export const ChatForm = styled.form`
@@ -18,7 +18,7 @@ export const ChatForm = styled.form`
 `;
 
 export const ChatMessageContainer = styled.form`
-  background-color: ${COLORS.secondary};
+  background-color: ${COLORS.background};
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -37,15 +37,15 @@ export const ChatInput = styled.input`
 `;
 
 export const MessageLine = styled.div`
-  width: 70%;
+  width: 100%;
   display: flex;
-  background-color: ${COLORS.secondary};
+  background-color: ${COLORS.background};
   padding: 4px;
 `;
 
 export const MessageBox = styled.div`
-  width: 100%;
-  background-color: ${COLORS.background};
+  width: 70%;
+  background-color: ${COLORS.secondary};
   border-radius: 5px;
   padding: 8px;
 `;
@@ -59,7 +59,7 @@ export const ChatTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${COLORS.secondary};
+  background-color: ${COLORS.background};
   padding: 8px;
 `
 
@@ -67,7 +67,7 @@ export const ChatMiddle = styled.div`
   display:flex;
   justify-content: start;
   align-items: center;
-  background-color: ${COLORS.secondary};
+  background-color: ${COLORS.background};
 `
 
 export const ChatIcon = styled.img`
@@ -78,7 +78,7 @@ export const ChatIcon = styled.img`
 `
 
 export const ChatTitle = styled.h3`
-  color: ${COLORS.background};
-  background-color: ${COLORS.secondary};
+  color: ${COLORS.primary};
+  background-color: ${COLORS.background};
   margin-right:4px;
 `

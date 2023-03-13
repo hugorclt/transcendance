@@ -14,6 +14,8 @@ import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filt
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { UsersService } from 'src/users/users.service';
 import { User } from '@prisma/client';
+import { RoomsService } from './rooms/rooms.service';
+import { MessagesService } from './rooms/messages/messages.service';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -23,7 +25,11 @@ import { User } from '@prisma/client';
 export class SocialsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private roomService: RoomsService,
+    private messageService: MessagesService,
+  ) {}
 
   @WebSocketServer()
   public io: Namespace;
@@ -41,10 +47,18 @@ export class SocialsGateway
       'on-status-update',
       { username: user.username, avatar: user.avatar, status: user.status },
     );
+    const rooms = await this.roomService.findRoomsForUser(client.userId);
+    rooms.map((room) => {
+      client.join(room.id);
+    });
   }
 
   async handleDisconnect(client: AuthSocket) {
     client.leave(client.userId);
+    const rooms = await this.roomService.findRoomsForUser(client.userId);
+    rooms.map((room) => {
+      client.leave(room.id);
+    });
   }
 
   async sendStatusUpdate(user: {
@@ -95,6 +109,33 @@ export class SocialsGateway
     });
   }
 
+  @SubscribeMessage('new-message')
+  async newMessage(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody() payload: { message: string; roomName: string },
+  ) {
+    const sender = await this.usersService.findOne(client.userId);
+    if (!sender) return; //throw error not found
+    const room = await this.roomService.findOneByName(payload.roomName);
+    if (!room) return; // throw error not found
+    await this.messageService.create({
+      content: payload.message,
+      senderId: sender.id,
+      roomId: room.id,
+    });
+    this.io.to(room.id).emit('on-new-message', {
+      sender: sender.username,
+      message: payload.message,
+      roomName: payload.roomName,
+    });
+
+    this.io.to(room.id).emit('on-chat-update', {
+      avatar: room.avatar,
+      name: room.name,
+      lastMessage: payload.message,
+    });
+  }
+
   emitToUser(receiverId: string, eventName: string, data: any) {
     this.io.to(receiverId).emit(eventName, data);
   }
@@ -106,6 +147,36 @@ export class SocialsGateway
   }
 
   removeFriend(removerId: string, friendRemoved: string) {
-    this.emitToUser(removerId, "on-removed-friend", friendRemoved);
+    this.emitToUser(removerId, 'on-removed-friend', friendRemoved);
+  }
+
+  addChatToHistory(
+    ownerId: string,
+    roomName: string,
+    lastMessage: string,
+    avatar: string,
+  ) {
+    this.emitToUser(ownerId, 'on-chat-update', {
+      avatar: avatar,
+      name: roomName,
+      lastMessage: lastMessage,
+    });
+  }
+
+  async joinUserToRoom(room: any, users: string[]) {
+    const owner = await this.usersService.findOne(room.ownerId);
+    users.push(owner.username);
+    users.map(async (user) => {
+      const participant = await this.usersService.findOneByUsername(user);
+      if (!participant) return; //error not found
+      const socketId = (
+        await this.io.adapter.sockets(new Set([participant.id]))
+      )
+        .values()
+        .next().value;
+      if (!socketId) return;
+      const socket = this.io.sockets.get(socketId);
+      socket.join(room.id);
+    });
   }
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { ChatContext } from "../../../../views/ChatPage/ChatContext";
 import { ChatCardsBox, ChatCardsLastMessage, ChatCardsMiddle, ChatCardsName, ChatCardsRoundedAvatar } from "./ChatCardsStyle";
 
@@ -20,7 +20,7 @@ function ChatCards(props: {
       <ChatCardsRoundedAvatar src={props.avatar}/>
       <ChatCardsMiddle>
         <ChatCardsName>{props.roomName}</ChatCardsName>
-        <ChatCardsLastMessage>{props.lastMessage}</ChatCardsLastMessage>
+        <ChatCardsLastMessage>{props.lastMessage.length >= 20 ? props.lastMessage.substring(0, 20) + "..." : props.lastMessage}</ChatCardsLastMessage>
       </ChatCardsMiddle>
     </ChatCardsBox>
   );

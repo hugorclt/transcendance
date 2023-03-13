@@ -39,6 +39,7 @@ function CreateRoom() {
       password: password,
       users: users,
       isPrivate: isPrivate,
+      isDm: false,
     }).then((res: AxiosResponse) => {
       console.log("Room succesfully created\n", res.data);
     }).catch((err: AxiosError) => {
