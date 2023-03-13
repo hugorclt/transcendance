@@ -109,38 +109,13 @@ export class SocialsGateway
     });
   }
 
-  async sendDm(
-    sender: any,
-    @MessageBody() payload: { message: string; roomName: string },
-  ): Promise<boolean> {
-    const friendOfUser = await this.usersService.getUserFriends(sender.id);
-    const friend = friendOfUser.find(
-      (friend) => friend.name == payload.roomName,
-    );
-    if (friend) {
-      this.emitToUser(friend.id, 'on-new-message', {
-        sender: sender.username,
-        message: payload.message,
-        roomName: payload.roomName,
-      });
-      this.emitToUser(sender.id, 'on-new-message', {
-        sender: sender.username,
-        message: payload.message,
-        roomName: payload.roomName,
-      });
-      return true;
-    }
-    return false;
-  }
-
   @SubscribeMessage('new-message')
   async newMessage(
     @ConnectedSocket() client: AuthSocket,
     @MessageBody() payload: { message: string; roomName: string },
   ) {
-    console.log("cc")
     const sender = await this.usersService.findOne(client.userId);
-    if (await this.sendDm(sender, payload)) return;
+    if (!sender) return; //throw error not found
     const room = await this.roomService.findOneByName(payload.roomName);
     if (!room) return; // throw error not found
     await this.messageService.create({
@@ -148,13 +123,17 @@ export class SocialsGateway
       senderId: sender.id,
       roomId: room.id,
     });
-    this.io
-      .to(room.id)
-      .emit('on-new-message', {
-        sender: sender.username,
-        message: payload.message,
-        roomName: payload.roomName,
-      });
+    this.io.to(room.id).emit('on-new-message', {
+      sender: sender.username,
+      message: payload.message,
+      roomName: payload.roomName,
+    });
+
+    this.io.to(room.id).emit('on-chat-update', {
+      avatar: room.avatar,
+      name: room.name,
+      lastMessage: payload.message,
+    });
   }
 
   emitToUser(receiverId: string, eventName: string, data: any) {
@@ -181,6 +160,23 @@ export class SocialsGateway
       avatar: avatar,
       name: roomName,
       lastMessage: lastMessage,
+    });
+  }
+
+  async joinUserToRoom(room: any, users: string[]) {
+    const owner = await this.usersService.findOne(room.ownerId);
+    users.push(owner.username);
+    users.map(async (user) => {
+      const participant = await this.usersService.findOneByUsername(user);
+      if (!participant) return; //error not found
+      const socketId = (
+        await this.io.adapter.sockets(new Set([participant.id]))
+      )
+        .values()
+        .next().value;
+      if (!socketId) return;
+      const socket = this.io.sockets.get(socketId);
+      socket.join(room.id);
     });
   }
 }

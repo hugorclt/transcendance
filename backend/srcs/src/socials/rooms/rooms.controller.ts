@@ -29,6 +29,7 @@ export class RoomsController {
     createRoomDto.ownerId = creatorId;
     const room = await this.roomsService.create(createRoomDto);
     this.socialGateway.addChatToHistory(room.ownerId, room.name, "", room.avatar);
+    this.socialGateway.joinUserToRoom(room, createRoomDto.users);
     return { roomId: room.id };
   }
 

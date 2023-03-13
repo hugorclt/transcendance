@@ -37,7 +37,8 @@ function ChatHistory() {
       if (index !== -1) {
         const updatedFriend = {
           ...prev[index],
-          status: status,
+          lastMessage: lastMessage,
+          name: name,
           avatar: avatar,
           key: nanoid(),
         };
