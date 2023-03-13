@@ -62,12 +62,12 @@ function FriendsCards(props: TFriendsProps) {
           </FriendsPopUpButton>
         }>
         <PopUpBox>
-          {/* <InsidePopUpButton
+          <InsidePopUpButton
             onClick={() => {
               setOpenChat(props.name);
             }}>
             Send message
-          </InsidePopUpButton> */}
+          </InsidePopUpButton>
           <InsidePopUpButton>Block friends</InsidePopUpButton>
           <InsidePopUpButton onClick={handleRemove}>
             Remove friends

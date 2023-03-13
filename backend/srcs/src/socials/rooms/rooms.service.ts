@@ -62,8 +62,7 @@ export class RoomsService {
       list.flatMap(async (room) => {
         const lastMessage = await this.messageService.getLastMessage(room.id);
 
-        if (room.ownerId != userId && lastMessage == null)
-          return ;
+        if (room.ownerId != userId && lastMessage == null) return;
 
         return {
           avatar: room.avatar,
@@ -117,9 +116,29 @@ export class RoomsService {
 
   async findConvHistory(roomName: string) {
     const room = await this.findOneByName(roomName);
-    if (!room) return ; //error
-    
+    if (!room) return; //error
+
     const messages = await this.messageService.getMessages(room.id);
     return messages;
+  }
+
+  async getParticipantsInRoom(roomName: string) {
+    const room = await this.findOneByName(roomName);
+    const participants = await this.prisma.participant.findMany({
+      where: {
+        roomId: room.id,
+      },
+    });
+
+    return await Promise.all(
+      participants.map(async (participant) => {
+        const user = await this.usersService.findOne(participant.userId);
+        return {
+          name: user.username,
+          status: user.status,
+          role: participant.role,
+        };
+      }),
+    );
   }
 }

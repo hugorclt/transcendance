@@ -9,13 +9,15 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Namespace } from 'socket.io';
-import { Injectable, UseFilters } from '@nestjs/common';
+import { Injectable, NotFoundException, UseFilters } from '@nestjs/common';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { UsersService } from 'src/users/users.service';
 import { User } from '@prisma/client';
 import { RoomsService } from './rooms/rooms.service';
 import { MessagesService } from './rooms/messages/messages.service';
+import { NotFoundError } from 'rxjs';
+import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -115,9 +117,9 @@ export class SocialsGateway
     @MessageBody() payload: { message: string; roomName: string },
   ) {
     const sender = await this.usersService.findOne(client.userId);
-    if (!sender) return; //throw error not found
+    if (!sender) throw new WsNotFoundException("Sender not found");
     const room = await this.roomService.findOneByName(payload.roomName);
-    if (!room) return; // throw error not found
+    if (!room) throw new WsNotFoundException("Room not found");
     await this.messageService.create({
       content: payload.message,
       senderId: sender.id,
@@ -168,7 +170,7 @@ export class SocialsGateway
     users.push(owner.username);
     users.map(async (user) => {
       const participant = await this.usersService.findOneByUsername(user);
-      if (!participant) return; //error not found
+      if (!participant) throw new WsNotFoundException("Participant can't join the room, refresh the page")
       const socketId = (
         await this.io.adapter.sockets(new Set([participant.id]))
       )

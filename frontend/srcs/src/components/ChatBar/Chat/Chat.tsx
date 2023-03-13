@@ -21,6 +21,7 @@ import {
   ChatTop,
   ChatIcon,
   ChatTitle,
+  ChatBody,
 } from "./ChatStyle";
 import { TMessage } from "./ChatType";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -29,11 +30,15 @@ import { logo42 } from "../../../assets/images/42.jpg";
 import { AiOutlineClose } from "react-icons/ai";
 import { nanoid } from "nanoid";
 import { ChatContext } from "../../../views/ChatPage/ChatContext";
+import LeftSideChat from "./LeftSideChat/LeftSideChat";
+import { ChatManagerOpen } from "../../../views/ChatPage/ChatManagerOpen";
+import { FaUserFriends } from "react-icons/fa";
 
 function Chat(props: { name: string }) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
   const { openChat, setOpenChat } = useContext(ChatContext);
+  const { openManager, setOpenManager } = useContext(ChatManagerOpen);
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
@@ -121,37 +126,44 @@ function Chat(props: { name: string }) {
   };
 
   return (
-    <ChatTabContainer>
-      <ChatTop>
-        <ChatMiddle>
-          <ChatIcon src="" />
-          <ChatTitle>{props.name.toLocaleUpperCase()}</ChatTitle>
-          <BsThreeDotsVertical style={{ color: COLORS.background }} size={22} />
-        </ChatMiddle>
-        <AiOutlineClose
-          onClick={() => {
-            setOpenChat("");
-          }}
-          style={{ color: COLORS.background }}
-          size={22}
-        />
-      </ChatTop>
-      <ChatMessageContainer ref={messageBoxRef}>
-        {messageList.map((val, index) => {
-          return renderMessage(val, index);
-        })}
-      </ChatMessageContainer>
-      <ChatForm onSubmit={sendMessage} autoComplete="off">
-        <ChatInput
-          placeholder="send a message here..."
-          value={message}
-          onChange={(e) => {
-            setMessage(e.target.value);
-          }}
-          type="text"
-        />
-      </ChatForm>
-    </ChatTabContainer>
+    <ChatBody>
+      {openManager && <LeftSideChat name={props.name} />}
+      <ChatTabContainer>
+        <ChatTop>
+          <ChatMiddle>
+            <ChatIcon src="" />
+            <ChatTitle>{props.name.toLocaleUpperCase()}</ChatTitle>
+            <FaUserFriends
+              onClick={() => setOpenManager(!openManager)}
+              style={{ color: COLORS.secondary }}
+              size={22}
+            />
+          </ChatMiddle>
+          <AiOutlineClose
+            onClick={() => {
+              setOpenChat("");
+            }}
+            style={{ color: COLORS.secondary }}
+            size={22}
+          />
+        </ChatTop>
+        <ChatMessageContainer ref={messageBoxRef}>
+          {messageList.map((val, index) => {
+            return renderMessage(val, index);
+          })}
+        </ChatMessageContainer>
+        <ChatForm onSubmit={sendMessage} autoComplete="off">
+          <ChatInput
+            placeholder="send a message here..."
+            value={message}
+            onChange={(e) => {
+              setMessage(e.target.value);
+            }}
+            type="text"
+          />
+        </ChatForm>
+      </ChatTabContainer>
+    </ChatBody>
   );
 }
 

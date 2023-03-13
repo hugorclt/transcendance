@@ -44,4 +44,10 @@ export class RoomsController {
   async getHistoryRoom(@Request() req) {
     return await this.roomsService.findConvHistory(req.body.roomName)
   }
+
+  @Post("/participants")
+  async getParticipantsInRoom(@Request() req) {
+    const test = await this.roomsService.getParticipantsInRoom(req.body.roomName);
+    return (test);
+  }
 }

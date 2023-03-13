@@ -1,14 +1,19 @@
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 
-export const ChatTabContainer = styled.div`
+export const ChatBody = styled.div`
+  display:flex;
   width: 370px;
   height: 450px;
+`
+
+export const ChatTabContainer = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: ${COLORS.background};
-  /* opacity: 100%; */
 `;
 
 export const ChatForm = styled.form`
@@ -75,6 +80,7 @@ export const ChatIcon = styled.img`
   height:42px;
   border-radius:21px;
   margin-right:8px;
+  margin: 0px 8px;
 `
 
 export const ChatTitle = styled.h3`
