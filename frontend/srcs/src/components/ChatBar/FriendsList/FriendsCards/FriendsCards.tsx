@@ -17,15 +17,25 @@ import {
 } from "./FriendsCardsStyle";
 import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
 
 function FriendsCards(props: TFriendsProps) {
   const [color, setColor] = useState("");
   const [openDD, setOpenDD] = useState(false);
   const { setOpenChat } = useContext(ChatContext);
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     setColor(convertStatusColor(props.status));
   }, []);
+
+  const handleRemove = () => {
+    axiosPrivate
+      .post("/users/friends/remove", { usernameToRemove: props.name })
+      .then((res: AxiosResponse) => console.log("user succesfully removed"))
+      .catch((err: AxiosError) => console.log("failed to remove", err));
+  };
 
   return (
     <FriendsCardsBox>
@@ -51,18 +61,18 @@ function FriendsCards(props: TFriendsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }
-      >
+        }>
         <PopUpBox>
           <InsidePopUpButton
             onClick={() => {
               setOpenChat(props.name);
-            }}
-          >
+            }}>
             Send message
           </InsidePopUpButton>
           <InsidePopUpButton>Block friends</InsidePopUpButton>
-          <InsidePopUpButton>Remove friends</InsidePopUpButton>
+          <InsidePopUpButton onClick={handleRemove}>
+            Remove friends
+          </InsidePopUpButton>
         </PopUpBox>
       </Popup>
     </FriendsCardsBox>

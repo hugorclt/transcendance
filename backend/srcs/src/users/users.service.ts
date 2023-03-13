@@ -14,6 +14,7 @@ import { Status, Type } from '@prisma/client';
 import { exclude } from 'src/utils/exclude';
 import { UserEntity } from './entities/user.entity';
 import { ReturnUserEntity } from './entities/return-user.entity';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class UsersService {
@@ -165,6 +166,42 @@ export class UsersService {
     await this.prisma.user.update({
       where: { id: userId2 },
       data: { friends: { connect: { id: userId1 } } },
+    });
+  }
+
+  async removeFriends(
+    userId: string,
+    usernameToRemove: string,
+  ): Promise<ReturnUserEntity> {
+    const remover = await this.prisma.user.findUnique({
+      where: {id: userId},
+      include: {friends: true},
+    })
+
+    const removed = await this.prisma.user.findUnique({
+      where: {username: usernameToRemove},
+      include: {friends: true},
+    })
+
+    this.removeOneRelation(remover, removed);
+    this.removeOneRelation(removed, remover);
+    return exclude(removed, ['password', 'type', 'refreshToken']);
+  }
+
+  async removeOneRelation(remover: any, removed: any) {
+    if (!remover) throw new NotFoundException('Remover not found');
+    if (!removed) throw new NotFoundException('Removed not found');
+
+    const friend = remover.friends.find(
+      (friend) => friend.id === removed.id,
+    );
+    if (!friend) throw new NotFoundException('Friend not found');
+
+    await this.prisma.user.update({
+      where: { id: remover.id },
+      data: {
+        friends: { disconnect: { id: friend.id } },
+      },
     });
   }
 

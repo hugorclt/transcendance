@@ -104,4 +104,8 @@ export class SocialsGateway
       this.emitToUser(user.id, eventName, data);
     });
   }
+
+  removeFriend(removerId: string, friendRemoved: string) {
+    this.emitToUser(removerId, "on-removed-friend", friendRemoved);
+  }
 }

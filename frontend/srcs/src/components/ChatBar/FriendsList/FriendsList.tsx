@@ -52,11 +52,18 @@ function FriendsList() {
         console.log("Error while fetching friendlist");
       });
 
+    socket?.on("on-removed-friend", (friendRemoved) => {
+      setFriendList((prev) =>
+        prev.filter((friend) => friend.name !== friendRemoved)
+      );
+    });
+
     socket?.on("on-status-update", (newStatus) => {
       updateFriendList(newStatus.status, newStatus.username, newStatus.avatar);
     });
     return () => {
       socket?.off("on-status-update");
+      socket?.off("on-removed-friend");
     };
   }, [socket]);
 
