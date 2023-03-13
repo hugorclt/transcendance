@@ -1,5 +1,11 @@
 import { AxiosError, AxiosResponse } from "axios";
-import React, { FormEvent, useContext, useEffect, useState } from "react";
+import React, {
+  FormEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { GlobalContext } from "../../../services/Global/GlobalProvider";
 import { SocketContext } from "../../../services/Auth/SocketContext";
@@ -31,6 +37,7 @@ function Chat(props: { name: string }) {
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
+  const messageBoxRef = useRef<null | HTMLFormElement>(null);
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
@@ -40,7 +47,6 @@ function Chat(props: { name: string }) {
 
   useEffect(() => {
     socket?.on("on-new-message", (newMessage: TMessage) => {
-      console.log("msg", newMessage, "props: ", props.name);
       if (newMessage.roomName === props.name) {
         setMessageList((prev) => {
           return [...prev, newMessage];
@@ -71,11 +77,21 @@ function Chat(props: { name: string }) {
     return () => {
       setMessageList([]);
     };
-  }, []);
+  }, [props.name]);
+
+  useEffect(() => {
+    if (messageBoxRef && messageBoxRef.current) {
+      const element = messageBoxRef.current;
+      element.scroll({
+        top: element.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [messageList]);
 
   const renderMessage = (msg: any, index: any) => {
     const isMe = msg.sender === auth.username;
-    console.log(isMe);
     const sender = isMe ? (
       <div className="sender">You</div>
     ) : (
@@ -88,10 +104,7 @@ function Chat(props: { name: string }) {
         style={{
           justifyContent: isMe ? "flex-end" : "flex-start",
         }}>
-          <div style={{color: COLORS.primary}}>
-            {sender}
-
-          </div>
+        <div style={{ color: COLORS.primary }}>{sender}</div>
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
@@ -123,7 +136,7 @@ function Chat(props: { name: string }) {
           size={22}
         />
       </ChatTop>
-      <ChatMessageContainer>
+      <ChatMessageContainer ref={messageBoxRef}>
         {messageList.map((val, index) => {
           return renderMessage(val, index);
         })}
