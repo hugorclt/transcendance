@@ -65,9 +65,21 @@ export class RoomsService {
         if (room.ownerId != userId && lastMessage == null) return;
 
         return {
+          id: room.id,
           avatar: room.avatar,
           name: room.name,
           lastMessage: lastMessage == null ? '' : lastMessage.content,
+          isDm: room.isDm,
+          participant: Promise.all(
+            room.room.map(async (participant) => {
+              return {
+                id: participant.id,
+                role: participant.role,
+                name: (await this.usersService.findOne(participant.userId))
+                  .username,
+              };
+            }),
+          ),
         };
       }),
     );
@@ -111,6 +123,7 @@ export class RoomsService {
           },
         },
       },
+      include: { room: true },
     });
   }
 

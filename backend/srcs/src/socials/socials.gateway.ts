@@ -135,9 +135,10 @@ export class SocialsGateway
     });
 
     this.io.to(room.id).emit('on-chat-update', {
-      avatar: room.avatar,
-      name: room.name,
+      id: room.id,
       lastMessage: payload.message,
+      name: room.name,
+      avatar: room.avatar,
     });
   }
 
@@ -160,8 +161,10 @@ export class SocialsGateway
     roomName: string,
     lastMessage: string,
     avatar: string,
+    roomId: string,
   ) {
     this.emitToUser(ownerId, 'on-chat-update', {
+      id: roomId,
       avatar: avatar,
       name: roomName,
       lastMessage: lastMessage,

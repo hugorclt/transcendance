@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { ChatHistoryContext } from "../../../../views/ChatPage/ChatHistoryContext";
 import {
   StyledButton,
   StyledInput,
@@ -18,8 +17,6 @@ function JoinRoom() {
   const [name, setName] = useState("");
   const [isPrivate, setPrivate] = useState(false);
   const [password, setPassword] = useState("");
-  const { chatHistory, setChatHistory } = useContext(ChatHistoryContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const handleCheck = () => {
     setPrivate(!isPrivate);

@@ -16,7 +16,6 @@ function FriendProvider({ children }: { children: ReactNode }) {
     axiosPrivate
       .get("users/friends")
       .then((res: AxiosResponse) => {
-        console.log("data:", res.data);
         setFriendList(res.data);
       })
       .catch((err: AxiosError) => {
