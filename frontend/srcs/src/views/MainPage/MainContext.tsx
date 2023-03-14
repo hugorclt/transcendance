@@ -1,43 +1,9 @@
-import React, {
-  useState,
-  createContext,
-  Dispatch,
-  ReactNode,
-  useContext,
-} from "react";
-import {
-  TFriend,
-  TFriendListContext,
-  TMainPageContext,
-  TUser,
-  TUserContext,
-} from "./MainContextTypes";
+import React, { useState, createContext, ReactNode, useContext } from "react";
+import { TFriend, TMainPageContext, TUser } from "./MainContextTypes";
 import { useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
-
-const defaultUser = {
-  user: {
-    id: "",
-    username: "",
-    avatar: "",
-    email: "",
-    status: "",
-    balance: 0,
-  },
-  setUser: () => {},
-};
-
-const defaultFriendList = {
-  friendList: [],
-  setFriendList: () => {},
-};
-
-const defaultMain = {
-  selectedPage: 0,
-  setSelectedPage: () => {},
-};
 
 const defaultValue = {
   selectedPage: 0,
@@ -55,10 +21,7 @@ const defaultValue = {
   setUser: () => {},
 };
 
-export const MainContext = createContext<TMainPageContext>(defaultMain);
-export const UserContext = createContext<TUserContext>(defaultUser);
-export const FriendListContext =
-  createContext<TFriendListContext>(defaultFriendList);
+export const MainContext = createContext<TMainPageContext>(defaultValue);
 
 type MainProviderProps = {
   children: ReactNode;

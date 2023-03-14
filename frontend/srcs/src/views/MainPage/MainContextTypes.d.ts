@@ -1,16 +1,10 @@
 export interface TMainPageContext {
   selectedPage: number;
   setSelectedPage: Dispatch<React.SetStateAction<number>>;
-}
-
-export interface TUserContext {
-  user: TUser;
-  setUser: Dispatch<React.SetStateAction<TUser>>;
-}
-
-export interface TFriendListContext {
   friendList: TFriend[];
   setFriendList: Dispatch<React.SetStateAction<TFriend[]>>;
+  user: TUser;
+  setUser: Dispatch<React.SetStateAction<TUser>>;
 }
 
 export interface TUser {
