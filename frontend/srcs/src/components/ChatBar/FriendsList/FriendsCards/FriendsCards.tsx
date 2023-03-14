@@ -21,13 +21,8 @@ import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 
 function FriendsCards(props: TFriendsProps) {
-  const [color, setColor] = useState("");
   const { setOpenChat } = useContext(ChatContext);
   const axiosPrivate = useAxiosPrivate();
-
-  useEffect(() => {
-    setColor(convertStatusColor(props.status));
-  }, []);
 
   const handleRemove = () => {
     axiosPrivate
@@ -42,7 +37,9 @@ function FriendsCards(props: TFriendsProps) {
         <FriendsCardsAvatar src="" /> {/* toaddavatar */}
         <MiddleFriendsCardsBox>
           <FriendsCardsName>
-            <FriendsCardsStatusRound style={{ backgroundColor: color }} />
+            <FriendsCardsStatusRound
+              style={{ backgroundColor: convertStatusColor(props.status) }}
+            />
             {props.name.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>

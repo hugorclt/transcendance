@@ -19,6 +19,7 @@ import RequireStatus from "./services/Status/RequireStatus";
 import RequireInGameStatus from "./services/Status/RequireInGameStatus";
 import RequireUnAuth from "./services/Auth/RequiredUnAuth";
 import ProvideSocket from "./services/Auth/ProvideSocket";
+import MainPage from "./views/MainPage/MainPage";
 
 function App() {
   return (
@@ -33,11 +34,13 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route element={<ProvideSocket />}>
             <Route element={<RequireStatus/>}>
-                <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
-                <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
-                <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-                <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
-                <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
+              <Route element={<MainPage />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/shop" element={<ShopPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/lobby" element={<LobbyPage />} />
+                <Route path="/leaderboards" element={<LeaderboardsPage />} />
+              </Route>
             </Route>
             <Route element={<RequireInGameStatus />}>
               <Route path="/game" element={<GamePage />} />

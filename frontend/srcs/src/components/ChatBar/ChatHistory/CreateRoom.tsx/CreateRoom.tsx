@@ -62,7 +62,7 @@ function CreateRoom() {
     <CreateRoomBox>
       <CreateRoomTitle>CREATE ROOM</CreateRoomTitle>
       <CreateRoomForm onSubmit={handleSubmit}>
-        <div>
+        {/* <div>
           {friendList.map((val, index) => {
             return (
               <div key={index} onClick={() => handleAddFriends(val.name)}>
@@ -72,7 +72,7 @@ function CreateRoom() {
               </div>
             );
           })}
-        </div>
+        </div> */}
         <CreateRoomLabel htmlFor="name">Room name</CreateRoomLabel>
         <StyledInput
           name="name"

@@ -213,7 +213,14 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return user.friends;
+    return user.friends.map((friend) => {
+      return ({
+        id: friend.id,
+        username: friend.username,
+        status: friend.status,
+        avatar: friend.avatar
+      })
+    });
   }
 
   async getUsers(userId: string[]) {

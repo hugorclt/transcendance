@@ -47,7 +47,7 @@ export class SocialsGateway
     this.emitToList(
       await this.usersService.getUserFriends(client.userId),
       'on-status-update',
-      { username: user.username, avatar: user.avatar, status: user.status },
+      { username: user.username, avatar: user.avatar, status: user.status, id: user.id },
     );
     const rooms = await this.roomService.findRoomsForUser(client.userId);
     rooms.map((room) => {
@@ -74,6 +74,7 @@ export class SocialsGateway
       username: user.username,
       avatar: user.avatar,
       status: user.status,
+      id: user.userId,
     });
     this.emitToUser(user.userId, 'on-self-status-update', user.status);
   }
@@ -101,11 +102,13 @@ export class SocialsGateway
     else return;
     this.emitToUser(asker.id, 'on-status-update', {
       username: client.username,
+      id: client.id,
       status: replyer.status,
       avatar: replyer.avatar,
     });
     this.emitToUser(client.id, 'on-status-update', {
       username: asker.username,
+      id: client.id,
       status: asker.status,
       avatar: replyer.avatar,
     });
