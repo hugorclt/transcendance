@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { TFriendsProps } from "./FriendsType";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { IconContext } from "react-icons/lib";
 import { ChatContext } from "../../../../views/ChatPage/ChatContext";
 import {
   FriendsCardsAvatar,
@@ -19,8 +17,9 @@ import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { TFriend } from "../../../../views/MainPage/MainContextTypes";
 
-function FriendsCards(props: TFriendsProps) {
+function FriendsCards(props: TFriend) {
   const [color, setColor] = useState("");
   const { setOpenChat } = useContext(ChatContext);
   const axiosPrivate = useAxiosPrivate();
@@ -31,7 +30,7 @@ function FriendsCards(props: TFriendsProps) {
 
   const handleRemove = () => {
     axiosPrivate
-      .post("/users/friends/remove", { usernameToRemove: props.name })
+      .post("/users/friends/remove", { usernameToRemove: props.username })
       .then((res: AxiosResponse) => console.log("user succesfully removed"))
       .catch((err: AxiosError) => console.log("failed to remove", err));
   };
@@ -43,7 +42,7 @@ function FriendsCards(props: TFriendsProps) {
         <MiddleFriendsCardsBox>
           <FriendsCardsName>
             <FriendsCardsStatusRound style={{ backgroundColor: color }} />
-            {props.name.toLocaleUpperCase()}
+            {props.username.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>
             {props.status.toLocaleUpperCase()}
@@ -60,14 +59,16 @@ function FriendsCards(props: TFriendsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }>
+        }
+      >
         <PopUpBox>
-          {/* <InsidePopUpButton
+          <InsidePopUpButton
             onClick={() => {
-              setOpenChat(props.name);
-            }}>
+              setOpenChat(props.username);
+            }}
+          >
             Send message
-          </InsidePopUpButton> */}
+          </InsidePopUpButton>
           <InsidePopUpButton>Block friends</InsidePopUpButton>
           <InsidePopUpButton onClick={handleRemove}>
             Remove friends

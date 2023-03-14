@@ -1,80 +1,65 @@
-import { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useContext } from "react";
-import { axiosPrivate } from "../../../services/axios";
 import { nanoid } from "nanoid";
 import { SocketContext } from "../../../services/Auth/SocketContext";
-import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
 import FriendsCards from "./FriendsCards/FriendsCards";
 import { FriendsListBox } from "./FriendsListStyle";
+import { useMainContext } from "../../../views/MainPage/MainContext";
+import { TFriend } from "../../../views/MainPage/MainContextTypes";
 
 function FriendsList() {
-  const { friendList, setFriendList } = useContext(FriendsListContext);
-  const socket = useContext(SocketContext);
+  const { friendList, setFriendList } = useMainContext();
+  // const socket = useContext(SocketContext);
+  //
+  // function updateFriendList(status: string, username: string, avatar: string) {
+  //   setFriendList((prev: TFriend[]) => {
+  //     const index = prev.findIndex((friend) => friend.username === username);
+  //     if (index !== -1) {
+  //       const updatedFriend = {
+  //         ...prev[index],
+  //         status: status,
+  //         avatar: avatar,
+  //         key: nanoid(),
+  //       };
+  //       return [
+  //         ...prev.slice(0, index),
+  //         updatedFriend,
+  //         ...prev.slice(index + 1),
+  //       ];
+  //     } else {
+  //       return [
+  //         ...prev,
+  //         { key: nanoid(), username: username, status: status, avatar: avatar },
+  //       ];
+  //     }
+  //   });
+  // }
 
-  function updateFriendList(status: string, username: string, avatar: string) {
-    setFriendList((prev) => {
-      const index = prev.findIndex((friend) => friend.name === username);
-      if (index !== -1) {
-        const updatedFriend = {
-          ...prev[index],
-          status: status,
-          avatar: avatar,
-          key: nanoid(),
-        };
-        return [
-          ...prev.slice(0, index),
-          updatedFriend,
-          ...prev.slice(index + 1),
-        ];
-      } else {
-        return [
-          ...prev,
-          { key: nanoid(), name: username, status: status, avatar: avatar },
-        ];
-      }
-    });
-  }
+  // useEffect(() => {
+  //   socket?.on("on-removed-friend", (friendRemoved) => {
+  //     setFriendList((prev: TFriend[]) =>
+  //       prev.filter((friend) => friend.username !== friendRemoved)
+  //     );
+  //   });
 
-  useEffect(() => {
-    axiosPrivate
-      .get("users/friends")
-      .then((res: AxiosResponse) => {
-        const friends = res.data.map((element: any) => ({
-          name: element.username,
-          avatar: element.avatar,
-          status: element.status,
-          key: nanoid(),
-        }));
-        console.log(friends);
-        setFriendList(friends);
-      })
-      .catch((err: AxiosError) => {
-        console.log("Error while fetching friendlist");
-      });
-
-    socket?.on("on-removed-friend", (friendRemoved) => {
-      setFriendList((prev) =>
-        prev.filter((friend) => friend.name !== friendRemoved)
-      );
-    });
-
-    socket?.on("on-status-update", (newStatus) => {
-      updateFriendList(newStatus.status, newStatus.username, newStatus.avatar);
-    });
-    return () => {
-      socket?.off("on-status-update");
-      socket?.off("on-removed-friend");
-    };
-  }, [socket]);
+  //   socket?.on("on-status-update", (newStatus) => {
+  //     updateFriendList(newStatus.status, newStatus.username, newStatus.avatar);
+  //   });
+  //   return () => {
+  //     socket?.off("on-status-update");
+  //     socket?.off("on-removed-friend");
+  //   };
+  // }, [socket]);
 
   return (
     <FriendsListBox>
-      {friendList.map((val, index) => {
+      {friendList.map((val) => {
+        console.log("username: ", val.username);
         return (
           <FriendsCards
             key={nanoid()}
+            id={val.id}
             avatar={val.avatar}
-            name={val.name}
+            username={val.username}
             status={val.status}
           />
         );

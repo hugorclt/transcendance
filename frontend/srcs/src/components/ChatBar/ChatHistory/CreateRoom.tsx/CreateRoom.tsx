@@ -2,8 +2,8 @@ import { AxiosError, AxiosResponse } from "axios";
 import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { ChatHistoryContext } from "../../../../views/ChatPage/ChatHistoryContext";
-import { FriendsListContext } from "../../../../views/ChatPage/FriendsListContext";
 import { RoomModalOpenContext } from "../../../../views/ChatPage/RoomModalOpenContext";
+import { useMainContext } from "../../../../views/MainPage/MainContext";
 import {
   StyledButton,
   StyledInput,
@@ -23,7 +23,7 @@ function CreateRoom() {
   const [users, setUser] = useState<string[]>([]);
   const [isPrivate, setPrivate] = useState(false);
   const [password, setPassword] = useState("");
-  const { friendList } = useContext(FriendsListContext);
+  const { friendList } = useMainContext();
   const { chatHistory, setChatHistory } = useContext(ChatHistoryContext);
   const axiosPrivate = useAxiosPrivate();
 
@@ -34,17 +34,20 @@ function CreateRoom() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    axiosPrivate.post("/rooms/create", {
-      name: name,
-      password: password,
-      users: users,
-      isPrivate: isPrivate,
-      isDm: false,
-    }).then((res: AxiosResponse) => {
-      console.log("Room succesfully created\n", res.data);
-    }).catch((err: AxiosError) => {
-      console.log("error while creating the room")
-    })
+    axiosPrivate
+      .post("/rooms/create", {
+        name: name,
+        password: password,
+        users: users,
+        isPrivate: isPrivate,
+        isDm: false,
+      })
+      .then((res: AxiosResponse) => {
+        console.log("Room succesfully created\n", res.data);
+      })
+      .catch((err: AxiosError) => {
+        console.log("error while creating the room");
+      });
     setPassword("");
     setName("");
     setOpen(false);
@@ -65,9 +68,12 @@ function CreateRoom() {
         <div>
           {friendList.map((val, index) => {
             return (
-              <div key={index} onClick={() => handleAddFriends(val.name)}>
-                <p key={index} className={users.includes(val.name) ? "callout" : ""}>
-                  {val.name}
+              <div key={index} onClick={() => handleAddFriends(val.username)}>
+                <p
+                  key={index}
+                  className={users.includes(val.username) ? "callout" : ""}
+                >
+                  {val.username}
                 </p>
               </div>
             );
@@ -80,7 +86,8 @@ function CreateRoom() {
           onChange={(e) => setName(e.target.value)}
           type="text"
           required
-          autoComplete="new-password"></StyledInput>
+          autoComplete="new-password"
+        ></StyledInput>
         <CreateRoomLabel htmlFor="password">Password</CreateRoomLabel>
         <StyledInput
           name="password"
@@ -88,13 +95,15 @@ function CreateRoom() {
           disabled={isPrivate}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
-          autoComplete="new-password"></StyledInput>
+          autoComplete="new-password"
+        ></StyledInput>
         <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
         <CreateRoomCheckBox
           name="checkbox"
           checked={isPrivate}
           onChange={handleCheck}
-          type="checkbox"></CreateRoomCheckBox>
+          type="checkbox"
+        ></CreateRoomCheckBox>
         <CreateRoomButtonBox>
           <StyledButton type="submit" value="Create Room" />
         </CreateRoomButtonBox>
