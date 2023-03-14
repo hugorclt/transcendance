@@ -20,14 +20,15 @@ import {
 import { TbCurrencyShekel } from "react-icons/tb";
 import { COLORS, convertStatusColor } from "../../../colors";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
-import { useMainContext } from "../../../views/MainPage/MainContext";
+import { useAtom } from "jotai";
+import { userAtom } from "../../../services/store";
 
 function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
+  const [user, setUser] = useAtom(userAtom);
   const navigate = useNavigate();
   const location = useLocation();
   const { status } = useGlobal();
-  const { user } = useMainContext();
 
   var changeStatus: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>

@@ -17,16 +17,10 @@ import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
-import { TFriend } from "../../../../views/MainPage/MainContextTypes";
 
-function FriendsCards(props: TFriend) {
-  const [color, setColor] = useState("");
+function FriendsCards(props: TFriendsProps) {
   const { setOpenChat } = useContext(ChatContext);
   const axiosPrivate = useAxiosPrivate();
-
-  useEffect(() => {
-    setColor(convertStatusColor(props.status));
-  }, []);
 
   const handleRemove = () => {
     axiosPrivate
@@ -41,8 +35,10 @@ function FriendsCards(props: TFriend) {
         <FriendsCardsAvatar src="" /> {/* toaddavatar */}
         <MiddleFriendsCardsBox>
           <FriendsCardsName>
-            <FriendsCardsStatusRound style={{ backgroundColor: color }} />
-            {props.username.toLocaleUpperCase()}
+            <FriendsCardsStatusRound
+              style={{ backgroundColor: convertStatusColor(props.status) }}
+            />
+            {props.name.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>
             {props.status.toLocaleUpperCase()}

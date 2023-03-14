@@ -1,5 +1,5 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { ReactNode } from "react";
+import { Outlet } from "react-router";
 import ChatPage from "../../views/ChatPage/ChatPage";
 import NavBarPage from "../../views/NavBarPage/NavBarPage";
 import {
@@ -9,7 +9,7 @@ import {
   NavBarLayoutContainer,
 } from "./MainLayoutStyle";
 
-const MainLayout = () => {
+const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <MainLayoutStyle>
       <MainLayoutContainer>
