@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import NavBarItem from "./NavBarItem/NavBarItem";
 import { NavBarContainer } from "./NavBarStyle";
 import { useLocation } from "react-router-dom";
-import { useMainContext } from "../../views/MainPage/MainContext";
+import { useAtom } from "jotai";
+import { selectedPageAtom } from "../../services/store";
 
 function NavBar() {
-  const { selectedPage, setSelectedPage } = useMainContext();
+  const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
   const location = useLocation();
 
   function handleTabClick(index: number) {

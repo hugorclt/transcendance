@@ -12,6 +12,7 @@ export const COLORS = {
   white: "#ffffff",
   black: "#000000",
   darkgrey: "#737373",
+  darkergrey: "#292929",
 };
 
 export const convertStatusColor = (status: string): string => {

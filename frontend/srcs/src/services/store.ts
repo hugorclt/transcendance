@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { TConversation, TFriend, TUser } from "./type";
+import { TConversation, TFriend, TSelectedPage, TUser } from "./type";
 
 export const userAtom = atom<TUser>({
   id: "",
@@ -27,6 +27,8 @@ export const conversationDefaultValue = {
       role: "",
     },
   ],
-}
+};
 
 export const activeChat = atom<TConversation>(conversationDefaultValue);
+
+export const selectedPageAtom = atom<number>(0);

@@ -21,7 +21,7 @@ import { useAtom } from "jotai";
 import { activeChat } from "../../../../services/store";
 import { TFriendCardsProps } from "./FriendsCardsType";
 
-function FriendsCards({friend}: TFriendCardsProps) {
+function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
 
   const handleRemove = () => {
@@ -74,7 +74,8 @@ function FriendsCards({friend}: TFriendCardsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }>
+        }
+      >
         <PopUpBox>
           <InsidePopUpButton onClick={handleChat}>
             Send message
