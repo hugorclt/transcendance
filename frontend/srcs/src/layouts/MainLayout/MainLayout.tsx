@@ -16,7 +16,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
         <NavBarLayoutContainer>
           <NavBarPage />
         </NavBarLayoutContainer>
-        <Outlet />
+        {children}
       </MainLayoutContainer>
 
       <ChatLayoutContainer>

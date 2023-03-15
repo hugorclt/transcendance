@@ -24,7 +24,7 @@ function CreateRoom() {
   const [users, setUser] = useState<string[]>([]);
   const [isPrivate, setPrivate] = useState(false);
   const [password, setPassword] = useState("");
-  const [ friendList ] = useAtom(friendAtom);
+  const [friendList] = useAtom(friendAtom);
   const axiosPrivate = useAxiosPrivate();
 
   const handleCheck = () => {
@@ -69,14 +69,10 @@ function CreateRoom() {
           {friendList.map((val, index) => {
             return (
               <div key={index} onClick={() => handleAddFriends(val.username)}>
-<<<<<<< HEAD
                 <p
                   key={index}
                   className={users.includes(val.username) ? "callout" : ""}
                 >
-=======
-                <p key={index} className={users.includes(val.username) ? "callout" : ""}>
->>>>>>> hugo
                   {val.username}
                 </p>
               </div>

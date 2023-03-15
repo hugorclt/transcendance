@@ -6,7 +6,7 @@ import { friendAtom } from "../../../services/store";
 import { TFriend } from "../../../services/type";
 
 function FriendsList() {
-  const [friendList, setFriendList] = useAtom(friendAtom);
+  const [friendList] = useAtom(friendAtom);
 
   return (
     <FriendsListBox>

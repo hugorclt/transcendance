@@ -15,7 +15,7 @@ function ChatPage() {
       <CreateRoomContext.Provider value={{ isActive, setIsActive }}>
         <RoomModalOpenContext.Provider value={{ open, setOpen }}>
           <ChatManagerOpen.Provider value={{ openManager, setOpenManager }}>
-            <ChatBar />
+            <ChatBarLayout />
           </ChatManagerOpen.Provider>
         </RoomModalOpenContext.Provider>
       </CreateRoomContext.Provider>

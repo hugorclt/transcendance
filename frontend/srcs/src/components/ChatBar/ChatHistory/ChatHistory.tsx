@@ -8,8 +8,6 @@ import {
   ModalCreateJoin,
 } from "./ChatHistoryStyle";
 import { COLORS } from "../../../colors";
-import logo42 from "../../../assets/images/42.jpg";
-import { nanoid } from "nanoid";
 import Popup from "reactjs-popup";
 import { ModalBox } from "../FriendsList/FriendsTopBar/FriendsTopBarStyle";
 import CreateRoom from "./CreateRoom.tsx/CreateRoom";
@@ -38,7 +36,8 @@ function ChatHistory() {
           }
           modal
           open={open}
-          nested>
+          nested
+        >
           <ModalBox>
             <ModalCreateJoin>
               <CreateRoom />
