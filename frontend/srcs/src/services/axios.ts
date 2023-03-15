@@ -3,7 +3,7 @@ import axios from "axios";
 export const axiosClient = () => {
   //default get options
   const defaultOptions = {
-    baseURL: process.env.REACT_APP_BASE_URL,
+    baseURL: import.meta.env.VITE_BASE_URL,
     withCredentials: true,
     credentials: "include",
     headers: {
@@ -21,7 +21,7 @@ export const axiosClient = () => {
 };
 
 export const axiosPrivate = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

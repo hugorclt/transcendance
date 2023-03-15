@@ -15,7 +15,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.11",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/socket.io": "^3.0.2",
@@ -31,7 +30,6 @@
     "react-hooks-global-state": "^2.1.0",
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "5.0.1",
     "react-toastify": "^9.1.1",
     "react-use": "^17.4.0",
     "reactjs-popup": "^2.0.5",
@@ -41,10 +39,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite --host",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -66,9 +63,14 @@
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.2",
+    "@types/node": "^18.15.3",
     "@types/styled-components": "^5.1.26",
+    "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.13",
     "file-loader": "^6.2.0",
-    "postcss": "^8.4.21"
+    "postcss": "^8.4.21",
+    "vite": "^4.1.4",
+    "vite-plugin-svgr": "^2.4.0",
+    "vite-tsconfig-paths": "^4.0.7"
   }
 }
