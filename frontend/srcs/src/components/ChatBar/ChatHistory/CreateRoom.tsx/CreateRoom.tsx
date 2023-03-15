@@ -4,7 +4,6 @@ import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { friendAtom } from "../../../../services/store";
 import { RoomModalOpenContext } from "../../../../views/ChatPage/RoomModalOpenContext";
-import { useMainContext } from "../../../../views/MainPage/MainContext";
 import {
   StyledButton,
   StyledInput,
