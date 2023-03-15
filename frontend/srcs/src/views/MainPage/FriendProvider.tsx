@@ -31,7 +31,6 @@ function FriendProvider({ children }: { children: ReactNode }) {
     });
 
     socket?.on("on-status-update", (newStatus) => {
-      console.log("status update: ", newStatus);
       setFriendList((prev) => updateFriendList(newStatus, prev));
     });
     return () => {

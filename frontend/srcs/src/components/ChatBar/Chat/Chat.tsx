@@ -23,10 +23,9 @@ import {
   ChatTitle,
   ChatBody,
 } from "./ChatStyle";
-import { TMessage } from "./ChatType";
+import { TChatProps, TMessage } from "./ChatType";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { COLORS } from "../../../colors";
-import { logo42 } from "../../../assets/images/42.jpg";
 import { AiOutlineClose } from "react-icons/ai";
 import { nanoid } from "nanoid";
 import { ChatContext } from "../../../views/ChatPage/ChatContext";
@@ -34,7 +33,7 @@ import LeftSideChat from "./LeftSideChat/LeftSideChat";
 import { ChatManagerOpen } from "../../../views/ChatPage/ChatManagerOpen";
 import { FaUserFriends } from "react-icons/fa";
 
-function Chat(props: { name: string }) {
+function Chat({chat}: TChatProps) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
   const { openChat, setOpenChat } = useContext(ChatContext);
@@ -46,13 +45,13 @@ function Chat(props: { name: string }) {
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
-    socket?.emit("new-message", { message: message, roomName: props.name });
+    socket?.emit("new-message", { message: message, room: chat });
     setMessage("");
   };
 
   useEffect(() => {
     socket?.on("on-new-message", (newMessage: TMessage) => {
-      if (newMessage.roomName === props.name) {
+      if (newMessage.roomName === chat.name) {
         setMessageList((prev) => {
           return [...prev, newMessage];
         });
@@ -66,7 +65,7 @@ function Chat(props: { name: string }) {
 
   useEffect(() => {
     axiosPrivate
-      .post("/rooms/conv/history", { roomName: props.name })
+      .post("/rooms/conv/history", { roomName: chat.name })
       .then((res: AxiosResponse) => {
         setMessageList(
           res.data.map((message: any) => ({
@@ -82,7 +81,7 @@ function Chat(props: { name: string }) {
     return () => {
       setMessageList([]);
     };
-  }, [props.name]);
+  }, [chat.name]);
 
   useEffect(() => {
     if (messageBoxRef && messageBoxRef.current) {
@@ -127,12 +126,12 @@ function Chat(props: { name: string }) {
 
   return (
     <ChatBody>
-      {openManager && <LeftSideChat name={props.name} />}
+      {openManager && <LeftSideChat name={chat.name} />}
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
             <ChatIcon src="" />
-            <ChatTitle>{props.name.toLocaleUpperCase()}</ChatTitle>
+            <ChatTitle>{chat.name.toLocaleUpperCase()}</ChatTitle>
             <FaUserFriends
               onClick={() => setOpenManager(!openManager)}
               style={{ color: COLORS.secondary }}

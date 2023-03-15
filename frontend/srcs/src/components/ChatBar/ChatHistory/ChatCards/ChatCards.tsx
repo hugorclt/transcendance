@@ -1,26 +1,26 @@
-import React, { useContext, useEffect } from "react";
-import { ChatContext } from "../../../../views/ChatPage/ChatContext";
+import { useAtom } from "jotai";
 import { ChatCardsBox, ChatCardsLastMessage, ChatCardsMiddle, ChatCardsName, ChatCardsRoundedAvatar } from "./ChatCardsStyle";
+import { activeChat, conversationDefaultValue } from "../../../../services/store";
+import {ChatCardsProps} from './ChatCardsType'
 
-function ChatCards(props: {
-  avatar: string;
-  lastMessage: string;
-  roomName: string;
-}) {
-  const { openChat, setOpenChat } = useContext(ChatContext);
+
+function ChatCards({conversation} : ChatCardsProps) {
+  const [ openChat, setOpenChat ] = useAtom(activeChat);
 
   const addChatToTab = () => {
-    if (openChat == props.roomName)
-      setOpenChat("")
+    if (openChat.name == conversation.name)
+      setOpenChat(conversationDefaultValue)
     else
-      setOpenChat(props.roomName)
+    {
+      setOpenChat(conversation);
+    }
   };
   return (
     <ChatCardsBox onClick={addChatToTab}>
-      <ChatCardsRoundedAvatar src={props.avatar}/>
+      <ChatCardsRoundedAvatar src={conversation.avatar}/>
       <ChatCardsMiddle>
-        <ChatCardsName>{props.roomName}</ChatCardsName>
-        <ChatCardsLastMessage>{props.lastMessage.length >= 20 ? props.lastMessage.substring(0, 20) + "..." : props.lastMessage}</ChatCardsLastMessage>
+        <ChatCardsName>{conversation.name.length >= 20 ? conversation.name.substring(0, 20) + "..." : conversation.name}</ChatCardsName>
+        <ChatCardsLastMessage>{conversation.lastMessage.length >= 20 ? conversation.lastMessage.substring(0, 20) + "..." : conversation.lastMessage}</ChatCardsLastMessage>
       </ChatCardsMiddle>
     </ChatCardsBox>
   );

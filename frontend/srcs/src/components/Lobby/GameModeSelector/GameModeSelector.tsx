@@ -35,7 +35,6 @@ function GameModeSelector() {
         setSelectedMode("");
         setOnModeSelected(false);
         setPlayers(0);
-        console.log(response.data);
         setStatus("LOBBY");
       })
       .catch((error: AxiosError) => {

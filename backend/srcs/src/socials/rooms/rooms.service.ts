@@ -3,7 +3,7 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
-import { Role } from '@prisma/client';
+import { Message, Participant, Role, Room } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
 import { SocialsGateway } from '../socials.gateway';
@@ -64,23 +64,7 @@ export class RoomsService {
 
         if (room.ownerId != userId && lastMessage == null) return;
 
-        return {
-          id: room.id,
-          avatar: room.avatar,
-          name: room.name,
-          lastMessage: lastMessage == null ? '' : lastMessage.content,
-          isDm: room.isDm,
-          participant: Promise.all(
-            room.room.map(async (participant) => {
-              return {
-                id: participant.id,
-                role: participant.role,
-                name: (await this.usersService.findOne(participant.userId))
-                  .username,
-              };
-            }),
-          ),
-        };
+        return this.createRoomReturnEntity(room, lastMessage);
       }),
     );
   }
@@ -98,6 +82,9 @@ export class RoomsService {
   findOneByName(name: string) {
     return this.prisma.room.findUnique({
       where: { name },
+      include: {
+        room: true,
+      },
     });
   }
 
@@ -153,5 +140,20 @@ export class RoomsService {
         };
       }),
     );
+  }
+
+  async createRoomReturnEntity(
+    room: Room & { room: Participant[] },
+    lastMessage: Message,
+  ) {
+    return {
+      id: room.id,
+      avatar: room.avatar,
+      name: room.name,
+      isPrivate: room.isPrivate,
+      lastMessage: lastMessage == null ? '' : lastMessage.content,
+      isDm: room.isDm,
+      participant: await this.participant.createParticipantFromRoom(room),
+    };
   }
 }

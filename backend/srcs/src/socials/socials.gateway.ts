@@ -13,7 +13,7 @@ import { Injectable, NotFoundException, UseFilters } from '@nestjs/common';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { UsersService } from 'src/users/users.service';
-import { User } from '@prisma/client';
+import { Message, Participant, Room, User } from '@prisma/client';
 import { RoomsService } from './rooms/rooms.service';
 import { MessagesService } from './rooms/messages/messages.service';
 import { NotFoundError } from 'rxjs';
@@ -47,7 +47,12 @@ export class SocialsGateway
     this.emitToList(
       await this.usersService.getUserFriends(client.userId),
       'on-status-update',
-      { username: user.username, avatar: user.avatar, status: user.status, id: user.id },
+      {
+        username: user.username,
+        avatar: user.avatar,
+        status: user.status,
+        id: user.id,
+      },
     );
     const rooms = await this.roomService.findRoomsForUser(client.userId);
     rooms.map((room) => {
@@ -117,13 +122,14 @@ export class SocialsGateway
   @SubscribeMessage('new-message')
   async newMessage(
     @ConnectedSocket() client: AuthSocket,
-    @MessageBody() payload: { message: string; roomName: string },
+    @MessageBody()
+    payload: { message: string; room: Room & { room: Participant[] } },
   ) {
     const sender = await this.usersService.findOne(client.userId);
-    if (!sender) throw new WsNotFoundException("Sender not found");
-    const room = await this.roomService.findOneByName(payload.roomName);
-    if (!room) throw new WsNotFoundException("Room not found");
-    await this.messageService.create({
+    if (!sender) throw new WsNotFoundException('Sender not found');
+    const room = await this.roomService.findOneByName(payload.room.name);
+    if (!room) throw new WsNotFoundException('Room not found');
+    const message = await this.messageService.create({
       content: payload.message,
       senderId: sender.id,
       roomId: room.id,
@@ -131,15 +137,14 @@ export class SocialsGateway
     this.io.to(room.id).emit('on-new-message', {
       sender: sender.username,
       message: payload.message,
-      roomName: payload.roomName,
+      roomName: payload.room.name,
     });
 
-    this.io.to(room.id).emit('on-chat-update', {
-      id: room.id,
-      lastMessage: payload.message,
-      name: room.name,
-      avatar: room.avatar,
-    });
+    this.emitToUser(
+      room.id,
+      'on-chat-update',
+      await this.roomService.createRoomReturnEntity(room, message),
+    );
   }
 
   emitToUser(receiverId: string, eventName: string, data: any) {
@@ -156,19 +161,16 @@ export class SocialsGateway
     this.emitToUser(removerId, 'on-removed-friend', friendRemoved);
   }
 
-  addChatToHistory(
+  async addChatToHistory(
     ownerId: string,
-    roomName: string,
-    lastMessage: string,
-    avatar: string,
-    roomId: string,
+    room: Room & { room: Participant[] },
+    lastMessage: Message,
   ) {
-    this.emitToUser(ownerId, 'on-chat-update', {
-      id: roomId,
-      avatar: avatar,
-      name: roomName,
-      lastMessage: lastMessage,
-    });
+    this.emitToUser(
+      ownerId,
+      'on-chat-update',
+      await this.roomService.createRoomReturnEntity(room, lastMessage),
+    );
   }
 
   async joinUserToRoom(room: any, users: string[]) {
@@ -176,7 +178,10 @@ export class SocialsGateway
     users.push(owner.username);
     users.map(async (user) => {
       const participant = await this.usersService.findOneByUsername(user);
-      if (!participant) throw new WsNotFoundException("Participant can't join the room, refresh the page")
+      if (!participant)
+        throw new WsNotFoundException(
+          "Participant can't join the room, refresh the page",
+        );
       const socketId = (
         await this.io.adapter.sockets(new Set([participant.id]))
       )

@@ -8,7 +8,6 @@ import {
   ModalCreateJoin,
 } from "./ChatHistoryStyle";
 import { COLORS } from "../../../colors";
-import logo42 from "../../../assets/images/42.jpg";
 import { nanoid } from "nanoid";
 import Popup from "reactjs-popup";
 import { ModalBox } from "../FriendsList/FriendsTopBar/FriendsTopBarStyle";
@@ -50,15 +49,9 @@ function ChatHistory() {
       <ChatHistoryBox>
         {chatHistory.length > 0 &&
           chatHistory.map((val) => {
-            console.log(val);
             if (!val) return;
             return (
-              <ChatCards
-                key={val.id}
-                avatar={val.avatar}
-                roomName={val.name}
-                lastMessage={val.lastMessage}
-              />
+              <ChatCards key={nanoid()} conversation={val}/>
             );
           })}
       </ChatHistoryBox>

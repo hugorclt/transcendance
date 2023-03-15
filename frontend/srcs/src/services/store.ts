@@ -13,3 +13,20 @@ export const userAtom = atom<TUser>({
 export const friendAtom = atom<TFriend[]>([]);
 
 export const conversationAtom = atom<TConversation[]>([]);
+
+export const conversationDefaultValue = {
+  id: "",
+  name: "",
+  avatar: "",
+  lastMessage: "",
+  isDm: true,
+  participants: [
+    {
+      id: "",
+      name: "",
+      role: "",
+    },
+  ],
+}
+
+export const activeChat = atom<TConversation>(conversationDefaultValue);

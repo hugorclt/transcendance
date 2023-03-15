@@ -28,7 +28,13 @@ export class RoomsController {
     const creatorId = req.user.sub;
     createRoomDto.ownerId = creatorId;
     const room = await this.roomsService.create(createRoomDto);
-    this.socialGateway.addChatToHistory(room.ownerId, room.name, "", room.avatar, room.id);
+    this.socialGateway.addChatToHistory(creatorId, room, {
+      content: "",
+      senderId: undefined,
+      roomId: undefined,
+      id: undefined,
+      date: undefined,
+    });
     this.socialGateway.joinUserToRoom(room, createRoomDto.users);
     return { roomId: room.id };
   }
@@ -37,17 +43,19 @@ export class RoomsController {
   @ApiCreatedResponse({ type: [RoomEntity] })
   async findHistory(@Request() req) {
     const roomsHistory = await this.roomsService.findHistory(req.user.sub);
-    return (roomsHistory);
+    return roomsHistory;
   }
 
   @Post('conv/history')
   async getHistoryRoom(@Request() req) {
-    return await this.roomsService.findConvHistory(req.body.roomName)
+    return await this.roomsService.findConvHistory(req.body.roomName);
   }
 
-  @Post("/participants")
+  @Post('/participants')
   async getParticipantsInRoom(@Request() req) {
-    const test = await this.roomsService.getParticipantsInRoom(req.body.roomName);
-    return (test);
+    const test = await this.roomsService.getParticipantsInRoom(
+      req.body.roomName,
+    );
+    return test;
   }
 }

@@ -14,7 +14,6 @@ function LeftSideChat(props: { name: string }) {
     axiosPrivate
       .post("/rooms/participants", { roomName: props.name })
       .then((res: AxiosResponse) => {
-        console.log(res.data);
         setUserList(res.data);
       })
       .catch((err: AxiosError) => {

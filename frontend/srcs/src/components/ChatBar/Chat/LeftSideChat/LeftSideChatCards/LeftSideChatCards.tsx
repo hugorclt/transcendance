@@ -36,7 +36,6 @@ function LeftSideChatCards(props: {
 
   const handleClick = () => {
     socket?.emit("friend-request", props.name);
-    console.log(open);
   };
   return (
     <UserChatManagerBox>
