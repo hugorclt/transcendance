@@ -20,7 +20,9 @@ export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(private usersService: UsersService) {}
-
+  /*========================================================================*/
+  
+  
   @WebSocketServer()
   public io: Namespace;
 
