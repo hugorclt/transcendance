@@ -1,9 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
-import React, { useEffect, useContext } from "react";
-import { axiosPrivate } from "../../../services/axios";
-import { nanoid } from "nanoid";
-import { SocketContext } from "../../../services/Auth/SocketContext";
-import { FriendsListContext } from "../../../views/ChatPage/FriendsListContext";
+import React from "react";
 import FriendsCards from "./FriendsCards/FriendsCards";
 import { FriendsListBox } from "./FriendsListStyle";
 import { useAtom } from "jotai";
@@ -11,7 +6,7 @@ import { friendAtom } from "../../../services/store";
 import { TFriend } from "../../../services/type";
 
 function FriendsList() {
-  const [friendList, setFriendList] = useAtom(friendAtom);
+  const [friendList] = useAtom(friendAtom);
 
   return (
     <FriendsListBox>

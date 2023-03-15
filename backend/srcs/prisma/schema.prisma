@@ -19,7 +19,7 @@ model User {
   balance          Int?          @default(0)
   sender           Message[]
   participant      Participant[]
-  user             UserItem[]    @relation("ownerItem")
+  items            Item[]        @relation("itemOwner")
   lobbyOwner       Lobby[]       @relation("lobbyOwner")
   lobbyParticipant Lobby[]       @relation("lobbyParticipant")
   lobbySpectator   Lobby[]       @relation("lobbySpectator")
@@ -75,15 +75,7 @@ model Item {
   name  String
   price Int
   image String
-  item  UserItem[]
-}
-
-model UserItem {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId  String @db.Uuid
-  itemsId String @db.Uuid
-  items   Item   @relation(fields: [itemsId], references: [id])
-  user    User   @relation("ownerItem", fields: [userId], references: [id])
+  owners User[] @relation("itemOwner")
 }
 
 model Room {

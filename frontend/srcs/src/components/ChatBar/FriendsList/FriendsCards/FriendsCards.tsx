@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { TFriendsProps } from "./FriendsType";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { IconContext } from "react-icons/lib";
 import { ChatContext } from "../../../../views/ChatPage/ChatContext";
 import {
   FriendsCardsAvatar,
@@ -26,7 +24,7 @@ function FriendsCards(props: TFriendsProps) {
 
   const handleRemove = () => {
     axiosPrivate
-      .post("/users/friends/remove", { usernameToRemove: props.name })
+      .post("/users/friends/remove", { usernameToRemove: props.username })
       .then((res: AxiosResponse) => console.log("user succesfully removed"))
       .catch((err: AxiosError) => console.log("failed to remove", err));
   };
@@ -57,12 +55,14 @@ function FriendsCards(props: TFriendsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }>
+        }
+      >
         <PopUpBox>
           <InsidePopUpButton
             onClick={() => {
-              setOpenChat(props.name);
-            }}>
+              setOpenChat(props.username);
+            }}
+          >
             Send message
           </InsidePopUpButton>
           <InsidePopUpButton>Block friends</InsidePopUpButton>

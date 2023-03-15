@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { TFriendsProps } from "../../components/ChatBar/FriendsList/FriendsCards/FriendsType";
-import ChatBar from "../../layouts/ChatBarLayout/ChatBarLayout";
+import ChatBarLayout from "../../layouts/ChatBarLayout/ChatBarLayout";
 import { ChatContext } from "./ChatContext";
 import { ChatManagerOpen } from "./ChatManagerOpen";
 import { CreateRoomContext } from "./CreateRoomContext";
@@ -14,11 +13,11 @@ function ChatPage() {
   return (
     <ChatContext.Provider value={{ openChat, setOpenChat }}>
       <CreateRoomContext.Provider value={{ isActive, setIsActive }}>
-          <RoomModalOpenContext.Provider value={{ open, setOpen }}>
-            <ChatManagerOpen.Provider value={{ openManager, setOpenManager }}>
-              <ChatBar />
-            </ChatManagerOpen.Provider>
-          </RoomModalOpenContext.Provider>
+        <RoomModalOpenContext.Provider value={{ open, setOpen }}>
+          <ChatManagerOpen.Provider value={{ openManager, setOpenManager }}>
+            <ChatBarLayout />
+          </ChatManagerOpen.Provider>
+        </RoomModalOpenContext.Provider>
       </CreateRoomContext.Provider>
     </ChatContext.Provider>
   );

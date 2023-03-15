@@ -1,6 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
 import { AiOutlineUsergroupAdd, AiOutlineSearch } from "react-icons/ai";
-import { IconContext } from "react-icons/lib";
 import { COLORS } from "../../../../colors";
 import { SocketContext } from "../../../../services/Auth/SocketContext";
 import {
@@ -44,13 +43,15 @@ function FriendsTopBar() {
           }
           modal
           open={open}
-          nested>
+          nested
+        >
           <ModalBox>
             <AddFriendsForm onSubmit={handleSubmit} autoComplete="off">
               <ModalTitle>ENTER USERNAME:</ModalTitle>
               <StyledInput
                 onChange={(e) => setUsername(e.target.value)}
-                type="text"></StyledInput>
+                type="text"
+              ></StyledInput>
               <StyledButton type="submit" value="Invite" />
             </AddFriendsForm>
           </ModalBox>

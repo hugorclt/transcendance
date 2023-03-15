@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, ChangeEventHandler } from "react";
 import "react-circular-progressbar/dist/styles.css";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
@@ -23,7 +17,6 @@ import {
   StyledSelect,
   SelectBox,
 } from "./ProfilBoxStyle";
-
 import { TbCurrencyShekel } from "react-icons/tb";
 import { COLORS, convertStatusColor } from "../../../colors";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
@@ -41,7 +34,6 @@ function ProfilBox() {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const optionSelected = event.target.value;
-    console.log("option selected: ", optionSelected);
     axiosPrivate
       .post("/users/me/status", {
         status: optionSelected,

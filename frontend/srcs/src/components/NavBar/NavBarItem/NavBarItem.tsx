@@ -1,5 +1,5 @@
 import { NavBarItemStyle, NavBarLink } from "../NavBarStyle";
-import { useNavBarContext } from "../../../views/NavBarPage/NavBarContext";
+import { useMainContext } from "../../../views/MainPage/MainContext";
 import { useState, useEffect } from "react";
 import { COLORS } from "../../../colors";
 interface TNavBarItemProps {
@@ -10,7 +10,7 @@ interface TNavBarItemProps {
 }
 
 export function NavBarItem({ value, index, path, onClick }: TNavBarItemProps) {
-  const { selectedPage } = useNavBarContext();
+  const { selectedPage } = useMainContext();
   const [color, setColor] = useState(
     selectedPage === index ? COLORS.secondary : COLORS.white
   );

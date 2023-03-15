@@ -13,7 +13,6 @@ import GamePage from "./views/GamePage/GamePage";
 import RequireAuth from "./services/Auth/RequireAuth";
 import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Auth42/Login42";
-import MainLayout from "./layouts/MainLayout/MainLayout";
 import LoginLayout from "./layouts/LoginLayout/LoginLayout";
 import RequireStatus from "./services/Status/RequireStatus";
 import RequireInGameStatus from "./services/Status/RequireInGameStatus";
@@ -25,15 +24,22 @@ function App() {
   return (
     <Routes>
       <Route element={<PersistLogin />}>
-         {/* Public route */}
-        <Route element={<RequireUnAuth/>}>
+        {/* Public route */}
+        <Route element={<RequireUnAuth />}>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/login/42" element={<LoginLayout><Login42 /></LoginLayout>} />
+          <Route
+            path="/login/42"
+            element={
+              <LoginLayout>
+                <Login42 />
+              </LoginLayout>
+            }
+          />
         </Route>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
           <Route element={<ProvideSocket />}>
-            <Route element={<RequireStatus/>}>
+            <Route element={<RequireStatus />}>
               <Route element={<MainPage />}>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/shop" element={<ShopPage />} />

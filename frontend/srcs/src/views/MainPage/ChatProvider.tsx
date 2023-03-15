@@ -1,7 +1,5 @@
-import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import React, { ReactNode, useContext, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../services/Auth/SocketContext";
 import { updateChatHistory } from "../../services/Chat/updateChatHistory";

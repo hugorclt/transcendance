@@ -37,7 +37,8 @@ function ChatHistory() {
           }
           modal
           open={open}
-          nested>
+          nested
+        >
           <ModalBox>
             <ModalCreateJoin>
               <CreateRoom />

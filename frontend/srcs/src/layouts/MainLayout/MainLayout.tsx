@@ -9,7 +9,7 @@ import {
   NavBarLayoutContainer,
 } from "./MainLayoutStyle";
 
-const MainLayout = ({children}: {children: ReactNode}) => {
+const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <MainLayoutStyle>
       <MainLayoutContainer>
