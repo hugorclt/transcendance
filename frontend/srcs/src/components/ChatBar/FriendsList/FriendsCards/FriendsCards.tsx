@@ -17,8 +17,9 @@ import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { TFriend } from "../../../../services/type";
 
-function FriendsCards(props: TFriendsProps) {
+function FriendsCards(props: TFriend) {
   const { setOpenChat } = useContext(ChatContext);
   const axiosPrivate = useAxiosPrivate();
 
@@ -38,7 +39,7 @@ function FriendsCards(props: TFriendsProps) {
             <FriendsCardsStatusRound
               style={{ backgroundColor: convertStatusColor(props.status) }}
             />
-            {props.name.toLocaleUpperCase()}
+            {props.username.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>
             {props.status.toLocaleUpperCase()}
