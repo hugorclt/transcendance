@@ -3,7 +3,7 @@ import Icon42 from "../Icons/Icon42";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
 
 function Signin() {
-  const url42: string = process.env["REACT_APP_42URL"]!;
+  const url42: string = import.meta.env["VITE_42URL"]!;
 
   return (
     <div>

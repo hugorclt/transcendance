@@ -1,7 +1,8 @@
 import { AxiosError, AxiosResponse } from "axios";
+import { useAtom } from "jotai";
 import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { ChatHistoryContext } from "../../../../views/ChatPage/ChatHistoryContext";
+import { friendAtom } from "../../../../services/store";
 import { RoomModalOpenContext } from "../../../../views/ChatPage/RoomModalOpenContext";
 import { useMainContext } from "../../../../views/MainPage/MainContext";
 import {
@@ -23,8 +24,7 @@ function CreateRoom() {
   const [users, setUser] = useState<string[]>([]);
   const [isPrivate, setPrivate] = useState(false);
   const [password, setPassword] = useState("");
-  const { friendList } = useMainContext();
-  const { chatHistory, setChatHistory } = useContext(ChatHistoryContext);
+  const [ friendList ] = useAtom(friendAtom);
   const axiosPrivate = useAxiosPrivate();
 
   const handleCheck = () => {
@@ -65,20 +65,24 @@ function CreateRoom() {
     <CreateRoomBox>
       <CreateRoomTitle>CREATE ROOM</CreateRoomTitle>
       <CreateRoomForm onSubmit={handleSubmit}>
-        {/* <div>
+        <div>
           {friendList.map((val, index) => {
             return (
               <div key={index} onClick={() => handleAddFriends(val.username)}>
+<<<<<<< HEAD
                 <p
                   key={index}
                   className={users.includes(val.username) ? "callout" : ""}
                 >
+=======
+                <p key={index} className={users.includes(val.username) ? "callout" : ""}>
+>>>>>>> hugo
                   {val.username}
                 </p>
               </div>
             );
           })}
-        </div> */}
+        </div>
         <CreateRoomLabel htmlFor="name">Room name</CreateRoomLabel>
         <StyledInput
           name="name"

@@ -14,7 +14,7 @@ function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
-  const clientId: string = process.env["REACT_APP_GOOGLE_CLIENT_ID"]!;
+  const clientId: string = import.meta.env["VITE_GOOGLE_CLIENT_ID"]!;
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root

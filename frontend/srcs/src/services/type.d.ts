@@ -20,7 +20,7 @@ export interface TConversation {
     avatar: string,
     lastMessage: string,
     isDm: boolean,
-    participants: TParticipant,
+    participants: TParticipant[],
 }
 
 export interface TParticipant {
