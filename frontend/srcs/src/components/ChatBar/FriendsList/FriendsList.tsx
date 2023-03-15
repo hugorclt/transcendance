@@ -11,14 +11,7 @@ function FriendsList() {
   return (
     <FriendsListBox>
       {friendList.map((val: TFriend) => {
-        return (
-          <FriendsCards
-            key={val.id}
-            avatar={val.avatar}
-            name={val.username}
-            status={val.status}
-          />
-        );
+        return <FriendsCards key={val.id} friend={val} />;
       })}
     </FriendsListBox>
   );

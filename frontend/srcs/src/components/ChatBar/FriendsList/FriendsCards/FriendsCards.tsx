@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { ChatContext } from "../../../../views/ChatPage/ChatContext";
 import {
   FriendsCardsAvatar,
   FriendsCardsBox,
@@ -17,16 +16,36 @@ import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { TFriend } from "../../../../services/type";
+import { useAtom } from "jotai";
+import { activeChat } from "../../../../services/store";
+import { TFriendCardsProps } from "./FriendsCardsType";
 
-function FriendsCards(props: TFriendsProps) {
-  const { setOpenChat } = useContext(ChatContext);
+function FriendsCards({friend}: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
 
   const handleRemove = () => {
     axiosPrivate
-      .post("/users/friends/remove", { usernameToRemove: props.username })
+      .post("/users/friends/remove", { usernameToRemove: friend.username })
       .then((res: AxiosResponse) => console.log("user succesfully removed"))
       .catch((err: AxiosError) => console.log("failed to remove", err));
+  };
+
+  const handleChat = () => {
+    axiosPrivate
+      .post("/rooms/create", {
+        name: "undefined",
+        password: "",
+        users: [friend.username],
+        isPrivate: false,
+        isDm: true,
+      })
+      .then((res: AxiosResponse) => {
+        console.log("Room succesfully created\n", res.data);
+      })
+      .catch((err: AxiosError) => {
+        console.log("error while creating the room");
+      });
   };
 
   return (
@@ -36,12 +55,12 @@ function FriendsCards(props: TFriendsProps) {
         <MiddleFriendsCardsBox>
           <FriendsCardsName>
             <FriendsCardsStatusRound
-              style={{ backgroundColor: convertStatusColor(props.status) }}
+              style={{ backgroundColor: convertStatusColor(friend.status) }}
             />
-            {props.name.toLocaleUpperCase()}
+            {friend.username.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>
-            {props.status.toLocaleUpperCase()}
+            {friend.status.toLocaleUpperCase()}
           </FriendsCardsStatus>
         </MiddleFriendsCardsBox>
       </LeftFriendsCardsBox>
@@ -55,14 +74,9 @@ function FriendsCards(props: TFriendsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }
-      >
+        }>
         <PopUpBox>
-          <InsidePopUpButton
-            onClick={() => {
-              setOpenChat(props.username);
-            }}
-          >
+          <InsidePopUpButton onClick={handleChat}>
             Send message
           </InsidePopUpButton>
           <InsidePopUpButton>Block friends</InsidePopUpButton>

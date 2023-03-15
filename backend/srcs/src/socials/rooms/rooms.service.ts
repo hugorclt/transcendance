@@ -20,7 +20,18 @@ export class RoomsService {
   async create(createRoomDto: CreateRoomDto) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createRoomDto.password, salt);
-    const owner = await this.usersService.findOne(createRoomDto.ownerId);
+
+    if (createRoomDto.isDm == true) {
+      const id1 = await this.usersService.findOneByUsername(
+        createRoomDto.users[0],
+      );
+      const id2 = createRoomDto.ownerId;
+      const concatenatedID = this.concatenateID(id1.id, id2);
+
+      const roomExists = await this.findOneByName(concatenatedID);
+      if (roomExists !== null) return roomExists;
+      createRoomDto.name = concatenatedID;
+    }
 
     const room = await this.prisma.room.create({
       data: {
@@ -28,7 +39,6 @@ export class RoomsService {
         password: hash,
         avatar: '', //owner.avatar,
         isPrivate: createRoomDto.isPrivate,
-        // ownerId: createRoomDto.ownerId,
         isDm: createRoomDto.isDm,
         type: 0,
         room: {
@@ -153,7 +163,13 @@ export class RoomsService {
       isPrivate: room.isPrivate,
       lastMessage: lastMessage == null ? '' : lastMessage.content,
       isDm: room.isDm,
-      participant: await this.participant.createParticipantFromRoom(room),
+      participants: await this.participant.createParticipantFromRoom(room),
     };
+  }
+
+  // UTILS
+  concatenateID(id1: string, id2: string) {
+    const sortedIds = [id1, id2].sort();
+    return sortedIds.join('');
   }
 }

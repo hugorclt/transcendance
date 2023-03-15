@@ -12,6 +12,7 @@ function ChatProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     axiosPrivate.get("/rooms/history").then((res) => {
+      console.log(res.data);
       if (!res.data[0]) return;
       setChat(res.data);
     });

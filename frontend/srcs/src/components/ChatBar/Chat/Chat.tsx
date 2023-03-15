@@ -28,20 +28,24 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { COLORS } from "../../../colors";
 import { AiOutlineClose } from "react-icons/ai";
 import { nanoid } from "nanoid";
-import { ChatContext } from "../../../views/ChatPage/ChatContext";
 import LeftSideChat from "./LeftSideChat/LeftSideChat";
 import { ChatManagerOpen } from "../../../views/ChatPage/ChatManagerOpen";
 import { FaUserFriends } from "react-icons/fa";
+import { useAtom } from "jotai";
+import { activeChat, userAtom } from "../../../services/store";
+import { conversationDefaultValue } from "../../../services/store";
+import { displayName } from "../../../services/Chat/displayName";
 
-function Chat({chat}: TChatProps) {
+function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
-  const { openChat, setOpenChat } = useContext(ChatContext);
+  const [openChat, setOpenChat] = useAtom(activeChat);
   const { openManager, setOpenManager } = useContext(ChatManagerOpen);
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
   const messageBoxRef = useRef<null | HTMLFormElement>(null);
+  const [user, setUser] = useAtom(userAtom);
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
@@ -131,16 +135,18 @@ function Chat({chat}: TChatProps) {
         <ChatTop>
           <ChatMiddle>
             <ChatIcon src="" />
-            <ChatTitle>{chat.name.toLocaleUpperCase()}</ChatTitle>
-            <FaUserFriends
-              onClick={() => setOpenManager(!openManager)}
-              style={{ color: COLORS.secondary }}
-              size={22}
-            />
+            <ChatTitle>{displayName(openChat, user)}</ChatTitle>
+            {!chat.isDm && (
+              <FaUserFriends
+                onClick={() => setOpenManager(!openManager)}
+                style={{ color: COLORS.secondary }}
+                size={22}
+              />
+            )}
           </ChatMiddle>
           <AiOutlineClose
             onClick={() => {
-              setOpenChat("");
+              setOpenChat(conversationDefaultValue);
             }}
             style={{ color: COLORS.secondary }}
             size={22}
