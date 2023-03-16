@@ -17,6 +17,7 @@ import { Message, Participant, Room, User } from '@prisma/client';
 import { RoomsService } from './rooms/rooms.service';
 import { MessagesService } from './rooms/messages/messages.service';
 import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -30,6 +31,7 @@ export class SocialsGateway
     private usersService: UsersService,
     private roomService: RoomsService,
     private messageService: MessagesService,
+    private prisma: PrismaService,
   ) {}
 
   @WebSocketServer()
@@ -67,27 +69,52 @@ export class SocialsGateway
     });
   }
 
-  async sendStatusUpdate(user: {
-    username: string;
-    avatar: string;
-    userId: string;
-    status: string;
-  }): Promise<void> {
-    const friends = await this.usersService.getUserFriends(user.userId);
-    this.emitToList(friends, 'on-status-update', {
-      username: user.username,
-      avatar: user.avatar,
-      status: user.status,
-      id: user.userId,
+  async sendStatusUpdate(userId: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        preferences: true,
+        friends: true,
+      },
     });
-    this.emitToUser(user.userId, 'on-self-status-update', user.status);
+    this.emitToUser(user.id, 'on-self-status-update', user.status);
+    if (user.preferences.visibility == 'VISIBLE') {
+      this.emitToList(user.friends, 'on-status-update', {
+        username: user.username,
+        avatar: user.avatar,
+        status: user.status,
+        id: user.id,
+      });
+    }
   }
 
-  async sendVisibilityUpdate(
-    userId: string,
-    visibility: string,
-  ): Promise<void> {
-    this.emitToUser(userId, 'on-visibility-update', visibility);
+  async sendVisibilityUpdate(userId: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        preferences: true,
+        friends: true,
+      },
+    });
+    this.emitToUser(
+      userId,
+      'on-visibility-update',
+      user.preferences.visibility,
+    );
+    let status;
+    if (user.preferences.visibility == 'VISIBLE') {
+      status = user.status;
+    } else if (user.preferences.visibility == 'AWAY') {
+      status = 'AWAY';
+    } else if (user.preferences.visibility == 'INVISIBLE') {
+      status = 'DISCONNECTED';
+    }
+    this.emitToList(user.friends, 'on-status-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: status,
+      id: user.id,
+    });
   }
 
   @SubscribeMessage('friend-request')

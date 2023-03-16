@@ -42,12 +42,7 @@ export class LobbiesService {
       },
     });
     await this.usersService.updateStatus(user.id, 'LOBBY');
-    await this.socialsGateway.sendStatusUpdate({
-      username: user.username,
-      userId: user.id,
-      avatar: user.avatar,
-      status: 'LOBBY',
-    });
+    await this.socialsGateway.sendStatusUpdate(user.id);
     return lobby;
   }
   async findAll(): Promise<LobbyEntity[]> {
@@ -83,12 +78,7 @@ export class LobbiesService {
       'CONNECTED',
     );
     console.log('sending status update via socket...');
-    await this.socialsGateway.sendStatusUpdate({
-      username: user.username,
-      userId: user.id,
-      avatar: user.avatar,
-      status: user.status,
-    });
+    await this.socialsGateway.sendStatusUpdate(user.id);
     console.log('User successfully left lobby');
     //remove lobby
     console.log('deleting lobby...');
@@ -163,12 +153,7 @@ export class LobbiesService {
         'CONNECTED',
       );
       console.log('sending status update via socket...');
-      await this.socialsGateway.sendStatusUpdate({
-        username: user.username,
-        userId: user.id,
-        avatar: user.avatar,
-        status: user.status,
-      });
+      await this.socialsGateway.sendStatusUpdate(user.id);
       console.log('User successfully left lobby');
       return updateLobby;
     }
@@ -237,7 +222,7 @@ export class LobbiesService {
     }
     return true;
   }
-  // A User can only have one Lobby, it can only be part of one Lobby
+
   async canUserJoinLobbies(userId: string): Promise<ReturnUserEntity> {
     const user = await this.usersService.findOne(userId);
     if (!user) {

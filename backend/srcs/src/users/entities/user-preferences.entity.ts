@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Status, VisibilityMode } from '@prisma/client';
+import { VisibilityMode } from '@prisma/client';
 
 export class UserPreferencesEntity {
   @ApiProperty()

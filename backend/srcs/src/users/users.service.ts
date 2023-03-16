@@ -13,7 +13,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Status, Type, VisibilityMode } from '@prisma/client';
 import { exclude } from 'src/utils/exclude';
 import { UserEntity } from './entities/user.entity';
-import { ReturnUserEntity } from './entities/return-user.entity';
+import {
+  ReturnUserEntity,
+  ReturnUserEntityWithPreferences,
+} from './entities/return-user.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { UserPreferencesEntity } from './entities/user-preferences.entity';
 
@@ -147,21 +150,21 @@ export class UsersService {
   }
 
   async updateStatus(id: string, status: string): Promise<ReturnUserEntity> {
-    const user: UserEntity = await this.prisma.user.update({
+    const userUpdate: UserEntity = await this.prisma.user.update({
       where: { id },
       data: { status: status as Status },
     });
-    //this should trigger a status update to friends only if preference is set to visible
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (userUpdate)
+      return exclude(userUpdate, ['password', 'type', 'refreshToken']);
     throw new NotFoundException();
   }
 
-  async updateStatusVisibility(
+  async updateVisibility(
     id: string,
     status: string,
-  ): Promise<ReturnUserEntity> {
+  ): Promise<ReturnUserEntityWithPreferences> {
     console.log('Updating visibility preferences to: ', status);
-    const user: UserEntity = await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id },
       data: {
         preferences: {
@@ -170,8 +173,10 @@ export class UsersService {
           },
         },
       },
+      include: {
+        preferences: true,
+      },
     });
-    //this should trigger a status update to friends depending on the visibility update
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);
     throw new NotFoundException();
   }
@@ -260,7 +265,9 @@ export class UsersService {
   async getUserFriends(userId: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { friends: true },
+      include: {
+        friends: true,
+      }, //INCLUDE FRIENDS PREFERENCES AND CHANGE STATUS ACCORDINGLY
     });
     if (!user) {
       throw new NotFoundException('User not found');

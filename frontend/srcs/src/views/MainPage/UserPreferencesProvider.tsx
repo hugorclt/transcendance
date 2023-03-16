@@ -4,7 +4,6 @@ import React, { ReactNode, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../services/Auth/SocketContext";
-import { updateFriendList } from "../../services/Friends/updateFriendList";
 import { userPreferencesAtom } from "../../services/store";
 
 function UserPreferencesProvider({ children }: { children: ReactNode }) {

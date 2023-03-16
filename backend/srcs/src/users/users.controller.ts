@@ -13,7 +13,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
-import { ReturnUserEntity } from './entities/return-user.entity';
+import {
+  ReturnUserEntity,
+  ReturnUserEntityWithPreferences,
+} from './entities/return-user.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { Request } from '@nestjs/common';
 import { SocialsGateway } from 'src/socials/socials.gateway';
@@ -66,34 +69,17 @@ export class UsersController {
     return user;
   }
 
-  // @Post('me/status')
-  // @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
-  // async updateStatus(@Request() req): Promise<ReturnUserEntity> {
-  //   const user = await this.usersService.updateStatus(
-  //     req.user.sub,
-  //     req.body.status,
-  //   );
-  //   if (user) {
-  //     this.socialGateway.sendStatusUpdate({
-  //       userId: user.id,
-  //       username: user.username,
-  //       avatar: user.avatar,
-  //       status: user.status,
-  //     });
-  //   }
-  //   return user;
-  // }
-
   @Post('me/visibility')
-  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
-  async updateStatusVisibility(@Request() req): Promise<ReturnUserEntity> {
-    const user = await this.usersService.updateStatusVisibility(
+  @ApiOkResponse({ type: ReturnUserEntityWithPreferences, isArray: true })
+  async updateVisibility(
+    @Request() req,
+  ): Promise<ReturnUserEntityWithPreferences> {
+    const user = await this.usersService.updateVisibility(
       req.user.sub,
       req.body.status,
     );
     if (user) {
-      console.log('sending visibility update to: ', req.body.status);
-      this.socialGateway.sendVisibilityUpdate(req.user.sub, req.body.status);
+      this.socialGateway.sendVisibilityUpdate(req.user.sub);
     }
     return user;
   }
