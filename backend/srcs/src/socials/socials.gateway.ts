@@ -16,7 +16,6 @@ import { UsersService } from 'src/users/users.service';
 import { Message, Participant, Room, User } from '@prisma/client';
 import { RoomsService } from './rooms/rooms.service';
 import { MessagesService } from './rooms/messages/messages.service';
-import { NotFoundError } from 'rxjs';
 import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 
 @Injectable()
@@ -82,6 +81,13 @@ export class SocialsGateway
       id: user.userId,
     });
     this.emitToUser(user.userId, 'on-self-status-update', user.status);
+  }
+
+  async sendVisibilityUpdate(
+    userId: string,
+    visibility: string,
+  ): Promise<void> {
+    this.emitToUser(userId, 'on-visibility-update', visibility);
   }
 
   @SubscribeMessage('friend-request')

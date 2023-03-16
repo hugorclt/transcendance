@@ -17,6 +17,7 @@ model User {
   type             Type          @default(LOCAL)
   status           Status?       @default(DISCONNECTED)
   balance          Int?          @default(0)
+  preferences      Preference?
   sender           Message[]
   participant      Participant[]
   items            Item[]        @relation("itemOwner")
@@ -34,6 +35,18 @@ model User {
   roomOwner        Room[]        @relation("owner")
 }
 
+model Preference{
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user            User          @relation(fields: [userId], references: [id])
+  userId          String        @unique @db.Uuid
+  visibility      VisibilityMode 
+}
+
+enum VisibilityMode {
+  VISIBLE
+  INVISIBLE
+  AWAY
+}
 //================== GAME =================
 model Lobby {
   id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -124,7 +137,6 @@ enum Status {
   CONNECTED
   GAME
   LOBBY
-  AWAY
 }
 
 enum Role {

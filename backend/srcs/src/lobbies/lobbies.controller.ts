@@ -16,12 +16,17 @@ import { UpdateLobbyDto } from './dto/update-lobby.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { LobbyEntity } from './entities/lobby.entity';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
+import { JoinLobbyDto } from './dto/join-lobby.dto';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Controller('lobbies')
 @UseGuards(AccessAuthGard)
 @ApiTags('lobbies')
 export class LobbiesController {
-  constructor(private readonly lobbiesService: LobbiesService) {}
+  constructor(
+    private readonly lobbiesService: LobbiesService,
+    private readonly socialsGateway: SocialsGateway,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({ type: LobbyEntity })
@@ -50,6 +55,24 @@ export class LobbiesController {
     return await this.lobbiesService.findOne(id);
   }
 
+  @Post('join')
+  @ApiOkResponse({ type: LobbyEntity })
+  async joinLobby(
+    @Request() req: any,
+    @Body() joinLobbyDto: JoinLobbyDto,
+  ): Promise<LobbyEntity> {
+    return await this.lobbiesService.joinLobby(joinLobbyDto);
+  }
+
+  @Post('leave')
+  @ApiOkResponse({ type: LobbyEntity })
+  async leaveLobby(
+    @Request() req: any,
+    @Body() joinLobbyDto: JoinLobbyDto,
+  ): Promise<LobbyEntity> {
+    return await this.lobbiesService.leaveLobby(joinLobbyDto);
+  }
+
   @Get(':id/participants')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findLobbyParticipants(
@@ -58,7 +81,7 @@ export class LobbiesController {
     return await this.lobbiesService.findLobbyParticipants(id);
   }
 
-  @Get(':id/participants')
+  @Get(':id/banned')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findLobbyBanned(@Param('id') id: string): Promise<ReturnUserEntity[]> {
     return await this.lobbiesService.findLobbyBanned(id);
@@ -76,6 +99,6 @@ export class LobbiesController {
   @Delete(':id')
   @ApiOkResponse({ type: LobbyEntity })
   async remove(@Param('id') id: string): Promise<LobbyEntity> {
-    return await this.lobbiesService.remove(id);
+    return await this.lobbiesService.delete(id);
   }
 }

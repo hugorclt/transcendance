@@ -10,11 +10,12 @@ import {
 } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Status, Type } from '@prisma/client';
+import { Status, Type, VisibilityMode } from '@prisma/client';
 import { exclude } from 'src/utils/exclude';
 import { UserEntity } from './entities/user.entity';
 import { ReturnUserEntity } from './entities/return-user.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
+import { UserPreferencesEntity } from './entities/user-preferences.entity';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,14 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
-      data: createUserDto,
+      data: {
+        username: createUserDto.username,
+        email: createUserDto.email,
+        password: createUserDto.password,
+        preferences: {
+          create: { visibility: 'VISIBLE' },
+        },
+      },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
@@ -31,14 +39,30 @@ export class UsersService {
     createGoogleUserDto: CreateGoogleUserDto,
   ): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
-      data: createGoogleUserDto,
+      data: {
+        username: createGoogleUserDto.username,
+        email: createGoogleUserDto.email,
+        password: createGoogleUserDto.password,
+        type: createGoogleUserDto.type,
+        preferences: {
+          create: { visibility: 'VISIBLE' },
+        },
+      },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
 
   async create42(create42UserDto: Create42UserDto): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
-      data: create42UserDto,
+      data: {
+        username: create42UserDto.username,
+        email: create42UserDto.email,
+        password: create42UserDto.password,
+        type: create42UserDto.type,
+        preferences: {
+          create: { visibility: 'VISIBLE' },
+        },
+      },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
@@ -127,8 +151,38 @@ export class UsersService {
       where: { id },
       data: { status: status as Status },
     });
+    //this should trigger a status update to friends only if preference is set to visible
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);
     throw new NotFoundException();
+  }
+
+  async updateStatusVisibility(
+    id: string,
+    status: string,
+  ): Promise<ReturnUserEntity> {
+    console.log('Updating visibility preferences to: ', status);
+    const user: UserEntity = await this.prisma.user.update({
+      where: { id },
+      data: {
+        preferences: {
+          update: {
+            visibility: status as VisibilityMode,
+          },
+        },
+      },
+    });
+    //this should trigger a status update to friends depending on the visibility update
+    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    throw new NotFoundException();
+  }
+
+  async getUserPreferences(id: string): Promise<UserPreferencesEntity> {
+    console.log('getting user preferences');
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: { preferences: true },
+    });
+    return user.preferences;
   }
 
   async updateRefreshToken(id: string, refreshToken: string) {
@@ -174,14 +228,14 @@ export class UsersService {
     usernameToRemove: string,
   ): Promise<ReturnUserEntity> {
     const remover = await this.prisma.user.findUnique({
-      where: {id: userId},
-      include: {friends: true},
-    })
+      where: { id: userId },
+      include: { friends: true },
+    });
 
     const removed = await this.prisma.user.findUnique({
-      where: {username: usernameToRemove},
-      include: {friends: true},
-    })
+      where: { username: usernameToRemove },
+      include: { friends: true },
+    });
 
     this.removeOneRelation(remover, removed);
     this.removeOneRelation(removed, remover);
@@ -192,9 +246,7 @@ export class UsersService {
     if (!remover) throw new NotFoundException('Remover not found');
     if (!removed) throw new NotFoundException('Removed not found');
 
-    const friend = remover.friends.find(
-      (friend) => friend.id === removed.id,
-    );
+    const friend = remover.friends.find((friend) => friend.id === removed.id);
     if (!friend) throw new NotFoundException('Friend not found');
 
     await this.prisma.user.update({
@@ -214,12 +266,12 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     return user.friends.map((friend) => {
-      return ({
+      return {
         id: friend.id,
         username: friend.username,
         status: friend.status,
-        avatar: friend.avatar
-      })
+        avatar: friend.avatar,
+      };
     });
   }
 

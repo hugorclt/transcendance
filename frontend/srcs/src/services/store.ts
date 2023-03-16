@@ -1,5 +1,11 @@
 import { atom } from "jotai";
-import { TConversation, TFriend, TSelectedPage, TUser } from "./type";
+import {
+  TConversation,
+  TFriend,
+  TLobby,
+  TUser,
+  TUserPreferences,
+} from "./type";
 
 export const userAtom = atom<TUser>({
   id: "",
@@ -8,6 +14,17 @@ export const userAtom = atom<TUser>({
   avatar: "",
   exp: 0,
   balance: 0,
+});
+
+export const userPreferencesAtom = atom<TUserPreferences>({
+  visibility: "",
+});
+
+export const lobbyAtom = atom<TLobby>({
+  id: "",
+  ownerId: "",
+  nbPlayers: 0,
+  mode: "",
 });
 
 export const friendAtom = atom<TFriend[]>([]);

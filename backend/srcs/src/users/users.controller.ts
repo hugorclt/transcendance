@@ -18,6 +18,7 @@ import { AccessAuthGard } from 'src/auth/utils/guards';
 import { Request } from '@nestjs/common';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { RemoveFriendsDto } from './dto/remove-friend.dto';
+import { UserPreferencesEntity } from './entities/user-preferences.entity';
 
 @Controller('users')
 @UseGuards(AccessAuthGard)
@@ -65,22 +66,45 @@ export class UsersController {
     return user;
   }
 
-  @Post('me/status')
+  // @Post('me/status')
+  // @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
+  // async updateStatus(@Request() req): Promise<ReturnUserEntity> {
+  //   const user = await this.usersService.updateStatus(
+  //     req.user.sub,
+  //     req.body.status,
+  //   );
+  //   if (user) {
+  //     this.socialGateway.sendStatusUpdate({
+  //       userId: user.id,
+  //       username: user.username,
+  //       avatar: user.avatar,
+  //       status: user.status,
+  //     });
+  //   }
+  //   return user;
+  // }
+
+  @Post('me/visibility')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
-  async updateStatus(@Request() req): Promise<ReturnUserEntity> {
-    const user = await this.usersService.updateStatus(
+  async updateStatusVisibility(@Request() req): Promise<ReturnUserEntity> {
+    const user = await this.usersService.updateStatusVisibility(
       req.user.sub,
       req.body.status,
     );
     if (user) {
-      this.socialGateway.sendStatusUpdate({
-        userId: user.id,
-        username: user.username,
-        avatar: user.avatar,
-        status: user.status,
-      });
+      console.log('sending visibility update to: ', req.body.status);
+      this.socialGateway.sendVisibilityUpdate(req.user.sub, req.body.status);
     }
     return user;
+  }
+
+  @Get('me/preferences')
+  @ApiOkResponse({ type: UserPreferencesEntity })
+  async getUserPreferences(@Request() req): Promise<UserPreferencesEntity> {
+    const preferences = await this.usersService.getUserPreferences(
+      req.user.sub,
+    );
+    return preferences;
   }
 
   @Get(':id')
@@ -105,11 +129,20 @@ export class UsersController {
   }
 
   @Post('/friends/remove')
-  @ApiOkResponse({type: ReturnUserEntity })
-  async removeFriends(@Request() req, @Body() removeFriendsDto: RemoveFriendsDto) : Promise<ReturnUserEntity> {
-    const removed = await this.usersService.removeFriends(req.user.sub, removeFriendsDto.usernameToRemove);
-    this.socialGateway.removeFriend(req.user.sub, removeFriendsDto.usernameToRemove);
-    this.socialGateway.removeFriend(removed.id, req.user.username)
+  @ApiOkResponse({ type: ReturnUserEntity })
+  async removeFriends(
+    @Request() req,
+    @Body() removeFriendsDto: RemoveFriendsDto,
+  ): Promise<ReturnUserEntity> {
+    const removed = await this.usersService.removeFriends(
+      req.user.sub,
+      removeFriendsDto.usernameToRemove,
+    );
+    this.socialGateway.removeFriend(
+      req.user.sub,
+      removeFriendsDto.usernameToRemove,
+    );
+    this.socialGateway.removeFriend(removed.id, req.user.username);
     return removed;
   }
 }

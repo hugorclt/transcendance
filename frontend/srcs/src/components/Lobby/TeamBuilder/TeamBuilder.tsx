@@ -16,9 +16,33 @@ import {
   TeamNbPlayers,
   TeamInfoContainer,
   TeamStatusContainer,
+  LobbyLeaveButton,
 } from "./TeamBuilderStyle";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
+import { useAtom } from "jotai";
+import { userAtom, lobbyAtom } from "../../../services/store";
 
 function TeamBuilder() {
+  const axiosPrivate = useAxiosPrivate();
+  const [user, setUser] = useAtom(userAtom);
+  const [lobby, setLobby] = useAtom(lobbyAtom);
+  const leaveLobby = (e: React.SyntheticEvent) => {
+    console.log("Leave Button pressed");
+    e.preventDefault();
+    axiosPrivate
+      .post("http://localhost:3000/lobbies/leave", {
+        userId: user.id,
+        lobbyId: lobby.id,
+      })
+      .then((response: AxiosResponse) => {
+        console.log("success leaving lobby");
+      })
+      .catch((error: AxiosError) => {
+        console.log(JSON.stringify(error?.response?.data));
+      });
+  };
+
   return (
     <TeamBuilderContainer>
       <GameTitleContainer>
@@ -60,6 +84,7 @@ function TeamBuilder() {
         </TeamContainer>
       </CentralContainer>
       <BotContainer>
+        <LobbyLeaveButton onClick={leaveLobby}>LEAVE</LobbyLeaveButton>
         <GameStartButton>PLAY</GameStartButton>
       </BotContainer>
     </TeamBuilderContainer>

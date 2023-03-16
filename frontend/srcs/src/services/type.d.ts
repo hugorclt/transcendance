@@ -7,6 +7,22 @@ export interface TUser {
   balance: number;
 }
 
+export interface TUserPreferences {
+  visibility: string;
+}
+export interface TLobby {
+  id: string;
+  ownerId: string;
+  mode: string;
+  nbPlayers: number;
+}
+
+export interface TPlayer {
+  id: string;
+  team: number;
+  status: string;
+}
+
 export interface TFriend {
   id: string;
   username: string;

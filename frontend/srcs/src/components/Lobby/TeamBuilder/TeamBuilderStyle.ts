@@ -107,3 +107,13 @@ export const GameStartButton = styled.button`
   padding: 4px;
   border: 2px solid ${COLORS.border};
 `;
+
+export const LobbyLeaveButton = styled.button`
+  width: 150px;
+  height: 60px;
+  background-color: ${COLORS.secondary};
+  color: ${COLORS.primary};
+  border-radius: 5px;
+  padding: 4px;
+  border: 2px solid ${COLORS.border};
+`;
