@@ -9,7 +9,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Namespace } from 'socket.io';
-import { Injectable, NotFoundException, UseFilters } from '@nestjs/common';
+import { Injectable, UseFilters } from '@nestjs/common';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { UsersService } from 'src/users/users.service';
@@ -140,14 +140,14 @@ export class SocialsGateway
     else return;
     this.emitToUser(asker.id, 'on-status-update', {
       username: client.username,
-      id: client.id,
       status: replyer.status,
+      id: client.userId,
       avatar: replyer.avatar,
     });
-    this.emitToUser(client.id, 'on-status-update', {
+    this.emitToUser(replyer.id, 'on-status-update', {
       username: asker.username,
-      id: client.id,
       status: asker.status,
+      id: asker.id,
       avatar: replyer.avatar,
     });
   }
