@@ -16,9 +16,6 @@ import { COLORS, convertStatusColor } from "../../../../colors";
 import Popup from "reactjs-popup";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
-import { TFriend } from "../../../../services/type";
-import { useAtom } from "jotai";
-import { activeChat } from "../../../../services/store";
 import { TFriendCardsProps } from "./FriendsCardsType";
 
 function FriendsCards({ friend }: TFriendCardsProps) {

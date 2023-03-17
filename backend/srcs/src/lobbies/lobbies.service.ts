@@ -50,7 +50,9 @@ export class LobbiesService {
   }
 
   async findOne(id: string): Promise<LobbyEntity> {
-    return await this.prisma.lobby.findUnique({ where: { id } });
+    const lobby = await this.prisma.lobby.findUnique({ where: { id } });
+    if (!lobby) throw new NotFoundException('Lobby not found');
+    return lobby;
   }
 
   async update(

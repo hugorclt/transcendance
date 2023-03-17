@@ -12,6 +12,7 @@ import { ParticipantModule } from './socials/rooms/participant/participant.modul
 import { SocialsModule } from './socials/socials.module';
 import { MessagesModule } from './socials/rooms/messages/messages.module';
 import { ItemsModule } from './items/items.module';
+import { InvitationsModule } from './invitations/invitations.module';
 @Module({
   imports: [
     AuthModule,
@@ -25,6 +26,7 @@ import { ItemsModule } from './items/items.module';
     MessagesModule,
     LobbiesModule,
     ItemsModule,
+    InvitationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

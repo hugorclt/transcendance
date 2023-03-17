@@ -8,7 +8,6 @@ import {
   GameTitle,
   GameTitleCard,
   GameTitleContainer,
-  InviteFriendButton,
   TeamBuilderContainer,
   TeamCardsContainer,
   TeamContainer,
@@ -21,12 +20,19 @@ import {
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { userAtom, lobbyAtom } from "../../../services/store";
+import { userAtom, lobbyAtom, friendAtom } from "../../../services/store";
+import InviteFriendsButton from "./InviteFriendsButton/InviteFriendsButton";
 
 function TeamBuilder() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useAtom(userAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const [friendsList, setFriendsList] = useAtom(friendAtom);
+
+  const inviteFriends = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+  };
+
   const leaveLobby = (e: React.SyntheticEvent) => {
     console.log("Leave Button pressed");
     e.preventDefault();
@@ -58,7 +64,7 @@ function TeamBuilder() {
               <TeamName>RED TEAM</TeamName>
               <TeamNbPlayers>2/4</TeamNbPlayers>
             </TeamStatusContainer>
-            <InviteFriendButton />
+            <InviteFriendsButton />
           </TeamInfoContainer>
           <TeamCardsContainer>
             <PlayerCard />
@@ -73,7 +79,7 @@ function TeamBuilder() {
               <TeamName>BLUE TEAM</TeamName>
               <TeamNbPlayers>2/4</TeamNbPlayers>
             </TeamStatusContainer>
-            <InviteFriendButton />
+            <InviteFriendsButton />
           </TeamInfoContainer>
           <TeamCardsContainer>
             <PlayerCard />

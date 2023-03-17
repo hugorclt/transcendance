@@ -76,12 +76,6 @@ export const TeamNbPlayers = styled.h2`
   color: ${COLORS.primary};
 `;
 
-export const InviteFriendButton = styled.div`
-  width: 20px;
-  height: 20px;
-  background-color: ${COLORS.darkergrey};
-`;
-
 export const TeamCardsContainer = styled.div`
   height: 90%;
   width: 100%;
