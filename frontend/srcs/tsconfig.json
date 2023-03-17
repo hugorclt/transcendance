@@ -16,6 +16,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
+    
   },
   "include": ["src", "hooks/useAuth.tsx", "src/services/Auth/RequireAuth.tsx"]
 }

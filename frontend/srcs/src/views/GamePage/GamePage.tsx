@@ -1,7 +1,13 @@
-import React from "react";
+import React from 'react'
+import Game from '../../components/Game/Game'
+import { GameSocketProvider } from '../../services/Game/SocketContext'
 
 function GamePage() {
-  return <>GAME</>;
+  return (
+    <GameSocketProvider>
+      <Game />
+    </GameSocketProvider>
+  )
 }
 
-export default GamePage;
+export default GamePage
