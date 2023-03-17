@@ -11,6 +11,10 @@ export class Pitch {
     this.wallThickness = wallThickness;
   }
 
+  update() : void {
+    // map modification ?
+  }
+
   getWidth(): number {
     return this.width;
   }
