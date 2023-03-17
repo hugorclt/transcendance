@@ -119,8 +119,8 @@ function Game() {
           depth={PADDLE_SIZE.depth}
           color={"#fff"}
         />
-        <hemisphereLight args={["#ffff", 0.6]} />\
-        {/* <ambientLight color="#fff" /> */}
+        {/* <hemisphereLight args={["#ffff", 0.6]} />\ */}
+        <ambientLight color="#fff" />
       </Suspense>
     </Canvas>
   );
