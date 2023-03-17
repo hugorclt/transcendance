@@ -18,6 +18,7 @@ import { RoomsService } from './rooms/rooms.service';
 import { MessagesService } from './rooms/messages/messages.service';
 import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getStatusFromVisibility } from 'src/users/utils/friend-status';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -44,17 +45,7 @@ export class SocialsGateway
 
   async handleConnection(client: AuthSocket) {
     client.join(client.userId);
-    const user = await this.usersService.findOne(client.userId);
-    this.emitToList(
-      await this.usersService.getUserFriends(client.userId),
-      'on-status-update',
-      {
-        username: user.username,
-        avatar: user.avatar,
-        status: user.status,
-        id: user.id,
-      },
-    );
+    this.sendStatusUpdate(client.userId);
     const rooms = await this.roomService.findRoomsForUser(client.userId);
     rooms.map((room) => {
       client.join(room.id);
@@ -101,14 +92,10 @@ export class SocialsGateway
       'on-visibility-update',
       user.preferences.visibility,
     );
-    let status;
-    if (user.preferences.visibility == 'VISIBLE') {
-      status = user.status;
-    } else if (user.preferences.visibility == 'AWAY') {
-      status = 'AWAY';
-    } else if (user.preferences.visibility == 'INVISIBLE') {
-      status = 'DISCONNECTED';
-    }
+    let status = getStatusFromVisibility(
+      user.status,
+      user.preferences.visibility,
+    );
     this.emitToList(user.friends, 'on-status-update', {
       username: user.username,
       avatar: user.avatar,
@@ -131,22 +118,34 @@ export class SocialsGateway
     @ConnectedSocket() client: AuthSocket,
     @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
   ): Promise<any> {
-    const asker = await this.usersService.findOneByUsername(
-      payload.fromUsername,
-    );
-    const replyer = await this.usersService.findOne(client.userId);
+    const asker = await this.prisma.user.findUnique({
+      where: { username: payload.fromUsername },
+      include: { preferences: true },
+    });
+    const replyer = await this.prisma.user.findUnique({
+      where: { id: client.userId },
+      include: { preferences: true },
+    });
     if (payload.isReplyTrue === true)
       await this.usersService.addFriend(asker.id, replyer.id);
     else return;
+    let status = getStatusFromVisibility(
+      replyer.status,
+      replyer.preferences.visibility,
+    );
     this.emitToUser(asker.id, 'on-status-update', {
       username: client.username,
-      status: replyer.status,
+      status: status,
       id: client.userId,
       avatar: replyer.avatar,
     });
+    status = getStatusFromVisibility(
+      asker.status,
+      asker.preferences.visibility,
+    );
     this.emitToUser(replyer.id, 'on-status-update', {
       username: asker.username,
-      status: asker.status,
+      status: status,
       id: asker.id,
       avatar: replyer.avatar,
     });

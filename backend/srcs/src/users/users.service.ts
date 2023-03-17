@@ -17,8 +17,8 @@ import {
   ReturnUserEntity,
   ReturnUserEntityWithPreferences,
 } from './entities/return-user.entity';
-import { SocialsGateway } from 'src/socials/socials.gateway';
 import { UserPreferencesEntity } from './entities/user-preferences.entity';
+import { getStatusFromVisibility } from './utils/friend-status';
 
 @Injectable()
 export class UsersService {
@@ -163,7 +163,6 @@ export class UsersService {
     id: string,
     status: string,
   ): Promise<ReturnUserEntityWithPreferences> {
-    console.log('Updating visibility preferences to: ', status);
     const user = await this.prisma.user.update({
       where: { id },
       data: {
@@ -182,7 +181,6 @@ export class UsersService {
   }
 
   async getUserPreferences(id: string): Promise<UserPreferencesEntity> {
-    console.log('getting user preferences');
     const user = await this.prisma.user.findUnique({
       where: { id },
       include: { preferences: true },
@@ -266,17 +264,25 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
-        friends: true,
-      }, //INCLUDE FRIENDS PREFERENCES AND CHANGE STATUS ACCORDINGLY
+        friends: {
+          include: {
+            preferences: true,
+          },
+        },
+      },
     });
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user.friends.map((friend) => {
+      let friendStatus = getStatusFromVisibility(
+        friend.status,
+        friend.preferences.visibility,
+      );
       return {
         id: friend.id,
         username: friend.username,
-        status: friend.status,
+        status: friendStatus,
         avatar: friend.avatar,
       };
     });
