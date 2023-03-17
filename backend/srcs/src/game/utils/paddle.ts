@@ -5,14 +5,16 @@ export class Paddle {
     private width: number;
     private height: number;
     private depth: number;
+    private mass:number;
   
-    constructor(x: number, y: number, z: number, width: number, height: number, depth: number) {
+    constructor(x: number, y: number, z: number, width: number, height: number, depth: number, mass: number) {
       this.x = x;
       this.y = y;
       this.z = z;
       this.width = width;
       this.height = height;
       this.depth = depth;
+      this.mass = mass;
     }
   
     move(x: number) {
@@ -66,5 +68,13 @@ export class Paddle {
     setDepth(depth: number) {
         this.depth = depth;
     }
-  }
+
+    getMass(): number {
+      return this.mass;
+    }
+
+    setMass(mass: number) {
+      this.mass = mass;
+    }
+  };
   
