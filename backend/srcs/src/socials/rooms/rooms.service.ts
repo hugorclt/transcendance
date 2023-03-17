@@ -23,7 +23,7 @@ export class RoomsService {
 
     if (createRoomDto.isDm == true) {
       const id1 = await this.usersService.findOneByUsername(
-        createRoomDto.users[0],
+        createRoomDto.users[0].username,
       );
       const id2 = createRoomDto.ownerId;
       const concatenatedID = this.concatenateID(id1.id, id2);
@@ -43,8 +43,8 @@ export class RoomsService {
         type: 0,
         room: {
           create: createRoomDto.users.map((user) => ({
-            user: { connect: { username: user } },
-            role: user === createRoomDto.ownerId ? Role.OWNER : Role.BASIC,
+            user: { connect: { username: user.username } },
+            role: user.role === 'ADMIN' ? Role.ADMIN : Role.BASIC,
           })),
         },
         owner: { connect: { id: createRoomDto.ownerId } },
@@ -86,6 +86,9 @@ export class RoomsService {
   findOne(id: string) {
     return this.prisma.room.findUnique({
       where: { id },
+      include: {
+        room: true,
+      },
     });
   }
 
@@ -97,13 +100,6 @@ export class RoomsService {
       },
     });
   }
-
-  // update(id: string, updateRoomDto: UpdateRoomDto) {
-  //   return this.prisma.room.update({
-  //     where: {id},
-  // data: updateRoomDto,
-  //   });
-  // }
 
   remove(id: string) {
     return this.prisma.room.delete({
@@ -165,6 +161,53 @@ export class RoomsService {
       isDm: room.isDm,
       participants: await this.participant.createParticipantFromRoom(room),
     };
+  }
+
+  async changeOwner(roomId: string) {
+    const newOwner = await this.prisma.participant.findFirst({
+      where: { roomId: roomId },
+      orderBy: { joinedAt: 'desc' },
+      take: 1,
+    });
+    await this.prisma.participant.update({
+      where: { id: newOwner.id },
+      data: { role: Role.OWNER },
+    });
+  }
+
+  async leaveRoom(userId: string, roomId: string) {
+    const oldRoom = await this.findOne(roomId);
+    var nbParticipant = oldRoom.room.length;
+    const participantToDel = await this.prisma.participant.findMany({
+      where: {
+        userId: userId,
+        roomId: roomId,
+      },
+    });
+
+    await this.prisma.participant.deleteMany({
+      where: {
+        userId: userId,
+        roomId: roomId,
+      },
+    });
+
+    nbParticipant -= 1;
+    if (nbParticipant != 0 && participantToDel[0].role == Role.OWNER) {
+      this.changeOwner(roomId);
+    }
+
+    if (nbParticipant == 0) {
+      await this.prisma.room.delete({
+        where: { id: roomId },
+      });
+    }
+
+    const newRoom = await this.findOne(roomId);
+    if (!newRoom)
+      return ({room:undefined, participant: oldRoom.room})
+    const returnRoomEntity = await await this.createRoomReturnEntity(newRoom, await this.messageService.getLastMessage(roomId))
+    return ({room: returnRoomEntity, participant: oldRoom.room} )
   }
 
   // UTILS

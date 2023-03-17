@@ -10,4 +10,7 @@ export class ReturnParticipantEntity {
 
     @ApiProperty()
     name: string;
+
+    @ApiProperty()
+    status: string;
 }

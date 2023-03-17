@@ -1,6 +1,15 @@
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 
+export const ModalBoxCreateRoom = styled.div`
+  background-color: ${COLORS.background};
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid ${COLORS.border};
+  width: 512px;
+  height: 256px;
+`
+
 export const ChatHistoryTopBar = styled.div`
   padding: 8px;
   padding-right: 12px;
@@ -57,4 +66,23 @@ export const CreateRoomButtonBox = styled.button`
   width: 100%;
   height: 100%;
   background-color: ${COLORS.background};
+`
+
+export const CreateRoomFriends = styled.div`
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+
+  p {
+    color: ${COLORS.primary};
+  }
+  
+  h3 {
+    color: ${COLORS.primary};
+    text-decoration: underline;
+  }
+`
+
+export const CreateRoomScroll = styled.div`
+  overflow-y: scroll;
 `

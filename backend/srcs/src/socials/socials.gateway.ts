@@ -189,6 +189,12 @@ export class SocialsGateway
     });
   }
 
+  emitToListString(userList: string[], eventName: string, data: any) {
+    userList.forEach((user) => {
+      this.emitToUser(user, eventName, data);
+    });
+  }
+
   removeFriend(removerId: string, friendRemoved: string) {
     this.emitToUser(removerId, 'on-removed-friend', friendRemoved);
   }

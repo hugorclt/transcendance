@@ -20,7 +20,19 @@ function ChatProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     socket?.on("on-chat-update", (newChat) => {
-      setChat((prev) => updateChatHistory(prev, newChat));
+      if (newChat.avatar == "deleted") {
+        console.log("yep:", newChat);
+        setChat((prev) => {
+          const index = prev.findIndex((item) => item.id === newChat.id);
+          console.log(index);
+          if (index === -1) {
+            return prev;
+          }
+          return [...prev.slice(0, index), ...prev.slice(index + 1)];
+        });
+      } else {
+        setChat((prev) => updateChatHistory(prev, newChat));
+      }
     });
 
     return () => {

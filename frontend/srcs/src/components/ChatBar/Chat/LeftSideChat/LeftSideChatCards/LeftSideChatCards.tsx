@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { COLORS, convertStatusColor } from "../../../../../colors";
 import { ProfileBoxStatus } from "../../../ProfilBox/ProfilBoxStyle";
 import {
@@ -23,6 +23,7 @@ function LeftSideChatCards(props: {
   name: string;
   status: string;
   role: string;
+  isAdmin: boolean;
 }) {
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
@@ -64,7 +65,16 @@ function LeftSideChatCards(props: {
             <InsidePopUpButton onClick={handleClick}>
               Add to friends
             </InsidePopUpButton>
-            <InsidePopUpButton>Block player</InsidePopUpButton>
+            <InsidePopUpButton>Block user</InsidePopUpButton>
+            {props.isAdmin ? (
+              <>
+                <InsidePopUpButton>Mute user</InsidePopUpButton>
+                <InsidePopUpButton>Kick user</InsidePopUpButton>
+                <InsidePopUpButton>Ban user</InsidePopUpButton>
+              </>
+            ) : (
+              ""
+            )}
           </PopUpBox>
         </Popup>
       </LeftSideChatCardsRightBox>

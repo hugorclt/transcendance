@@ -39,10 +39,12 @@ export class ParticipantService {
   async createParticipantFromRoom(room: Room & { room: Participant[] }) {
     return Promise.all(
       room.room.map(async (participant) => {
+        const user = await this.usersService.findOne(participant.userId);
         return {
           id: participant.id,
           role: participant.role,
-          name: (await this.usersService.findOne(participant.userId)).username,
+          name: user.username,
+          status: user.status
         };
       }),
     );

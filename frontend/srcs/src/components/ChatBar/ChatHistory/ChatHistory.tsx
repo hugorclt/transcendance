@@ -6,11 +6,11 @@ import {
   ChatHistoryTopBar,
   ChatHistoryTopBarTitle,
   ModalCreateJoin,
+  ModalBoxCreateRoom,
 } from "./ChatHistoryStyle";
 import { COLORS } from "../../../colors";
 import { nanoid } from "nanoid";
 import Popup from "reactjs-popup";
-import { ModalBox } from "../FriendsList/FriendsTopBar/FriendsTopBarStyle";
 import CreateRoom from "./CreateRoom.tsx/CreateRoom";
 import JoinRoom from "./JoinRoom.tsx/JoinRoom";
 import { RoomModalOpenContext } from "../../../views/ChatPage/RoomModalOpenContext";
@@ -39,12 +39,12 @@ function ChatHistory() {
           open={open}
           nested
         >
-          <ModalBox>
+          <ModalBoxCreateRoom>
             <ModalCreateJoin>
               <CreateRoom />
               <JoinRoom />
             </ModalCreateJoin>
-          </ModalBox>
+          </ModalBoxCreateRoom>
         </Popup>
       </ChatHistoryTopBar>
       <ChatHistoryBox>

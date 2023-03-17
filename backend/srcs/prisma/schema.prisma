@@ -35,11 +35,11 @@ model User {
   roomOwner        Room[]        @relation("owner")
 }
 
-model Preference{
-  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user            User          @relation(fields: [userId], references: [id])
-  userId          String        @unique @db.Uuid
-  visibility      VisibilityMode 
+model Preference {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user       User           @relation(fields: [userId], references: [id])
+  userId     String         @unique @db.Uuid
+  visibility VisibilityMode
 }
 
 enum VisibilityMode {
@@ -47,6 +47,7 @@ enum VisibilityMode {
   INVISIBLE
   AWAY
 }
+
 //================== GAME =================
 model Lobby {
   id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -84,10 +85,10 @@ model Match {
 
 //================== SHOP =======================
 model Item {
-  id    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name  String
-  price Int
-  image String
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  price  Int
+  image  String
   owners User[] @relation("itemOwner")
 }
 
@@ -103,7 +104,7 @@ model Room {
   userBanSymmetric User[]        @relation("Banned")
   roomMsg          Message[]
   room             Participant[]
-  owner            User          @relation("owner", fields: [ownerId], references: [id])
+  owner            User          @relation("owner", fields: [ownerId], references: [id], onDelete: NoAction)
 }
 
 model Participant {
@@ -112,8 +113,8 @@ model Participant {
   roomId   String   @db.Uuid
   userId   String   @db.Uuid
   joinedAt DateTime @default(now())
-  room     Room     @relation(fields: [roomId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  room     Room     @relation(fields: [roomId], references: [id], onDelete: NoAction)
+  user     User     @relation(fields: [userId], references: [id], onDelete: NoAction)
 }
 
 model Message {
@@ -122,8 +123,8 @@ model Message {
   date     DateTime @default(now())
   senderId String   @db.Uuid
   roomId   String   @db.Uuid
-  room     Room     @relation(fields: [roomId], references: [id])
-  sender   User     @relation(fields: [senderId], references: [id])
+  room     Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender   User     @relation(fields: [senderId], references: [id], onDelete: NoAction)
 }
 
 enum Type {
