@@ -9,6 +9,7 @@ import {
 import { Namespace, Socket } from 'socket.io';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
+import { LobbiesService } from './lobbies.service';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -17,26 +18,27 @@ import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 export class LobbiesGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
+  constructor(private readonly lobbiesService: LobbiesService) {}
+
   @WebSocketServer()
   io: Namespace;
 
   afterInit(): void {}
 
-  handleConnection(client: AuthSocket, ...args: any[]) {
-    const sockets = this.io.sockets;
-    console.log(
-      `WebSocket client with id: ${client.id} connected! UserId: ${client.userId}, Username: ${client.username}`,
-    );
-    console.log(`Number of connected clients: ${sockets.size}`);
-    this.emitBroadcast('hello', `from ${client.id}`);
+  async handleConnection(client: AuthSocket) {
+    client.join(client.userId);
+    const lobby = await this.lobbiesService
+      .findLobbyByClientId(client.userId)
+      .catch((error) => {
+        throw error;
+      });
+    if (lobby) {
+      console.log('client is found in lobby: ', lobby);
+      client.join(lobby.id); //ou alors lobby owner id?
+    }
   }
 
-  handleDisconnect(client: Socket) {
-    const sockets = this.io.sockets;
-    console.log(`WebSocket client with id: ${client.id} disconnected!`);
-    console.log(`Number of connected clients: ${sockets.size}`);
-    //todo - remove client from poll and send particpants_updated event
-  }
+  handleDisconnect(client: Socket) {}
 
   public emitBroadcast(eventName: string, data: any) {
     this.io.emit(eventName, data);

@@ -10,7 +10,6 @@ import { JoinLobbyDto } from './dto/join-lobby.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LobbyEntity } from './entities/lobby.entity';
 import { UsersService } from 'src/users/users.service';
-import { LobbiesGateway } from './lobbies.gateway';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 
@@ -19,7 +18,6 @@ export class LobbiesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
-    private readonly lobbiesGateway: LobbiesGateway,
     private readonly socialsGateway: SocialsGateway,
   ) {}
 
@@ -52,6 +50,19 @@ export class LobbiesService {
   async findOne(id: string): Promise<LobbyEntity> {
     const lobby = await this.prisma.lobby.findUnique({ where: { id } });
     if (!lobby) throw new NotFoundException('Lobby not found');
+    return lobby;
+  }
+
+  async findLobbyByClientId(clientId: string): Promise<LobbyEntity> {
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        players: {
+          some: {
+            id: clientId,
+          },
+        },
+      },
+    });
     return lobby;
   }
 
