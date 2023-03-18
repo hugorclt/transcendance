@@ -109,11 +109,20 @@ export class LobbiesService {
       where: { id: joinLobbyDto.lobbyId },
       include: {
         players: true,
+        invitations: true,
       },
     });
-    if (lobby.nbPlayers < lobby.players.length) {
-      //lobby not full
-      console.log('lobby can be joined');
+    //check if user has been invited to lobby
+    lobby.invitations.map((invitation) => {
+      if (invitation.userId == joinLobbyDto.userId) {
+        console.log('user joining the lobby was invited');
+        //delete invitation
+        //TODO
+      }
+    });
+    if (lobby.nbPlayers == lobby.players.length) {
+      //lobby full
+      console.log('lobby is full');
     }
     //join lobby
     const updateLobby = await this.prisma.lobby.update({

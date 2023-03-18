@@ -11,7 +11,7 @@ import {
 @Injectable()
 export class InvitationsService {
   constructor(
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly lobbiesService: LobbiesService,
   ) {}
 

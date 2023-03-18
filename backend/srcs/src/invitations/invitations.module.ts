@@ -9,5 +9,6 @@ import { SocialsModule } from 'src/socials/socials.module';
   imports: [PrismaModule, LobbiesModule, forwardRef(() => SocialsModule)],
   controllers: [InvitationsController],
   providers: [InvitationsService],
+  exports: [InvitationsService],
 })
 export class InvitationsModule {}
