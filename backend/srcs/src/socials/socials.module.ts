@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { InvitationsModule } from 'src/invitations/invitations.module';
 import { LobbiesModule } from 'src/lobbies/lobbies.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
@@ -16,7 +15,6 @@ import { SocialsGateway } from './socials.gateway';
     forwardRef(() => MessagesModule),
     forwardRef(() => InvitationsModule),
     forwardRef(() => LobbiesModule),
-    JwtModule.register({ secret: process.env['AT_SECRET'] }),
   ],
   providers: [SocialsGateway],
   exports: [SocialsGateway],

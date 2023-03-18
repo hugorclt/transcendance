@@ -19,11 +19,10 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // JwtModule.register({ secret: process.env['AT_SECRET'] }),
+    JwtModule.register({ secret: process.env['AT_SECRET'] }),
     AuthModule,
     PrismaModule,
     UsersModule,
-    JwtModule,
     HttpModule,
     RoomsModule,
     ParticipantModule,

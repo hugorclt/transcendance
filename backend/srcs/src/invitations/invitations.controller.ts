@@ -35,12 +35,14 @@ export class InvitationsController {
     );
     console.log('emitting invitations to user via social gateway');
     this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
-    //should send pending invitation to players inside lobby
-    // this.lobbiesGateway.emitToRoom(
-    //   invitation.lobbyId,
-    //   'pending-invitation',
-    //   invitation,
-    // );
+    if (invitation.type == 'LOBBY') {
+      //should send pending invitation to players inside lobby
+      // this.lobbiesGateway.emitToRoom(
+      //   invitation.lobbyId,
+      //   'pending-invitation',
+      //   invitation,
+      // );
+    }
     return invitation;
   }
 
@@ -55,12 +57,14 @@ export class InvitationsController {
     console.log('emitting invitations to users via social gateway');
     invitations.map((invit) => {
       this.socialsGateway.emitToUser(invit.userId, 'invitation', invit);
-      //should send pending invitation to players inside lobby
-      // this.lobbiesGateway.emitToRoom(
-      //   invitation.lobbyId,
-      //   'pending-invitation',
-      //   invitation,
-      // );
+      if (invit.type == 'LOBBY') {
+        //should send pending invitation to players inside lobby
+        // this.lobbiesGateway.emitToRoom(
+        //   invitation.lobbyId,
+        //   'pending-invitation',
+        //   invitation,
+        // );
+      }
     });
     return invitations;
   }

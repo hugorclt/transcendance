@@ -12,10 +12,7 @@ const WSAuthMiddleware = (
   return async (socket: Socket, next) => {
     const authSocket = socket as AuthSocket;
     try {
-      console.log('token: ', socket.handshake.auth.jwt);
-      console.log('secret: ', process.env['AT_SECRET']);
       const jwtPayload = await jwtService.verify(socket.handshake.auth.jwt);
-      console.log('token has been verified');
       const user = await usersService.findOne(jwtPayload.sub);
       if (user) {
         authSocket.userId = user.id;
