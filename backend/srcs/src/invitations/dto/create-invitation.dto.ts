@@ -10,8 +10,13 @@ export class CreateInvitationDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   userId: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  username: string;
 
   @ApiProperty()
   @IsOptional()

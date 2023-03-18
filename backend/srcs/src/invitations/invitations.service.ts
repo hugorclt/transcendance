@@ -3,7 +3,10 @@ import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LobbiesService } from 'src/lobbies/lobbies.service';
-import { InvitationEntity } from './entities/invitation.entity';
+import {
+  InvitationEntity,
+  InvitationExtendedEntity,
+} from './entities/invitation.entity';
 
 @Injectable()
 export class InvitationsService {
@@ -14,37 +17,62 @@ export class InvitationsService {
 
   async create(
     createInvitationDto: CreateInvitationDto,
+    sender: any,
   ): Promise<InvitationEntity> {
-    //check if mode lobby
-    if (createInvitationDto.lobbyId) {
-      console.log('creating lobby invitation...');
-      //check lobby exists
-      const lobby = await this.lobbiesService.findOne(
-        createInvitationDto.lobbyId,
-      );
-      //check lobby can be joined (game not started, lobby not full, sender is lobby owner)
-      console.log('should check whether lobby is joinable');
-      //TODO
-      return await this.prisma.invitation.create({
-        data: {
-          type: createInvitationDto.type,
-          userId: createInvitationDto.userId,
-          lobbyId: lobby.id,
-        },
-      });
-    } else {
-      console.log('should create a friendship invitation');
-      //this is a friendship invitation
+    if (createInvitationDto.type == 'FRIEND') {
+      return await this.createFriendInvitation(createInvitationDto, sender);
+    } else if (createInvitationDto.type == 'LOBBY') {
+      return await this.createLobbyInvitation(createInvitationDto);
     }
+  }
+
+  async createLobbyInvitation(
+    createInvitationDto: CreateInvitationDto,
+  ): Promise<InvitationEntity> {
+    console.log('creating lobby invitation...');
+    //check lobby exists
+    const lobby = await this.lobbiesService.findOne(
+      createInvitationDto.lobbyId,
+    );
+    //check lobby can be joined (game not started, lobby not full, sender is lobby owner)
+    console.log('should check whether lobby is joinable');
+    //TODO
+    return await this.prisma.invitation.create({
+      data: {
+        type: createInvitationDto.type,
+        userId: createInvitationDto.userId,
+        lobbyId: lobby.id,
+      },
+    });
+  }
+
+  async createFriendInvitation(
+    createInvitationDto: CreateInvitationDto,
+    sender: any,
+  ): Promise<InvitationExtendedEntity> {
+    console.log('creating friend invitation...');
+    const receiver = await this.prisma.user.findUnique({
+      where: { username: createInvitationDto.username },
+    });
+    const invitation = await this.prisma.invitation.create({
+      data: {
+        type: createInvitationDto.type,
+        userId: receiver.id,
+        userFromId: sender.id,
+      },
+    });
+    console.log('invitation created: ', invitation);
+    return { ...invitation, userFromUsername: sender.username };
   }
 
   async createMany(
     invitationDtoList: CreateInvitationDto[],
+    senderId: string,
   ): Promise<InvitationEntity[]> {
     console.log('creating ', invitationDtoList.length, ' invitations');
     const invitations = await Promise.all(
       invitationDtoList.map(async (invitation) => {
-        return await this.create(invitation);
+        return await this.create(invitation, senderId);
       }),
     );
     console.log('success creating invitations');

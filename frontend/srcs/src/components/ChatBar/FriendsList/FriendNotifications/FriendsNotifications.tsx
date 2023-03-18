@@ -34,12 +34,13 @@ function FriendNotifications() {
     );
 
   useEffect(() => {
-    socket?.on("on-friend-request", (username) => {
-      notify(username);
+    socket?.on("invitation", (invitation) => {
+      console.log("received invitation: ", invitation);
+      notify(invitation.userFromUsername);
     });
 
     return () => {
-      socket?.off("on-friend-request");
+      socket?.off("invitation");
     };
   }, [socket]);
 

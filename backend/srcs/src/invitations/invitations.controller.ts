@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { InvitationsService } from './invitations.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
@@ -28,12 +29,13 @@ export class InvitationsController {
   @Post()
   @ApiCreatedResponse({ type: InvitationEntity })
   async create(
+    @Request() req: any,
     @Body() createInvitationDto: CreateInvitationDto,
   ): Promise<InvitationEntity> {
     const invitation = await this.invitationsService.create(
       createInvitationDto,
+      req.user,
     );
-    console.log('emitting invitations to user via social gateway');
     this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
     if (invitation.type == 'LOBBY') {
       //should send pending invitation to players inside lobby
@@ -49,10 +51,12 @@ export class InvitationsController {
   @Post('createMany')
   @ApiCreatedResponse({ type: InvitationEntity, isArray: true })
   async createMany(
+    @Request() req: any,
     @Body() invitationDtoList: CreateInvitationDto[],
   ): Promise<InvitationEntity[]> {
     const invitations = await this.invitationsService.createMany(
       invitationDtoList,
+      req.user.sub,
     );
     console.log('emitting invitations to users via social gateway');
     invitations.map((invit) => {

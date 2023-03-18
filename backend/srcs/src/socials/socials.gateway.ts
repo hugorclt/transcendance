@@ -107,14 +107,6 @@ export class SocialsGateway
   }
 
   //====== FRIEND / LOBBY INVITATIONS ======
-  @SubscribeMessage('friend-request')
-  async onFriendRequest(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody() toUsername,
-  ): Promise<void> {
-    const user = await this.usersService.findOneByUsername(toUsername);
-    this.emitToUser(user.id, 'on-friend-request', client.username);
-  }
 
   @SubscribeMessage('friend-request-reply')
   async onFriendRequestReply(
