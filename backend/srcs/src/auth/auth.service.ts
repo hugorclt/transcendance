@@ -134,7 +134,7 @@ export class AuthService {
   }
 
   /* --------------------------------- logout --------------------------------- */
-  async logout(userId: string) {
+  async logout(userId: string): Promise<void> {
     await this.prisma.user.updateMany({
       where: {
         id: userId,
@@ -178,11 +178,11 @@ export class AuthService {
   /* -------------------------------------------------------------------------- */
   async getTokens(userId: string, username: string) {
     const [at, rt] = await Promise.all([
-      this.jwtService.signAsync({
+      await this.jwtService.signAsync({
         sub: userId,
         username,
       }),
-      this.jwtService.signAsync(
+      await this.jwtService.signAsync(
         {
           sub: userId,
           username,
@@ -201,7 +201,7 @@ export class AuthService {
 
   async updateRefreshHash(userId: string, rt: string) {
     const hash = await bcrypt.hash(rt, 10);
-    this.usersService.updateRefreshToken(userId, hash);
+    await this.usersService.updateRefreshToken(userId, hash);
   }
 
   async checkGoogleToken(token: string): Promise<LoginTicket> {

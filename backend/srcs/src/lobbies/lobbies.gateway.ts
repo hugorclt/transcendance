@@ -25,7 +25,7 @@ export class LobbiesGateway
 
   afterInit(): void {}
 
-  async handleConnection(client: AuthSocket) {
+  async handleConnection(client: AuthSocket): Promise<void> {
     client.join(client.userId);
     const lobby = await this.lobbiesService
       .findLobbyByClientId(client.userId)
