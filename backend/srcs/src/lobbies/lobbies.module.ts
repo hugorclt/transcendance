@@ -10,9 +10,9 @@ import { SocialsModule } from 'src/socials/socials.module';
 @Module({
   imports: [
     PrismaModule,
-    UsersModule,
-    JwtModule.register({ secret: process.env['AT_SECRET'] }),
+    forwardRef(() => UsersModule),
     forwardRef(() => SocialsModule),
+    JwtModule.register({ secret: process.env['AT_SECRET'] }),
   ],
   controllers: [LobbiesController],
   providers: [LobbiesService, LobbiesGateway],

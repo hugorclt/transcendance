@@ -53,12 +53,12 @@ enum VisibilityMode {
 model Invitation{
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   type InvitationType
-  user User @relation("invited", fields: [userId], references: [id])
   userId String @db.Uuid
-  userFrom User? @relation("inviter", fields: [userFromId], references: [id])
   userFromId String? @db.Uuid
-  lobbyFrom Lobby? @relation(fields: [lobbyId], references: [id])
   lobbyId String? @db.Uuid
+  user User @relation("invited", fields: [userId], references: [id])
+  userFrom User? @relation("inviter", fields: [userFromId], references: [id])
+  lobbyFrom Lobby? @relation(fields: [lobbyId], references: [id])
 }
 
 enum InvitationType {

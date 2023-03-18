@@ -38,6 +38,7 @@ export class SocialsGateway
   @WebSocketServer()
   public io: Namespace;
 
+  //===== LIFECYCLE METHODS =====
   afterInit() {
     console.log('SocialsGateway initialized');
     this.io.on('connection', (socket) => {});
@@ -60,6 +61,7 @@ export class SocialsGateway
     });
   }
 
+  //===== STATUS / VISIBILITY =====
   async sendStatusUpdate(userId: string): Promise<void> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -104,6 +106,7 @@ export class SocialsGateway
     });
   }
 
+  //====== FRIEND / LOBBY INVITATIONS ======
   @SubscribeMessage('friend-request')
   async onFriendRequest(
     @ConnectedSocket() client: AuthSocket,
@@ -151,6 +154,21 @@ export class SocialsGateway
     });
   }
 
+  @SubscribeMessage('lobby-invitation-reply')
+  async onLobbyInvitationReply(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody() payload: { lobbyId: string; isReplyTrue: boolean },
+  ): Promise<void> {
+    //if reply false
+    if (payload.isReplyTrue == false) {
+      //=> delete invitation in db
+      //=> send lobby gateway invitation refused (with userId) to stop printing invitation pending
+    } else {
+      //if reply true
+    }
+  }
+
+  //====== CHAT / MESSAGES / ROOMS ======
   @SubscribeMessage('new-message')
   async newMessage(
     @ConnectedSocket() client: AuthSocket,
@@ -177,16 +195,6 @@ export class SocialsGateway
       'on-chat-update',
       await this.roomService.createRoomReturnEntity(room, message),
     );
-  }
-
-  emitToUser(receiverId: string, eventName: string, data: any) {
-    this.io.to(receiverId).emit(eventName, data);
-  }
-
-  emitToList(userList: User[], eventName: string, data: any) {
-    userList.forEach((user) => {
-      this.emitToUser(user.id, eventName, data);
-    });
   }
 
   removeFriend(removerId: string, friendRemoved: string) {
@@ -222,6 +230,17 @@ export class SocialsGateway
       if (!socketId) return;
       const socket = this.io.sockets.get(socketId);
       socket.join(room.id);
+    });
+  }
+
+  //====== UTILS =====
+  emitToUser(receiverId: string, eventName: string, data: any) {
+    this.io.to(receiverId).emit(eventName, data);
+  }
+
+  emitToList(userList: User[], eventName: string, data: any) {
+    userList.forEach((user) => {
+      this.emitToUser(user.id, eventName, data);
     });
   }
 }

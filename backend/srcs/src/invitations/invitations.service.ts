@@ -38,6 +38,19 @@ export class InvitationsService {
     }
   }
 
+  async createMany(
+    invitationDtoList: CreateInvitationDto[],
+  ): Promise<InvitationEntity[]> {
+    console.log('creating ', invitationDtoList.length, ' invitations');
+    const invitations = await Promise.all(
+      invitationDtoList.map(async (invitation) => {
+        return await this.create(invitation);
+      }),
+    );
+    console.log('success creating invitations');
+    return invitations;
+  }
+
   async findAll(): Promise<InvitationEntity[]> {
     return await this.prisma.invitation.findMany({});
   }

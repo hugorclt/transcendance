@@ -14,12 +14,16 @@ import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { InvitationEntity } from './entities/invitation.entity';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Controller('invitations')
-// @UseGuards(AccessAuthGard)
+@UseGuards(AccessAuthGard)
 @ApiTags('invitations')
 export class InvitationsController {
-  constructor(private readonly invitationsService: InvitationsService) {}
+  constructor(
+    private readonly invitationsService: InvitationsService,
+    private readonly socialsGateway: SocialsGateway,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({ type: InvitationEntity })
@@ -29,8 +33,36 @@ export class InvitationsController {
     const invitation = await this.invitationsService.create(
       createInvitationDto,
     );
-    console.log('invitation successfully created in db, should send invite');
+    console.log('emitting invitations to user via social gateway');
+    this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
+    //should send pending invitation to players inside lobby
+    // this.lobbiesGateway.emitToRoom(
+    //   invitation.lobbyId,
+    //   'pending-invitation',
+    //   invitation,
+    // );
     return invitation;
+  }
+
+  @Post('createMany')
+  @ApiCreatedResponse({ type: InvitationEntity, isArray: true })
+  async createMany(
+    @Body() invitationDtoList: CreateInvitationDto[],
+  ): Promise<InvitationEntity[]> {
+    const invitations = await this.invitationsService.createMany(
+      invitationDtoList,
+    );
+    console.log('emitting invitations to users via social gateway');
+    invitations.map((invit) => {
+      this.socialsGateway.emitToUser(invit.userId, 'invitation', invit);
+      //should send pending invitation to players inside lobby
+      // this.lobbiesGateway.emitToRoom(
+      //   invitation.lobbyId,
+      //   'pending-invitation',
+      //   invitation,
+      // );
+    });
+    return invitations;
   }
 
   @Get()
