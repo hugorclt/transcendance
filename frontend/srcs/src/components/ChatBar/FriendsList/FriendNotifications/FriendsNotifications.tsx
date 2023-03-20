@@ -4,10 +4,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { SocketContext } from "../../../../services/Auth/SocketContext";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { useAtom } from "jotai";
+import { lobbyAtom } from "../../../../services/store";
 
 function FriendNotifications() {
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
+  const [lobby, setLobby] = useAtom(lobbyAtom);
   const acceptFriendRequest = (username: string) => {
     socket?.emit("friend-request-reply", {
       fromUsername: username,
@@ -20,6 +23,12 @@ function FriendNotifications() {
       .post("/lobbies/join", { lobbyId: lobbyId, userId: userId })
       .then((response: AxiosResponse) => {
         console.log("success joining lobby: ", JSON.stringify(response.data));
+        setLobby({
+          id: response.data.id,
+          ownerId: response.data.ownerId,
+          nbPlayers: +response.data.nbPlayers,
+          mode: response.data.mode,
+        });
       })
       .catch((error: AxiosError) => {
         console.log("error joining lobby: ", JSON.stringify(error.cause));

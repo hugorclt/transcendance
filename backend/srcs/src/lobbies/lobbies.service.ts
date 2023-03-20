@@ -136,6 +136,7 @@ export class LobbiesService {
       },
     });
     console.log('User successfully joined lobby');
+    await this.usersService.updateStatus(joinLobbyDto.userId, 'LOBBY');
     return updateLobby;
     //update lobby status to all participants
   }

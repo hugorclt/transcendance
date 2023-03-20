@@ -63,7 +63,6 @@ export class LobbiesGateway
     console.log('received leave-lobby event');
     //check if user is in said lobby
     //disconnect user from lobby in db
-    //
     //send lobby left update to users in lobby
   }
 }

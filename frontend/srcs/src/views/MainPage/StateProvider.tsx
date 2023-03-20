@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import ChatProvider from "./ChatProvider";
 import FriendProvider from "./FriendProvider";
+import LobbyProvider from "./LobbyProvider";
 import UserPreferencesProvider from "./UserPreferencesProvider";
 import UserProvider from "./UserProvider";
 
@@ -9,7 +10,9 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
     <UserProvider>
       <UserPreferencesProvider>
         <FriendProvider>
-          <ChatProvider>{children}</ChatProvider>
+          <LobbyProvider>
+            <ChatProvider>{children}</ChatProvider>
+          </LobbyProvider>
         </FriendProvider>
       </UserPreferencesProvider>
     </UserProvider>

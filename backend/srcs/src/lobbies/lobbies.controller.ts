@@ -49,6 +49,14 @@ export class LobbiesController {
     return await this.lobbiesService.findAll();
   }
 
+  @Get('pistil')
+  @ApiOkResponse({ type: LobbyEntity })
+  async findLobbyForUser(@Request() req: any): Promise<LobbyEntity> {
+    console.log('getting lobby for user: ', req.user.username);
+    const lobby = await this.lobbiesService.findLobbyForUser(req.user.sub);
+    return lobby;
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: LobbyEntity })
   async findOne(@Param('id') id: string): Promise<LobbyEntity> {
@@ -61,7 +69,11 @@ export class LobbiesController {
     @Request() req: any,
     @Body() joinLobbyDto: JoinLobbyDto,
   ): Promise<LobbyEntity> {
-    return await this.lobbiesService.joinLobby(joinLobbyDto);
+    //join lobby
+    const lobby = await this.lobbiesService.joinLobby(joinLobbyDto);
+    //send status update
+    this.socialsGateway.sendStatusUpdate(req.user.sub);
+    return lobby;
   }
 
   @Post('leave')

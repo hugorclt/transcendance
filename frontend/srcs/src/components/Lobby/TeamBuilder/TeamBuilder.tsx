@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PlayerCard from "./PlayerCard/PlayerCard";
 import {
   BotContainer,
@@ -49,11 +49,14 @@ function TeamBuilder() {
       });
   };
 
+  useEffect(() => {}, []);
+
   return (
     <TeamBuilderContainer>
       <GameTitleContainer>
         <GameTitleCard>
           <GameTitle>PONG CHAMPIONS</GameTitle>
+          <GameTitle>{lobby.mode}</GameTitle>
           <GamePlayersMode>2 vs 2</GamePlayersMode>
         </GameTitleCard>
       </GameTitleContainer>
