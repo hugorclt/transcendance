@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -85,6 +85,17 @@ export class InvitationsService {
 
   async findOne(id: string): Promise<InvitationEntity> {
     return await this.prisma.invitation.findUnique({ where: { id } });
+  }
+
+  async decline(id: string, userId: string): Promise<InvitationEntity> {
+    const invitation = await this.prisma.invitation.findFirst({
+      where: {
+        id: id,
+        userId: userId,
+      },
+    });
+    if (!invitation) throw new NotFoundException('Invitation not found');
+    return await this.remove(invitation.id);
   }
 
   async update(

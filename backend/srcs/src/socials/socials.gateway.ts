@@ -46,7 +46,7 @@ export class SocialsGateway
 
   async handleConnection(client: AuthSocket) {
     client.join(client.userId);
-    this.sendStatusUpdate(client.userId);
+    // this.sendStatusUpdate(client.userId);
     const rooms = await this.roomService.findRoomsForUser(client.userId);
     rooms.map((room) => {
       client.join(room.id);
@@ -144,20 +144,6 @@ export class SocialsGateway
       id: asker.id,
       avatar: replyer.avatar,
     });
-  }
-
-  @SubscribeMessage('lobby-invitation-reply')
-  async onLobbyInvitationReply(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody() payload: { lobbyId: string; isReplyTrue: boolean },
-  ): Promise<void> {
-    //if reply false
-    if (payload.isReplyTrue == false) {
-      //=> delete invitation in db
-      //=> send lobby gateway invitation refused (with userId) to stop printing invitation pending
-    } else {
-      //if reply true
-    }
   }
 
   //====== CHAT / MESSAGES / ROOMS ======

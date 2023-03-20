@@ -16,6 +16,7 @@ import { AccessAuthGard } from 'src/auth/utils/guards';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { InvitationEntity } from './entities/invitation.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
+import { LobbiesGateway } from 'src/lobbies/lobbies.gateway';
 
 @Controller('invitations')
 @UseGuards(AccessAuthGard)
@@ -24,6 +25,7 @@ export class InvitationsController {
   constructor(
     private readonly invitationsService: InvitationsService,
     private readonly socialsGateway: SocialsGateway,
+    private readonly lobbiesGateway: LobbiesGateway,
   ) {}
 
   @Post()
@@ -71,6 +73,24 @@ export class InvitationsController {
       }
     });
     return invitations;
+  }
+
+  @Post('decline')
+  @ApiOkResponse({ type: InvitationEntity })
+  async decline(
+    @Request() req: any,
+    @Body() invitation: { id: string },
+  ): Promise<InvitationEntity> {
+    console.log('received declined invitation: ', invitation);
+    const invitationDeclined = await this.invitationsService.decline(
+      invitation.id,
+      req.user.sub,
+    );
+    if (invitationDeclined.type == 'LOBBY') {
+      //TODO: should send invitation canceled to players in lobby
+      // await this.lobbiesGateway.emitToRoom(invitationDeclined.lobbyId, 'on-invitation-declined', invitationDeclined);
+    }
+    return invitationDeclined;
   }
 
   @Get()

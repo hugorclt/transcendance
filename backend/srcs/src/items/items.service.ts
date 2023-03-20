@@ -13,7 +13,6 @@ export class ItemsService {
   }
 
   async findAll() {
-    this.socket.emitBroadcast('hello', 'THE BIG TEST');
     return await this.prisma.item.findMany({});
   }
 

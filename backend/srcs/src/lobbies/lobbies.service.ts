@@ -53,12 +53,12 @@ export class LobbiesService {
     return lobby;
   }
 
-  async findLobbyByClientId(clientId: string): Promise<LobbyEntity> {
+  async findLobbyForUser(userId: string): Promise<LobbyEntity> {
     const lobby = await this.prisma.lobby.findFirst({
       where: {
         players: {
           some: {
-            id: clientId,
+            id: userId,
           },
         },
       },

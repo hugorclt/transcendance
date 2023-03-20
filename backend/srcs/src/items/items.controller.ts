@@ -16,7 +16,7 @@ import { ItemEntity } from './entities/item.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 
 @Controller('items')
-// @UseGuards(AccessAuthGard)
+@UseGuards(AccessAuthGard)
 @ApiTags('items')
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}

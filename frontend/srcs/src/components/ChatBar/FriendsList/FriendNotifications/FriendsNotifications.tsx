@@ -26,6 +26,23 @@ function FriendNotifications() {
       });
   };
 
+  const declineInvitation = (invitationId: string) => {
+    axiosPrivate
+      .post("/invitations/decline", { invitationId })
+      .then((response: AxiosResponse) => {
+        console.log(
+          "success declining invitation: ",
+          JSON.stringify(response.data)
+        );
+      })
+      .catch((error: AxiosError) => {
+        console.log(
+          "error declining invitation: ",
+          JSON.stringify(error.cause)
+        );
+      });
+  };
+
   //========== FRIEND NOTIFICATION  ==============
   const notifyFriend = (invitation: any) =>
     toast(
@@ -43,7 +60,14 @@ function FriendNotifications() {
           >
             Accept
           </button>
-          <button className="text-red-800">Refuse</button>
+          <button
+            className="text-red-800"
+            onClick={() => {
+              declineInvitation(invitation.id);
+            }}
+          >
+            Refuse
+          </button>
         </div>
       </>
     );
@@ -64,7 +88,14 @@ function FriendNotifications() {
           >
             Accept
           </button>
-          <button className="text-red-800">Refuse</button>
+          <button
+            className="text-red-800"
+            onClick={() => {
+              declineInvitation(invitation.id);
+            }}
+          >
+            Refuse
+          </button>
         </div>
       </>
     );
