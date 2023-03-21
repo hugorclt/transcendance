@@ -52,7 +52,6 @@ export class LobbiesController {
   @Get('pistil')
   @ApiOkResponse({ type: LobbyEntity })
   async findLobbyForUser(@Request() req: any): Promise<LobbyEntity> {
-    console.log('getting lobby for user: ', req.user.username);
     const lobby = await this.lobbiesService.findLobbyForUser(req.user.sub);
     return lobby;
   }

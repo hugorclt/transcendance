@@ -72,7 +72,6 @@ export class RoomsController {
     );
     participant.map((user) => {
       const dataToSend = (user.userId == req.body.userId ? {id: req.body.roomId, avatar: "deleted"} : room)
-      console.log("sending...: ", user.userId);      
       this.socialGateway.emitToUser(user.userId, "on-chat-update", dataToSend);
     })
   }

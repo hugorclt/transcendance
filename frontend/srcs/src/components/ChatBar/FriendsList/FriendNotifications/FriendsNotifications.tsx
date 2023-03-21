@@ -5,19 +5,20 @@ import { SocketContext } from "../../../../services/Auth/SocketContext";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { lobbyAtom } from "../../../../services/store";
+import { friendAtom, lobbyAtom } from "../../../../services/store";
+import { updateFriendList } from "../../../../services/Friends/updateFriendList";
 
 function FriendNotifications() {
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const [friendlist, setFriendList] = useAtom(friendAtom);
 
   const acceptFriendRequest = (userFromId: string, userId: string) => {
     axiosPrivate
       .post("/users/friends/add", { userFromId: userFromId, userId: userId })
       .then((response: AxiosResponse) => {
-        console.log("success adding friend: ", JSON.stringify(response.data));
-        //update friend list with new friend
+        setFriendList((prev) => updateFriendList(response.data, prev));
       })
       .catch((error: AxiosError) => {
         console.log("error adding friend: ", JSON.stringify(error.cause));

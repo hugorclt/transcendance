@@ -63,7 +63,6 @@ export class InvitationsController {
       invitationDtoList,
       req.user.sub,
     );
-    console.log('emitting invitations to users via social gateway');
     invitations.map((invit) => {
       this.socialsGateway.emitToUser(invit.userId, 'invitation', invit);
       if (invit.type == 'LOBBY') {
@@ -84,7 +83,6 @@ export class InvitationsController {
     @Request() req: any,
     @Body() invitation: { id: string },
   ): Promise<InvitationEntity> {
-    console.log('received declined invitation: ', invitation);
     const invitationDeclined = await this.invitationsService.decline(
       invitation.id,
       req.user.sub,

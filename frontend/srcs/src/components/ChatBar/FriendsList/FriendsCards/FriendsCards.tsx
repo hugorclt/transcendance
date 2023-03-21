@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   FriendsCardsAvatar,
