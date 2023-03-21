@@ -34,3 +34,10 @@ export const ChatCardsEnd = styled.div`
   flex: 1;
   align-items: center;
 `;
+
+export const RoundNewChat = styled.div`
+  width:10px;
+  height:10px;
+  border-radius: 5px;
+  background-color: ${COLORS.orange};
+`

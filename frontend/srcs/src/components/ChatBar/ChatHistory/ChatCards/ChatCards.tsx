@@ -6,6 +6,7 @@ import {
   ChatCardsMiddle,
   ChatCardsName,
   ChatCardsRoundedAvatar,
+  RoundNewChat,
 } from "./ChatCardsStyle";
 import {
   activeChat,
@@ -30,6 +31,8 @@ function ChatCards({ conversation }: ChatCardsProps) {
     if (openChat.name == conversation.name)
       setOpenChat(conversationDefaultValue);
     else {
+      conversation.isRead = true;
+      console.log("pourtant je passe ici", conversation);
       setOpenChat(conversation);
     }
   };
@@ -57,6 +60,7 @@ function ChatCards({ conversation }: ChatCardsProps) {
               ? conversation.lastMessage.substring(0, 20) + "..."
               : conversation.lastMessage}
           </ChatCardsLastMessage>
+          {!conversation.isRead && <RoundNewChat></RoundNewChat>}
         </ChatCardsMiddle>
       </div>
       <ChatCardsEnd>

@@ -159,6 +159,7 @@ export class RoomsService {
       isPrivate: room.isPrivate,
       lastMessage: lastMessage == null ? '' : lastMessage.content,
       isDm: room.isDm,
+      isRead: false,
       participants: await this.participant.createParticipantFromRoom(room),
     };
   }

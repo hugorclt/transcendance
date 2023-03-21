@@ -37,6 +37,7 @@ export const conversationDefaultValue = {
   avatar: "",
   lastMessage: "",
   isDm: true,
+  isRead: true,
   participants: [
     {
       id: "",
