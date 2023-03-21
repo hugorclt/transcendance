@@ -10,8 +10,9 @@ import { InvitationsModule } from 'src/invitations/invitations.module';
 @Module({
   imports: [
     PrismaModule,
-    forwardRef(() => UsersModule),
     forwardRef(() => SocialsModule),
+    forwardRef(() => InvitationsModule),
+    forwardRef(() => UsersModule),
   ],
   controllers: [LobbiesController],
   providers: [LobbiesService, LobbiesGateway],

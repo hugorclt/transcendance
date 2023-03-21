@@ -12,7 +12,6 @@ import { Namespace } from 'socket.io';
 import { Injectable, UseFilters } from '@nestjs/common';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
-import { UsersService } from 'src/users/users.service';
 import { Message, Participant, Room, User } from '@prisma/client';
 import { RoomsService } from './rooms/rooms.service';
 import { MessagesService } from './rooms/messages/messages.service';
@@ -29,7 +28,6 @@ export class SocialsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(
-    private usersService: UsersService,
     private roomService: RoomsService,
     private messageService: MessagesService,
     private prisma: PrismaService,
@@ -46,7 +44,7 @@ export class SocialsGateway
 
   async handleConnection(client: AuthSocket) {
     client.join(client.userId);
-    // this.sendStatusUpdate(client.userId);
+    this.sendStatusUpdate(client.userId);
     const rooms = await this.roomService.findRoomsForUser(client.userId);
     rooms.map((room) => {
       client.join(room.id);
@@ -106,46 +104,6 @@ export class SocialsGateway
     });
   }
 
-  //====== FRIEND / LOBBY INVITATIONS ======
-
-  @SubscribeMessage('friend-request-reply')
-  async onFriendRequestReply(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody() payload: { fromUsername: string; isReplyTrue: boolean },
-  ): Promise<any> {
-    const asker = await this.prisma.user.findUnique({
-      where: { username: payload.fromUsername },
-      include: { preferences: true },
-    });
-    const replyer = await this.prisma.user.findUnique({
-      where: { id: client.userId },
-      include: { preferences: true },
-    });
-    if (payload.isReplyTrue === true)
-      await this.usersService.addFriend(asker.id, replyer.id);
-    else return;
-    let status = getStatusFromVisibility(
-      replyer.status,
-      replyer.preferences.visibility,
-    );
-    this.emitToUser(asker.id, 'on-status-update', {
-      username: client.username,
-      status: status,
-      id: client.userId,
-      avatar: replyer.avatar,
-    });
-    status = getStatusFromVisibility(
-      asker.status,
-      asker.preferences.visibility,
-    );
-    this.emitToUser(replyer.id, 'on-status-update', {
-      username: asker.username,
-      status: status,
-      id: asker.id,
-      avatar: replyer.avatar,
-    });
-  }
-
   //====== CHAT / MESSAGES / ROOMS ======
   @SubscribeMessage('new-message')
   async newMessage(
@@ -154,7 +112,9 @@ export class SocialsGateway
     payload: { message: string; room: Room & { room: Participant[] } },
   ) {
     if (payload.message == '' || payload.message.length > 256) return;
-    const sender = await this.usersService.findOne(client.userId);
+    const sender = await this.prisma.user.findUnique({
+      where: { id: client.userId },
+    });
     if (!sender) throw new WsNotFoundException('Sender not found');
     const room = await this.roomService.findOneByName(payload.room.name);
     if (!room) throw new WsNotFoundException('Room not found');
@@ -197,10 +157,14 @@ export class SocialsGateway
   }
 
   async joinUserToRoom(room: any, users: string[]) {
-    const owner = await this.usersService.findOne(room.ownerId);
+    const owner = await this.prisma.user.findUnique({
+      where: { id: room.ownerId },
+    });
     users.push(owner.username);
     users.map(async (user) => {
-      const participant = await this.usersService.findOneByUsername(user);
+      const participant = await this.prisma.user.findUnique({
+        where: { username: user },
+      });
       if (!participant)
         throw new WsNotFoundException(
           "Participant can't join the room, refresh the page",

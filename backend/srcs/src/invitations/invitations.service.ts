@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LobbiesService } from 'src/lobbies/lobbies.service';
 import {
   InvitationEntity,
   InvitationExtendedEntity,
@@ -10,15 +9,12 @@ import {
 
 @Injectable()
 export class InvitationsService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly lobbiesService: LobbiesService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(
     createInvitationDto: CreateInvitationDto,
     sender: any,
-  ): Promise<InvitationEntity> {
+  ): Promise<InvitationExtendedEntity> {
     if (createInvitationDto.type == 'FRIEND') {
       return await this.createFriendInvitation(createInvitationDto, sender);
     } else if (createInvitationDto.type == 'LOBBY') {
@@ -28,29 +24,29 @@ export class InvitationsService {
 
   async createLobbyInvitation(
     createInvitationDto: CreateInvitationDto,
-  ): Promise<InvitationEntity> {
+  ): Promise<InvitationExtendedEntity> {
     console.log('creating lobby invitation...');
     //check lobby exists
-    const lobby = await this.lobbiesService.findOne(
-      createInvitationDto.lobbyId,
-    );
+    const lobby = await this.prisma.lobby.findUnique({
+      where: { id: createInvitationDto.lobbyId },
+    });
     //check lobby can be joined (game not started, lobby not full, sender is lobby owner)
     console.log('should check whether lobby is joinable');
     //TODO
-    return await this.prisma.invitation.create({
+    const invitation = await this.prisma.invitation.create({
       data: {
         type: createInvitationDto.type,
         userId: createInvitationDto.userId,
         lobbyId: lobby.id,
       },
     });
+    return { ...invitation, userFromUsername: null };
   }
 
   async createFriendInvitation(
     createInvitationDto: CreateInvitationDto,
     sender: any,
   ): Promise<InvitationExtendedEntity> {
-    console.log('creating friend invitation...');
     const receiver = await this.prisma.user.findUnique({
       where: { username: createInvitationDto.username },
     });
@@ -58,11 +54,13 @@ export class InvitationsService {
       data: {
         type: createInvitationDto.type,
         userId: receiver.id,
-        userFromId: sender.id,
+        userFromId: sender.sub,
       },
     });
-    console.log('invitation created: ', invitation);
-    return { ...invitation, userFromUsername: sender.username };
+    return {
+      ...invitation,
+      userFromUsername: sender.username,
+    };
   }
 
   async createMany(

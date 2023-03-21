@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Participant, Room } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UsersService } from 'src/users/users.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
 
 @Injectable()
 export class ParticipantService {
-  constructor(
-    private prisma: PrismaService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   create(createParticipantDto: CreateParticipantDto) {
     return this.prisma.participant.create({
@@ -39,12 +35,14 @@ export class ParticipantService {
   async createParticipantFromRoom(room: Room & { room: Participant[] }) {
     return Promise.all(
       room.room.map(async (participant) => {
-        const user = await this.usersService.findOne(participant.userId);
+        const user = await this.prisma.user.findUnique({
+          where: { id: participant.userId },
+        });
         return {
           id: participant.id,
           role: participant.role,
           name: user.username,
-          status: user.status
+          status: user.status,
         };
       }),
     );

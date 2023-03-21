@@ -6,7 +6,11 @@ import { LobbiesModule } from 'src/lobbies/lobbies.module';
 import { SocialsModule } from 'src/socials/socials.module';
 
 @Module({
-  imports: [PrismaModule, LobbiesModule, forwardRef(() => SocialsModule)],
+  imports: [
+    PrismaModule,
+    forwardRef(() => SocialsModule),
+    forwardRef(() => LobbiesModule),
+  ],
   controllers: [InvitationsController],
   providers: [InvitationsService],
   exports: [InvitationsService],

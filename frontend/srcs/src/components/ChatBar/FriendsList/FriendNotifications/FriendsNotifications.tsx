@@ -11,11 +11,17 @@ function FriendNotifications() {
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
   const [lobby, setLobby] = useAtom(lobbyAtom);
-  const acceptFriendRequest = (username: string) => {
-    socket?.emit("friend-request-reply", {
-      fromUsername: username,
-      isReplyTrue: true,
-    });
+
+  const acceptFriendRequest = (userFromId: string, userId: string) => {
+    axiosPrivate
+      .post("/users/friends/add", { userFromId: userFromId, userId: userId })
+      .then((response: AxiosResponse) => {
+        console.log("success adding friend: ", JSON.stringify(response.data));
+        //update friend list with new friend
+      })
+      .catch((error: AxiosError) => {
+        console.log("error adding friend: ", JSON.stringify(error.cause));
+      });
   };
 
   const acceptLobbyRequest = (lobbyId: string, userId: string) => {
@@ -64,7 +70,7 @@ function FriendNotifications() {
           <button
             className="text-green-800"
             onClick={() => {
-              acceptFriendRequest(invitation.userFromUsername);
+              acceptFriendRequest(invitation.userFromId, invitation.userId);
             }}
           >
             Accept

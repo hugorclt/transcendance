@@ -12,7 +12,6 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { UserEntity } from './entities/user.entity';
 import {
   ReturnUserEntity,
   ReturnUserEntityWithPreferences,
@@ -22,6 +21,7 @@ import { Request } from '@nestjs/common';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { RemoveFriendsDto } from './dto/remove-friend.dto';
 import { UserPreferencesEntity } from './entities/user-preferences.entity';
+import { addFriendDto } from './dto/add-friend.dto';
 
 @Controller('users')
 @UseGuards(AccessAuthGard)
@@ -112,6 +112,12 @@ export class UsersController {
   @ApiOkResponse({ type: ReturnUserEntity })
   remove(@Param('id') id: string): Promise<ReturnUserEntity> {
     return this.usersService.remove(id);
+  }
+
+  @Post('/friends/add')
+  @ApiOkResponse()
+  async addFriend(@Request() req: any, @Body() addFriendDto: addFriendDto) {
+    return await this.usersService.addFriend(addFriendDto);
   }
 
   @Post('/friends/remove')

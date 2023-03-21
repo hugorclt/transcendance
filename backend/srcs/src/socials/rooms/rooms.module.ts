@@ -11,7 +11,7 @@ import { RoomsService } from './rooms.service';
   imports: [
     PrismaModule,
     forwardRef(() => UsersModule),
-    ParticipantModule,
+    forwardRef(() => ParticipantModule),
     forwardRef(() => SocialsModule),
     forwardRef(() => MessagesModule),
   ],

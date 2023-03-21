@@ -69,10 +69,8 @@ export class LobbiesController {
     @Request() req: any,
     @Body() joinLobbyDto: JoinLobbyDto,
   ): Promise<LobbyEntity> {
-    //join lobby
     const lobby = await this.lobbiesService.joinLobby(joinLobbyDto);
-    //send status update
-    this.socialsGateway.sendStatusUpdate(req.user.sub);
+    await this.socialsGateway.sendStatusUpdate(req.user.sub);
     return lobby;
   }
 
@@ -82,7 +80,10 @@ export class LobbiesController {
     @Request() req: any,
     @Body() joinLobbyDto: JoinLobbyDto,
   ): Promise<LobbyEntity> {
-    return await this.lobbiesService.leaveLobby(joinLobbyDto);
+    const lobby = await this.lobbiesService.leaveLobby(joinLobbyDto);
+    await this.socialsGateway.sendStatusUpdate(req.user.sub);
+    return lobby;
+    //should update status for each user that left lobby
   }
 
   @Get(':id/participants')

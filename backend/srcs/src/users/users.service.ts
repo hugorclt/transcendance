@@ -19,10 +19,15 @@ import {
 } from './entities/return-user.entity';
 import { UserPreferencesEntity } from './entities/user-preferences.entity';
 import { getStatusFromVisibility } from './utils/friend-status';
+import { addFriendDto } from './dto/add-friend.dto';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly socialsGateway: SocialsGateway,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
@@ -205,25 +210,57 @@ export class UsersService {
     throw new NotFoundException('User not found');
   }
 
-  async addFriend(userId1: string, userId2: string): Promise<void> {
+  async addFriend(addFriendDto: addFriendDto): Promise<any> {
+    //should check if invitation exist and
+    //TODO
+    //=> if not exist: error
+    //=> if exists delete and continue
     const existingFriends = await this.prisma.user.findUnique({
-      where: { id: userId1 },
-      include: { friends: { where: { id: userId2 } } },
+      where: { id: addFriendDto.userFromId },
+      include: { friends: { where: { id: addFriendDto.userId } } },
     });
 
     if (existingFriends?.friends.length > 0) {
       throw new ConflictException('Already friends');
     }
 
-    await this.prisma.user.update({
-      where: { id: userId1 },
-      data: { friends: { connect: { id: userId2 } } },
+    const newFriend = await this.prisma.user.update({
+      where: { id: addFriendDto.userFromId },
+      data: { friends: { connect: { id: addFriendDto.userId } } },
+      include: {
+        preferences: true,
+      },
     });
 
-    await this.prisma.user.update({
-      where: { id: userId2 },
-      data: { friends: { connect: { id: userId1 } } },
+    const user = await this.prisma.user.update({
+      where: { id: addFriendDto.userId },
+      data: { friends: { connect: { id: addFriendDto.userFromId } } },
+      include: {
+        preferences: true,
+      },
     });
+
+    //should emit to new friend about friendship
+    let status = getStatusFromVisibility(
+      user.status,
+      user.preferences.visibility,
+    );
+    this.socialsGateway.emitToUser(newFriend.id, 'on-status-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: status,
+      id: user.id,
+    });
+    status = getStatusFromVisibility(
+      newFriend.status,
+      newFriend.preferences.visibility,
+    );
+    return {
+      username: newFriend.username,
+      avatar: newFriend.avatar,
+      status: status,
+      id: newFriend.id,
+    };
   }
 
   async removeFriends(

@@ -14,7 +14,10 @@ import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { InvitationEntity } from './entities/invitation.entity';
+import {
+  InvitationEntity,
+  InvitationExtendedEntity,
+} from './entities/invitation.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { LobbiesGateway } from 'src/lobbies/lobbies.gateway';
 
@@ -33,7 +36,7 @@ export class InvitationsController {
   async create(
     @Request() req: any,
     @Body() createInvitationDto: CreateInvitationDto,
-  ): Promise<InvitationEntity> {
+  ): Promise<InvitationExtendedEntity> {
     const invitation = await this.invitationsService.create(
       createInvitationDto,
       req.user,

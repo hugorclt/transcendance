@@ -1,5 +1,4 @@
 import {
-  INestApplication,
   Injectable,
   MethodNotAllowedException,
   NotFoundException,
@@ -12,12 +11,14 @@ import { LobbyEntity } from './entities/lobby.entity';
 import { UsersService } from 'src/users/users.service';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
+import { InvitationsService } from 'src/invitations/invitations.service';
 
 @Injectable()
 export class LobbiesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
+    private readonly invitationsService: InvitationsService,
     private readonly socialsGateway: SocialsGateway,
   ) {}
 
@@ -105,6 +106,7 @@ export class LobbiesService {
     await this.canUserJoinLobbies(joinLobbyDto.userId);
     console.log('user can join lobby');
     //check if lobby is joinable and / or not full
+    //TODO
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: joinLobbyDto.lobbyId },
       include: {
@@ -113,17 +115,14 @@ export class LobbiesService {
       },
     });
     //check if user has been invited to lobby
-    lobby.invitations.map((invitation) => {
-      if (invitation.userId == joinLobbyDto.userId) {
-        console.log('user joining the lobby was invited');
-        //delete invitation
-        //TODO
-      }
-    });
-    if (lobby.nbPlayers == lobby.players.length) {
-      //lobby full
-      console.log('lobby is full');
-    }
+    await Promise.all(
+      lobby.invitations.map((invitation) => {
+        if (invitation.userId == joinLobbyDto.userId) {
+          console.log('user joining the lobby was invited');
+          this.invitationsService.remove(invitation.id);
+        }
+      }),
+    );
     //join lobby
     const updateLobby = await this.prisma.lobby.update({
       where: {

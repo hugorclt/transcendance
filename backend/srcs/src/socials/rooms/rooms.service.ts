@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcrypt';
@@ -6,13 +6,13 @@ import { ParticipantService } from './participant/participant.service';
 import { Message, Participant, Role, Room } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
-import { SocialsGateway } from '../socials.gateway';
 
 @Injectable()
 export class RoomsService {
   constructor(
     private prisma: PrismaService,
     private participant: ParticipantService,
+    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private messageService: MessagesService,
   ) {}
@@ -205,10 +205,12 @@ export class RoomsService {
     }
 
     const newRoom = await this.findOne(roomId);
-    if (!newRoom)
-      return ({room:undefined, participant: oldRoom.room})
-    const returnRoomEntity = await await this.createRoomReturnEntity(newRoom, await this.messageService.getLastMessage(roomId))
-    return ({room: returnRoomEntity, participant: oldRoom.room} )
+    if (!newRoom) return { room: undefined, participant: oldRoom.room };
+    const returnRoomEntity = await await this.createRoomReturnEntity(
+      newRoom,
+      await this.messageService.getLastMessage(roomId),
+    );
+    return { room: returnRoomEntity, participant: oldRoom.room };
   }
 
   // UTILS
