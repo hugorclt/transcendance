@@ -10,9 +10,7 @@ function ChatBox() {
 
   function selectActiveChat() {
     const index = chat.findIndex((elem) => elem.isActive == true);
-    console.log(index);
     if (index > -1) {
-      console.log("oui");
       return (
         <ChatContainer>
           <Chat chat={chat[index]} />

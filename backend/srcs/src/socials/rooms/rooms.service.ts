@@ -206,6 +206,8 @@ export class RoomsService {
     return newRoom;
   }
 
+  
+
   // UTILS
   concatenateID(id1: string, id2: string) {
     const sortedIds = [id1, id2].sort();

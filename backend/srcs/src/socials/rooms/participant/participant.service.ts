@@ -41,7 +41,7 @@ export class ParticipantService {
       room.room.map(async (participant) => {
         const user = await this.usersService.findOne(participant.userId);
         return {
-          id: participant.id,
+          id: user.id,
           role: participant.role,
           name: user.username,
           status: user.status

@@ -20,6 +20,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { SocketContext } from "../../../../../services/Auth/SocketContext";
 
 function LeftSideChatCards(props: {
+  roomId: string;
+  userId: string;
   name: string;
   status: string;
   role: string;
@@ -38,6 +40,15 @@ function LeftSideChatCards(props: {
   const handleClick = () => {
     socket?.emit("friend-request", props.name);
   };
+
+  const handleKick = () => {
+    console.log(props.roomId);
+    socket?.emit("kick-player", {
+      userIdKicked: props.userId,
+      roomId: props.roomId,
+    });
+  };
+
   return (
     <UserChatManagerBox>
       <ChatManagerNameStatus>
@@ -69,7 +80,9 @@ function LeftSideChatCards(props: {
             {props.isAdmin ? (
               <>
                 <InsidePopUpButton>Mute user</InsidePopUpButton>
-                <InsidePopUpButton>Kick user</InsidePopUpButton>
+                <InsidePopUpButton onClick={handleKick}>
+                  Kick user
+                </InsidePopUpButton>
                 <InsidePopUpButton>Ban user</InsidePopUpButton>
               </>
             ) : (

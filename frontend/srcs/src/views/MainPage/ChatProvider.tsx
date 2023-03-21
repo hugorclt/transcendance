@@ -25,13 +25,19 @@ function ChatProvider({ children }: { children: ReactNode }) {
       setChat((prev) =>
         prev.map((chat) => {
           if (chat.isActive == true) chat.isRead = true;
-          return (chat);
+          return chat;
         })
       );
     });
 
+    socket?.on("on-chat-delete", (chatToDel) => {
+      console.log(chatToDel);
+      setChat((prev) => prev.filter((chat) => chat.id != chatToDel.roomId));
+    });
+
     return () => {
       socket?.off("on-chat-update");
+      socket?.off("on-chat-delete");
     };
   }, [socket]);
 

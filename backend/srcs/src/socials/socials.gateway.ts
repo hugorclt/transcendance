@@ -13,12 +13,13 @@ import { Injectable, UseFilters } from '@nestjs/common';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { UsersService } from 'src/users/users.service';
-import { Message, Participant, Room, User } from '@prisma/client';
+import { Message, Participant, Role, Room, User } from '@prisma/client';
 import { RoomsService } from './rooms/rooms.service';
 import { MessagesService } from './rooms/messages/messages.service';
 import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { getStatusFromVisibility } from 'src/users/utils/friend-status';
+import { ParticipantService } from './rooms/participant/participant.service';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -33,6 +34,7 @@ export class SocialsGateway
     private roomService: RoomsService,
     private messageService: MessagesService,
     private prisma: PrismaService,
+    private participantService: ParticipantService,
   ) {}
 
   @WebSocketServer()
@@ -158,8 +160,10 @@ export class SocialsGateway
     if (!sender) throw new WsNotFoundException('Sender not found');
     const room = await this.roomService.findOneByName(payload.room.name);
     if (!room) throw new WsNotFoundException('Room not found');
-    console.log(room.room.filter((participant) => participant.userId == client.userId));
-    if (room.room.filter((participant) => participant.userId == sender.id).length == 0)
+    if (
+      room.room.filter((participant) => participant.userId == sender.id)
+        .length == 0
+    )
       return;
     const message = await this.messageService.create({
       content: payload.message,
@@ -218,11 +222,45 @@ export class SocialsGateway
   async leaveUserFromRoom(roomId: string, userId: string) {
     const socketId = (await this.io.adapter.sockets(new Set([userId])))
       .values()
-      .next()
-      .value;
-    if (!socketId) return ;
+      .next().value;
+    if (!socketId) return;
     const socket = this.io.sockets.get(socketId);
     socket.leave(roomId);
+  }
+
+  @SubscribeMessage('kick-player')
+  async kickUser(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    payload: {
+      roomId: string;
+      userIdKicked: string;
+    },
+  ) {
+    const room = await this.prisma.room.findUnique({
+      where: { id: payload.roomId },
+      include: { room: true },
+    });
+    if (!room) return;
+
+    const kicker = this.isInRoom(client.userId, room);
+    if (!kicker || (kicker.role != Role.ADMIN && kicker.role != Role.OWNER)) return;
+    
+    const newRoom = await this.roomService.leaveRoom(payload.userIdKicked, payload.roomId);
+    console.log(newRoom);
+    if (!newRoom) return;
+    this.leaveUserFromRoom(payload.roomId, payload.userIdKicked);
+
+    this.emitToUser(payload.roomId, 'on-chat-update', {
+      id: newRoom.id,
+      participants: await this.participantService.createParticipantFromRoom(
+        room,
+      ),
+    });
+
+    this.emitToUser(payload.userIdKicked, 'on-chat-delete', {
+      roomId: payload.roomId,
+    });
   }
 
   //====== UTILS =====
@@ -239,5 +277,13 @@ export class SocialsGateway
     userList.forEach((user) => {
       this.emitToUser(user.id, eventName, data);
     });
+  }
+
+  isInRoom(userId: string, room: Room & { room: Participant[] }) {
+    const user = room.room.filter(
+      (participant) => participant.userId == userId,
+    );
+    if (user.length == 0) return undefined;
+    return user[0];
   }
 }

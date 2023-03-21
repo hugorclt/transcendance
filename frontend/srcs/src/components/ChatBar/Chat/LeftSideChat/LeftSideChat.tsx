@@ -28,6 +28,8 @@ function LeftSideChat({ chat }: TChatProps) {
         return (
           <LeftSideChatCards
             key={nanoid()}
+            roomId={chat.id}
+            userId={user.id}
             name={user.name}
             status={user.status}
             role={user.role}
