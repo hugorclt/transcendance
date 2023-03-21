@@ -62,6 +62,10 @@ export class RoomsService {
         role: Role.OWNER,
       },
     });
+    // this.socialGateway.joinUserToRoom(
+    //   room,
+    //   createRoomDto.users.map((user) => user.username),
+    // );
     return room;
   }
 
