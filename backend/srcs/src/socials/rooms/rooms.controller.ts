@@ -12,7 +12,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoomEntity } from './entities/room.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { SocialsGateway } from '../socials.gateway';
-import { MessagesService } from './messages/messages.service';
+import { ParticipantService } from './participant/participant.service';
 
 @Controller('rooms')
 @ApiTags('rooms')
@@ -21,7 +21,7 @@ export class RoomsController {
   constructor(
     private readonly roomsService: RoomsService,
     private socialGateway: SocialsGateway,
-    private messageService: MessagesService,
+    private participantService: ParticipantService,
   ) {}
 
   @Post('/create')
@@ -66,13 +66,17 @@ export class RoomsController {
 
   @Post('/leave')
   async leaveRoom(@Request() req) {
-    const { room, participant} = await this.roomsService.leaveRoom(
-      req.body.userId,
+    const room = await this.roomsService.leaveRoom(
+      req.user.sub,
       req.body.roomId,
     );
-    participant.map((user) => {
-      const dataToSend = (user.userId == req.body.userId ? {id: req.body.roomId, avatar: "deleted"} : room)
-      this.socialGateway.emitToUser(user.userId, "on-chat-update", dataToSend);
-    })
+    this.socialGateway.leaveUserFromRoom(req.body.roomId, req.user.sub);
+    if (room)
+      this.socialGateway.emitToUser(req.body.roomId, 'on-chat-update', {
+        id: room.id,
+        participants: await this.participantService.createParticipantFromRoom(
+          room,
+        ),
+      });
   }
 }

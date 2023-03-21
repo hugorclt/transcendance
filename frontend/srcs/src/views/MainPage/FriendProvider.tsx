@@ -3,9 +3,9 @@ import { useAtom } from "jotai";
 import React, { ReactNode, useContext, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../services/Auth/SocketContext";
-import { updateFriendList } from "../../services/Friends/updateFriendList";
 import { friendAtom } from "../../services/store";
 import { TFriend } from "../../services/type";
+import { updateArray } from "../../services/utils/updateArray";
 
 function FriendProvider({ children }: { children: ReactNode }) {
   const [friendList, setFriendList] = useAtom(friendAtom);
@@ -24,18 +24,18 @@ function FriendProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    socket?.on("on-removed-friend", (friendRemoved) => {
+    socket?.on("on-friend-remove", (friendRemoved) => {
       setFriendList((prev: TFriend[]) =>
         prev.filter((friend: TFriend) => friend.username !== friendRemoved)
       );
     });
 
-    socket?.on("on-status-update", (newStatus) => {
-      setFriendList((prev) => updateFriendList(newStatus, prev));
+    socket?.on("on-friend-update", (newStatus) => {
+      setFriendList((prev) => updateArray(prev, newStatus));
     });
     return () => {
-      socket?.off("on-status-update");
-      socket?.off("on-removed-friend");
+      socket?.off("on-friend-update");
+      socket?.off("on-friend-remove");
     };
   }, [socket]);
   return <>{children}</>;

@@ -39,7 +39,7 @@ export class ParticipantService {
           where: { id: participant.userId },
         });
         return {
-          id: participant.id,
+          id: user.id,
           role: participant.role,
           name: user.username,
           status: user.status,

@@ -183,22 +183,20 @@ export class RoomsService {
   async leaveRoom(userId: string, roomId: string) {
     const oldRoom = await this.findOne(roomId);
     var nbParticipant = oldRoom.room.length;
-    const participantToDel = await this.prisma.participant.findMany({
+    const participantToDel = await this.prisma.participant.findFirst({
       where: {
         userId: userId,
         roomId: roomId,
       },
     });
-
-    await this.prisma.participant.deleteMany({
+    await this.prisma.participant.delete({
       where: {
-        userId: userId,
-        roomId: roomId,
+        id: participantToDel.id,
       },
     });
 
     nbParticipant -= 1;
-    if (nbParticipant != 0 && participantToDel[0].role == Role.OWNER) {
+    if (nbParticipant != 0 && participantToDel.role == Role.OWNER) {
       this.changeOwner(roomId);
     }
 
@@ -209,12 +207,7 @@ export class RoomsService {
     }
 
     const newRoom = await this.findOne(roomId);
-    if (!newRoom) return { room: undefined, participant: oldRoom.room };
-    const returnRoomEntity = await await this.createRoomReturnEntity(
-      newRoom,
-      await this.messageService.getLastMessage(roomId),
-    );
-    return { room: returnRoomEntity, participant: oldRoom.room };
+    return newRoom;
   }
 
   // UTILS

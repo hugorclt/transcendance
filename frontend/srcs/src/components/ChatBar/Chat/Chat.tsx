@@ -24,7 +24,6 @@ import {
   ChatBody,
 } from "./ChatStyle";
 import { TChatProps, TMessage } from "./ChatType";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { COLORS } from "../../../colors";
 import { AiOutlineClose } from "react-icons/ai";
 import { nanoid } from "nanoid";
@@ -32,23 +31,23 @@ import LeftSideChat from "./LeftSideChat/LeftSideChat";
 import { ChatManagerOpen } from "../../../views/ChatPage/ChatManagerOpen";
 import { FaUserFriends } from "react-icons/fa";
 import { useAtom } from "jotai";
-import { activeChat, userAtom } from "../../../services/store";
-import { conversationDefaultValue } from "../../../services/store";
+import { conversationAtom, userAtom } from "../../../services/store";
 import { displayName } from "../../../services/Chat/displayName";
 
 function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
-  const [openChat, setOpenChat] = useAtom(activeChat);
   const { openManager, setOpenManager } = useContext(ChatManagerOpen);
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
   const messageBoxRef = useRef<null | HTMLFormElement>(null);
   const [user, setUser] = useAtom(userAtom);
+  const [chatHistory, setChat] = useAtom(conversationAtom);
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
+    if (message == "" || message.length > 256) return;
     socket?.emit("new-message", { message: message, room: chat });
     setMessage("");
   };
@@ -130,12 +129,12 @@ function Chat({ chat }: TChatProps) {
 
   return (
     <ChatBody>
-      {openManager && <LeftSideChat name={chat.name} />}
+      {openManager && <LeftSideChat chat={chat} />}
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
             <ChatIcon src="" />
-            <ChatTitle>{displayName(openChat, user)}</ChatTitle>
+            <ChatTitle>{displayName(chat, user)}</ChatTitle>
             {!chat.isDm && (
               <FaUserFriends
                 onClick={() => setOpenManager(!openManager)}
@@ -146,7 +145,12 @@ function Chat({ chat }: TChatProps) {
           </ChatMiddle>
           <AiOutlineClose
             onClick={() => {
-              setOpenChat(conversationDefaultValue);
+              setChat((prev) =>
+                prev.map((chat) => {
+                  if (chat.isActive == true) chat.isActive = false;
+                  return chat;
+                })
+              );
             }}
             style={{ color: COLORS.secondary }}
             size={22}
@@ -166,7 +170,9 @@ function Chat({ chat }: TChatProps) {
             }}
             type="text"
           />
-          <p style={{color: message.length <= 256 ? COLORS.primary : "red"}}>{message.length + "/256"}</p>
+          <p style={{ color: message.length <= 256 ? COLORS.primary : "red" }}>
+            {message.length + "/256"}
+          </p>
         </ChatForm>
       </ChatTabContainer>
     </ChatBody>

@@ -2,42 +2,42 @@ import { useAtom } from "jotai";
 import React, { ReactNode, useContext, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../services/Auth/SocketContext";
-import { updateChatHistory } from "../../services/Chat/updateChatHistory";
-import { conversationAtom, activeChat, conversationDefaultValue } from "../../services/store";
+import { updateArray } from "../../services/utils/updateArray";
+import { conversationAtom } from "../../services/store";
 
 function ChatProvider({ children }: { children: ReactNode }) {
   const [chat, setChat] = useAtom(conversationAtom);
   const axiosPrivate = useAxiosPrivate();
   const socket = useContext(SocketContext);
-  const [openChat, setOpenChat] = useAtom(activeChat);
 
+  /* ------------------------------ first render ------------------------------ */
   useEffect(() => {
     axiosPrivate.get("/rooms/history").then((res) => {
-      console.log(res.data);
       if (!res.data[0]) return;
       setChat(res.data);
     });
   }, []);
 
+  /* ------------------------------ socket render ----------------------------- */
   useEffect(() => {
     socket?.on("on-chat-update", (newChat) => {
-      if (newChat.avatar == "deleted") {
-        setChat((prev) => {
-          const index = prev.findIndex((item) => item.id === newChat.id);
-          if (index === -1) {
-            return prev;
-          }
-          if (openChat.id == prev[index].id)
-            setOpenChat(conversationDefaultValue);
-          return [...prev.slice(0, index), ...prev.slice(index + 1)];
-        });
-      } else {
-        setChat((prev) => updateChatHistory(prev, newChat, openChat));
-      }
+      setChat((prev) => updateArray(prev, newChat));
+      setChat((prev) =>
+        prev.map((chat) => {
+          if (chat.isActive == true) chat.isRead = true;
+          return chat;
+        })
+      );
+    });
+
+    socket?.on("on-chat-delete", (chatToDel) => {
+      console.log(chatToDel);
+      setChat((prev) => prev.filter((chat) => chat.id != chatToDel.roomId));
     });
 
     return () => {
       socket?.off("on-chat-update");
+      socket?.off("on-chat-delete");
     };
   }, [socket]);
 

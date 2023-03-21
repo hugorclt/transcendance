@@ -37,6 +37,7 @@ export interface TConversation {
   lastMessage: string;
   isDm: boolean;
   isRead: boolean;
+  isActive: boolean;
   participants: TParticipant[];
 }
 
