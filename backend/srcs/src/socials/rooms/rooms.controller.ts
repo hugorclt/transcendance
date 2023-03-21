@@ -12,6 +12,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoomEntity } from './entities/room.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { SocialsGateway } from '../socials.gateway';
+import { MessagesService } from './messages/messages.service';
 
 @Controller('rooms')
 @ApiTags('rooms')
@@ -20,6 +21,7 @@ export class RoomsController {
   constructor(
     private readonly roomsService: RoomsService,
     private socialGateway: SocialsGateway,
+    private messageService: MessagesService,
   ) {}
 
   @Post('/create')
@@ -29,13 +31,16 @@ export class RoomsController {
     createRoomDto.ownerId = creatorId;
     const room = await this.roomsService.create(createRoomDto);
     this.socialGateway.addChatToHistory(creatorId, room, {
-      content: "",
+      content: '',
       senderId: undefined,
       roomId: undefined,
       id: undefined,
       date: undefined,
     });
-    this.socialGateway.joinUserToRoom(room, createRoomDto.users);
+    this.socialGateway.joinUserToRoom(
+      room,
+      createRoomDto.users.map((user) => user.username),
+    );
     return { roomId: room.id };
   }
 
@@ -57,5 +62,18 @@ export class RoomsController {
       req.body.roomName,
     );
     return test;
+  }
+
+  @Post('/leave')
+  async leaveRoom(@Request() req) {
+    const { room, participant} = await this.roomsService.leaveRoom(
+      req.body.userId,
+      req.body.roomId,
+    );
+    participant.map((user) => {
+      const dataToSend = (user.userId == req.body.userId ? {id: req.body.roomId, avatar: "deleted"} : room)
+      console.log("sending...: ", user.userId);      
+      this.socialGateway.emitToUser(user.userId, "on-chat-update", dataToSend);
+    })
   }
 }

@@ -166,6 +166,7 @@ function Chat({ chat }: TChatProps) {
             }}
             type="text"
           />
+          <p style={{color: message.length <= 256 ? COLORS.primary : "red"}}>{message.length + "/256"}</p>
         </ChatForm>
       </ChatTabContainer>
     </ChatBody>

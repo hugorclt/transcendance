@@ -13,14 +13,21 @@ import {
   CreateRoomButtonBox,
   CreateRoomCheckBox,
   CreateRoomForm,
+  CreateRoomFriends,
   CreateRoomLabel,
+  CreateRoomScroll,
   CreateRoomTitle,
 } from "../ChatHistoryStyle";
+
+type ParticipantState = {
+  username: string;
+  role: string;
+};
 
 function CreateRoom() {
   const { open, setOpen } = useContext(RoomModalOpenContext);
   const [name, setName] = useState("");
-  const [users, setUser] = useState<string[]>([]);
+  const [users, setUser] = useState<ParticipantState[]>([]);
   const [isPrivate, setPrivate] = useState(false);
   const [password, setPassword] = useState("");
   const [friendList] = useAtom(friendAtom);
@@ -53,61 +60,76 @@ function CreateRoom() {
   };
 
   function handleAddFriends(name: string) {
-    if (!users.includes(name)) {
-      setUser((prev) => [...prev, name]);
+    const index = users.findIndex((user) => user.username == name);
+    if (index == -1) {
+      setUser((prev) => [...prev, { username: name, role: "BASIC" }]);
     } else {
-      setUser((prev) => prev.filter((user) => user !== name));
+      if (users[index].role == "BASIC") {
+        const updatedUsers = [...users];
+        updatedUsers[index].role = "ADMIN";
+        setUser(updatedUsers);
+      } else {
+        const updatedUsers = users.filter((user) => user.username !== name);
+        setUser(updatedUsers);
+      }
     }
   }
 
+  function chooseColor(username: string) {
+    if (users.find((user) => user.username == username)?.role == "BASIC")
+      return "admin";
+    else if (users.find((user) => user.username == username)?.role == "ADMIN")
+      return "callout";
+    return "";
+  }
+
   return (
-    <CreateRoomBox>
-      <CreateRoomTitle>CREATE ROOM</CreateRoomTitle>
-      <CreateRoomForm onSubmit={handleSubmit}>
-        <div>
+    <>
+      <CreateRoomFriends>
+        <h3>Friends</h3>
+        <CreateRoomScroll>
           {friendList.map((val, index) => {
             return (
               <div key={index} onClick={() => handleAddFriends(val.username)}>
-                <p
-                  key={index}
-                  className={users.includes(val.username) ? "callout" : ""}
-                >
+                <p key={index} className={chooseColor(val.username)}>
                   {val.username}
                 </p>
               </div>
             );
           })}
-        </div>
-        <CreateRoomLabel htmlFor="name">Room name</CreateRoomLabel>
-        <StyledInput
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          required
-          autoComplete="new-password"
-        ></StyledInput>
-        <CreateRoomLabel htmlFor="password">Password</CreateRoomLabel>
-        <StyledInput
-          name="password"
-          value={password}
-          disabled={isPrivate}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          autoComplete="new-password"
-        ></StyledInput>
-        <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
-        <CreateRoomCheckBox
-          name="checkbox"
-          checked={isPrivate}
-          onChange={handleCheck}
-          type="checkbox"
-        ></CreateRoomCheckBox>
-        <CreateRoomButtonBox>
-          <StyledButton type="submit" value="Create Room" />
-        </CreateRoomButtonBox>
-      </CreateRoomForm>
-    </CreateRoomBox>
+        </CreateRoomScroll>
+      </CreateRoomFriends>
+      <CreateRoomBox>
+        <CreateRoomTitle>CREATE ROOM</CreateRoomTitle>
+        <CreateRoomForm onSubmit={handleSubmit}>
+          <CreateRoomLabel htmlFor="name">Room name</CreateRoomLabel>
+          <StyledInput
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            required
+            autoComplete="new-password"></StyledInput>
+          <CreateRoomLabel htmlFor="password">Password</CreateRoomLabel>
+          <StyledInput
+            name="password"
+            value={password}
+            disabled={isPrivate}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            autoComplete="new-password"></StyledInput>
+          <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
+          <CreateRoomCheckBox
+            name="checkbox"
+            checked={isPrivate}
+            onChange={handleCheck}
+            type="checkbox"></CreateRoomCheckBox>
+          <CreateRoomButtonBox>
+            <StyledButton type="submit" value="Create Room" />
+          </CreateRoomButtonBox>
+        </CreateRoomForm>
+      </CreateRoomBox>
+    </>
   );
 }
 

@@ -36,6 +36,7 @@ export interface TConversation {
   avatar: string;
   lastMessage: string;
   isDm: boolean;
+  isRead: boolean;
   participants: TParticipant[];
 }
 
@@ -43,6 +44,7 @@ export interface TParticipant {
   id: string;
   name: string;
   role: string;
+  status: string;
 }
 
 export interface TSelectedPage {

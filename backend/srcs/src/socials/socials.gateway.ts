@@ -153,10 +153,15 @@ export class SocialsGateway
     @MessageBody()
     payload: { message: string; room: Room & { room: Participant[] } },
   ) {
+    if (payload.message == '' || payload.message.length > 256) return;
     const sender = await this.usersService.findOne(client.userId);
     if (!sender) throw new WsNotFoundException('Sender not found');
     const room = await this.roomService.findOneByName(payload.room.name);
     if (!room) throw new WsNotFoundException('Room not found');
+    // console.log(room.room);
+    // console.log(room.room.filter((participant) => participant.id == sender.id));
+    // if (!room.room.filter((participant) => participant.id == sender.id).length)
+    //   return;
     const message = await this.messageService.create({
       content: payload.message,
       senderId: sender.id,
@@ -212,6 +217,11 @@ export class SocialsGateway
   }
 
   //====== UTILS =====
+  emitToListString(userList: string[], eventName: string, data: any) {
+    userList.forEach((user) => {
+      this.emitToUser(user, eventName, data);
+    });
+  }
   emitToUser(receiverId: string, eventName: string, data: any) {
     this.io.to(receiverId).emit(eventName, data);
   }
