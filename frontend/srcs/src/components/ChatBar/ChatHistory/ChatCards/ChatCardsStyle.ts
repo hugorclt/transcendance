@@ -3,7 +3,7 @@ import { COLORS } from "../../../../colors";
 
 export const ChatCardsBox = styled.div`
   display: flex;
-  display: flex-start;
+  justify-content: space-between;
   padding: 8px;
 `;
 
@@ -31,7 +31,6 @@ export const ChatCardsLastMessage = styled.h5`
 export const ChatCardsEnd = styled.div`
   display: flex;
   justify-content: flex-end;
-  flex: 1;
   align-items: center;
 `;
 

@@ -31,23 +31,4 @@ export const friendAtom = atom<TFriend[]>([]);
 
 export const conversationAtom = atom<TConversation[]>([]);
 
-export const conversationDefaultValue = {
-  id: "",
-  name: "",
-  avatar: "",
-  lastMessage: "",
-  isDm: true,
-  isRead: true,
-  participants: [
-    {
-      id: "",
-      name: "",
-      role: "",
-      status: "",
-    },
-  ],
-};
-
-export const activeChat = atom<TConversation>(conversationDefaultValue);
-
 export const selectedPageAtom = atom<number>(0);

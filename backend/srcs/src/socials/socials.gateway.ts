@@ -72,7 +72,7 @@ export class SocialsGateway
     });
     this.emitToUser(user.id, 'on-self-status-update', user.status);
     if (user.preferences.visibility == 'VISIBLE') {
-      this.emitToList(user.friends, 'on-status-update', {
+      this.emitToList(user.friends, 'on-friend-update', {
         username: user.username,
         avatar: user.avatar,
         status: user.status,
@@ -98,7 +98,7 @@ export class SocialsGateway
       user.status,
       user.preferences.visibility,
     );
-    this.emitToList(user.friends, 'on-status-update', {
+    this.emitToList(user.friends, 'on-friend-update', {
       username: user.username,
       avatar: user.avatar,
       status: status,
@@ -128,7 +128,7 @@ export class SocialsGateway
       replyer.status,
       replyer.preferences.visibility,
     );
-    this.emitToUser(asker.id, 'on-status-update', {
+    this.emitToUser(asker.id, 'on-friend-update', {
       username: client.username,
       status: status,
       id: client.userId,
@@ -138,7 +138,7 @@ export class SocialsGateway
       asker.status,
       asker.preferences.visibility,
     );
-    this.emitToUser(replyer.id, 'on-status-update', {
+    this.emitToUser(replyer.id, 'on-friend-update', {
       username: asker.username,
       status: status,
       id: asker.id,
@@ -158,10 +158,9 @@ export class SocialsGateway
     if (!sender) throw new WsNotFoundException('Sender not found');
     const room = await this.roomService.findOneByName(payload.room.name);
     if (!room) throw new WsNotFoundException('Room not found');
-    // console.log(room.room);
-    // console.log(room.room.filter((participant) => participant.id == sender.id));
-    // if (!room.room.filter((participant) => participant.id == sender.id).length)
-    //   return;
+    console.log(room.room.filter((participant) => participant.userId == client.userId));
+    if (room.room.filter((participant) => participant.userId == sender.id).length == 0)
+      return;
     const message = await this.messageService.create({
       content: payload.message,
       senderId: sender.id,
@@ -181,7 +180,7 @@ export class SocialsGateway
   }
 
   removeFriend(removerId: string, friendRemoved: string) {
-    this.emitToUser(removerId, 'on-removed-friend', friendRemoved);
+    this.emitToUser(removerId, 'on-friend-remove', friendRemoved);
   }
 
   async addChatToHistory(
@@ -214,6 +213,16 @@ export class SocialsGateway
       const socket = this.io.sockets.get(socketId);
       socket.join(room.id);
     });
+  }
+
+  async leaveUserFromRoom(roomId: string, userId: string) {
+    const socketId = (await this.io.adapter.sockets(new Set([userId])))
+      .values()
+      .next()
+      .value;
+    if (!socketId) return ;
+    const socket = this.io.sockets.get(socketId);
+    socket.leave(roomId);
   }
 
   //====== UTILS =====
