@@ -21,7 +21,10 @@ function ChatProvider({ children }: { children: ReactNode }) {
   /* ------------------------------ socket render ----------------------------- */
   useEffect(() => {
     socket?.on("on-chat-update", (newChat) => {
+      console.log("received event on-chat-update: ", newChat);
       setChat((prev) => updateArray(prev, newChat));
+
+      //Set orange pastille on new chat not read
       setChat((prev) =>
         prev.map((chat) => {
           if (chat.isActive == true) chat.isRead = true;

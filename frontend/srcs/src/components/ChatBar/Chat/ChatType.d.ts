@@ -1,7 +1,7 @@
 export type TMessage = {
-  sender: string;
-  message: string;
-  roomName: string;
+  senderId: string;
+  content: string;
+  roomId: string;
 };
 
 export interface TChatProps {

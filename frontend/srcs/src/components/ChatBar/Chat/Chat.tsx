@@ -48,13 +48,22 @@ function Chat({ chat }: TChatProps) {
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
     if (message == "" || message.length > 256) return;
-    socket?.emit("new-message", { message: message, room: chat });
+    console.log("message to send:", message);
+    axiosPrivate
+      .post("/rooms/message", { message: message, roomId: chat.id })
+      .then((res: AxiosResponse) => {
+        console.log("message received: ", res.data);
+        setMessageList((prev) => [...prev, res.data]);
+      })
+      .catch((err: AxiosError) => {
+        console.log("error while sending message");
+      });
     setMessage("");
   };
 
   useEffect(() => {
     socket?.on("on-new-message", (newMessage: TMessage) => {
-      if (newMessage.roomName === chat.name) {
+      if (newMessage.roomId === chat.id) {
         setMessageList((prev) => {
           return [...prev, newMessage];
         });
@@ -71,10 +80,10 @@ function Chat({ chat }: TChatProps) {
       .post("/rooms/conv/history", { roomName: chat.name })
       .then((res: AxiosResponse) => {
         setMessageList(
-          res.data.map((message: any) => ({
-            message: message.content,
-            sender: message.sender.username,
-            roomName: message.room.name,
+          res.data.map((message: TMessage) => ({
+            content: message.content,
+            senderId: message.senderId,
+            roomId: message.roomId,
           }))
         );
       })
@@ -97,12 +106,16 @@ function Chat({ chat }: TChatProps) {
     }
   }, [messageList]);
 
-  const renderMessage = (msg: any, index: any) => {
-    const isMe = msg.sender === auth.username;
-    const sender = isMe ? (
+  const renderMessage = (msg: TMessage) => {
+    const sender = chatHistory
+      .find((chat) => chat.id == chat.id)
+      ?.participants.find((user) => user.id == msg.senderId);
+    console.log(sender);
+    const isMe = sender?.name === auth.username;
+    const senderName = isMe ? (
       <div className="sender">You</div>
     ) : (
-      <div className="sender">{msg.sender}</div>
+      <div className="sender">{sender?.name}</div>
     );
 
     return (
@@ -110,17 +123,20 @@ function Chat({ chat }: TChatProps) {
         key={nanoid()}
         style={{
           justifyContent: isMe ? "flex-end" : "flex-start",
-        }}>
-        <div style={{ color: COLORS.primary }}>{sender}</div>
+        }}
+      >
+        <div style={{ color: COLORS.primary }}>{senderName}</div>
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}>
+          }}
+        >
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}>
-            {msg.message}
+            }}
+          >
+            {msg.content}
           </MessageContent>
         </MessageBox>
       </MessageLine>
@@ -157,8 +173,8 @@ function Chat({ chat }: TChatProps) {
           />
         </ChatTop>
         <ChatMessageContainer ref={messageBoxRef}>
-          {messageList.map((val, index) => {
-            return renderMessage(val, index);
+          {messageList.map((val) => {
+            return renderMessage(val);
           })}
         </ChatMessageContainer>
         <ChatForm onSubmit={sendMessage} autoComplete="off">

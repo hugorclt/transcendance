@@ -6,7 +6,7 @@ import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import { friendAtom, lobbyAtom } from "../../../../services/store";
-import { updateFriendList } from "../../../../services/Friends/updateFriendList";
+import { updateArray } from "../../../../services/utils/updateArray";
 
 function FriendNotifications() {
   const socket = useContext(SocketContext);
@@ -18,7 +18,9 @@ function FriendNotifications() {
     axiosPrivate
       .post("/users/friends/add", { userFromId: userFromId, userId: userId })
       .then((response: AxiosResponse) => {
-        setFriendList((prev) => updateFriendList(response.data, prev));
+        console.log("added friend: ", JSON.stringify(response.data));
+        //TODO ERROR
+        setFriendList((prev) => updateArray(prev, response.data));
       })
       .catch((error: AxiosError) => {
         console.log("error adding friend: ", JSON.stringify(error.cause));

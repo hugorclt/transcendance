@@ -245,7 +245,7 @@ export class UsersService {
       user.status,
       user.preferences.visibility,
     );
-    this.socialsGateway.emitToUser(newFriend.id, 'on-status-update', {
+    this.socialsGateway.emitToUser(newFriend.id, 'on-friend-update', {
       username: user.username,
       avatar: user.avatar,
       status: status,

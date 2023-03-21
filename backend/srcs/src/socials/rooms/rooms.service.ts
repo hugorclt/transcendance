@@ -6,6 +6,7 @@ import { ParticipantService } from './participant/participant.service';
 import { Message, Participant, Role, Room } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
+import { SocialsGateway } from '../socials.gateway';
 
 @Injectable()
 export class RoomsService {
@@ -15,6 +16,7 @@ export class RoomsService {
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private messageService: MessagesService,
+    private socialGateway: SocialsGateway,
   ) {}
 
   async create(createRoomDto: CreateRoomDto) {
@@ -62,10 +64,11 @@ export class RoomsService {
         role: Role.OWNER,
       },
     });
-    // this.socialGateway.joinUserToRoom(
-    //   room,
-    //   createRoomDto.users.map((user) => user.username),
-    // );
+    const roomEntity = await this.createRoomReturnEntity(room, undefined);
+    this.socialGateway.joinUsersToRoom(
+      room,
+      createRoomDto.users.map((user) => user.username),
+    );
     return room;
   }
 
@@ -78,6 +81,9 @@ export class RoomsService {
 
         if (room.ownerId != userId && lastMessage == null) return;
 
+        //should call gateway join each room
+        console.log('user: ', userId, ' joining room: ', room.id);
+        this.socialGateway.joinUserToRoom(room.id, userId);
         return this.createRoomReturnEntity(room, lastMessage);
       }),
     );
@@ -129,7 +135,13 @@ export class RoomsService {
     if (!room) return; //error
 
     const messages = await this.messageService.getMessages(room.id);
-    return messages;
+    return messages.map((message) => {
+      return {
+        content: message.content,
+        senderId: message.senderId,
+        roomId: message.roomId,
+      };
+    });
   }
 
   async getParticipantsInRoom(roomName: string) {
@@ -161,7 +173,7 @@ export class RoomsService {
       avatar: room.avatar,
       name: room.name,
       isPrivate: room.isPrivate,
-      lastMessage: lastMessage == null ? '' : lastMessage.content,
+      lastMessage: lastMessage == undefined ? '' : lastMessage.content,
       isDm: room.isDm,
       isRead: false,
       participants: await this.participant.createParticipantFromRoom(room),
@@ -207,7 +219,39 @@ export class RoomsService {
     }
 
     const newRoom = await this.findOne(roomId);
+    console.log('calling gateway from rooms service');
+    this.socialGateway.leaveUserFromRoom(roomId, userId);
+    if (newRoom)
+      this.socialGateway.emitToUser(newRoom.id, 'on-chat-update', {
+        id: newRoom.id,
+        participants: await this.participant.createParticipantFromRoom(newRoom),
+      });
     return newRoom;
+  }
+
+  async newMessage(senderId: string, payload: any): Promise<any> {
+    if (payload.message == '' || payload.message.length > 256) return;
+    const room = await this.prisma.room.findFirst({
+      where: {
+        id: payload.roomId,
+        room: {
+          //wtf
+          some: {
+            userId: senderId,
+          },
+        },
+      },
+    });
+    if (!room) return;
+    const message = await this.messageService.create({
+      content: payload.message,
+      senderId,
+      roomId: room.id,
+    });
+    if (!message) return;
+    this.socialGateway.sendMessageToRoom(message);
+
+    return message;
   }
 
   // UTILS
