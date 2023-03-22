@@ -43,19 +43,26 @@ export class SocialsGateway
   }
 
   async handleConnection(client: AuthSocket) {
-    console.log('socket connected for user: ', client.username);
-    client.join(client.userId);
-    this.sendStatusUpdate(client.userId);
+    const rooms = await this.prisma.room.findMany({
+      where: {
+        participants: {
+          some: {
+            userId: client.userId,
+          },
+        },
+      },
+    });
+    if (!rooms) return;
+    await Promise.all(
+      rooms.map((room) => {
+        client.join(room.id);
+      }),
+    );
+    await client.join(client.userId);
+    await this.sendStatusUpdate(client.userId);
   }
 
-  async handleDisconnect(client: AuthSocket) {
-    console.log('sids: ', this.io.adapter.sids);
-    this.io.adapter.sids.get(client.id)?.forEach((room) => {
-      console.log('user leaving room: ', room);
-      client.leave(room);
-    });
-    console.log('socket disconnected for user: ', client.username);
-  }
+  async handleDisconnect(client: AuthSocket) {}
 
   //===== STATUS / VISIBILITY =====
   async sendStatusUpdate(userId: string): Promise<void> {
@@ -110,7 +117,6 @@ export class SocialsGateway
 
   sendMessageToRoom(message: CreateMessageDto) {
     const client = this.getSocketFromUserId(message.senderId);
-    // console.log('sending message to client: ', client);
     if (!client) return;
     client.to(message.roomId).emit('on-new-message', message);
     this.emitToUser(message.roomId, 'on-chat-update', {
@@ -148,14 +154,6 @@ export class SocialsGateway
     if (!socketId) return;
     const socket = this.io.sockets.get(socketId);
     await socket.join(roomId);
-    console.log(
-      'socketID: ',
-      socketId,
-      ' joining roomId: ',
-      roomId,
-      ' with userId: ',
-      userId,
-    );
   }
 
   async leaveUserFromRoom(roomId: string, userId: string) {
@@ -220,15 +218,8 @@ export class SocialsGateway
   }
 
   emitRoomCreated(ownerId: string, room: ReturnRoomEntity) {
-    console.log('sending room creation through socket');
     const socket = this.getSocketFromUserId(ownerId);
     if (!socket) return;
-    console.log(
-      'sending it to socket with id: ',
-      socket.id,
-      ' inside roomid: ',
-      room.id,
-    );
     socket.to(room.id).emit('on-chat-update', room);
   }
 

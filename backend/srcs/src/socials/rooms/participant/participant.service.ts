@@ -32,9 +32,9 @@ export class ParticipantService {
     return `This action removes a #${id} participant`;
   }
 
-  async createParticipantFromRoom(room: Room & { room: Participant[] }) {
+  async createParticipantFromRoom(room: Room & { participants: Participant[] }) {
     return await Promise.all(
-      room.room.map(async (participant) => {
+      room.participants.map(async (participant) => {
         const user = await this.prisma.user.findUnique({
           where: { id: participant.userId },
         });
