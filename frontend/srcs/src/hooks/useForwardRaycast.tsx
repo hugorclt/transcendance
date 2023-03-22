@@ -12,6 +12,7 @@ export const useForwardRaycast = (obj: {current: Object3D|null}) => {
   return () => {
     if (!obj.current)
       return []
+      console.log(obj.current.getWorldPosition(pos))
     raycaster.set(
       obj.current.getWorldPosition(pos),
       obj.current.getWorldDirection(dir))
