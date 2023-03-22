@@ -124,16 +124,18 @@ export class SocialsGateway
   }
 
   async joinUsersToRoom(room: any, usersId: string[]) {
-    usersId.map(async (userId) => {
-      const participant = await this.prisma.user.findUnique({
-        where: { id: userId },
-      });
-      if (!participant)
-        throw new WsNotFoundException(
-          "Participant can't join the room, refresh the page",
-        );
-      await this.joinUserToRoom(room.id, participant.id);
-    });
+    await Promise.all(
+      usersId.map(async (userId) => {
+        const participant = await this.prisma.user.findUnique({
+          where: { id: userId },
+        });
+        if (!participant)
+          throw new WsNotFoundException(
+            "Participant can't join the room, refresh the page",
+          );
+        await this.joinUserToRoom(room.id, participant.id);
+      }),
+    );
   }
 
   //==============================================================================================
@@ -144,6 +146,8 @@ export class SocialsGateway
       .values()
       .next().value;
     if (!socketId) return;
+    const socket = this.io.sockets.get(socketId);
+    await socket.join(roomId);
     console.log(
       'socketID: ',
       socketId,
@@ -152,8 +156,6 @@ export class SocialsGateway
       ' with userId: ',
       userId,
     );
-    const socket = this.io.sockets.get(socketId);
-    await socket.join(roomId);
   }
 
   async leaveUserFromRoom(roomId: string, userId: string) {
