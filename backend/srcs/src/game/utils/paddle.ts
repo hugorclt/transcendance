@@ -6,8 +6,10 @@ export class Paddle {
     private height: number;
     private depth: number;
     private mass:number;
+    private speed:number;
+    private positionBuffer: [];
   
-    constructor(x: number, y: number, z: number, width: number, height: number, depth: number, mass: number) {
+    constructor(x: number, y: number, z: number, width: number, height: number, depth: number, mass: number, speed: number) {
       this.x = x;
       this.y = y;
       this.z = z;
@@ -15,6 +17,7 @@ export class Paddle {
       this.height = height;
       this.depth = depth;
       this.mass = mass;
+      this.speed = speed;
     }
   
     move(x: number) {
