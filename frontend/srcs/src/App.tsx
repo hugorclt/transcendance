@@ -48,9 +48,9 @@ function App() {
                 <Route path="/leaderboards" element={<LeaderboardsPage />} />
               </Route>
             </Route>
-            <Route element={<RequireInGameStatus />}>
+            {/* <Route element={<RequireInGameStatus />}> */}
               <Route path="/game" element={<GamePage />} />
-            </Route>
+            {/* </Route> */}
           </Route>
         </Route>
       </Route>
