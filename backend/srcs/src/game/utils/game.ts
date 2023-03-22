@@ -26,6 +26,7 @@ export class Game {
     paddleHeight: number,
     paddleDepth: number,
     paddleMass: number,
+    paddleSpeed: number,
     scoreboardTotalTime: number,
     scoreboardRemainingTime: number,
     scoreboardScoreA: number,
@@ -47,6 +48,7 @@ export class Game {
       paddleHeight,
       paddleDepth,
       paddleMass,
+      paddleSpeed
     );
     const paddleB = new Paddle(
       pitchWidth / 2,
@@ -56,6 +58,7 @@ export class Game {
       paddleHeight,
       paddleDepth,
       paddleMass,
+      paddleSpeed
     );
     const scoreboard = new Scoreboard(
       scoreboardTotalTime,
@@ -73,9 +76,9 @@ export class Game {
   }
 
 
-  loop(second: number) {
-    this.pitch.update();
-    this.ball.update();
+  loop(dt: number) {
+    this.pitch.update(dt);
+    this.ball.update(dt);
     this.paddleA.update();
     this.paddleB.update();
     this.scoreboard.update();

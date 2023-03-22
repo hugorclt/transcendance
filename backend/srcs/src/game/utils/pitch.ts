@@ -11,8 +11,8 @@ export class Pitch {
     this.wallThickness = wallThickness;
   }
 
-  update() : void {
-    // map modification ?
+  update(dt : number) : void {
+    return ; // so far no mod
   }
 
   getWidth(): number {
