@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { COLORS } from "../../colors";
 import {
   createMaterialArray,
@@ -62,11 +62,16 @@ function Game() {
     new Vector3(MAP_SIZE.width / 2, WALL_SIZE.height / 2, 0)
   );
 
+useFrame(() => {
+
+}) 
+
   return (
     <div ref={canvas}>
       <Canvas
         tabIndex={0}
-        style={{ background: COLORS.background, height: "100vh" }}>
+        style={{ background: COLORS.background, height: "100vh" }}
+      >
         <Suspense fallback={null}>
           <PerspectiveCamera makeDefault position={CAMERA_POS} />
           <OrbitControls />
