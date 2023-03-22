@@ -50,15 +50,15 @@ enum VisibilityMode {
   AWAY
 }
 
-model Invitation{
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  type InvitationType
-  userId String @db.Uuid
-  userFromId String? @db.Uuid
-  lobbyId String? @db.Uuid
-  user User @relation("invited", fields: [userId], references: [id])
-  userFrom User? @relation("inviter", fields: [userFromId], references: [id])
-  lobbyFrom Lobby? @relation(fields: [lobbyId], references: [id])
+model Invitation {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type       InvitationType
+  userId     String         @db.Uuid
+  userFromId String?        @db.Uuid
+  lobbyId    String?        @db.Uuid
+  user       User           @relation("invited", fields: [userId], references: [id])
+  userFrom   User?          @relation("inviter", fields: [userFromId], references: [id])
+  lobbyFrom  Lobby?         @relation(fields: [lobbyId], references: [id])
 }
 
 enum InvitationType {
@@ -68,16 +68,16 @@ enum InvitationType {
 
 //================== GAME =================
 model Lobby {
-  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ownerId     String  @unique @db.Uuid
-  nbPlayers   Int     @default(2)
-  maxDuration Int     @default(180)
-  mode        Mode    @default(CLASSIC)
-  map         MapName @default(CLASSIC)
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId     String       @unique @db.Uuid
+  nbPlayers   Int          @default(2)
+  maxDuration Int          @default(180)
+  mode        Mode         @default(CLASSIC)
+  map         MapName      @default(CLASSIC)
   invitations Invitation[]
-  owner       User    @relation("lobbyOwner", fields: [ownerId], references: [id])
-  players     User[]  @relation("lobbyParticipant")
-  spectators  User[]  @relation("lobbySpectator")
+  owner       User         @relation("lobbyOwner", fields: [ownerId], references: [id])
+  players     User[]       @relation("lobbyParticipant")
+  spectators  User[]       @relation("lobbySpectator")
 }
 
 enum MapName {
@@ -122,7 +122,7 @@ model Room {
   isDm             Boolean
   userBanSymmetric User[]        @relation("Banned")
   roomMsg          Message[]
-  room             Participant[]
+  participants     Participant[]
   owner            User          @relation("owner", fields: [ownerId], references: [id], onDelete: NoAction)
 }
 

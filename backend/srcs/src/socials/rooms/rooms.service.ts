@@ -46,7 +46,7 @@ export class RoomsService {
         isPrivate: createRoomDto.isPrivate,
         isDm: createRoomDto.isDm,
         type: 0,
-        room: {
+        participants: {
           create: createRoomDto.users.map((user) => ({
             user: { connect: { id: user.userId } },
             role: user.role as Role,
@@ -55,7 +55,7 @@ export class RoomsService {
         owner: { connect: { id: ownerId } },
       },
       include: {
-        room: true,
+        participants: true,
         owner: true,
       },
     });
@@ -74,13 +74,11 @@ export class RoomsService {
   async findHistory(userId: string) {
     const list = await this.findRoomsForUser(userId);
 
-    return Promise.all(
+    return await Promise.all(
       list.flatMap(async (room) => {
         const lastMessage = await this.messageService.getLastMessage(room.id);
 
         if (room.ownerId != userId && lastMessage == null) return;
-
-        await this.socialGateway.joinUserToRoom(room.id, userId);
         return this.createRoomReturnEntity(room, lastMessage);
       }),
     );
@@ -90,26 +88,26 @@ export class RoomsService {
     return this.prisma.room.findMany({});
   }
 
-  findOne(id: string) {
-    return this.prisma.room.findUnique({
+  async findOne(id: string) {
+    return await this.prisma.room.findUnique({
       where: { id },
       include: {
-        room: true,
+        participants: true,
       },
     });
   }
 
-  findOneByName(name: string) {
-    return this.prisma.room.findUnique({
+  async findOneByName(name: string) {
+    return await this.prisma.room.findUnique({
       where: { name },
       include: {
-        room: true,
+        participants: true,
       },
     });
   }
 
-  remove(id: string) {
-    return this.prisma.room.delete({
+  async remove(id: string) {
+    return await this.prisma.room.delete({
       where: { id },
     });
   }
@@ -117,13 +115,13 @@ export class RoomsService {
   async findRoomsForUser(userId: string) {
     return await this.prisma.room.findMany({
       where: {
-        room: {
+        participants: {
           some: {
             user: { id: userId },
           },
         },
       },
-      include: { room: true },
+      include: { participants: true },
     });
   }
 
@@ -162,7 +160,7 @@ export class RoomsService {
   }
 
   async createRoomReturnEntity(
-    room: Room & { room: Participant[] },
+    room: Room & { participants: Participant[] },
     lastMessage: Message,
   ): Promise<ReturnRoomEntity> {
     return {
@@ -191,7 +189,7 @@ export class RoomsService {
 
   async leaveRoom(userId: string, roomId: string) {
     const oldRoom = await this.findOne(roomId);
-    var nbParticipant = oldRoom.room.length;
+    var nbParticipant = oldRoom.participants.length;
     const participantToDel = await this.prisma.participant.findFirst({
       where: {
         userId: userId,
@@ -216,7 +214,6 @@ export class RoomsService {
     }
 
     const newRoom = await this.findOne(roomId);
-    console.log('calling gateway from rooms service');
     this.socialGateway.leaveUserFromRoom(roomId, userId);
     if (newRoom)
       this.socialGateway.emitToUser(newRoom.id, 'on-chat-update', {
@@ -231,8 +228,7 @@ export class RoomsService {
     const room = await this.prisma.room.findFirst({
       where: {
         id: payload.roomId,
-        room: {
-          //wtf
+        participants: {
           some: {
             userId: senderId,
           },

@@ -10,7 +10,7 @@ import { useGlobal } from "../../services/Global/GlobalProvider";
 
 async function initializeSocket(token: string) {
   try {
-    const socket = io("http://localhost:3000/socials", {
+    const socket = await io("http://localhost:3000/socials", {
       auth: {
         jwt: token,
       },
