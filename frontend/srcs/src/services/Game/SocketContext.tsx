@@ -32,7 +32,6 @@ export function GameSocketProvider({ children }: { children: ReactNode }) {
     async function initSocket() {
       if (!connected.current) {
         console.log("init socket");
-        console.log(auth);
         const s: any = await initializeSocket(auth?.accessToken);
         setSocket(s);
       }
@@ -41,7 +40,5 @@ export function GameSocketProvider({ children }: { children: ReactNode }) {
     initSocket();
   }, []);
 
-  return (
-    <GameSocket.Provider value={socket}>{children}</GameSocket.Provider>
-  );
+  return <GameSocket.Provider value={socket}>{children}</GameSocket.Provider>;
 }

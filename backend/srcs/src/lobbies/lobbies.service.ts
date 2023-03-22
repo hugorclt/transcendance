@@ -19,7 +19,6 @@ export class LobbiesService {
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
     private readonly invitationsService: InvitationsService,
-    private readonly socialsGateway: SocialsGateway,
   ) {}
 
   //=========================== CRUD OPERATIONS ======================
@@ -41,7 +40,6 @@ export class LobbiesService {
       },
     });
     await this.usersService.updateStatus(user.id, 'LOBBY');
-    await this.socialsGateway.sendStatusUpdate(user.id);
     return lobby;
   }
   async findAll(): Promise<LobbyEntity[]> {
@@ -91,8 +89,6 @@ export class LobbiesService {
       lobby.ownerId,
       'CONNECTED',
     );
-    console.log('sending status update via socket...');
-    await this.socialsGateway.sendStatusUpdate(user.id);
     console.log('User successfully left lobby');
     //remove lobby
     console.log('deleting lobby...');
@@ -102,7 +98,6 @@ export class LobbiesService {
   //====================== JOIN / LEAVE LOBBY ===========================
 
   async joinLobby(joinLobbyDto: JoinLobbyDto) {
-    //check if user can join a lobby
     await this.canUserJoinLobbies(joinLobbyDto.userId);
     console.log('user can join lobby');
     //check if lobby is joinable and / or not full
@@ -116,10 +111,9 @@ export class LobbiesService {
     });
     //check if user has been invited to lobby
     await Promise.all(
-      lobby.invitations.map((invitation) => {
+      lobby.invitations.map(async (invitation) => {
         if (invitation.userId == joinLobbyDto.userId) {
-          console.log('user joining the lobby was invited');
-          this.invitationsService.remove(invitation.id);
+          await this.invitationsService.remove(invitation.id);
         }
       }),
     );
@@ -134,22 +128,20 @@ export class LobbiesService {
         },
       },
     });
-    console.log('User successfully joined lobby');
     await this.usersService.updateStatus(joinLobbyDto.userId, 'LOBBY');
-    return updateLobby;
+    console.log('User successfully joined lobby');
     //update lobby status to all participants
+    //TODO
+    return updateLobby;
   }
 
   async leaveLobby(joinLobbyDto: JoinLobbyDto) {
-    console.log('leave lobby from lobbiesService');
     //check if user is lobby owner: delete lobby
-    const check = await this.isUserLobbyOwner(
-      joinLobbyDto.userId,
-      joinLobbyDto.lobbyId,
-    );
-    if (check) {
+    if (
+      await this.isUserLobbyOwner(joinLobbyDto.userId, joinLobbyDto.lobbyId)
+    ) {
       console.log('player is lobby Owner, deleting lobby...');
-      await this.delete(joinLobbyDto.lobbyId);
+      return await this.delete(joinLobbyDto.lobbyId);
     }
     //check if user is lobby participant:
     const check2 = await this.isUserInLobby(
@@ -174,8 +166,6 @@ export class LobbiesService {
         joinLobbyDto.userId,
         'CONNECTED',
       );
-      console.log('sending status update via socket...');
-      await this.socialsGateway.sendStatusUpdate(user.id);
       console.log('User successfully left lobby');
       return updateLobby;
     }

@@ -4,13 +4,11 @@ import { LobbiesController } from './lobbies.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersModule } from 'src/users/users.module';
 import { LobbiesGateway } from './lobbies.gateway';
-import { SocialsModule } from 'src/socials/socials.module';
 import { InvitationsModule } from 'src/invitations/invitations.module';
 
 @Module({
   imports: [
     PrismaModule,
-    forwardRef(() => SocialsModule),
     forwardRef(() => InvitationsModule),
     forwardRef(() => UsersModule),
   ],

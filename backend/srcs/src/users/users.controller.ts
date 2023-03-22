@@ -74,14 +74,10 @@ export class UsersController {
   async updateVisibility(
     @Request() req,
   ): Promise<ReturnUserEntityWithPreferences> {
-    const user = await this.usersService.updateVisibility(
+    return await this.usersService.updateVisibility(
       req.user.sub,
       req.body.status,
     );
-    if (user) {
-      this.socialGateway.sendVisibilityUpdate(req.user.sub);
-    }
-    return user;
   }
 
   @Get('me/preferences')

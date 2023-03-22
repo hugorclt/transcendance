@@ -24,7 +24,6 @@ function UserPreferencesProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     socket?.on("on-visibility-update", (visibility) => {
-      console.log("updated visbility to: ", visibility);
       setUserPreferences((prev) => ({ ...prev, visibility: visibility }));
     });
 

@@ -23,9 +23,9 @@ const googleClient = new OAuth2Client(
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
-    private prisma: PrismaService,
-    private jwtService: JwtService,
+    private readonly usersService: UsersService,
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
     private readonly httpService: HttpService,
   ) {}
 

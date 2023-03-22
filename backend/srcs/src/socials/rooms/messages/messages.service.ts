@@ -25,11 +25,11 @@ export class MessagesService {
   }
 
   update(id: number, updateMessageDto: UpdateMessageDto) {
-    return `This action updates a #${id} message`;
+    return 'rien';
   }
 
   remove(id: number) {
-    return `This action removes a #${id} message`;
+    return 'rien';
   }
 
   async getLastMessage(roomId: string) {

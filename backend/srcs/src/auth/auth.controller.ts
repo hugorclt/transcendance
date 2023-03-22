@@ -17,7 +17,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { LocalRegisterDto } from './dto/log-user.dto';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { UsersService } from 'src/users/users.service';
-import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Controller('auth')
 @ApiTags('login')
@@ -25,7 +24,6 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly socialsGateway: SocialsGateway,
   ) {}
 
   @Get('me')
@@ -80,7 +78,6 @@ export class AuthController {
   @UseGuards(AccessAuthGard)
   async logout(@Request() req) {
     await this.authService.logout(req.user.sub);
-    this.socialsGateway.sendStatusUpdate(req.user.sub);
     return req.user.sub;
   }
 }

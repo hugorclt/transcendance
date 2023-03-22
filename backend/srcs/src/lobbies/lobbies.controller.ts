@@ -17,16 +17,12 @@ import { AccessAuthGard } from 'src/auth/utils/guards';
 import { LobbyEntity } from './entities/lobby.entity';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JoinLobbyDto } from './dto/join-lobby.dto';
-import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Controller('lobbies')
 @UseGuards(AccessAuthGard)
 @ApiTags('lobbies')
 export class LobbiesController {
-  constructor(
-    private readonly lobbiesService: LobbiesService,
-    private readonly socialsGateway: SocialsGateway,
-  ) {}
+  constructor(private readonly lobbiesService: LobbiesService) {}
 
   @Post()
   @ApiCreatedResponse({ type: LobbyEntity })
@@ -68,9 +64,7 @@ export class LobbiesController {
     @Request() req: any,
     @Body() joinLobbyDto: JoinLobbyDto,
   ): Promise<LobbyEntity> {
-    const lobby = await this.lobbiesService.joinLobby(joinLobbyDto);
-    await this.socialsGateway.sendStatusUpdate(req.user.sub);
-    return lobby;
+    return await this.lobbiesService.joinLobby(joinLobbyDto);
   }
 
   @Post('leave')
@@ -79,10 +73,7 @@ export class LobbiesController {
     @Request() req: any,
     @Body() joinLobbyDto: JoinLobbyDto,
   ): Promise<LobbyEntity> {
-    const lobby = await this.lobbiesService.leaveLobby(joinLobbyDto);
-    await this.socialsGateway.sendStatusUpdate(req.user.sub);
-    return lobby;
-    //should update status for each user that left lobby
+    return await this.lobbiesService.leaveLobby(joinLobbyDto);
   }
 
   @Get(':id/participants')
