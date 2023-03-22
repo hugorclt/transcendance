@@ -81,9 +81,9 @@ export class Paddle {
     }
 
     /*================================ GAME MOVE ==============================*/
-    // input is either 1 or -1;
-    applyInput(input: number) {
-      this.x += input * this.speed;
+    
+    applyInput() {
+      
     }
   };
   
