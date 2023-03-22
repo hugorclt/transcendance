@@ -22,10 +22,8 @@ export class RoomsController {
   @Post('/create')
   @ApiCreatedResponse({ type: RoomEntity })
   async create(@Request() req, @Body() createRoomDto: CreateRoomDto) {
-    const creatorId = req.user.sub;
-    createRoomDto.ownerId = creatorId;
-    const room = await this.roomsService.create(createRoomDto);
-    return this.roomsService.createRoomReturnEntity(room, undefined);
+    const room = await this.roomsService.create(createRoomDto, req.user.sub);
+    return room;
   }
 
   @Get('/history')

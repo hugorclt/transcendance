@@ -2,6 +2,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
+import { useGlobal } from "../../../../services/Global/GlobalProvider";
 import { conversationAtom, friendAtom } from "../../../../services/store";
 import { updateArray } from "../../../../services/utils/updateArray";
 import { RoomModalOpenContext } from "../../../../views/ChatPage/RoomModalOpenContext";
@@ -21,7 +22,7 @@ import {
 } from "../ChatHistoryStyle";
 
 type ParticipantState = {
-  username: string;
+  userId: string;
   role: string;
 };
 
@@ -34,6 +35,7 @@ function CreateRoom() {
   const [friendList] = useAtom(friendAtom);
   const [chat, setChat] = useAtom(conversationAtom);
   const axiosPrivate = useAxiosPrivate();
+  const {auth} = useGlobal();
 
   const handleCheck = () => {
     setPrivate(!isPrivate);
@@ -62,26 +64,26 @@ function CreateRoom() {
     setOpen(false);
   };
 
-  function handleAddFriends(name: string) {
-    const index = users.findIndex((user) => user.username == name);
+  function handleAddFriends(id: string) {
+    const index = users.findIndex((user) => user.userId == id);
     if (index == -1) {
-      setUser((prev) => [...prev, { username: name, role: "BASIC" }]);
+      setUser((prev) => [...prev, { userId: id, role: "BASIC" }]);
     } else {
       if (users[index].role == "BASIC") {
         const updatedUsers = [...users];
         updatedUsers[index].role = "ADMIN";
         setUser(updatedUsers);
       } else {
-        const updatedUsers = users.filter((user) => user.username !== name);
+        const updatedUsers = users.filter((user) => user.userId !== id);
         setUser(updatedUsers);
       }
     }
   }
 
-  function chooseColor(username: string) {
-    if (users.find((user) => user.username == username)?.role == "BASIC")
+  function chooseColor(id: string) {
+    if (users.find((user) => user.userId == id)?.role == "BASIC")
       return "admin";
-    else if (users.find((user) => user.username == username)?.role == "ADMIN")
+    else if (users.find((user) => user.userId == id)?.role == "ADMIN")
       return "callout";
     return "";
   }
@@ -93,8 +95,8 @@ function CreateRoom() {
         <CreateRoomScroll>
           {friendList.map((val, index) => {
             return (
-              <div key={index} onClick={() => handleAddFriends(val.username)}>
-                <p key={index} className={chooseColor(val.username)}>
+              <div key={index} onClick={() => handleAddFriends(val.id)}>
+                <p key={index} className={chooseColor(val.id)}>
                   {val.username}
                 </p>
               </div>

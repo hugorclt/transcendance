@@ -42,7 +42,6 @@ function LeftSideChatCards(props: {
   };
 
   const handleKick = () => {
-    console.log(props.roomId);
     socket?.emit("kick-player", {
       userIdKicked: props.userId,
       roomId: props.roomId,

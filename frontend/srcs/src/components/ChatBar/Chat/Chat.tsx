@@ -110,7 +110,6 @@ function Chat({ chat }: TChatProps) {
     const sender = chatHistory
       .find((chat) => chat.id == chat.id)
       ?.participants.find((user) => user.id == msg.senderId);
-    console.log(sender);
     const isMe = sender?.name === auth.username;
     const senderName = isMe ? (
       <div className="sender">You</div>

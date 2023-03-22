@@ -7,6 +7,7 @@ import { Message, Participant, Role, Room } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
 import { SocialsGateway } from '../socials.gateway';
+import { ReturnRoomEntity } from './entities/room.entity';
 
 @Injectable()
 export class RoomsService {
@@ -19,21 +20,24 @@ export class RoomsService {
     private socialGateway: SocialsGateway,
   ) {}
 
-  async create(createRoomDto: CreateRoomDto) {
+  async create(createRoomDto: CreateRoomDto, ownerId: string) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createRoomDto.password, salt);
 
-    if (createRoomDto.isDm == true) {
-      const id1 = await this.usersService.findOneByUsername(
-        createRoomDto.users[0].username,
-      );
-      const id2 = createRoomDto.ownerId;
-      const concatenatedID = this.concatenateID(id1.id, id2);
+    createRoomDto.users.push({ userId: ownerId, role: 'OWNER' });
+    // if (createRoomDto.isDm == true) {
+    //   const id1 = await this.usersService.findOneByUsername(
+    //     createRoomDto.users[0].username,
+    //   );
+    //   const id2 = createRoomDto.users.find((user) => user.role == "OWNER");
+    //   const owner
+    //   const concatenatedID = this.concatenateID(id1.id, id2);
 
-      const roomExists = await this.findOneByName(concatenatedID);
-      if (roomExists !== null) return roomExists;
-      createRoomDto.name = concatenatedID;
-    }
+    //   const roomExists = await this.findOneByName(concatenatedID);
+    //   if (roomExists !== null) return roomExists;
+    //   createRoomDto.name = concatenatedID;
+    // }
+    console.log(createRoomDto);
 
     const room = await this.prisma.room.create({
       data: {
@@ -45,11 +49,11 @@ export class RoomsService {
         type: 0,
         room: {
           create: createRoomDto.users.map((user) => ({
-            user: { connect: { username: user.username } },
-            role: user.role === 'ADMIN' ? Role.ADMIN : Role.BASIC,
+            user: { connect: { id: user.userId } },
+            role: user.role as Role,
           })),
         },
-        owner: { connect: { id: createRoomDto.ownerId } },
+        owner: { connect: { id: ownerId } },
       },
       include: {
         room: true,
@@ -57,19 +61,18 @@ export class RoomsService {
       },
     });
 
-    await this.prisma.participant.create({
-      data: {
-        userId: createRoomDto.ownerId,
-        roomId: room.id,
-        role: Role.OWNER,
-      },
-    });
     const roomEntity = await this.createRoomReturnEntity(room, undefined);
-    this.socialGateway.joinUsersToRoom(
-      room,
-      createRoomDto.users.map((user) => user.username),
-    );
-    return room;
+    console.log('room entity has been created: ', roomEntity);
+    
+    this.socialGateway
+      .joinUsersToRoom(
+        room,
+        createRoomDto.users.map((user) => user.userId),
+      )
+      .then(() => {
+        this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
+      });
+    return roomEntity;
   }
 
   async findHistory(userId: string) {
@@ -81,9 +84,7 @@ export class RoomsService {
 
         if (room.ownerId != userId && lastMessage == null) return;
 
-        //should call gateway join each room
-        console.log('user: ', userId, ' joining room: ', room.id);
-        this.socialGateway.joinUserToRoom(room.id, userId);
+        await this.socialGateway.joinUserToRoom(room.id, userId);
         return this.createRoomReturnEntity(room, lastMessage);
       }),
     );
@@ -167,7 +168,7 @@ export class RoomsService {
   async createRoomReturnEntity(
     room: Room & { room: Participant[] },
     lastMessage: Message,
-  ) {
+  ): Promise<ReturnRoomEntity> {
     return {
       id: room.id,
       avatar: room.avatar,

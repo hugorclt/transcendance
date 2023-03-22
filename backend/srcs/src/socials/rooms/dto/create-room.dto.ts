@@ -4,7 +4,7 @@ import { IsNotEmpty, IsOptional, IsString, ValidateIf } from "class-validator";
 export class ParticipantDto {
   @IsNotEmpty()
   @ApiProperty()
-  username: string;
+  userId: string;
 
   @IsNotEmpty()
   @ApiProperty()
@@ -31,9 +31,6 @@ export class CreateRoomDto {
   @IsNotEmpty()
   @ApiProperty()
   isDm: boolean;
-
-  @ApiProperty()
-  ownerId?: string;
 
   @ApiProperty()
   avatar?: string;

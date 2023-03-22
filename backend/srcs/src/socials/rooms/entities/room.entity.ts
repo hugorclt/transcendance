@@ -51,5 +51,5 @@ export class ReturnRoomEntity {
     @ApiProperty()
     lastMessage: string;
 
-    participant: ReturnParticipantEntity[];
+    participants: ReturnParticipantEntity[];
 }
