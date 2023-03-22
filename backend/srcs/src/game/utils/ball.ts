@@ -74,7 +74,7 @@ export class Ball {
     this.mass = mass;
   }
 
-  /*================================ COMPUTATION ==============================*/
+  /*================================ BALL MOVE ==============================*/
 
   collideWithPaddle(paddle: Paddle) {
     // Compute the impulse of the collision
@@ -109,5 +109,16 @@ export class Ball {
       this.x = pitch.getRightWallPosition() - radius;
       this.vx = -this.vx;
     }
+  }
+
+
+  respawn(x: number, z: number, vx: number, vy: number, radius: number, mass: number) {
+    this.x = x;
+    // this.y = y;
+    this.z = z;
+    this.vx = vx;
+    this.vz = vy;
+    this.radius = radius;
+    this.mass = mass;
   }
 }

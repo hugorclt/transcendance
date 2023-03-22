@@ -22,6 +22,10 @@ export class Scoreboard {
     this.scoreToWin = scoreToWin;
   }
 
+  update(dt: number) {
+    return ;
+  }
+
   checkForGoal(ball: Ball, pitch: Pitch) {
     const ballZ = ball.getZ();
 

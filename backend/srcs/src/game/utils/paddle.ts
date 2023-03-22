@@ -19,7 +19,11 @@ export class Paddle {
       this.mass = mass;
       this.speed = speed;
     }
-  
+ 
+    update(input: number) {
+      this.applyInput(input);
+    }
+
     /*================================ getter and setter ==============================*/
     
     
@@ -80,8 +84,15 @@ export class Paddle {
       this.mass = mass;
     }
 
-    /*================================ GAME MOVE ==============================*/
-    // input is either 1 or -1;
+    /*================================ PADDLE MOVE ==============================*/
+
+    respawn(x: number, y: number, z: number) {
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
+
+    // Left is -1 and right is 1
     applyInput(input: number) {
       this.x += input * this.speed;
     }
