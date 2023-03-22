@@ -8,7 +8,13 @@ import { RoomsController } from './rooms.controller';
 import { RoomsService } from './rooms.service';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => UsersModule), ParticipantModule, forwardRef(() => SocialsModule), forwardRef(() => MessagesModule)],
+  imports: [
+    PrismaModule,
+    forwardRef(() => UsersModule),
+    forwardRef(() => ParticipantModule),
+    forwardRef(() => SocialsModule),
+    forwardRef(() => MessagesModule),
+  ],
   controllers: [RoomsController],
   providers: [RoomsService],
   exports: [RoomsService],

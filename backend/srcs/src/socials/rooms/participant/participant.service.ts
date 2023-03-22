@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Participant, Room } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UsersService } from 'src/users/users.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
 
 @Injectable()
 export class ParticipantService {
-  constructor(
-    private prisma: PrismaService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   create(createParticipantDto: CreateParticipantDto) {
     return this.prisma.participant.create({
@@ -36,13 +32,17 @@ export class ParticipantService {
     return `This action removes a #${id} participant`;
   }
 
-  async createParticipantFromRoom(room: Room & { room: Participant[] }) {
-    return Promise.all(
-      room.room.map(async (participant) => {
+  async createParticipantFromRoom(room: Room & { participants: Participant[] }) {
+    return await Promise.all(
+      room.participants.map(async (participant) => {
+        const user = await this.prisma.user.findUnique({
+          where: { id: participant.userId },
+        });
         return {
-          id: participant.id,
+          id: user.id,
           role: participant.role,
-          name: (await this.usersService.findOne(participant.userId)).username,
+          name: user.username,
+          status: user.status,
         };
       }),
     );

@@ -1,8 +1,6 @@
-import { TConversation } from "../type";
-
-export function updateChatHistory(
-  array: TConversation[],
-  newObj: TConversation
+export function updateArray(
+  array: any[],
+  newObj: any,
 ) {
   const index = array.findIndex((obj) => obj.id === newObj.id);
   if (index === -1) {

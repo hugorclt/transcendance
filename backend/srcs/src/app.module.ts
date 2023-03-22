@@ -12,12 +12,17 @@ import { ParticipantModule } from './socials/rooms/participant/participant.modul
 import { SocialsModule } from './socials/socials.module';
 import { MessagesModule } from './socials/rooms/messages/messages.module';
 import { ItemsModule } from './items/items.module';
+import { InvitationsModule } from './invitations/invitations.module';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    JwtModule.register({ secret: process.env['AT_SECRET'] }),
     AuthModule,
     PrismaModule,
     UsersModule,
-    JwtModule,
     HttpModule,
     RoomsModule,
     ParticipantModule,
@@ -25,6 +30,7 @@ import { ItemsModule } from './items/items.module';
     MessagesModule,
     LobbiesModule,
     ItemsModule,
+    InvitationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

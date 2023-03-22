@@ -10,19 +10,35 @@ import {
 } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Status, Type } from '@prisma/client';
+import { Status, Type, VisibilityMode } from '@prisma/client';
 import { exclude } from 'src/utils/exclude';
 import { UserEntity } from './entities/user.entity';
-import { ReturnUserEntity } from './entities/return-user.entity';
+import {
+  ReturnUserEntity,
+  ReturnUserEntityWithPreferences,
+} from './entities/return-user.entity';
+import { UserPreferencesEntity } from './entities/user-preferences.entity';
+import { getStatusFromVisibility } from './utils/friend-status';
+import { addFriendDto } from './dto/add-friend.dto';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly socialsGateway: SocialsGateway,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
-      data: createUserDto,
+      data: {
+        username: createUserDto.username,
+        email: createUserDto.email,
+        password: createUserDto.password,
+        preferences: {
+          create: { visibility: 'VISIBLE' },
+        },
+      },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
@@ -31,14 +47,30 @@ export class UsersService {
     createGoogleUserDto: CreateGoogleUserDto,
   ): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
-      data: createGoogleUserDto,
+      data: {
+        username: createGoogleUserDto.username,
+        email: createGoogleUserDto.email,
+        password: createGoogleUserDto.password,
+        type: createGoogleUserDto.type,
+        preferences: {
+          create: { visibility: 'VISIBLE' },
+        },
+      },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
 
   async create42(create42UserDto: Create42UserDto): Promise<ReturnUserEntity> {
     const user: UserEntity = await this.prisma.user.create({
-      data: create42UserDto,
+      data: {
+        username: create42UserDto.username,
+        email: create42UserDto.email,
+        password: create42UserDto.password,
+        type: create42UserDto.type,
+        preferences: {
+          create: { visibility: 'VISIBLE' },
+        },
+      },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
@@ -123,12 +155,42 @@ export class UsersService {
   }
 
   async updateStatus(id: string, status: string): Promise<ReturnUserEntity> {
-    const user: UserEntity = await this.prisma.user.update({
+    const userUpdate: UserEntity = await this.prisma.user.update({
       where: { id },
       data: { status: status as Status },
     });
+    if (userUpdate)
+      return exclude(userUpdate, ['password', 'type', 'refreshToken']);
+    throw new NotFoundException();
+  }
+
+  async updateVisibility(
+    id: string,
+    status: string,
+  ): Promise<ReturnUserEntityWithPreferences> {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: {
+        preferences: {
+          update: {
+            visibility: status as VisibilityMode,
+          },
+        },
+      },
+      include: {
+        preferences: true,
+      },
+    });
     if (user) return exclude(user, ['password', 'type', 'refreshToken']);
     throw new NotFoundException();
+  }
+
+  async getUserPreferences(id: string): Promise<UserPreferencesEntity> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: { preferences: true },
+    });
+    return user.preferences;
   }
 
   async updateRefreshToken(id: string, refreshToken: string) {
@@ -148,25 +210,57 @@ export class UsersService {
     throw new NotFoundException('User not found');
   }
 
-  async addFriend(userId1: string, userId2: string): Promise<void> {
+  async addFriend(addFriendDto: addFriendDto): Promise<any> {
+    //should check if invitation exist and
+    //TODO
+    //=> if not exist: error
+    //=> if exists delete and continue
     const existingFriends = await this.prisma.user.findUnique({
-      where: { id: userId1 },
-      include: { friends: { where: { id: userId2 } } },
+      where: { id: addFriendDto.userFromId },
+      include: { friends: { where: { id: addFriendDto.userId } } },
     });
 
     if (existingFriends?.friends.length > 0) {
       throw new ConflictException('Already friends');
     }
 
-    await this.prisma.user.update({
-      where: { id: userId1 },
-      data: { friends: { connect: { id: userId2 } } },
+    const newFriend = await this.prisma.user.update({
+      where: { id: addFriendDto.userFromId },
+      data: { friends: { connect: { id: addFriendDto.userId } } },
+      include: {
+        preferences: true,
+      },
     });
 
-    await this.prisma.user.update({
-      where: { id: userId2 },
-      data: { friends: { connect: { id: userId1 } } },
+    const user = await this.prisma.user.update({
+      where: { id: addFriendDto.userId },
+      data: { friends: { connect: { id: addFriendDto.userFromId } } },
+      include: {
+        preferences: true,
+      },
     });
+
+    //should emit to new friend about friendship
+    let status = getStatusFromVisibility(
+      user.status,
+      user.preferences.visibility,
+    );
+    this.socialsGateway.emitToUser(newFriend.id, 'on-friend-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: status,
+      id: user.id,
+    });
+    status = getStatusFromVisibility(
+      newFriend.status,
+      newFriend.preferences.visibility,
+    );
+    return {
+      username: newFriend.username,
+      avatar: newFriend.avatar,
+      status: status,
+      id: newFriend.id,
+    };
   }
 
   async removeFriends(
@@ -174,14 +268,14 @@ export class UsersService {
     usernameToRemove: string,
   ): Promise<ReturnUserEntity> {
     const remover = await this.prisma.user.findUnique({
-      where: {id: userId},
-      include: {friends: true},
-    })
+      where: { id: userId },
+      include: { friends: true },
+    });
 
     const removed = await this.prisma.user.findUnique({
-      where: {username: usernameToRemove},
-      include: {friends: true},
-    })
+      where: { username: usernameToRemove },
+      include: { friends: true },
+    });
 
     this.removeOneRelation(remover, removed);
     this.removeOneRelation(removed, remover);
@@ -192,9 +286,7 @@ export class UsersService {
     if (!remover) throw new NotFoundException('Remover not found');
     if (!removed) throw new NotFoundException('Removed not found');
 
-    const friend = remover.friends.find(
-      (friend) => friend.id === removed.id,
-    );
+    const friend = remover.friends.find((friend) => friend.id === removed.id);
     if (!friend) throw new NotFoundException('Friend not found');
 
     await this.prisma.user.update({
@@ -208,18 +300,28 @@ export class UsersService {
   async getUserFriends(userId: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { friends: true },
+      include: {
+        friends: {
+          include: {
+            preferences: true,
+          },
+        },
+      },
     });
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user.friends.map((friend) => {
-      return ({
+      let friendStatus = getStatusFromVisibility(
+        friend.status,
+        friend.preferences.visibility,
+      );
+      return {
         id: friend.id,
         username: friend.username,
-        status: friend.status,
-        avatar: friend.avatar
-      })
+        status: friendStatus,
+        avatar: friend.avatar,
+      };
     });
   }
 

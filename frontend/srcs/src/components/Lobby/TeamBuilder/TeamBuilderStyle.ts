@@ -76,12 +76,6 @@ export const TeamNbPlayers = styled.h2`
   color: ${COLORS.primary};
 `;
 
-export const InviteFriendButton = styled.div`
-  width: 20px;
-  height: 20px;
-  background-color: ${COLORS.darkergrey};
-`;
-
 export const TeamCardsContainer = styled.div`
   height: 90%;
   width: 100%;
@@ -99,6 +93,16 @@ export const BotContainer = styled.div`
 `;
 
 export const GameStartButton = styled.button`
+  width: 150px;
+  height: 60px;
+  background-color: ${COLORS.secondary};
+  color: ${COLORS.primary};
+  border-radius: 5px;
+  padding: 4px;
+  border: 2px solid ${COLORS.border};
+`;
+
+export const LobbyLeaveButton = styled.button`
   width: 150px;
   height: 60px;
   background-color: ${COLORS.secondary};

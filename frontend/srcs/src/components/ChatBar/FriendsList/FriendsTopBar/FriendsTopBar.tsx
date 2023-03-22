@@ -1,7 +1,6 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineUsergroupAdd, AiOutlineSearch } from "react-icons/ai";
 import { COLORS } from "../../../../colors";
-import { SocketContext } from "../../../../services/Auth/SocketContext";
 import {
   AddFriendsForm,
   FriendsTopBarContainer,
@@ -13,17 +12,28 @@ import {
   ModalTitle,
 } from "./FriendsTopBarStyle";
 import Popup from "reactjs-popup";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
 
 function FriendsTopBar() {
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState("");
-  const socket = useContext(SocketContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setOpen(false);
     console.log("sending request");
-    socket?.emit("friend-request", username);
+    axiosPrivate
+      .post("/invitations", { type: "FRIEND", username: username })
+      .then((response: AxiosResponse) => {
+        console.log("succesfully sent friend request");
+        console.log("invitation sent: ", JSON.stringify(response.data));
+      })
+      .catch((error: AxiosError) => {
+        console.log("failed sending friend request");
+        console.log("error: ", JSON.stringify(error.message));
+      });
     setUsername("");
   };
 

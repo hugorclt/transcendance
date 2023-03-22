@@ -46,7 +46,10 @@ export class ReturnRoomEntity {
     isDm: boolean;
 
     @ApiProperty()
+    isRead: boolean;
+
+    @ApiProperty()
     lastMessage: string;
 
-    participant: ReturnParticipantEntity[];
+    participants: ReturnParticipantEntity[];
 }

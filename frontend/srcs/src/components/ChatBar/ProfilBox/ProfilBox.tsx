@@ -21,21 +21,22 @@ import { TbCurrencyShekel } from "react-icons/tb";
 import { COLORS, convertStatusColor } from "../../../colors";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
 import { useAtom } from "jotai";
-import { userAtom } from "../../../services/store";
+import { userAtom, userPreferencesAtom } from "../../../services/store";
 
 function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useAtom(userAtom);
+  const [userPreferences, setUserPreferences] = useAtom(userPreferencesAtom);
   const navigate = useNavigate();
   const location = useLocation();
   const { status } = useGlobal();
 
-  var changeStatus: ChangeEventHandler = (
+  var changeStatusVisibility: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const optionSelected = event.target.value;
     axiosPrivate
-      .post("/users/me/status", {
+      .post("/users/me/visibility", {
         status: optionSelected,
       })
       .catch((res: AxiosError) =>
@@ -49,7 +50,9 @@ function ProfilBox() {
         <ProfilBoxTitle>
           {user?.username.toLocaleUpperCase()}
           <ProfileBoxStatus
-            style={{ backgroundColor: convertStatusColor(status) }}
+            style={{
+              backgroundColor: convertStatusColor(status),
+            }}
           />
         </ProfilBoxTitle>
         <ExperienceBarContainer>
@@ -65,12 +68,13 @@ function ProfilBox() {
           <TbCurrencyShekel style={{ color: COLORS.secondary }} size={24} />
         </CurrencyContainer>
         <SelectBox>
-          <StyledSelect value={status.toUpperCase()} onChange={changeStatus}>
-            <option>CONNECTED</option>
+          <StyledSelect
+            value={userPreferences.visibility.toUpperCase()}
+            onChange={changeStatusVisibility}
+          >
+            <option>VISIBLE</option>
             <option>AWAY</option>
-            <option>DISCONNECTED</option>
-            <option>LOBBY</option>
-            <option>GAME</option>
+            <option>INVISIBLE</option>
           </StyledSelect>
         </SelectBox>
       </ProfilBoxRight>

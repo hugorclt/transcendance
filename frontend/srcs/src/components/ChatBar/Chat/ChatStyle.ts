@@ -20,6 +20,10 @@ export const ChatForm = styled.form`
   width: 95%;
   margin: 8px;
   border-radius: 5px;
+
+  p {
+    color: ${COLORS.primary}
+  }
 `;
 
 export const ChatMessageContainer = styled.form`
