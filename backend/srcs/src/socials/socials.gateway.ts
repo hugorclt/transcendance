@@ -124,7 +124,7 @@ export class SocialsGateway
   }
 
   async joinUsersToRoom(room: any, usersId: string[]) {
-    usersId.map(async (userId) => {
+    await Promise.all(usersId.map(async (userId) => {
       const participant = await this.prisma.user.findUnique({
         where: { id: userId },
       });
@@ -133,7 +133,7 @@ export class SocialsGateway
           "Participant can't join the room, refresh the page",
         );
       await this.joinUserToRoom(room.id, participant.id);
-    });
+    }));
   }
 
   //==============================================================================================

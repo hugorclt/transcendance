@@ -37,7 +37,6 @@ export class RoomsService {
     //   if (roomExists !== null) return roomExists;
     //   createRoomDto.name = concatenatedID;
     // }
-    console.log(createRoomDto);
 
     const room = await this.prisma.room.create({
       data: {
@@ -62,16 +61,13 @@ export class RoomsService {
     });
 
     const roomEntity = await this.createRoomReturnEntity(room, undefined);
-    console.log('room entity has been created: ', roomEntity);
-    
-    this.socialGateway
-      .joinUsersToRoom(
-        room,
-        createRoomDto.users.map((user) => user.userId),
-      )
-      .then(() => {
-        this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
-      });
+
+    await this.socialGateway.joinUsersToRoom(
+      room,
+      createRoomDto.users.map((user) => user.userId),
+    );
+    this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
+
     return roomEntity;
   }
 
