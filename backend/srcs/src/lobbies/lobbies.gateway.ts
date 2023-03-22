@@ -3,13 +3,15 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Namespace, Socket } from 'socket.io';
+import { Namespace } from 'socket.io';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
-
+import { PrismaService } from 'src/prisma/prisma.service';
+import { LobbiesService } from './lobbies.service';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -17,28 +19,50 @@ import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 export class LobbiesGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly lobbiesService: LobbiesService,
+  ) {}
+
   @WebSocketServer()
   io: Namespace;
 
   afterInit(): void {}
 
-  handleConnection(client: AuthSocket, ...args: any[]) {
-    const sockets = this.io.sockets;
-    console.log(
-      `WebSocket client with id: ${client.id} connected! UserId: ${client.userId}, Username: ${client.username}`,
-    );
-    console.log(`Number of connected clients: ${sockets.size}`);
-    this.emitBroadcast('hello', `from ${client.id}`);
+  async handleConnection(client: AuthSocket) {
+    client.join(client.userId);
+    const lobby = await this.lobbiesService.findLobbyForUser(client.userId);
+    if (lobby) {
+      console.log('user ', client.username, ' is in lobby ', lobby.id);
+      client.join(lobby.id);
+    }
   }
 
-  handleDisconnect(client: Socket) {
-    const sockets = this.io.sockets;
-    console.log(`WebSocket client with id: ${client.id} disconnected!`);
-    console.log(`Number of connected clients: ${sockets.size}`);
-    //todo - remove client from poll and send particpants_updated event
+  handleDisconnect(client: AuthSocket) {}
+
+  @SubscribeMessage('join-lobby')
+  async joinLobby(client: AuthSocket, lobbyId: string) {
+    console.log('received join-lobby event');
+    const user = await this.prisma.user.findUnique({
+      where: { id: client.id },
+    });
+    const lobby = await this.lobbiesService.findLobbyForUser(client.userId);
+    if (lobby) {
+      client.join(lobby.id);
+      this.io.to(lobby.id).emit('player-joined', { username: client.username });
+    }
   }
 
-  public emitBroadcast(eventName: string, data: any) {
-    this.io.emit(eventName, data);
+  @SubscribeMessage('player-ready')
+  async playerReady(client: AuthSocket, bool: boolean) {
+    console.log('received player-ready event: ', bool ? 'true' : 'false');
+  }
+
+  @SubscribeMessage('leave-lobby')
+  async leaveLobby(client: AuthSocket, lobbyId: string) {
+    console.log('received leave-lobby event');
+    //check if user is in said lobby
+    //disconnect user from lobby in db
+    //send lobby left update to users in lobby
   }
 }

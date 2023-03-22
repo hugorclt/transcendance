@@ -1,39 +1,42 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
-import { Role } from '@prisma/client';
+import { Message, Participant, Role, Room } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
 import { SocialsGateway } from '../socials.gateway';
+import { ReturnRoomEntity } from './entities/room.entity';
 
 @Injectable()
 export class RoomsService {
   constructor(
     private prisma: PrismaService,
     private participant: ParticipantService,
+    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private messageService: MessagesService,
+    private socialGateway: SocialsGateway,
   ) {}
 
-  async create(createRoomDto: CreateRoomDto) {
+  async create(createRoomDto: CreateRoomDto, ownerId: string) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createRoomDto.password, salt);
-    // const owner = await this.usersService.findOne(createRoomDto.ownerId);
 
-    if (createRoomDto.isDm == true)
-    {
-      // create room name
-      const id1 = await this.usersService.findOneByUsername(createRoomDto.users[0])  // ID of the target
-      const id2 = createRoomDto.ownerId;
-      const concatenatedID = this.concatenateID(id1.id ,id2);
+    createRoomDto.users.push({ userId: ownerId, role: 'OWNER' });
+    // if (createRoomDto.isDm == true) {
+    //   const id1 = await this.usersService.findOneByUsername(
+    //     createRoomDto.users[0].username,
+    //   );
+    //   const id2 = createRoomDto.users.find((user) => user.role == "OWNER");
+    //   const owner
+    //   const concatenatedID = this.concatenateID(id1.id, id2);
 
-      const roomExists = await this.findOne(concatenatedID);
-      if (roomExists !== null)
-        return roomExists; // end the process of creation if the room exits
-      createRoomDto.name = concatenatedID;
-    }
+    //   const roomExists = await this.findOneByName(concatenatedID);
+    //   if (roomExists !== null) return roomExists;
+    //   createRoomDto.name = concatenatedID;
+    // }
 
     const room = await this.prisma.room.create({
       data: {
@@ -41,47 +44,42 @@ export class RoomsService {
         password: hash,
         avatar: '', //owner.avatar,
         isPrivate: createRoomDto.isPrivate,
-        // ownerId: createRoomDto.ownerId,
         isDm: createRoomDto.isDm,
         type: 0,
-        room: {
+        participants: {
           create: createRoomDto.users.map((user) => ({
-            user: { connect: { username: user } },
-            role: user === createRoomDto.ownerId ? Role.OWNER : Role.BASIC,
+            user: { connect: { id: user.userId } },
+            role: user.role as Role,
           })),
         },
-        owner: { connect: { id: createRoomDto.ownerId } },
+        owner: { connect: { id: ownerId } },
       },
       include: {
-        room: true,
+        participants: true,
         owner: true,
       },
     });
 
-    await this.prisma.participant.create({
-      data: {
-        userId: createRoomDto.ownerId,
-        roomId: room.id,
-        role: Role.OWNER,
-      },
-    });
-    return room;
+    const roomEntity = await this.createRoomReturnEntity(room, undefined);
+
+    await this.socialGateway.joinUsersToRoom(
+      room,
+      createRoomDto.users.map((user) => user.userId),
+    );
+    this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
+
+    return roomEntity;
   }
 
   async findHistory(userId: string) {
     const list = await this.findRoomsForUser(userId);
 
-    return Promise.all(
+    return await Promise.all(
       list.flatMap(async (room) => {
         const lastMessage = await this.messageService.getLastMessage(room.id);
 
         if (room.ownerId != userId && lastMessage == null) return;
-
-        return {
-          avatar: room.avatar,
-          name: room.name,
-          lastMessage: lastMessage == null ? '' : lastMessage.content,
-        };
+        return this.createRoomReturnEntity(room, lastMessage);
       }),
     );
   }
@@ -90,27 +88,26 @@ export class RoomsService {
     return this.prisma.room.findMany({});
   }
 
-  findOne(id: string) {
-    return this.prisma.room.findUnique({
+  async findOne(id: string) {
+    return await this.prisma.room.findUnique({
       where: { id },
+      include: {
+        participants: true,
+      },
     });
   }
 
-  findOneByName(name: string) {
-    return this.prisma.room.findUnique({
+  async findOneByName(name: string) {
+    return await this.prisma.room.findUnique({
       where: { name },
+      include: {
+        participants: true,
+      },
     });
   }
 
-  // update(id: string, updateRoomDto: UpdateRoomDto) {
-  //   return this.prisma.room.update({
-  //     where: {id},
-  // data: updateRoomDto,
-  //   });
-  // }
-
-  remove(id: string) {
-    return this.prisma.room.delete({
+  async remove(id: string) {
+    return await this.prisma.room.delete({
       where: { id },
     });
   }
@@ -118,12 +115,13 @@ export class RoomsService {
   async findRoomsForUser(userId: string) {
     return await this.prisma.room.findMany({
       where: {
-        room: {
+        participants: {
           some: {
             user: { id: userId },
           },
         },
       },
+      include: { participants: true },
     });
   }
 
@@ -132,7 +130,13 @@ export class RoomsService {
     if (!room) return; //error
 
     const messages = await this.messageService.getMessages(room.id);
-    return messages;
+    return messages.map((message) => {
+      return {
+        content: message.content,
+        senderId: message.senderId,
+        roomId: message.roomId,
+      };
+    });
   }
 
   async getParticipantsInRoom(roomName: string) {
@@ -155,10 +159,97 @@ export class RoomsService {
     );
   }
 
+  async createRoomReturnEntity(
+    room: Room & { participants: Participant[] },
+    lastMessage: Message,
+  ): Promise<ReturnRoomEntity> {
+    return {
+      id: room.id,
+      avatar: room.avatar,
+      name: room.name,
+      isPrivate: room.isPrivate,
+      lastMessage: lastMessage == undefined ? '' : lastMessage.content,
+      isDm: room.isDm,
+      isRead: false,
+      participants: await this.participant.createParticipantFromRoom(room),
+    };
+  }
+
+  async changeOwner(roomId: string) {
+    const newOwner = await this.prisma.participant.findFirst({
+      where: { roomId: roomId },
+      orderBy: { joinedAt: 'desc' },
+      take: 1,
+    });
+    await this.prisma.participant.update({
+      where: { id: newOwner.id },
+      data: { role: Role.OWNER },
+    });
+  }
+
+  async leaveRoom(userId: string, roomId: string) {
+    const oldRoom = await this.findOne(roomId);
+    var nbParticipant = oldRoom.participants.length;
+    const participantToDel = await this.prisma.participant.findFirst({
+      where: {
+        userId: userId,
+        roomId: roomId,
+      },
+    });
+    await this.prisma.participant.delete({
+      where: {
+        id: participantToDel.id,
+      },
+    });
+
+    nbParticipant -= 1;
+    if (nbParticipant != 0 && participantToDel.role == Role.OWNER) {
+      this.changeOwner(roomId);
+    }
+
+    if (nbParticipant == 0) {
+      await this.prisma.room.delete({
+        where: { id: roomId },
+      });
+    }
+
+    const newRoom = await this.findOne(roomId);
+    this.socialGateway.leaveUserFromRoom(roomId, userId);
+    if (newRoom)
+      this.socialGateway.emitToUser(newRoom.id, 'on-chat-update', {
+        id: newRoom.id,
+        participants: await this.participant.createParticipantFromRoom(newRoom),
+      });
+    return newRoom;
+  }
+
+  async newMessage(senderId: string, payload: any): Promise<any> {
+    if (payload.message == '' || payload.message.length > 256) return;
+    const room = await this.prisma.room.findFirst({
+      where: {
+        id: payload.roomId,
+        participants: {
+          some: {
+            userId: senderId,
+          },
+        },
+      },
+    });
+    if (!room) return;
+    const message = await this.messageService.create({
+      content: payload.message,
+      senderId,
+      roomId: room.id,
+    });
+    if (!message) return;
+    this.socialGateway.sendMessageToRoom(message);
+
+    return message;
+  }
 
   // UTILS
- concatenateID(id1 : string, id2 : string) {
+  concatenateID(id1: string, id2: string) {
     const sortedIds = [id1, id2].sort();
-    return sortedIds.join("");
+    return sortedIds.join('');
   }
 }

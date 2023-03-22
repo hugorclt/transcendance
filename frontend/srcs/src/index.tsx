@@ -6,7 +6,7 @@ import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import GlobalProvider from "./services/Global/GlobalProvider";
 
-if (process.env["ENV_MODE"] === "production") {
+if (import.meta.env["ENV_MODE"] === "production") {
   disableReactDevTools();
 }
 

@@ -1,12 +1,8 @@
 import React from "react";
-import { TeamBuilderContainer } from "./TeamBuilder/TeamBuilderStyle";
+import TeamBuilder from "./TeamBuilder/TeamBuilder";
 
 function Lobby() {
-  return (
-    <TeamBuilderContainer>
-      <h1>Lobby</h1>
-    </TeamBuilderContainer>
-  );
+  return <TeamBuilder />;
 }
 
 export default Lobby;

@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, ChangeEventHandler } from "react";
 import "react-circular-progressbar/dist/styles.css";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
@@ -23,44 +17,26 @@ import {
   StyledSelect,
   SelectBox,
 } from "./ProfilBoxStyle";
-
 import { TbCurrencyShekel } from "react-icons/tb";
 import { COLORS, convertStatusColor } from "../../../colors";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
-
-type User = {
-  id: string;
-  username: string;
-  avatar: string;
-  email: string;
-  status: string;
-  balance: number;
-};
+import { useAtom } from "jotai";
+import { userAtom, userPreferencesAtom } from "../../../services/store";
 
 function ProfilBox() {
   const axiosPrivate = useAxiosPrivate();
-  const [user, setUser] = useState<User>();
-  const [color, setColor] = useState("#19e650");
+  const [user, setUser] = useAtom(userAtom);
+  const [userPreferences, setUserPreferences] = useAtom(userPreferencesAtom);
   const navigate = useNavigate();
   const location = useLocation();
   const { status } = useGlobal();
 
-  useEffect(() => {
-    axiosPrivate
-      .get("/users/me")
-      .then((res: AxiosResponse) => setUser(res.data))
-      .catch((res: AxiosError) =>
-        navigate("/login", { state: { from: location }, replace: true })
-      );
-  }, []);
-
-  var changeStatus: ChangeEventHandler = (
+  var changeStatusVisibility: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const optionSelected = event.target.value;
-    console.log("option selected: ", optionSelected);
     axiosPrivate
-      .post("/users/me/status", {
+      .post("/users/me/visibility", {
         status: optionSelected,
       })
       .catch((res: AxiosError) =>
@@ -74,7 +50,9 @@ function ProfilBox() {
         <ProfilBoxTitle>
           {user?.username.toLocaleUpperCase()}
           <ProfileBoxStatus
-            style={{ backgroundColor: convertStatusColor(status) }}
+            style={{
+              backgroundColor: convertStatusColor(status),
+            }}
           />
         </ProfilBoxTitle>
         <ExperienceBarContainer>
@@ -90,12 +68,13 @@ function ProfilBox() {
           <TbCurrencyShekel style={{ color: COLORS.secondary }} size={24} />
         </CurrencyContainer>
         <SelectBox>
-          <StyledSelect value={status.toUpperCase()} onChange={changeStatus}>
-            <option>CONNECTED</option>
+          <StyledSelect
+            value={userPreferences.visibility.toUpperCase()}
+            onChange={changeStatusVisibility}
+          >
+            <option>VISIBLE</option>
             <option>AWAY</option>
-            <option>DISCONNECTED</option>
-            <option>LOBBY</option>
-            <option>GAME</option>
+            <option>INVISIBLE</option>
           </StyledSelect>
         </SelectBox>
       </ProfilBoxRight>

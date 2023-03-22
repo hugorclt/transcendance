@@ -13,35 +13,44 @@ import GamePage from "./views/GamePage/GamePage";
 import RequireAuth from "./services/Auth/RequireAuth";
 import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Auth42/Login42";
-import MainLayout from "./layouts/MainLayout/MainLayout";
 import LoginLayout from "./layouts/LoginLayout/LoginLayout";
 import RequireStatus from "./services/Status/RequireStatus";
 import RequireInGameStatus from "./services/Status/RequireInGameStatus";
 import RequireUnAuth from "./services/Auth/RequiredUnAuth";
 import ProvideSocket from "./services/Auth/ProvideSocket";
+import MainPage from "./views/MainPage/MainPage";
 
 function App() {
   return (
     <Routes>
       <Route element={<PersistLogin />}>
-         {/* Public route */}
-        <Route element={<RequireUnAuth/>}>
+        {/* Public route */}
+        <Route element={<RequireUnAuth />}>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/login/42" element={<LoginLayout><Login42 /></LoginLayout>} />
+          <Route
+            path="/login/42"
+            element={
+              <LoginLayout>
+                <Login42 />
+              </LoginLayout>
+            }
+          />
         </Route>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
           <Route element={<ProvideSocket />}>
-            <Route element={<RequireStatus/>}>
-                <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
-                <Route path="/shop" element={<MainLayout><ShopPage /></MainLayout>} />
-                <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-                <Route path="/lobby" element={<MainLayout><LobbyPage /></MainLayout>} />
-                <Route path="/leaderboards" element={<MainLayout><LeaderboardsPage /></MainLayout>} />
+            <Route element={<RequireStatus />}>
+              <Route element={<MainPage />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/shop" element={<ShopPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/lobby" element={<LobbyPage />} />
+                <Route path="/leaderboards" element={<LeaderboardsPage />} />
+              </Route>
             </Route>
-            <Route element={<RequireInGameStatus />}>
+            {/* <Route element={<RequireInGameStatus />}> */}
               <Route path="/game" element={<GamePage />} />
-            </Route>
+            {/* </Route> */}
           </Route>
         </Route>
       </Route>

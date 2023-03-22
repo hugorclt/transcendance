@@ -1,18 +1,26 @@
+import { useAtom } from "jotai";
 import React, { useContext } from "react";
 import { ChatContainer } from "../../../layouts/ChatBarLayout/ChatBarStyle";
-import { ChatContext } from "../../../views/ChatPage/ChatContext";
 import Chat from "./Chat";
+import { conversationAtom } from "../../../services/store";
+import { TConversation } from "../../../services/type";
 
 function ChatBox() {
-  const { openChat } = useContext(ChatContext);
+  const [chat, setChat] = useAtom(conversationAtom);
 
-  return openChat.length == 0 ? (
-    <></>
-  ) : (
-    <ChatContainer>
-      <Chat name={openChat} />
-    </ChatContainer>
-  );
+  function selectActiveChat() {
+    const index = chat.findIndex((elem) => elem.isActive == true);
+    if (index > -1) {
+      return (
+        <ChatContainer>
+          <Chat chat={chat[index]} />
+        </ChatContainer>
+      );
+    }
+    return <></>;
+  }
+
+  return selectActiveChat();
 }
 
 export default ChatBox;

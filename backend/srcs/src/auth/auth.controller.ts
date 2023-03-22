@@ -17,6 +17,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { LocalRegisterDto } from './dto/log-user.dto';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { UsersService } from 'src/users/users.service';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Controller('auth')
 @ApiTags('login')
@@ -24,6 +25,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
+    private readonly socialsGateway: SocialsGateway,
   ) {}
 
   @Get('me')
@@ -37,7 +39,7 @@ export class AuthController {
     @Body('token') token,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    return this.authService.handleGoogleLogin({ token: token }, res);
+    return await this.authService.handleGoogleLogin({ token: token }, res);
   }
 
   @Post('42/login')
@@ -45,29 +47,29 @@ export class AuthController {
     @Body('code') code,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    return this.authService.handle42Login({ code: code }, res);
+    return await this.authService.handle42Login({ code: code }, res);
   }
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  handleLocalLogin(
+  async handleLocalLogin(
     @Request() req,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    return this.authService.login(req.user, res);
+    return await this.authService.login(req.user, res);
   }
 
   @Post('register')
-  handleLocalRegister(
+  async handleLocalRegister(
     @Body() localRegisterDto: LocalRegisterDto,
   ): Promise<ReturnUserEntity> {
-    return this.authService.createNewLocalAccount(localRegisterDto);
+    return await this.authService.createNewLocalAccount(localRegisterDto);
   }
 
   @Get('refresh')
   @UseGuards(RefreshAuthGard)
-  refreshToken(@Request() req, @Response({ passthrough: true }) res) {
-    return this.authService.refreshToken(
+  async refreshToken(@Request() req, @Response({ passthrough: true }) res) {
+    return await this.authService.refreshToken(
       req.user.sub,
       req.user.refreshToken,
       res,
@@ -76,8 +78,9 @@ export class AuthController {
 
   @Get('logout')
   @UseGuards(AccessAuthGard)
-  logout(@Request() req) {
-    this.authService.logout(req.user.sub);
+  async logout(@Request() req) {
+    await this.authService.logout(req.user.sub);
+    this.socialsGateway.sendStatusUpdate(req.user.sub);
     return req.user.sub;
   }
 }

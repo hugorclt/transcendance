@@ -10,8 +10,11 @@ import {
   GameModeCardsBody,
   GameModeContainer,
 } from "./GamemodeSelectorStyle";
+import { useAtom } from "jotai";
+import { lobbyAtom } from "../../../services/store";
 
 function GameModeSelector() {
+  const [lobby, setLobby] = useAtom(lobbyAtom);
   const axiosPrivate = useAxiosPrivate();
   const [errMsg, setErrMsg] = useState<string>("");
   const {
@@ -32,10 +35,16 @@ function GameModeSelector() {
         mode: selectedMode.toLocaleUpperCase(),
       })
       .then((response: AxiosResponse) => {
+        console.log(JSON.stringify(response.data));
+        setLobby({
+          id: response.data.id,
+          ownerId: response.data.ownerId,
+          nbPlayers: +response.data.nbPlayers,
+          mode: response.data.mode,
+        });
         setSelectedMode("");
         setOnModeSelected(false);
         setPlayers(0);
-        console.log(response.data);
         setStatus("LOBBY");
       })
       .catch((error: AxiosError) => {

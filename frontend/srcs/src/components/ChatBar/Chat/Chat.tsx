@@ -23,36 +23,47 @@ import {
   ChatTitle,
   ChatBody,
 } from "./ChatStyle";
-import { TMessage } from "./ChatType";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { TChatProps, TMessage } from "./ChatType";
 import { COLORS } from "../../../colors";
-import { logo42 } from "../../../assets/images/42.jpg";
 import { AiOutlineClose } from "react-icons/ai";
 import { nanoid } from "nanoid";
-import { ChatContext } from "../../../views/ChatPage/ChatContext";
 import LeftSideChat from "./LeftSideChat/LeftSideChat";
 import { ChatManagerOpen } from "../../../views/ChatPage/ChatManagerOpen";
 import { FaUserFriends } from "react-icons/fa";
+import { useAtom } from "jotai";
+import { conversationAtom, userAtom } from "../../../services/store";
+import { displayName } from "../../../services/Chat/displayName";
 
-function Chat(props: { name: string }) {
+function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<TMessage[]>([]);
-  const { openChat, setOpenChat } = useContext(ChatContext);
   const { openManager, setOpenManager } = useContext(ChatManagerOpen);
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
   const messageBoxRef = useRef<null | HTMLFormElement>(null);
+  const [user, setUser] = useAtom(userAtom);
+  const [chatHistory, setChat] = useAtom(conversationAtom);
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
-    socket?.emit("new-message", { message: message, roomName: props.name });
+    if (message == "" || message.length > 256) return;
+    console.log("message to send:", message);
+    axiosPrivate
+      .post("/rooms/message", { message: message, roomId: chat.id })
+      .then((res: AxiosResponse) => {
+        console.log("message received: ", res.data);
+        setMessageList((prev) => [...prev, res.data]);
+      })
+      .catch((err: AxiosError) => {
+        console.log("error while sending message");
+      });
     setMessage("");
   };
 
   useEffect(() => {
     socket?.on("on-new-message", (newMessage: TMessage) => {
-      if (newMessage.roomName === props.name) {
+      if (newMessage.roomId === chat.id) {
         setMessageList((prev) => {
           return [...prev, newMessage];
         });
@@ -66,13 +77,13 @@ function Chat(props: { name: string }) {
 
   useEffect(() => {
     axiosPrivate
-      .post("/rooms/conv/history", { roomName: props.name })
+      .post("/rooms/conv/history", { roomName: chat.name })
       .then((res: AxiosResponse) => {
         setMessageList(
-          res.data.map((message: any) => ({
-            message: message.content,
-            sender: message.sender.username,
-            roomName: message.room.name,
+          res.data.map((message: TMessage) => ({
+            content: message.content,
+            senderId: message.senderId,
+            roomId: message.roomId,
           }))
         );
       })
@@ -82,7 +93,7 @@ function Chat(props: { name: string }) {
     return () => {
       setMessageList([]);
     };
-  }, [props.name]);
+  }, [chat.name]);
 
   useEffect(() => {
     if (messageBoxRef && messageBoxRef.current) {
@@ -95,12 +106,15 @@ function Chat(props: { name: string }) {
     }
   }, [messageList]);
 
-  const renderMessage = (msg: any, index: any) => {
-    const isMe = msg.sender === auth.username;
-    const sender = isMe ? (
+  const renderMessage = (msg: TMessage) => {
+    const sender = chatHistory
+      .find((chat) => chat.id == chat.id)
+      ?.participants.find((user) => user.id == msg.senderId);
+    const isMe = sender?.name === auth.username;
+    const senderName = isMe ? (
       <div className="sender">You</div>
     ) : (
-      <div className="sender">{msg.sender}</div>
+      <div className="sender">{sender?.name}</div>
     );
 
     return (
@@ -108,17 +122,20 @@ function Chat(props: { name: string }) {
         key={nanoid()}
         style={{
           justifyContent: isMe ? "flex-end" : "flex-start",
-        }}>
-        <div style={{ color: COLORS.primary }}>{sender}</div>
+        }}
+      >
+        <div style={{ color: COLORS.primary }}>{senderName}</div>
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}>
+          }}
+        >
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}>
-            {msg.message}
+            }}
+          >
+            {msg.content}
           </MessageContent>
         </MessageBox>
       </MessageLine>
@@ -127,29 +144,36 @@ function Chat(props: { name: string }) {
 
   return (
     <ChatBody>
-      {openManager && <LeftSideChat name={props.name} />}
+      {openManager && <LeftSideChat chat={chat} />}
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
             <ChatIcon src="" />
-            <ChatTitle>{props.name.toLocaleUpperCase()}</ChatTitle>
-            <FaUserFriends
-              onClick={() => setOpenManager(!openManager)}
-              style={{ color: COLORS.secondary }}
-              size={22}
-            />
+            <ChatTitle>{displayName(chat, user)}</ChatTitle>
+            {!chat.isDm && (
+              <FaUserFriends
+                onClick={() => setOpenManager(!openManager)}
+                style={{ color: COLORS.secondary }}
+                size={22}
+              />
+            )}
           </ChatMiddle>
           <AiOutlineClose
             onClick={() => {
-              setOpenChat("");
+              setChat((prev) =>
+                prev.map((chat) => {
+                  if (chat.isActive == true) chat.isActive = false;
+                  return chat;
+                })
+              );
             }}
             style={{ color: COLORS.secondary }}
             size={22}
           />
         </ChatTop>
         <ChatMessageContainer ref={messageBoxRef}>
-          {messageList.map((val, index) => {
-            return renderMessage(val, index);
+          {messageList.map((val) => {
+            return renderMessage(val);
           })}
         </ChatMessageContainer>
         <ChatForm onSubmit={sendMessage} autoComplete="off">
@@ -161,6 +185,9 @@ function Chat(props: { name: string }) {
             }}
             type="text"
           />
+          <p style={{ color: message.length <= 256 ? COLORS.primary : "red" }}>
+            {message.length + "/256"}
+          </p>
         </ChatForm>
       </ChatTabContainer>
     </ChatBody>

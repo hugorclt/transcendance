@@ -4,15 +4,15 @@ import { LobbiesController } from './lobbies.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersModule } from 'src/users/users.module';
 import { LobbiesGateway } from './lobbies.gateway';
-import { JwtModule } from '@nestjs/jwt';
 import { SocialsModule } from 'src/socials/socials.module';
+import { InvitationsModule } from 'src/invitations/invitations.module';
 
 @Module({
   imports: [
     PrismaModule,
-    UsersModule,
-    JwtModule.register({ secret: process.env['AT_SECRET'] }),
     forwardRef(() => SocialsModule),
+    forwardRef(() => InvitationsModule),
+    forwardRef(() => UsersModule),
   ],
   controllers: [LobbiesController],
   providers: [LobbiesService, LobbiesGateway],
