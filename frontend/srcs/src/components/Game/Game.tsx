@@ -53,7 +53,7 @@ function Game() {
     new Vector3(0, 0.5, -MAP_SIZE.height / 2)
   );
   const [posBall, setPosBall] = useState<Vector3>(
-    new Vector3(0, 0.5, -MAP_SIZE.height / 2)
+    new Vector3(0, 1, -MAP_SIZE.height / 2)
   );
   const [leftWall, setLeftWall] = useState<Vector3>(
     new Vector3(-MAP_SIZE.width / 2, WALL_SIZE.height / 2, 0)
@@ -76,7 +76,7 @@ function Game() {
             height={MAP_SIZE.height}
             color="#000000"
           />
-          <Ball color="#fff" radius={0.5} position={new Vector3(0, 0.5, 0)} />
+          <Ball color="#fff" radius={0.5} position={new Vector3(0, 1, 0)} />
           <Wall
             position={leftWall}
             width={WALL_SIZE.width}
