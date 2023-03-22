@@ -17,6 +17,7 @@ import { AccessAuthGard } from 'src/auth/utils/guards';
 import { LobbyEntity } from './entities/lobby.entity';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JoinLobbyDto } from './dto/join-lobby.dto';
+import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 
 @Controller('lobbies')
 @UseGuards(AccessAuthGard)
@@ -77,10 +78,10 @@ export class LobbiesController {
   }
 
   @Get(':id/participants')
-  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
+  @ApiOkResponse({ type: LobbyMemberEntity, isArray: true })
   async findLobbyParticipants(
     @Param('id') id: string,
-  ): Promise<ReturnUserEntity[]> {
+  ): Promise<LobbyMemberEntity[]> {
     return await this.lobbiesService.findLobbyParticipants(id);
   }
 

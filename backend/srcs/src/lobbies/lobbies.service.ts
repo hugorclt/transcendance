@@ -10,8 +10,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { LobbyEntity } from './entities/lobby.entity';
 import { UsersService } from 'src/users/users.service';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
-import { SocialsGateway } from 'src/socials/socials.gateway';
 import { InvitationsService } from 'src/invitations/invitations.service';
+import { LobbyMembersService } from './members/lobby-members.service';
+import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 
 @Injectable()
 export class LobbiesService {
@@ -19,6 +20,7 @@ export class LobbiesService {
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
     private readonly invitationsService: InvitationsService,
+    private readonly lobbyMembersService: LobbyMembersService,
   ) {}
 
   //=========================== CRUD OPERATIONS ======================
@@ -34,7 +36,7 @@ export class LobbiesService {
         maxDuration: createLobbyDto.maxDuration,
         mode: createLobbyDto.mode,
         map: createLobbyDto.map,
-        players: {
+        members: {
           connect: { id: ownerId },
         },
       },
@@ -55,7 +57,7 @@ export class LobbiesService {
   async findLobbyForUser(userId: string): Promise<LobbyEntity> {
     const lobby = await this.prisma.lobby.findFirst({
       where: {
-        players: {
+        members: {
           some: {
             id: userId,
           },
@@ -80,7 +82,7 @@ export class LobbiesService {
     console.log('Disconnecting all lobby players...');
     const lobby = await this.prisma.lobby.update({
       where: { id },
-      data: { players: { set: [] } },
+      data: { members: { set: [] } },
     });
     //and update their status?
     //TODO
@@ -105,7 +107,7 @@ export class LobbiesService {
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: joinLobbyDto.lobbyId },
       include: {
-        players: true,
+        members: true,
         invitations: true,
       },
     });
@@ -123,7 +125,7 @@ export class LobbiesService {
         id: joinLobbyDto.lobbyId,
       },
       data: {
-        players: {
+        members: {
           connect: { id: joinLobbyDto.userId },
         },
       },
@@ -156,7 +158,7 @@ export class LobbiesService {
           id: joinLobbyDto.lobbyId,
         },
         data: {
-          players: {
+          members: {
             disconnect: { id: joinLobbyDto.userId },
           },
         },
@@ -172,32 +174,23 @@ export class LobbiesService {
   }
 
   //========================== LOBBY INFOS ===============================
-  async findLobbyParticipants(lobbyId: string): Promise<ReturnUserEntity[]> {
+  async findLobbyParticipants(lobbyId: string): Promise<LobbyMemberEntity[]> {
     //find many users who are participants in some lobby with id "lobbyID"
-    const participants = await this.prisma.user.findMany({
-      where: {
-        lobbyParticipant: {
-          some: {
-            id: lobbyId,
-          },
-        },
-      },
-    });
-    return participants;
+    return await this.lobbyMembersService.findLobbyMembers(lobbyId);
   }
 
   async findLobbyBanned(lobbyId: string): Promise<ReturnUserEntity[]> {
     //find many users who are banned in some lobby with id "lobbyID"
-    const participants = await this.prisma.user.findMany({
+    const bannedMembers = await this.prisma.user.findMany({
       where: {
-        lobbyParticipant: {
+        lobbyMember: {
           some: {
             id: lobbyId,
           },
         },
       },
     });
-    return participants;
+    return bannedMembers;
   }
 
   //============================ HELPER FUNCTIONS =============================
@@ -222,7 +215,7 @@ export class LobbiesService {
     const user = await this.prisma.user.findFirst({
       where: {
         id: userId,
-        lobbyParticipant: {
+        lobbyMember: {
           some: {
             id: lobbyId,
           },
@@ -242,7 +235,7 @@ export class LobbiesService {
     }
     const lobby = await this.prisma.lobby.findFirst({
       where: {
-        players: {
+        members: {
           some: {
             id: userId,
           },
