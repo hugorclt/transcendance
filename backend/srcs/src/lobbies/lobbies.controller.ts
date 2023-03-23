@@ -65,7 +65,7 @@ export class LobbiesController {
     @Request() req: any,
     @Body() joinLobbyDto: JoinLobbyDto,
   ): Promise<LobbyEntity> {
-    return await this.lobbiesService.joinLobby(joinLobbyDto);
+    return await this.lobbiesService.joinLobby(req.user.sub, joinLobbyDto);
   }
 
   @Post('leave')

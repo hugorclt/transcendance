@@ -14,6 +14,7 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { Team } from '@prisma/client';
+import { LobbiesGateway } from './lobbies.gateway';
 
 @Injectable()
 export class LobbiesService {
@@ -22,6 +23,7 @@ export class LobbiesService {
     private readonly usersService: UsersService,
     private readonly invitationsService: InvitationsService,
     private readonly lobbyMembersService: LobbyMembersService,
+    private readonly lobbiesGateway: LobbiesGateway,
   ) {}
 
   async create(
@@ -50,6 +52,7 @@ export class LobbiesService {
     await this.usersService.updateStatus(user.id, 'LOBBY');
     return lobby;
   }
+
   async findAll(): Promise<LobbyEntity[]> {
     return await this.prisma.lobby.findMany({});
   }
@@ -65,7 +68,7 @@ export class LobbiesService {
       where: {
         members: {
           some: {
-            id: userId,
+            userId: userId,
           },
         },
       },
@@ -88,7 +91,7 @@ export class LobbiesService {
     console.log('Disconnecting all lobby players...');
     const lobby = await this.prisma.lobby.update({
       where: { id },
-      data: { members: { set: [] } },
+      data: { members: { deleteMany: {} } },
     });
     //and update their status?
     //TODO
@@ -105,11 +108,13 @@ export class LobbiesService {
 
   //====================== JOIN / LEAVE LOBBY ===========================
 
-  async joinLobby(joinLobbyDto: JoinLobbyDto) {
-    await this.canUserJoinLobbies(joinLobbyDto.userId);
-    console.log('user can join lobby');
-    //check if lobby is joinable and / or not full
-    //TODO
+  async joinLobby(userId: string, joinLobbyDto: JoinLobbyDto) {
+    //is user the one sending the request
+    if (userId != joinLobbyDto.userId) return;
+    //user exists and is not already in a lobby?
+    const user = await this.canUserJoinLobbies(joinLobbyDto.userId);
+    //===> check if lobby is joinable
+    //check lobby exists
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: joinLobbyDto.lobbyId },
       include: {
@@ -117,6 +122,7 @@ export class LobbiesService {
         invitations: true,
       },
     });
+    if (!lobby) throw new NotFoundException('Lobby not found');
     //check if user has been invited to lobby
     await Promise.all(
       lobby.invitations.map(async (invitation) => {
@@ -125,20 +131,41 @@ export class LobbiesService {
         }
       }),
     );
+    //check if lobby is not full
+    if (
+      (lobby.private && lobby.members.length == lobby.nbPlayers / 2) ||
+      (!lobby.private && lobby.members.length == lobby.nbPlayers)
+    ) {
+      console.log('lobby full');
+      throw new MethodNotAllowedException('Lobby is already full');
+    }
     //join lobby
+    //TODO : check if team is full => join the right team accordingly
     const updateLobby = await this.prisma.lobby.update({
       where: {
         id: joinLobbyDto.lobbyId,
       },
       data: {
         members: {
-          connect: { id: joinLobbyDto.userId },
+          create: {
+            team: 'LEFT' as Team,
+            ready: false,
+            userId: joinLobbyDto.userId,
+          },
         },
       },
     });
+    //update new member status to lobby
     await this.usersService.updateStatus(joinLobbyDto.userId, 'LOBBY');
     console.log('User successfully joined lobby');
     //update lobby status to all participants
+    this.lobbiesGateway.emitToLobby(lobby.id, 'user-joined-lobby', {
+      userId: user.id,
+      username: user.username,
+      avatar: user.avatar,
+      team: 'LEFT',
+      ready: false,
+    });
     //TODO
     return updateLobby;
   }
@@ -158,14 +185,16 @@ export class LobbiesService {
     );
     if (check2) {
       console.log('User is lobby participant, disconnecting user...');
-      //disconnect user from lobby
+      //disconnect user from lobby by deleting lobbyMember
       const updateLobby = await this.prisma.lobby.update({
         where: {
           id: joinLobbyDto.lobbyId,
         },
         data: {
           members: {
-            disconnect: { id: joinLobbyDto.userId },
+            deleteMany: {
+              userId: joinLobbyDto.userId,
+            },
           },
         },
       });
@@ -175,18 +204,20 @@ export class LobbiesService {
         'CONNECTED',
       );
       console.log('User successfully left lobby');
+      //update lobby members of departure
+      this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
+        userId: joinLobbyDto.userId,
+      });
       return updateLobby;
     }
   }
 
   //========================== LOBBY INFOS ===============================
   async findLobbyParticipants(lobbyId: string): Promise<LobbyMemberEntity[]> {
-    //find many users who are participants in some lobby with id "lobbyID"
     return await this.lobbyMembersService.findLobbyMembers(lobbyId);
   }
 
   async findLobbyBanned(lobbyId: string): Promise<ReturnUserEntity[]> {
-    //find many users who are banned in some lobby with id "lobbyID"
     const bannedMembers = await this.prisma.user.findMany({
       where: {
         lobbyMember: {
@@ -223,7 +254,7 @@ export class LobbiesService {
         id: userId,
         lobbyMember: {
           some: {
-            id: lobbyId,
+            lobbyId: lobbyId,
           },
         },
       },
@@ -235,15 +266,17 @@ export class LobbiesService {
   }
 
   async canUserJoinLobbies(userId: string): Promise<ReturnUserEntity> {
+    //user exists?
     const user = await this.usersService.findOne(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    //user is not already in a lobby
     const lobby = await this.prisma.lobby.findFirst({
       where: {
         members: {
           some: {
-            id: userId,
+            userId: userId,
           },
         },
       },
@@ -251,7 +284,6 @@ export class LobbiesService {
     if (lobby) {
       throw new MethodNotAllowedException('User can only be in one lobby');
     }
-    //check if user is banned from lobby ?
     return user;
   }
 }

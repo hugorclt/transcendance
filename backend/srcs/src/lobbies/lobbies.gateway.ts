@@ -3,7 +3,6 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
@@ -11,7 +10,6 @@ import { Namespace } from 'socket.io';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LobbiesService } from './lobbies.service';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -19,10 +17,7 @@ import { LobbiesService } from './lobbies.service';
 export class LobbiesGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly lobbiesService: LobbiesService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   @WebSocketServer()
   io: Namespace;
@@ -31,7 +26,15 @@ export class LobbiesGateway
 
   async handleConnection(client: AuthSocket) {
     client.join(client.userId);
-    const lobby = await this.lobbiesService.findLobbyForUser(client.userId);
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        members: {
+          some: {
+            userId: client.userId,
+          },
+        },
+      },
+    });
     if (lobby) {
       console.log('user ', client.username, ' is in lobby ', lobby.id);
       client.join(lobby.id);
@@ -39,4 +42,8 @@ export class LobbiesGateway
   }
 
   handleDisconnect(client: AuthSocket) {}
+
+  emitToLobby(lobbyId: string, eventName: string, eventData: any) {
+    this.io.to(lobbyId).emit(eventName, eventData);
+  }
 }
