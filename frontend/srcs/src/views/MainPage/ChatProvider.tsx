@@ -21,7 +21,6 @@ function ChatProvider({ children }: { children: ReactNode }) {
   /* ------------------------------ socket render ----------------------------- */
   useEffect(() => {
     socket?.on("on-chat-update", (newChat) => {
-      console.log("received event on-chat-update: ", newChat);
       setChat((prev) => updateArray(prev, newChat));
 
       //Set orange pastille on new chat not read
@@ -34,7 +33,6 @@ function ChatProvider({ children }: { children: ReactNode }) {
     });
 
     socket?.on("on-chat-delete", (chatToDel) => {
-      console.log(chatToDel);
       setChat((prev) => prev.filter((chat) => chat.id != chatToDel.roomId));
     });
 

@@ -32,7 +32,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     async function initSocket() {
       if (!connected.current) {
         console.log("init socket");
-        console.log(auth);
         const s: any = await initializeSocket(auth?.accessToken);
         setSocket(s);
       }

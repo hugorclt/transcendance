@@ -39,30 +39,4 @@ export class LobbiesGateway
   }
 
   handleDisconnect(client: AuthSocket) {}
-
-  @SubscribeMessage('join-lobby')
-  async joinLobby(client: AuthSocket, lobbyId: string) {
-    console.log('received join-lobby event');
-    const user = await this.prisma.user.findUnique({
-      where: { id: client.id },
-    });
-    const lobby = await this.lobbiesService.findLobbyForUser(client.userId);
-    if (lobby) {
-      client.join(lobby.id);
-      this.io.to(lobby.id).emit('player-joined', { username: client.username });
-    }
-  }
-
-  @SubscribeMessage('player-ready')
-  async playerReady(client: AuthSocket, bool: boolean) {
-    console.log('received player-ready event: ', bool ? 'true' : 'false');
-  }
-
-  @SubscribeMessage('leave-lobby')
-  async leaveLobby(client: AuthSocket, lobbyId: string) {
-    console.log('received leave-lobby event');
-    //check if user is in said lobby
-    //disconnect user from lobby in db
-    //send lobby left update to users in lobby
-  }
 }

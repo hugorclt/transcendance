@@ -79,8 +79,8 @@ export class Game {
   loop(dt: number) {
     this.pitch.update(dt);
     this.ball.update(dt);
-    this.paddleA.update();
-    this.paddleB.update();
-    this.scoreboard.update();
+    // this.paddleA.update();
+    // this.paddleB.update();
+    // this.scoreboard.update();
   }
 }

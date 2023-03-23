@@ -34,7 +34,6 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
     async function initSocket() {
       if (!connected.current) {
         console.log("init socket lobby");
-        console.log(auth);
         const s: any = await initializeSocket(axiosPrivate, auth?.accessToken);
         setSocket(s);
       }
@@ -42,16 +41,6 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
     }
     initSocket();
   }, []);
-
-  useEffect(() => {
-    socket?.on("hello", (data) => {
-      console.log(data);
-    });
-
-    return () => {
-      socket?.off("hello");
-    };
-  }, [socket]);
 
   return (
     <LobbySocketContext.Provider value={socket}>

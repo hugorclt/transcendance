@@ -23,15 +23,12 @@ function FriendsTopBar() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setOpen(false);
-    console.log("sending request");
     axiosPrivate
       .post("/invitations", { type: "FRIEND", username: username })
       .then((response: AxiosResponse) => {
         console.log("succesfully sent friend request");
-        console.log("invitation sent: ", JSON.stringify(response.data));
       })
       .catch((error: AxiosError) => {
-        console.log("failed sending friend request");
         console.log("error: ", JSON.stringify(error.message));
       });
     setUsername("");

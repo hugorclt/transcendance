@@ -23,9 +23,9 @@ const googleClient = new OAuth2Client(
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
-    private prisma: PrismaService,
-    private jwtService: JwtService,
+    private readonly usersService: UsersService,
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
     private readonly httpService: HttpService,
   ) {}
 
@@ -120,16 +120,8 @@ export class AuthService {
       maxAge: 7 * 24 * 3600000,
       httpOnly: true,
     });
-
-    await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        status: 'CONNECTED',
-      },
-    });
-    this.updateRefreshHash(user.id, tokens.refresh_token);
+    await this.usersService.updateStatus(user.id, 'CONNECTED');
+    await this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
 
@@ -138,15 +130,13 @@ export class AuthService {
     await this.prisma.user.updateMany({
       where: {
         id: userId,
-        refreshToken: {
-          not: null,
-        },
       },
       data: {
         refreshToken: null,
         status: 'DISCONNECTED',
       },
     });
+    await this.usersService.updateStatus(userId, 'DISCONNECTED');
   }
 
   /* ------------------------------ refresh_token ----------------------------- */

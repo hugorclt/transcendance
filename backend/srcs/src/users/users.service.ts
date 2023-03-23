@@ -155,34 +155,80 @@ export class UsersService {
   }
 
   async updateStatus(id: string, status: string): Promise<ReturnUserEntity> {
-    const userUpdate: UserEntity = await this.prisma.user.update({
+    const userUpdate = await this.prisma.user.update({
       where: { id },
       data: { status: status as Status },
+      include: {
+        friends: true,
+        preferences: true,
+      },
     });
-    if (userUpdate)
-      return exclude(userUpdate, ['password', 'type', 'refreshToken']);
-    throw new NotFoundException();
+    if (!userUpdate) throw new NotFoundException();
+    this.socialsGateway.emitToUser(
+      userUpdate.id,
+      'on-self-status-update',
+      userUpdate.status,
+    );
+    if (
+      userUpdate.preferences.visibility == 'VISIBLE' ||
+      (userUpdate.preferences.visibility == 'AWAY' &&
+        userUpdate.status == 'DISCONNECTED')
+    ) {
+      this.socialsGateway.emitToList(userUpdate.friends, 'on-friend-update', {
+        username: userUpdate.username,
+        avatar: userUpdate.avatar,
+        status: userUpdate.status,
+        id: userUpdate.id,
+      });
+    } else if (
+      userUpdate.preferences.visibility == 'AWAY' &&
+      userUpdate.status == 'CONNECTED'
+    ) {
+      this.socialsGateway.emitToList(userUpdate.friends, 'on-friend-update', {
+        username: userUpdate.username,
+        avatar: userUpdate.avatar,
+        status: 'AWAY',
+        id: userUpdate.id,
+      });
+    }
+    return exclude(userUpdate, ['password', 'type', 'refreshToken']);
   }
 
   async updateVisibility(
     id: string,
-    status: string,
+    visibility: string,
   ): Promise<ReturnUserEntityWithPreferences> {
     const user = await this.prisma.user.update({
       where: { id },
       data: {
         preferences: {
           update: {
-            visibility: status as VisibilityMode,
+            visibility: visibility as VisibilityMode,
           },
         },
       },
       include: {
         preferences: true,
+        friends: true,
       },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
-    throw new NotFoundException();
+    if (!user) throw new NotFoundException();
+    this.socialsGateway.emitToUser(
+      user.id,
+      'on-visibility-update',
+      user.preferences.visibility,
+    );
+    let sentStatus = getStatusFromVisibility(
+      user.status,
+      user.preferences.visibility,
+    );
+    this.socialsGateway.emitToList(user.friends, 'on-friend-update', {
+      username: user.username,
+      avatar: user.avatar,
+      status: sentStatus,
+      id: user.id,
+    });
+    return exclude(user, ['password', 'type', 'refreshToken']);
   }
 
   async getUserPreferences(id: string): Promise<UserPreferencesEntity> {

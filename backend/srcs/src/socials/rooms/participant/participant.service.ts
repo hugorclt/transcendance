@@ -25,14 +25,16 @@ export class ParticipantService {
   }
 
   update(id: number, updateParticipantDto: UpdateParticipantDto) {
-    return `This action updates a #${id} participant`;
+    return 'rien';
   }
 
   remove(id: number) {
-    return `This action removes a #${id} participant`;
+    return 'rien';
   }
 
-  async createParticipantFromRoom(room: Room & { participants: Participant[] }) {
+  async createParticipantFromRoom(
+    room: Room & { participants: Participant[] },
+  ) {
     return await Promise.all(
       room.participants.map(async (participant) => {
         const user = await this.prisma.user.findUnique({

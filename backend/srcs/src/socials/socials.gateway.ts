@@ -15,8 +15,6 @@ import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { Participant, Role, Room, User } from '@prisma/client';
 import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { getStatusFromVisibility } from 'src/users/utils/friend-status';
-import { ParticipantService } from './rooms/participant/participant.service';
 import { CreateMessageDto } from './rooms/messages/dto/create-message.dto';
 import { ReturnRoomEntity } from './rooms/entities/room.entity';
 
@@ -28,15 +26,11 @@ import { ReturnRoomEntity } from './rooms/entities/room.entity';
 export class SocialsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(
-    private prisma: PrismaService,
-    private participantService: ParticipantService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   @WebSocketServer()
   public io: Namespace;
 
-  //===== LIFECYCLE METHODS =====
   afterInit() {
     console.log('SocialsGateway initialized');
     this.io.on('connection', (socket) => {});
@@ -59,57 +53,11 @@ export class SocialsGateway
       }),
     );
     await client.join(client.userId);
-    await this.sendStatusUpdate(client.userId);
+    //await this.sendStatusUpdate(client.userId);
   }
 
   async handleDisconnect(client: AuthSocket) {}
 
-  //===== STATUS / VISIBILITY =====
-  async sendStatusUpdate(userId: string): Promise<void> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        preferences: true,
-        friends: true,
-      },
-    });
-    this.emitToUser(user.id, 'on-self-status-update', user.status);
-    if (user.preferences.visibility == 'VISIBLE') {
-      this.emitToList(user.friends, 'on-friend-update', {
-        username: user.username,
-        avatar: user.avatar,
-        status: user.status,
-        id: user.id,
-      });
-    }
-  }
-
-  async sendVisibilityUpdate(userId: string): Promise<void> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        preferences: true,
-        friends: true,
-      },
-    });
-    this.emitToUser(
-      userId,
-      'on-visibility-update',
-      user.preferences.visibility,
-    );
-    let status = getStatusFromVisibility(
-      user.status,
-      user.preferences.visibility,
-    );
-    this.emitToList(user.friends, 'on-friend-update', {
-      username: user.username,
-      avatar: user.avatar,
-      status: status,
-      id: user.id,
-    });
-  }
-
-  //====== CHAT / MESSAGES / ROOMS ======
   getSocketFromUserId(userId: string): Socket {
     const socketId = this.io.adapter.rooms.get(userId).values().next().value;
     return this.io.sockets.get(socketId);
@@ -144,9 +92,6 @@ export class SocialsGateway
     );
   }
 
-  //==============================================================================================
-  //                                            IMPORTANT NOTE: useful
-  //==============================================================================================
   async joinUserToRoom(roomId: string, userId: string) {
     const socketId = (await this.io.adapter.sockets(new Set([userId])))
       .values()
@@ -164,7 +109,6 @@ export class SocialsGateway
     const socket = this.io.sockets.get(socketId);
     socket.leave(roomId);
   }
-  //==============================================================================================
 
   @SubscribeMessage('kick-player')
   async kickUser(
