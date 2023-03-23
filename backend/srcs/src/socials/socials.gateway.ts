@@ -110,41 +110,6 @@ export class SocialsGateway
     socket.leave(roomId);
   }
 
-  @SubscribeMessage('kick-player')
-  async kickUser(
-    @ConnectedSocket() client: AuthSocket,
-    @MessageBody()
-    payload: {
-      roomId: string;
-      userIdKicked: string;
-    },
-  ) {
-    // const room = await this.prisma.room.findUnique({
-    //   where: { id: payload.roomId },
-    //   include: { room: true },
-    // });
-    // if (!room) return;
-    // const kicker = this.isInRoom(client.userId, room);
-    // if (!kicker || (kicker.role != Role.ADMIN && kicker.role != Role.OWNER))
-    //   return;
-    // const newRoom = await this.roomService.leaveRoom(
-    //   payload.userIdKicked,
-    //   payload.roomId,
-    // );
-    // console.log(newRoom);
-    // if (!newRoom) return;
-    // this.leaveUserFromRoom(payload.roomId, payload.userIdKicked);
-    // this.emitToUser(payload.roomId, 'on-chat-update', {
-    //   id: newRoom.id,
-    //   participants: await this.participantService.createParticipantFromRoom(
-    //     room,
-    //   ),
-    // });
-    // this.emitToUser(payload.userIdKicked, 'on-chat-delete', {
-    //   roomId: payload.roomId,
-    // });
-  }
-
   //====== UTILS =====
   emitToListString(userList: string[], eventName: string, data: any) {
     userList.forEach((user) => {
@@ -165,13 +130,5 @@ export class SocialsGateway
     const socket = this.getSocketFromUserId(ownerId);
     if (!socket) return;
     socket.to(room.id).emit('on-chat-update', room);
-  }
-
-  isInRoom(userId: string, room: Room & { room: Participant[] }) {
-    const user = room.room.filter(
-      (participant) => participant.userId == userId,
-    );
-    if (user.length == 0) return undefined;
-    return user[0];
   }
 }

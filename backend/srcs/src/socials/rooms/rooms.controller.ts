@@ -56,4 +56,14 @@ export class RoomsController {
       req.body.roomId,
     );
   }
+
+  @Post('/kick')
+  async kickFromRoom(@Request() req) {
+    return await this.roomsService.kickFromRoom(req.user.sub, req.body.userId, req.body.roomId);
+  }
+
+  @Post('/mute')
+  async muteFromRoom(@Request() req) {
+    return await this.roomsService.muteFromRoom(req.user.sub, req.body.userId, req.body.roomId, req.body.isMute)
+  }
 }

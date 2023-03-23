@@ -13,4 +13,7 @@ export class ReturnParticipantEntity {
 
     @ApiProperty()
     status: string;
+
+    @ApiProperty()
+    isMute: boolean;
 }

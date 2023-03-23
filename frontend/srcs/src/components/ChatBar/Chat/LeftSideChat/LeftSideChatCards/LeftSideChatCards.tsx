@@ -18,6 +18,8 @@ import {
 } from "../../../FriendsList/FriendsCards/FriendsCardsStyle";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { SocketContext } from "../../../../../services/Auth/SocketContext";
+import { BiVolumeMute } from "react-icons/bi";
+import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 
 function LeftSideChatCards(props: {
   roomId: string;
@@ -25,10 +27,12 @@ function LeftSideChatCards(props: {
   name: string;
   status: string;
   role: string;
+  isMute: boolean;
   isAdmin: boolean;
 }) {
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
+  const axiosPrivate = useAxiosPrivate();
 
   function displayRole(role: string) {
     if (role == "ADMIN")
@@ -42,9 +46,17 @@ function LeftSideChatCards(props: {
   };
 
   const handleKick = () => {
-    socket?.emit("kick-player", {
-      userIdKicked: props.userId,
+    axiosPrivate.post("/rooms/kick", {
+      userId: props.userId,
       roomId: props.roomId,
+    });
+  };
+
+  const handleMute = () => {
+    axiosPrivate.post("rooms/mute", {
+      userId: props.userId,
+      roomId: props.roomId,
+      isMute: props.isMute
     });
   };
 
@@ -60,6 +72,9 @@ function LeftSideChatCards(props: {
       </ChatManagerNameStatus>
       <LeftSideChatCardsRightBox>
         {displayRole(props.role)}
+        {props.isMute == true && (
+          <BiVolumeMute style={{ color: COLORS.secondary }} size={22} />
+        )}
         <Popup
           position="left center"
           arrowStyle={{ color: COLORS.background }}
@@ -78,7 +93,9 @@ function LeftSideChatCards(props: {
             <InsidePopUpButton>Block user</InsidePopUpButton>
             {props.isAdmin ? (
               <>
-                <InsidePopUpButton>Mute user</InsidePopUpButton>
+                <InsidePopUpButton onClick={handleMute}>
+                  {props.isMute ? "Unmute user" : "Mute user"}
+                </InsidePopUpButton>
                 <InsidePopUpButton onClick={handleKick}>
                   Kick user
                 </InsidePopUpButton>
