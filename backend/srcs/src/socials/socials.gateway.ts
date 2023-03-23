@@ -53,7 +53,6 @@ export class SocialsGateway
       }),
     );
     await client.join(client.userId);
-    //await this.sendStatusUpdate(client.userId);
   }
 
   async handleDisconnect(client: AuthSocket) {}

@@ -13,6 +13,7 @@ import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
+import { Team } from '@prisma/client';
 
 @Injectable()
 export class LobbiesService {
@@ -23,7 +24,6 @@ export class LobbiesService {
     private readonly lobbyMembersService: LobbyMembersService,
   ) {}
 
-  //=========================== CRUD OPERATIONS ======================
   async create(
     ownerId: string,
     createLobbyDto: CreateLobbyDto,
@@ -37,7 +37,13 @@ export class LobbiesService {
         mode: createLobbyDto.mode,
         map: createLobbyDto.map,
         members: {
-          connect: { id: ownerId },
+          create: {
+            team: 'LEFT' as Team,
+            ready: false,
+            user: {
+              connect: { id: ownerId },
+            },
+          },
         },
       },
     });
