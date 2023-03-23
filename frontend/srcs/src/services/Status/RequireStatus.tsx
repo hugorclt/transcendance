@@ -13,7 +13,6 @@ function RequireStatus() {
   const axiosPrivate = useAxiosPrivate();
 
   function updateSelfStatus(status: string) {
-    console.log("updating self status with status: ", status);
     setStatus(status);
   }
 
@@ -22,7 +21,6 @@ function RequireStatus() {
       axiosPrivate
         .get("/users/status")
         .then((res: AxiosResponse) => {
-          console.log("on component mount, status is: ", res.data.status);
           setStatus(res.data.status);
         })
         .catch((err: AxiosError) => {

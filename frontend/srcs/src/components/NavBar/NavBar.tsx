@@ -12,7 +12,6 @@ function NavBar() {
   function handleTabClick(index: number) {
     if (selectedPage != index) {
       setSelectedPage(index);
-      console.log("selected index: ", index);
     }
   }
 

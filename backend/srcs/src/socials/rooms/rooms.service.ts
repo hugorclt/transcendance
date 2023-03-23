@@ -67,7 +67,6 @@ export class RoomsService {
       createRoomDto.users.map((user) => user.userId),
     );
     this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
-
     return roomEntity;
   }
 
