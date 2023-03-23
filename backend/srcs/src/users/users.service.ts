@@ -169,16 +169,28 @@ export class UsersService {
       'on-self-status-update',
       userUpdate.status,
     );
-    let sentStatus = getStatusFromVisibility(
-      userUpdate.status,
-      userUpdate.preferences.visibility,
-    );
-    this.socialsGateway.emitToList(userUpdate.friends, 'on-friend-update', {
-      username: userUpdate.username,
-      avatar: userUpdate.avatar,
-      status: sentStatus,
-      id: userUpdate.id,
-    });
+    if (
+      userUpdate.preferences.visibility == 'VISIBLE' ||
+      (userUpdate.preferences.visibility == 'AWAY' &&
+        userUpdate.status == 'DISCONNECTED')
+    ) {
+      this.socialsGateway.emitToList(userUpdate.friends, 'on-friend-update', {
+        username: userUpdate.username,
+        avatar: userUpdate.avatar,
+        status: userUpdate.status,
+        id: userUpdate.id,
+      });
+    } else if (
+      userUpdate.preferences.visibility == 'AWAY' &&
+      userUpdate.status == 'CONNECTED'
+    ) {
+      this.socialsGateway.emitToList(userUpdate.friends, 'on-friend-update', {
+        username: userUpdate.username,
+        avatar: userUpdate.avatar,
+        status: 'AWAY',
+        id: userUpdate.id,
+      });
+    }
     return exclude(userUpdate, ['password', 'type', 'refreshToken']);
   }
 

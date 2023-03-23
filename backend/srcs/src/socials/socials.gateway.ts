@@ -15,7 +15,6 @@ import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { Participant, Role, Room, User } from '@prisma/client';
 import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { getStatusFromVisibility } from 'src/users/utils/friend-status';
 import { CreateMessageDto } from './rooms/messages/dto/create-message.dto';
 import { ReturnRoomEntity } from './rooms/entities/room.entity';
 
@@ -32,7 +31,6 @@ export class SocialsGateway
   @WebSocketServer()
   public io: Namespace;
 
-  //===== LIFECYCLE METHODS =====
   afterInit() {
     console.log('SocialsGateway initialized');
     this.io.on('connection', (socket) => {});
@@ -55,12 +53,11 @@ export class SocialsGateway
       }),
     );
     await client.join(client.userId);
-    // await this.sendStatusUpdate(client.userId);
+    //await this.sendStatusUpdate(client.userId);
   }
 
   async handleDisconnect(client: AuthSocket) {}
 
-  //====== CHAT / MESSAGES / ROOMS ======
   getSocketFromUserId(userId: string): Socket {
     const socketId = this.io.adapter.rooms.get(userId).values().next().value;
     return this.io.sockets.get(socketId);
@@ -95,9 +92,6 @@ export class SocialsGateway
     );
   }
 
-  //==============================================================================================
-  //                                            IMPORTANT NOTE: useful
-  //==============================================================================================
   async joinUserToRoom(roomId: string, userId: string) {
     const socketId = (await this.io.adapter.sockets(new Set([userId])))
       .values()
@@ -115,7 +109,6 @@ export class SocialsGateway
     const socket = this.io.sockets.get(socketId);
     socket.leave(roomId);
   }
-  //==============================================================================================
 
   @SubscribeMessage('kick-player')
   async kickUser(

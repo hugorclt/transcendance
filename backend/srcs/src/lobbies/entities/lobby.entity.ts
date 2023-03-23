@@ -18,6 +18,9 @@ export class LobbyEntity implements Lobby {
   @ApiProperty({ default: Mode.CLASSIC })
   mode: Mode = Mode.CLASSIC;
 
+  @ApiProperty({ default: false })
+  private: boolean = false;
+
   @ApiProperty({ default: MapName.CLASSIC })
   map: MapName = MapName.CLASSIC;
 }
