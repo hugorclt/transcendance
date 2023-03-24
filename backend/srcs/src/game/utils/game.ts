@@ -125,7 +125,7 @@ export class Game {
             this.reset();
             return true;
         } else return false;
-    }
+    }FIELD_LENGTH
 
     isGoalTeam1() {
         const ballZ = this.ball.getPosition().z;
@@ -150,14 +150,23 @@ export class Game {
         this.ball.setVelocity(null);
     }
 
-    init() {
-        const FIELD_WIDTH = this.field.getWidth();
-        const FIELD_LENGTH = this.field.getLength();
-        const BALL_RADIUS = this.ball.getRadius();
+    async init() {
+        console.log("whyyy");
+        const FIELD_WIDTH = 32//this.field.getWidth();
+        const FIELD_LENGTH = 64//this.field.getLength();
+        const BALL_RADIUS = 1//this.ball.getRadius();
+        const PADDLE_WIDTH = 5;
+        const PADDLE_LENGTH = 2;
 
+        this.paddle1.setWidth(PADDLE_WIDTH);
+        this.paddle1.setLength(PADDLE_LENGTH);
+        this.paddle2.setWidth(PADDLE_WIDTH);
+        this.paddle2.setLength(PADDLE_LENGTH);
+        this.ball.setRadius(BALL_RADIUS);
+        this.field.setLength(FIELD_LENGTH);
+        this.field.setWidth(FIELD_WIDTH);
         this.paddle1.setPosition(0, FIELD_LENGTH / 2);
         this.paddle2.setPosition(0, -FIELD_LENGTH / 2);
-        console.log("fin init")
     }
 
     async launch() {

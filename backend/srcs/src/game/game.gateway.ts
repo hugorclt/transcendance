@@ -12,6 +12,10 @@ import { UsersService } from 'src/users/users.service';
 import { Namespace } from 'socket.io';
 import { Game } from './utils/game';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
+import { Ball } from './utils/ball';
+import { Paddle } from './utils/paddle';
+import { Scoreboard } from './utils/scoreboard';
+import { Field } from './utils/field';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -23,8 +27,7 @@ export class GameGateway
 {
   constructor(private usersService: UsersService) {}
   /*========================================================================*/
-  
-  
+
   @WebSocketServer()
   public io: Namespace;
   private game: Game;
@@ -33,28 +36,33 @@ export class GameGateway
 
   afterInit() {
     console.log('GameGateway initialized');
+    this.game = new Game(
+      new Ball({ x: 0, y: 0, z: 0 }, 0, undefined, false),
+      new Paddle(0, 0, { x: 0, z: 0 }),
+      new Paddle(0, 0, { x: 0, z: 0 }),
+      new Scoreboard(0, 0),
+      new Field(0, 0),
+    );
   }
 
   async handleConnection(client: AuthSocket) {
     await client.join(client.userId);
-    if (!this.player1)
-      this.player1 = client.userId;
-    else
-      this.player2 = client.userId; 
+    if (!this.player1) this.player1 = client.userId;
+    else this.player2 = client.userId;
   }
 
   async handleDisconnect(client: any) {
     // toDO
   }
 
-
   /*======= start game =======*/
 
   @SubscribeMessage('start-game')
   async onStart(client: AuthSocket): Promise<void> {
-    this.game.init();
-    this.io.to(client.userId).emit("game-info", {
-      cc: "hello",
+    console.log('start-game received');
+    await this.game.init();
+    console.log('end-init');
+    this.io.to(client.userId).emit('game-info', {
       floorWidth: this.game.getField().getWidth(),
       floorLength: this.game.getField().getLength(),
       ballRadius: this.game.getBall().getRadius(),
@@ -68,10 +76,10 @@ export class GameGateway
       ballStartZ: this.game.getBall().getPosition().z,
       scorePlayer1: this.game.getScoreboard().getPlayer1(),
       scorePlayer2: this.game.getScoreboard().getPlayer2(),
-    })
+    });
     this.game.launch();
     setInterval(() => {
-      this.io.to(client.userId).emit("ball-position", {
+      this.io.to(client.userId).emit('ball-position', {
         x: this.game.getBall().getPosition().x,
         z: this.game.getBall().getPosition().z,
       });
@@ -91,13 +99,13 @@ export class GameGateway
       this.game.getPaddle1().moveLeft();
       this.io.to(client.userId).emit('player1', {
         x: this.game.getPaddle1().getPosition().x,
-      })
+      });
     }
     if (client.userId == this.player2) {
       this.game.getPaddle2().moveLeft();
       this.io.to(client.userId).emit('player2', {
         x: this.game.getPaddle2().getPosition().x,
-      })
+      });
     }
   }
 
@@ -109,13 +117,13 @@ export class GameGateway
       this.game.getPaddle1().moveRight();
       this.io.to(client.userId).emit('player1', {
         x: this.game.getPaddle1().getPosition().x,
-      })
+      });
     }
     if (client.userId == this.player2) {
       this.game.getPaddle2().moveRight();
       this.io.to(client.userId).emit('player2', {
         x: this.game.getPaddle2().getPosition().x,
-      })
+      });
     }
   }
 }

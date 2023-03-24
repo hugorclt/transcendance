@@ -13,7 +13,12 @@ import {
   createMaterialArray,
   degreeToRad,
 } from "../../services/Game/utilsGame";
-import { PerspectiveCamera, OrbitControls, Stats, SoftShadows } from "@react-three/drei";
+import {
+  PerspectiveCamera,
+  OrbitControls,
+  Stats,
+  SoftShadows,
+} from "@react-three/drei";
 import { AxesHelper, Vector3 } from "three";
 import { nanoid } from "nanoid";
 import { toonShaderMaterial } from "../../services/Game/shaders/shadersUtils";
@@ -83,7 +88,7 @@ function Game() {
   useEffect(() => {
     console.log("start-game sent");
     socket?.emit("start-game");
-  }, [])
+  }, []);
 
   return (
     <Suspense fallback={null}>
