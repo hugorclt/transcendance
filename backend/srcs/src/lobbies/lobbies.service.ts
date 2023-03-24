@@ -7,7 +7,7 @@ import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
 import { JoinLobbyDto } from './dto/join-lobby.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LobbyEntity } from './entities/lobby.entity';
+import { LobbyEntity, LobbyWithMembersEntity } from './entities/lobby.entity';
 import { UsersService } from 'src/users/users.service';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { InvitationsService } from 'src/invitations/invitations.service';
@@ -29,7 +29,7 @@ export class LobbiesService {
   async create(
     ownerId: string,
     createLobbyDto: CreateLobbyDto,
-  ): Promise<LobbyEntity> {
+  ): Promise<LobbyWithMembersEntity> {
     const user = await this.canUserJoinLobbies(ownerId);
     const lobby = await this.prisma.lobby.create({
       data: {
@@ -48,6 +48,9 @@ export class LobbiesService {
           },
         },
       },
+      include: {
+        members: true,
+      },
     });
     await this.usersService.updateStatus(user.id, 'LOBBY');
     await this.lobbiesGateway.joinUserToLobby(user.id, lobby.id);
@@ -64,7 +67,7 @@ export class LobbiesService {
     return lobby;
   }
 
-  async findLobbyForUser(userId: string): Promise<LobbyEntity> {
+  async findLobbyForUser(userId: string): Promise<LobbyWithMembersEntity> {
     const lobby = await this.prisma.lobby.findFirst({
       where: {
         members: {
@@ -72,6 +75,9 @@ export class LobbiesService {
             userId: userId,
           },
         },
+      },
+      include: {
+        members: true,
       },
     });
     return lobby;
@@ -161,6 +167,9 @@ export class LobbiesService {
             userId: joinLobbyDto.userId,
           },
         },
+      },
+      include: {
+        members: true,
       },
     });
     //update new member status to lobby

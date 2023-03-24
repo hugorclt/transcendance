@@ -14,7 +14,7 @@ import { LobbiesService } from './lobbies.service';
 import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
-import { LobbyEntity } from './entities/lobby.entity';
+import { LobbyEntity, LobbyWithMembersEntity } from './entities/lobby.entity';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JoinLobbyDto } from './dto/join-lobby.dto';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
@@ -26,11 +26,11 @@ export class LobbiesController {
   constructor(private readonly lobbiesService: LobbiesService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: LobbyEntity })
+  @ApiCreatedResponse({ type: LobbyWithMembersEntity })
   async create(
     @Request() req: any,
     @Body() createLobbyDto: CreateLobbyDto,
-  ): Promise<LobbyEntity> {
+  ): Promise<LobbyWithMembersEntity> {
     const lobby = await this.lobbiesService.create(
       req.user.sub,
       createLobbyDto,
@@ -47,8 +47,8 @@ export class LobbiesController {
   }
 
   @Get('pistil')
-  @ApiOkResponse({ type: LobbyEntity })
-  async findLobbyForUser(@Request() req: any): Promise<LobbyEntity> {
+  @ApiOkResponse({ type: LobbyWithMembersEntity })
+  async findLobbyForUser(@Request() req: any): Promise<LobbyWithMembersEntity> {
     const lobby = await this.lobbiesService.findLobbyForUser(req.user.sub);
     return lobby;
   }
@@ -60,11 +60,11 @@ export class LobbiesController {
   }
 
   @Post('join')
-  @ApiOkResponse({ type: LobbyEntity })
+  @ApiOkResponse({ type: LobbyWithMembersEntity })
   async joinLobby(
     @Request() req: any,
     @Body() joinLobbyDto: JoinLobbyDto,
-  ): Promise<LobbyEntity> {
+  ): Promise<LobbyWithMembersEntity> {
     return await this.lobbiesService.joinLobby(req.user.sub, joinLobbyDto);
   }
 

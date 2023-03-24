@@ -27,7 +27,6 @@ function TeamBuilder() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useAtom(userAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
-  const [friendsList, setFriendsList] = useAtom(friendAtom);
 
   const inviteFriends = (e: React.SyntheticEvent) => {
     e.preventDefault();

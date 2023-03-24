@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useRef,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useGlobal } from "../../services/Global/GlobalProvider";
@@ -27,17 +21,13 @@ export const LobbySocketContext = createContext<Socket | null>(null);
 export function LobbySocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const axiosPrivate = useAxiosPrivate();
-  // const connected = useRef(false);
   const { auth } = useGlobal();
 
   useEffect(() => {
     async function initSocket() {
-      // if (!connected.current) {
       console.log("init socket lobby");
       const s: any = await initializeSocket(axiosPrivate, auth?.accessToken);
       setSocket(s);
-      // }
-      // connected.current = true;
     }
     initSocket();
   }, []);
