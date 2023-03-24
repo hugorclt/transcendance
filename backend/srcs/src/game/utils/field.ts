@@ -15,4 +15,12 @@ export class Field {
   getLength() {
     return this.length;
   }
+
+  setWidth(width: number) {
+    this.width = width;
+  }
+
+  setLength(length: number) {
+    this.length = length;
+  }
 }

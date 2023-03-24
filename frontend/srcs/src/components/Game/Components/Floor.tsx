@@ -8,7 +8,7 @@ interface TFloorProps {
 
 const Floor = (props: TFloorProps) => {
   return (
-    <mesh rotation={[degreeToRad(-90), 0, 0]} position={[props.width / 2, 0, props.length / 2 ]}>
+    <mesh rotation={[degreeToRad(-90), 0, 0]} position={[0, 0,0]}>
       <planeGeometry args={[props.width, props.length]} />
       <meshToonMaterial color={"#000000"} />
     </mesh>
