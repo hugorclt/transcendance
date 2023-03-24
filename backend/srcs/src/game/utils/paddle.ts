@@ -18,7 +18,20 @@ export class Paddle {
         return this.length;
     }
 
-    getPostion() {
+    getPosition() {
         return this.position;
+    }
+
+    setPosition(x: number, z: number) {
+        this.position.x = x;
+        this.position.z = z;
+    }
+
+    moveLeft() {
+        this.position.x -= 1
+    }
+
+    moveRight() {
+        this.position.x += 1;
     }
 }

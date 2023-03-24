@@ -68,7 +68,7 @@ export class Game {
         ballPos.z += this.ball.getVelocity().z;
 
         this.ball.setPositionX(ballPos.x);
-        this.ball.setPositionY(ballPos.z);
+        this.ball.setPositionZ(ballPos.z);
     }
 
     isSideCollision() {
@@ -83,7 +83,7 @@ export class Game {
     isPaddleCollision(paddle: Paddle) {
         const ballZ = this.ball.getPosition().z;
         const ballRadius = this.ball.getRadius();
-        const paddlePosZ = paddle.getPostion().z;
+        const paddlePosZ = paddle.getPosition().z;
         const direction = this.ball.getVelocity().z > 0 ? "up" : "down";
 
         if (direction === "up") {
@@ -97,7 +97,7 @@ export class Game {
 
     isBallAlignedWithPaddle(paddle: Paddle) {
         const halfPaddleWidth = paddle.getWidth() / 2;
-        const paddlePosX = paddle.getPostion().x;
+        const paddlePosX = paddle.getPosition().x;
         const ballX = this.ball.getPosition().x;
 
         return ballX > paddlePosX - halfPaddleWidth &&
@@ -106,7 +106,7 @@ export class Game {
 
     hitBallBack(paddle: Paddle) {
         const ballX = this.ball.getPosition().x;
-        const paddlePosX = paddle.getPostion().x;
+        const paddlePosX = paddle.getPosition().x;
 
         const newVelocityX = (ballX - paddlePosX) / 5;
         const newVelocityZ = this.ball.getVelocity().z *-1;
@@ -121,7 +121,10 @@ export class Game {
 
         if (ballZ > fieldZ + 100) {
             this.scoreboard.incrementPlayer2()
-        }
+            this.stopBall();
+            this.reset();
+            return true;
+        } else return false;
     }
 
     isGoalTeam1() {
@@ -130,6 +133,54 @@ export class Game {
 
         if  (ballZ < fieldZ - 100) {
             this.scoreboard.incrementPlayer1();
-        }
+            this.stopBall();
+            this.reset();
+            return true;
+        } else return false;
+    }
+
+    stopBall() {
+        this.ball.setStopped(true);
+    }
+
+    reset() {
+        this.ball.setPositionX(0);
+        this.ball.setPositionY(0);
+        this.ball.setPositionZ(0);
+        this.ball.setVelocity(null);
+    }
+
+    init() {
+        const FIELD_WIDTH = this.field.getWidth();
+        const FIELD_LENGTH = this.field.getLength();
+        const BALL_RADIUS = this.ball.getRadius();
+
+        this.paddle1.setPosition(0, FIELD_LENGTH / 2);
+        this.paddle2.setPosition(0, -FIELD_LENGTH / 2);
+    }
+
+    async launch() {
+        this.processBallMovement();
+    }
+
+
+    getBall() {
+        return this.ball;
+    }
+
+    getPaddle1() {
+        return this.paddle1;
+    }
+
+    getPaddle2() {
+        return this.paddle2;
+    }
+
+    getScoreboard() {
+        return this.scoreboard;
+    }
+    
+    getField() {
+        return this.field;
     }
 }
