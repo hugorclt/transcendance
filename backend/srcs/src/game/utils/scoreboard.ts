@@ -1,81 +1,26 @@
-import { Ball } from "./ball";
-import { Pitch } from "./pitch";
-
 export class Scoreboard {
-  private totalTime: number;
-  private remainingTime: number;
-  private scoreA: number;
-  private scoreB: number;
-  private scoreToWin: number;
 
-  constructor(
-    totalTime: number,
-    remainingTime: number,
-    scoreA: number,
-    scoreB: number,
-    scoreToWin: number
-  ) {
-    this.totalTime = totalTime;
-    this.remainingTime = remainingTime;
-    this.scoreA = scoreA;
-    this.scoreB = scoreB;
-    this.scoreToWin = scoreToWin;
-  }
+    private player1: number;
+    private player2: number;
 
-  update(dt: number) {
-    return ;
-  }
-
-  checkForGoal(ball: Ball, pitch: Pitch) {
-    const ballZ = ball.getZ();
-
-    if (ballZ >= pitch.getDepth()) {
-      this.scoreA += 1;
-      return true;
-    } else if (ballZ <= 0) {
-      this.scoreB += 1;
-      return true;
+    constructor (player1: number, player2: number) {
+        this.player1 = player1;
+        this.player2 = player2;
     }
-    return false;
-  }
 
-  getTotalTime() {
-    return this.totalTime;
-  }
+    getPlayer1() {
+        return this.player1;
+    }
 
-  setTotalTime(totalTime: number) {
-    this.totalTime = totalTime;
-  }
+    getPlayer2() {
+        return this.player2;
+    }
 
-  getRemainingTime() {
-    return this.remainingTime;
-  }
+    incrementPlayer1() {
+        this.player1++;
+    }
 
-  setRemainingTime(remainingTime: number) {
-    this.remainingTime = remainingTime;
-  }
-
-  getScoreA() {
-    return this.scoreA;
-  }
-
-  setScoreA(scoreA: number) {
-    this.scoreA = scoreA;
-  }
-
-  getScoreB() {
-    return this.scoreB;
-  }
-
-  setScoreB(scoreB: number) {
-    this.scoreB = scoreB;
-  }
-
-  getScoreToWin() {
-    return this.scoreToWin;
-  }
-
-  setScoreToWin(scoreToWin: number) {
-    this.scoreToWin = scoreToWin;
-  }
+    incrementPlayer2() {
+        this.player2++;
+    }
 }
