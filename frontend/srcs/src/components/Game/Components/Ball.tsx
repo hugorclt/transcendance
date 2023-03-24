@@ -1,39 +1,65 @@
+import { Trail } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { Bloom } from "@react-three/postprocessing";
+import {
+  forwardRef,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { Mesh, Vector2, Vector3 } from "three";
 import { useForwardRaycast } from "../../../hooks/useForwardRaycast";
-import { MAP_SIZE, WALL_SIZE } from "../Game";
+import { GameSocket } from "../../../services/Game/SocketContext";
 
 interface TBallProps {
-  color: string;
-  position: Vector3;
   radius: number;
+  startPos: Vector3;
 }
 
-
-
-const Ball = (props: TBallProps, ref: any) => {
+const Ball = (props: TBallProps) => {
   const ballRef = useRef<Mesh>(null!);
+  const socket = useContext(GameSocket);
 
-  useImperativeHandle(ref, () => ({
-    getPosition() {
-      return ballRef.current.position;
-    },
-    setXPosition(offset: number) {
-      ballRef.current.position.x += offset;
-    },
-    setZPosition(offset: number) {
-      ballRef.current.position.z += offset;
-    }
-  }));
+  useEffect(() => {
+    socket?.on("ball", (data) => {
+      ballRef.current.position.x = data.x;
+      ballRef.current.position.z = data.z;
+    });
+    return () => {
+      socket?.off("ball");
+    };
+  }, [socket]);
+
+    var t= 0;
+  useFrame(() => {
+    t += 0.01;          
+    ballRef.current.position.x = 20*Math.cos(t) + 0;
+    ballRef.current.position.z = 20*Math.sin(t) + 0;
+  })
 
   return (
-    <mesh ref={ballRef} position={props.position}>
-      <sphereGeometry args={[props.radius, 32, 32]} />
-      <meshToonMaterial color={props.color} />
-    </mesh>
+    <Trail
+      width={5} // Width of the line
+      color={"skyblue"} // Color of the line
+      length={10} // Length of the line
+      decay={1} // How fast the line fades away
+      local={false} // Wether to use the target's world or local positions
+      stride={0} // Min distance between previous and current point
+      interval={1} // Number of frames to wait before next calculation
+      target={undefined} // Optional target. This object will produce the trail.
+      attenuation={(width) => width} // A function to define the width in each point along it.
+    >
+      <mesh ref={ballRef} position={props.startPos}>
+        <sphereGeometry args={[props.radius, 32, 32]} />
+        <meshToonMaterial
+          emissive="blue"
+          emissiveIntensity={3}
+          toneMapped={false}
+        />
+      </mesh>
+    </Trail>
   );
 };
 
-
-export default forwardRef(Ball);
+export default Ball;

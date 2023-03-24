@@ -33,6 +33,10 @@ import { FaUserFriends } from "react-icons/fa";
 import { useAtom } from "jotai";
 import { conversationAtom, userAtom } from "../../../services/store";
 import { displayName } from "../../../services/Chat/displayName";
+import Popup from "reactjs-popup";
+import {IoIosSettings} from 'react-icons/io'
+import { ModalBox } from "../../Lobby/TeamBuilder/InviteFriendsButton/InviteFriendsButtonStyle";
+import ChatManager from "./ChatManager/ChatManager";
 
 function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
@@ -48,12 +52,11 @@ function Chat({ chat }: TChatProps) {
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
     if (message == "" || message.length > 256) return;
-    console.log("message to send:", message);
     axiosPrivate
       .post("/rooms/message", { message: message, roomId: chat.id })
       .then((res: AxiosResponse) => {
-        console.log("message received: ", res.data);
-        setMessageList((prev) => [...prev, res.data]);
+        if (res.data.isMuted == false)
+          setMessageList((prev) => [...prev, res.data]);
       })
       .catch((err: AxiosError) => {
         console.log("error while sending message");
@@ -122,19 +125,16 @@ function Chat({ chat }: TChatProps) {
         key={nanoid()}
         style={{
           justifyContent: isMe ? "flex-end" : "flex-start",
-        }}
-      >
+        }}>
         <div style={{ color: COLORS.primary }}>{senderName}</div>
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}
-        >
+          }}>
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}
-          >
+            }}>
             {msg.content}
           </MessageContent>
         </MessageBox>
@@ -158,18 +158,33 @@ function Chat({ chat }: TChatProps) {
               />
             )}
           </ChatMiddle>
-          <AiOutlineClose
-            onClick={() => {
-              setChat((prev) =>
-                prev.map((chat) => {
-                  if (chat.isActive == true) chat.isActive = false;
-                  return chat;
-                })
-              );
-            }}
-            style={{ color: COLORS.secondary }}
-            size={22}
-          />
+          <div style={{display:"flex"}}>
+            <Popup
+              trigger={
+                <div>
+                  <IoIosSettings
+                    size={22}
+                    style={{ color: COLORS.secondary }}
+                  />
+                </div>
+              }
+              modal
+              nested>
+                <ChatManager />
+              </Popup>
+            <AiOutlineClose
+              onClick={() => {
+                setChat((prev) =>
+                  prev.map((chat) => {
+                    if (chat.isActive == true) chat.isActive = false;
+                    return chat;
+                  })
+                );
+              }}
+              style={{ color: COLORS.secondary }}
+              size={22}
+            />
+          </div>
         </ChatTop>
         <ChatMessageContainer ref={messageBoxRef}>
           {messageList.map((val) => {

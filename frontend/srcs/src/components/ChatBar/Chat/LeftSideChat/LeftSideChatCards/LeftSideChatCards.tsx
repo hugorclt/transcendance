@@ -20,6 +20,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { SocketContext } from "../../../../../services/Auth/SocketContext";
 import { BiVolumeMute } from "react-icons/bi";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
+import AdminInteraction from "./AdminInteraction";
 
 function LeftSideChatCards(props: {
   roomId: string;
@@ -43,21 +44,6 @@ function LeftSideChatCards(props: {
 
   const handleClick = () => {
     socket?.emit("friend-request", props.name);
-  };
-
-  const handleKick = () => {
-    axiosPrivate.post("/rooms/kick", {
-      userId: props.userId,
-      roomId: props.roomId,
-    });
-  };
-
-  const handleMute = () => {
-    axiosPrivate.post("rooms/mute", {
-      userId: props.userId,
-      roomId: props.roomId,
-      isMute: props.isMute
-    });
   };
 
   return (
@@ -92,15 +78,7 @@ function LeftSideChatCards(props: {
             </InsidePopUpButton>
             <InsidePopUpButton>Block user</InsidePopUpButton>
             {props.isAdmin ? (
-              <>
-                <InsidePopUpButton onClick={handleMute}>
-                  {props.isMute ? "Unmute user" : "Mute user"}
-                </InsidePopUpButton>
-                <InsidePopUpButton onClick={handleKick}>
-                  Kick user
-                </InsidePopUpButton>
-                <InsidePopUpButton>Ban user</InsidePopUpButton>
-              </>
+              <AdminInteraction userId={props.userId} roomId={props.roomId} isMute={props.isMute} />
             ) : (
               ""
             )}

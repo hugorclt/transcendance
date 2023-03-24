@@ -7,7 +7,7 @@ const SkyBox = () => {
 
   return (
     <mesh material={skyBox}>
-      <boxGeometry args={[2000, 2000, 2000]} />
+      <boxGeometry args={[1000, 1000, 1000]} />
     </mesh>
   );
 };
