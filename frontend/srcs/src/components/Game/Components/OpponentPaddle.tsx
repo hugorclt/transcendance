@@ -5,7 +5,7 @@ import { GameSocket } from "../../../services/Game/SocketContext";
 interface TPaddleProps {
   startPos: Vector3;
   width: number;
-  height: number;
+  length: number;
 }
 
 const OpponentPaddle = (props: TPaddleProps, ref: any) => {
@@ -13,17 +13,17 @@ const OpponentPaddle = (props: TPaddleProps, ref: any) => {
   const socket = useContext(GameSocket);
 
   useEffect(() => {
-    socket?.on("opponent", (data) => {
+    socket?.on("player2", (data) => {
       paddleRef.current.position.x = data.x
     })
     return () => {
-      socket?.off("opponent");
+      socket?.off("player2");
     }
   }, [socket])
 
   return (
     <mesh ref={paddleRef} position={props.startPos}>
-      <boxGeometry args={[props.width, props.height, 1]} />
+      <boxGeometry args={[props.width, props.length, 1]} />
       <meshToonMaterial color={"#fff"} />
     </mesh>
   );

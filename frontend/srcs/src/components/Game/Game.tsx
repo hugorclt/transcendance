@@ -36,10 +36,10 @@ import Particles from "./Components/Particles";
 
 interface GameInfo {
   floorWidth: number;
-  floorHeight: number;
+  floorLength: number;
   ballRadius: number;
   paddleWidth: number;
-  paddleHeight: number;
+  paddleLength: number;
   paddlePlayerStartX: number;
   paddlePlayerStartZ: number;
   paddleOppStartX: number;
@@ -52,10 +52,10 @@ interface GameInfo {
 
 const defaultValue = {
   floorWidth: 0,
-  floorHeight: 0,
+  floorLength: 0,
   ballRadius: 0,
   paddleWidth: 0,
-  paddleHeight: 0,
+  paddleLength: 0,
   scorePlayer1: 0,
   scorePlayer2: 0,
   paddlePlayerStartX: 0,
@@ -79,6 +79,10 @@ function Game() {
     };
   }, [socket]);
 
+  useEffect(() => {
+    socket?.emit("start-game");
+  }, [])
+
   return (
     <Suspense fallback={null}>
       {/* <PerspectiveCamera makeDefault /> */}
@@ -87,15 +91,15 @@ function Game() {
       </EffectComposer>
       <OrbitControls />
       <primitive object={new AxesHelper(10)} />
-      <Floor width={gameInfo.floorWidth} height={gameInfo.floorHeight} />
+      <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
       <Ball
-        // radius={gameInfo.ballRadius}
+        radius={gameInfo.ballRadius}
         radius={1}
         startPos={new Vector3(gameInfo.ballStartX, 0, gameInfo.ballSTartZ)}
       />
       <PlayerPaddle
         width={gameInfo.paddleWidth}
-        height={gameInfo.paddleHeight}
+        length={gameInfo.paddleLength}
         startPos={
           new Vector3(
             gameInfo.paddlePlayerStartX,
@@ -106,7 +110,7 @@ function Game() {
       />
       <OpponentPaddle
         width={gameInfo.paddleWidth}
-        height={gameInfo.paddleHeight}
+        length={gameInfo.paddleLength}
         startPos={
           new Vector3(gameInfo.paddleOppStartX, 0, gameInfo.paddleOppStartZ)
         }

@@ -3,13 +3,13 @@ import { degreeToRad } from "../../../services/Game/utilsGame";
 
 interface TFloorProps {
     width: number,
-    height: number,
+    length: number,
 }
 
 const Floor = (props: TFloorProps) => {
   return (
-    <mesh rotation={[degreeToRad(-90), 0, 0]} position={[props.width / 2, 0, props.height / 2 ]}>
-      <planeGeometry args={[props.width, props.height]} />
+    <mesh rotation={[degreeToRad(-90), 0, 0]} position={[props.width / 2, 0, props.length / 2 ]}>
+      <planeGeometry args={[props.width, props.length]} />
       <meshToonMaterial color={"#000000"} />
     </mesh>
   );
