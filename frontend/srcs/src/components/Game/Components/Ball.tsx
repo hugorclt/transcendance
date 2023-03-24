@@ -31,12 +31,7 @@ const Ball = (props: TBallProps) => {
     };
   }, [socket]);
 
-    var t= 0;
-  useFrame(() => {
-    t += 0.01;          
-    ballRef.current.position.x = 20*Math.cos(t) + 0;
-    ballRef.current.position.z = 20*Math.sin(t) + 0;
-  })
+
 
   return (
     <Trail

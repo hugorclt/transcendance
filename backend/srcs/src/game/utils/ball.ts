@@ -55,4 +55,8 @@ export class Ball {
   getRadius() {
     return this.radius;
   }
+
+  setRadius(radius: number) {
+    this.radius = radius;
+  }
 }

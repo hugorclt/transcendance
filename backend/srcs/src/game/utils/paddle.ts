@@ -27,6 +27,14 @@ export class Paddle {
         this.position.z = z;
     }
 
+    setWidth(width: number) {
+        this.width = width;
+    }
+
+    setLength(length: number) {
+        this.length= length;
+    }
+
     moveLeft() {
         this.position.x -= 1
     }
