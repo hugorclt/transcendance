@@ -31,11 +31,8 @@ export class GameGateway
   private player1: string;
   private player2: string;
 
-  // game.init();
-
   afterInit() {
     console.log('GameGateway initialized');
-    this.io.on('connection', (socket) => {});
   }
 
   async handleConnection(client: AuthSocket) {
@@ -57,6 +54,7 @@ export class GameGateway
   async onStart(client: AuthSocket): Promise<void> {
     this.game.init();
     this.io.to(client.userId).emit("game-info", {
+      cc: "hello",
       floorWidth: this.game.getField().getWidth(),
       floorLength: this.game.getField().getLength(),
       ballRadius: this.game.getBall().getRadius(),

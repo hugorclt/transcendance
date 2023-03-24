@@ -72,6 +72,7 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
+      console.log(data);
       setGameInfo(data);
     });
     return () => {
@@ -80,6 +81,7 @@ function Game() {
   }, [socket]);
 
   useEffect(() => {
+    console.log("start-game sent");
     socket?.emit("start-game");
   }, [])
 
@@ -94,7 +96,6 @@ function Game() {
       <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
       <Ball
         radius={gameInfo.ballRadius}
-        radius={1}
         startPos={new Vector3(gameInfo.ballStartX, 0, gameInfo.ballSTartZ)}
       />
       <PlayerPaddle

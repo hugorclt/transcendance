@@ -157,6 +157,7 @@ export class Game {
 
         this.paddle1.setPosition(0, FIELD_LENGTH / 2);
         this.paddle2.setPosition(0, -FIELD_LENGTH / 2);
+        console.log("fin init")
     }
 
     async launch() {
