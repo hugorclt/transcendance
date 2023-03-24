@@ -1,40 +1,38 @@
 import { useFrame } from "@react-three/fiber";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useContext, useEffect, useImperativeHandle, useRef } from "react";
 import { Mesh, Vector3 } from "three";
 import useKeyboard from "../../../hooks/useKeyboard";
+import { GameSocket } from "../../../services/Game/SocketContext";
 
 interface TPaddleProps {
-  position: Vector3;
+  startPos: Vector3;
   width: number;
-  height: number;
-  depth: number;
-  color: string;
+  length: number;
 }
-
-const VELOCITY = 8;
 
 const PlayerPaddle = (props: TPaddleProps, ref: any) => {
   const paddleRef = useRef<Mesh>(null!);
   const keyMap = useKeyboard();
-  
-  useImperativeHandle(ref, () => ({
-    getPosition() {
-      return paddleRef.current.position;
-    },
-    setXPosition(offset: number) {
-      paddleRef.current.position.x += offset;
-    }
-  }))
+  const socket = useContext(GameSocket);
 
   useFrame((_, delta) => {
-    keyMap['KeyA'] && (paddleRef.current.position.x -= 1 * (delta * VELOCITY))
-    keyMap['KeyD'] && (paddleRef.current.position.x += 1 * (delta * VELOCITY))
+    keyMap['KeyA'] && socket?.emit("left-move")
+    keyMap['KeyD'] && socket?.emit("right-move")
   })
 
+  useEffect(() => {
+    socket?.on("player1", (data) => {
+      paddleRef.current.position.x = data.x
+    })
+    return () => {
+      socket?.off("player1");
+    }
+  }, [socket])
+
   return (
-    <mesh ref={paddleRef} position={props.position}>
-      <boxGeometry args={[props.width, props.height, props.depth]} />
-      <meshToonMaterial color={props.color} />
+    <mesh ref={paddleRef} position={props.startPos}>
+      <boxGeometry args={[props.width, props.length, 1]} />
+      <meshToonMaterial color={"#fff"} />
     </mesh>
   );
 };

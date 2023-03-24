@@ -1,5 +1,8 @@
-import React, { useContext, useState } from "react";
+import { AxiosError, AxiosResponse } from "axios";
+import { useAtom } from "jotai";
+import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
+import { conversationAtom } from "../../../../services/store";
 import {
   StyledButton,
   StyledInput,
@@ -13,20 +16,24 @@ import {
 } from "../ChatHistoryStyle";
 
 function JoinRoom() {
-  const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [isPrivate, setPrivate] = useState(false);
   const [password, setPassword] = useState("");
+  const axiosPrivate = useAxiosPrivate()
+  const [conv, setConv] = useAtom(conversationAtom);
 
-  const handleCheck = () => {
-    setPrivate(!isPrivate);
-    if (!isPrivate) setPassword("");
-  };
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    axiosPrivate.post("/rooms/join", {name: name, password: password}).then((res: AxiosResponse) => {
+      setConv((prev) => [res.data, ...prev]);
+    }).catch((err: AxiosError) => {
+      console.log("error while joining the room");
+    })
+  }
 
   return (
     <CreateRoomBox>
       <CreateRoomTitle>JOIN ROOM</CreateRoomTitle>
-      <CreateRoomForm autoComplete="off">
+      <CreateRoomForm onSubmit={handleSubmit} autoComplete="off">
         <CreateRoomLabel htmlFor="name">Room name</CreateRoomLabel>
         <StyledInput
           name="name"
@@ -38,7 +45,6 @@ function JoinRoom() {
         <StyledInput
           name="password"
           value={password}
-          disabled={isPrivate}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           autoComplete="new-password"></StyledInput>

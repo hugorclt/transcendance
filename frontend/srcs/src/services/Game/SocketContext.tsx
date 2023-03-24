@@ -31,7 +31,7 @@ export function GameSocketProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function initSocket() {
       if (!connected.current) {
-        console.log("init socket");
+        console.log("init game socket");
         const s: any = await initializeSocket(auth?.accessToken);
         setSocket(s);
       }

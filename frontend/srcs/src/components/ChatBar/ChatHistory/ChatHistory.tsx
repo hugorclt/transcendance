@@ -16,10 +16,12 @@ import JoinRoom from "./JoinRoom.tsx/JoinRoom";
 import { RoomModalOpenContext } from "../../../views/ChatPage/RoomModalOpenContext";
 import { useAtom } from "jotai";
 import { conversationAtom } from "../../../services/store";
+import { useGlobal } from "../../../services/Global/GlobalProvider";
 
 function ChatHistory() {
   const { open, setOpen } = useContext(RoomModalOpenContext);
   const [chatHistory, setChatHistory] = useAtom(conversationAtom);
+  const {auth} = useGlobal();
 
   return (
     <>
@@ -49,8 +51,9 @@ function ChatHistory() {
       </ChatHistoryTopBar>
       <ChatHistoryBox>
         {chatHistory.length > 0 &&
-          chatHistory.map((val) => {
-            if (!val) return;
+          chatHistory.flatMap((val) => {
+            const me = val.participants?.find((user) => user.name == auth.username)
+            if (!val || (val.lastMessage == "" && me?.role != "OWNER")) return;
             return (
               <ChatCards key={nanoid()} conversation={val}/>
             );

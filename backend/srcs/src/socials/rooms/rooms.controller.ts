@@ -25,6 +25,11 @@ export class RoomsController {
     return await this.roomsService.create(createRoomDto, req.user.sub);
   }
 
+  @Post("/join")
+  async JoinRoom(@Request() req) {
+    return await this.roomsService.joinRoom(req.user.sub, req.body.name, req.body.password);
+  }
+
   @Get('/history')
   @ApiCreatedResponse({ type: [RoomEntity] })
   async findHistory(@Request() req) {
@@ -55,5 +60,20 @@ export class RoomsController {
       req.user.sub,
       req.body.roomId,
     );
+  }
+
+  @Post('/kick')
+  async kickFromRoom(@Request() req) {
+    return await this.roomsService.kickFromRoom(req.user.sub, req.body.userId, req.body.roomId);
+  }
+
+  @Post('/mute')
+  async muteFromRoom(@Request() req) {
+    return await this.roomsService.muteFromRoom(req.user.sub, req.body.userId, req.body.roomId, req.body.isMute, req.body.time)
+  }
+
+  @Post('/ban')
+  async banFromRoom(@Request() req) {
+    return await this.roomsService.banFromRoom(req.user.sub, req.body.userId, req.body.roomId)
   }
 }

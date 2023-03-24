@@ -23,3 +23,17 @@ export const ChatManagerNameStatus = styled.div`
 export const LeftSideChatCardsRightBox = styled.div`
   display:flex;
 `
+
+export const SliderContainer = styled.div`
+  display:flex;
+  justify-content: space-around;
+
+  p {
+    color: ${COLORS.primary}
+  }
+`
+
+export const InputRange = styled.input`
+  background-color: ${COLORS.secondary};
+  width: 60%;
+`

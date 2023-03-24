@@ -18,6 +18,9 @@ import {
 } from "../../../FriendsList/FriendsCards/FriendsCardsStyle";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { SocketContext } from "../../../../../services/Auth/SocketContext";
+import { BiVolumeMute } from "react-icons/bi";
+import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
+import AdminInteraction from "./AdminInteraction";
 
 function LeftSideChatCards(props: {
   roomId: string;
@@ -25,10 +28,12 @@ function LeftSideChatCards(props: {
   name: string;
   status: string;
   role: string;
+  isMute: boolean;
   isAdmin: boolean;
 }) {
   const { auth } = useContext(GlobalContext);
   const socket = useContext(SocketContext);
+  const axiosPrivate = useAxiosPrivate();
 
   function displayRole(role: string) {
     if (role == "ADMIN")
@@ -39,13 +44,6 @@ function LeftSideChatCards(props: {
 
   const handleClick = () => {
     socket?.emit("friend-request", props.name);
-  };
-
-  const handleKick = () => {
-    socket?.emit("kick-player", {
-      userIdKicked: props.userId,
-      roomId: props.roomId,
-    });
   };
 
   return (
@@ -60,6 +58,9 @@ function LeftSideChatCards(props: {
       </ChatManagerNameStatus>
       <LeftSideChatCardsRightBox>
         {displayRole(props.role)}
+        {props.isMute == true && (
+          <BiVolumeMute style={{ color: COLORS.secondary }} size={22} />
+        )}
         <Popup
           position="left center"
           arrowStyle={{ color: COLORS.background }}
@@ -77,13 +78,7 @@ function LeftSideChatCards(props: {
             </InsidePopUpButton>
             <InsidePopUpButton>Block user</InsidePopUpButton>
             {props.isAdmin ? (
-              <>
-                <InsidePopUpButton>Mute user</InsidePopUpButton>
-                <InsidePopUpButton onClick={handleKick}>
-                  Kick user
-                </InsidePopUpButton>
-                <InsidePopUpButton>Ban user</InsidePopUpButton>
-              </>
+              <AdminInteraction userId={props.userId} roomId={props.roomId} isMute={props.isMute} />
             ) : (
               ""
             )}

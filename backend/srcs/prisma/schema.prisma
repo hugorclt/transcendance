@@ -68,17 +68,17 @@ enum InvitationType {
 
 //================== GAME =================
 model Lobby {
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ownerId     String       @unique @db.Uuid
-  nbPlayers   Int          @default(2)
-  maxDuration Int          @default(180)
-  mode        Mode         @default(CLASSIC)
-  private     Boolean      @default(false)
-  map         MapName      @default(CLASSIC)
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId     String        @unique @db.Uuid
+  nbPlayers   Int           @default(2)
+  maxDuration Int           @default(180)
+  mode        Mode          @default(CLASSIC)
+  private     Boolean       @default(false)
+  map         MapName       @default(CLASSIC)
   invitations Invitation[]
-  owner       User         @relation("lobbyOwner", fields: [ownerId], references: [id])
-  members     LobbyMember[]     
-  spectators  User[]       @relation("lobbySpectator")
+  owner       User          @relation("lobbyOwner", fields: [ownerId], references: [id])
+  members     LobbyMember[]
+  spectators  User[]        @relation("lobbySpectator")
 }
 
 model LobbyMember {
@@ -128,18 +128,18 @@ model Item {
 }
 
 model Room {
-  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name             String        @unique
-  password         String
-  avatar           String
-  type             Int
-  ownerId          String        @db.Uuid
-  isPrivate        Boolean
-  isDm             Boolean
-  userBanSymmetric User[]        @relation("Banned")
-  roomMsg          Message[]
-  participants     Participant[]
-  owner            User          @relation("owner", fields: [ownerId], references: [id], onDelete: NoAction)
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String        @unique
+  password     String
+  avatar       String
+  type         Int
+  ownerId      String        @db.Uuid
+  isPrivate    Boolean
+  isDm         Boolean
+  banned       User[]        @relation("Banned")
+  roomMsg      Message[]
+  participants Participant[]
+  owner        User          @relation("owner", fields: [ownerId], references: [id], onDelete: NoAction)
 }
 
 model Participant {
@@ -148,6 +148,7 @@ model Participant {
   roomId   String   @db.Uuid
   userId   String   @db.Uuid
   joinedAt DateTime @default(now())
+  isMute   Boolean  @default(false)
   room     Room     @relation(fields: [roomId], references: [id], onDelete: NoAction)
   user     User     @relation(fields: [userId], references: [id], onDelete: NoAction)
 }

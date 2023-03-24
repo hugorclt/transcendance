@@ -13,7 +13,7 @@ import { ReturnRoomEntity } from './entities/room.entity';
 export class RoomsService {
   constructor(
     private prisma: PrismaService,
-    private participant: ParticipantService,
+    private participantService: ParticipantService,
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private messageService: MessagesService,
@@ -83,6 +83,40 @@ export class RoomsService {
     );
   }
 
+  async joinRoom(userId: string, name: string, password: string) {
+    const room = await this.findOneByNameBanned(name);
+    const isAlreadyIn = room.participants.find((user) => user.id == userId);
+    if (isAlreadyIn) return;
+    const isBanned = room.banned.find((user) => user.id == userId);
+    if (isBanned) return;
+    const checkPassword = await bcrypt.compare(password, room.password);
+    if (!checkPassword) return;
+    const newRoom = await this.prisma.room.update({
+      where: {
+        id: room.id,
+      },
+      data: {
+        participants: {
+          create: {
+            userId: userId,
+            role: Role.BASIC,
+          },
+        },
+      },
+      include: {
+        participants: true,
+      }
+    });
+    this.socialGateway.emitToUser(room.id, 'on-chat-update', {
+      id: room.id,
+      participants: await this.participantService.createParticipantFromRoom(
+        newRoom,
+      ),
+    });
+    this.socialGateway.joinUserToRoom(room.id, userId);
+    return this.createRoomReturnEntity(newRoom, await this.messageService.getLastMessage(newRoom.id));
+  }
+
   findAll() {
     return this.prisma.room.findMany({});
   }
@@ -101,6 +135,16 @@ export class RoomsService {
       where: { name },
       include: {
         participants: true,
+      },
+    });
+  }
+
+  async findOneByNameBanned(name: string) {
+    return await this.prisma.room.findUnique({
+      where: { name },
+      include: {
+        participants: true,
+        banned: true,
       },
     });
   }
@@ -170,7 +214,9 @@ export class RoomsService {
       lastMessage: lastMessage == undefined ? '' : lastMessage.content,
       isDm: room.isDm,
       isRead: false,
-      participants: await this.participant.createParticipantFromRoom(room),
+      participants: await this.participantService.createParticipantFromRoom(
+        room,
+      ),
     };
   }
 
@@ -195,6 +241,7 @@ export class RoomsService {
         roomId: roomId,
       },
     });
+    if (!participantToDel) return;
     await this.prisma.participant.delete({
       where: {
         id: participantToDel.id,
@@ -217,7 +264,9 @@ export class RoomsService {
     if (newRoom)
       this.socialGateway.emitToUser(newRoom.id, 'on-chat-update', {
         id: newRoom.id,
-        participants: await this.participant.createParticipantFromRoom(newRoom),
+        participants: await this.participantService.createParticipantFromRoom(
+          newRoom,
+        ),
       });
     return newRoom;
   }
@@ -233,7 +282,12 @@ export class RoomsService {
           },
         },
       },
+      include: {
+        participants: true,
+      },
     });
+    const sender = room.participants.find((user) => user.userId == senderId);
+    if (sender.isMute == true) return { isMuted: true };
     if (!room) return;
     const message = await this.messageService.create({
       content: payload.message,
@@ -243,12 +297,132 @@ export class RoomsService {
     if (!message) return;
     this.socialGateway.sendMessageToRoom(message);
 
-    return message;
+    return { ...message, isMuted: false };
+  }
+
+  async kickFromRoom(kickerId: string, userId: string, roomId: string) {
+    if (kickerId == userId) return;
+    if (!this.isOwner(userId, roomId)) return;
+    const kicker = await this.findUserInRoom(roomId, {
+      userId: kickerId,
+      role: Role.OWNER || Role.ADMIN,
+    });
+    if (!kicker) return;
+    const newRoom = await this.leaveRoom(userId, roomId);
+    if (!newRoom) return;
+    this.socialGateway.leaveUserFromRoom(roomId, userId);
+    this.socialGateway.emitToUser(userId, 'on-chat-delete', { roomId });
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      id: roomId,
+      participants: await this.participantService.createParticipantFromRoom(
+        newRoom,
+      ),
+    });
+  }
+
+  async muteFromRoom(
+    muterId: string,
+    userId: string,
+    roomId: string,
+    isMute: boolean,
+    time: number,
+  ) {
+    if (muterId == userId) return;
+    if (!this.isOwner(userId, roomId)) return;
+    const muter = await this.findUserInRoom(roomId, {
+      userId: muterId,
+      role: Role.OWNER || Role.ADMIN,
+    });
+    if (!muter) return;
+    const user = await this.findUserInRoom(roomId, {
+      userId: userId,
+    });
+    if (!user) return;
+    const newRoom = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        participants: {
+          updateMany: {
+            where: { userId: userId },
+            data: { isMute: !isMute },
+          },
+        },
+      },
+      include: {
+        participants: true,
+      },
+    });
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      id: roomId,
+      participants: await this.participantService.createParticipantFromRoom(
+        newRoom,
+      ),
+    });
+  }
+
+  async banFromRoom(bannerId: string, userId: string, roomId: string) {
+    if (bannerId == userId) return;
+    if (!this.isOwner(userId, roomId)) return;
+    const banner = await this.findUserInRoom(roomId, {
+      userId: bannerId,
+      role: Role.OWNER || Role.ADMIN,
+    });
+    if (!banner) return;
+    const user = await this.findUserInRoom(roomId, {
+      userId: userId,
+    });
+    if (!user) return;
+    await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        banned: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        participants: true,
+      },
+    });
+    this.kickFromRoom(bannerId, userId, roomId);
   }
 
   // UTILS
   concatenateID(id1: string, id2: string) {
     const sortedIds = [id1, id2].sort();
     return sortedIds.join('');
+  }
+
+  async findUserInRoom(roomId: string, toSearch: any) {
+    return await this.prisma.room.findFirst({
+      where: {
+        id: roomId,
+        participants: {
+          some: toSearch,
+        },
+      },
+    });
+  }
+
+  async isOwner(userId: string, roomId: string) {
+    const room = await this.prisma.room.findFirst({
+      where: {
+        id: roomId,
+        participants: {
+          some: {
+            userId: userId,
+            role: Role.OWNER,
+          },
+        },
+      },
+    });
+    console.log(room);
+    if (!room) return false;
+    return true;
   }
 }

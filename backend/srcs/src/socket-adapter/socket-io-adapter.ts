@@ -31,6 +31,7 @@ export class SocketIoAdapter extends IoAdapter {
     console.log('Registering Socket.io middleware');
     server.of('lobbies').use(WSAuthMiddleware(jwtService, usersService));
     server.of('socials').use(WSAuthMiddleware(jwtService, usersService));
+    server.of('game').use(WSAuthMiddleware(jwtService, usersService));
     return server;
   }
 }

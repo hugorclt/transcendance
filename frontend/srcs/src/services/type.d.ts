@@ -46,6 +46,7 @@ export interface TParticipant {
   name: string;
   role: string;
   status: string;
+  isMute: boolean;
 }
 
 export interface TSelectedPage {
