@@ -3,7 +3,6 @@ import { useAtom } from "jotai";
 import React, { ReactNode, useContext, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { lobbyAtom } from "../../services/store";
-import { TLobby } from "../../services/type";
 import { LobbySocketContext } from "../LobbyPage/LobbySocketContext";
 
 function LobbyProvider({ children }: { children: ReactNode }) {
@@ -24,15 +23,6 @@ function LobbyProvider({ children }: { children: ReactNode }) {
       });
   }, []);
 
-  useEffect(() => {
-    socket?.on("player-joined", () => {});
-    socket?.on("player-left", () => {});
-
-    return () => {
-      socket?.off("player-joined");
-      socket?.off("player-left");
-    };
-  }, [socket]);
   return <>{children}</>;
 }
 

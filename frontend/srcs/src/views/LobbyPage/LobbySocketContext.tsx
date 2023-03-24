@@ -27,20 +27,33 @@ export const LobbySocketContext = createContext<Socket | null>(null);
 export function LobbySocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const axiosPrivate = useAxiosPrivate();
-  const connected = useRef(false);
+  // const connected = useRef(false);
   const { auth } = useGlobal();
 
   useEffect(() => {
     async function initSocket() {
-      if (!connected.current) {
-        console.log("init socket lobby");
-        const s: any = await initializeSocket(axiosPrivate, auth?.accessToken);
-        setSocket(s);
-      }
-      connected.current = true;
+      // if (!connected.current) {
+      console.log("init socket lobby");
+      const s: any = await initializeSocket(axiosPrivate, auth?.accessToken);
+      setSocket(s);
+      // }
+      // connected.current = true;
     }
     initSocket();
   }, []);
+
+  useEffect(() => {
+    socket?.on("user-joined-lobby", (user) => {
+      console.log("user joined lobby: ", user);
+    });
+    socket?.on("user-left-lobby", (user) => {
+      console.log("user left lobby: ", user);
+    });
+    return () => {
+      socket?.off("user-joined-lobby");
+      socket?.off("user-left-lobby");
+    };
+  }, [socket]);
 
   return (
     <LobbySocketContext.Provider value={socket}>

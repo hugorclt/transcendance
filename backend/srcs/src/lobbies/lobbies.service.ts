@@ -50,6 +50,7 @@ export class LobbiesService {
       },
     });
     await this.usersService.updateStatus(user.id, 'LOBBY');
+    await this.lobbiesGateway.joinUserToLobby(user.id, lobby.id);
     return lobby;
   }
 
@@ -87,21 +88,28 @@ export class LobbiesService {
   }
 
   async delete(id: string): Promise<LobbyEntity> {
+    //check if user  is lobbyOwner
     //remove all lobby participants
     console.log('Disconnecting all lobby players...');
+    const users = await this.prisma.user.findMany({
+      where: {
+        lobbyMember: {
+          some: {
+            lobbyId: id,
+          },
+        },
+      },
+    });
+    console.log('Updating user status...');
+    await Promise.all(
+      users.map(async (user) => {
+        await this.usersService.updateStatus(user.id, 'CONNECTED');
+      }),
+    );
     const lobby = await this.prisma.lobby.update({
       where: { id },
       data: { members: { deleteMany: {} } },
     });
-    //and update their status?
-    //TODO
-    console.log('Updating user status...');
-    const user = await this.usersService.updateStatus(
-      lobby.ownerId,
-      'CONNECTED',
-    );
-    console.log('User successfully left lobby');
-    //remove lobby
     console.log('deleting lobby...');
     return await this.prisma.lobby.delete({ where: { id } });
   }
@@ -133,8 +141,8 @@ export class LobbiesService {
     );
     //check if lobby is not full
     if (
-      (lobby.private && lobby.members.length == lobby.nbPlayers / 2) ||
-      (!lobby.private && lobby.members.length == lobby.nbPlayers)
+      (!lobby.private && lobby.members.length == lobby.nbPlayers / 2) ||
+      (lobby.private && lobby.members.length == lobby.nbPlayers)
     ) {
       console.log('lobby full');
       throw new MethodNotAllowedException('Lobby is already full');
@@ -159,6 +167,7 @@ export class LobbiesService {
     await this.usersService.updateStatus(joinLobbyDto.userId, 'LOBBY');
     console.log('User successfully joined lobby');
     //update lobby status to all participants
+    await this.lobbiesGateway.joinUserToLobby(joinLobbyDto.userId, lobby.id);
     this.lobbiesGateway.emitToLobby(lobby.id, 'user-joined-lobby', {
       userId: user.id,
       username: user.username,
@@ -166,7 +175,6 @@ export class LobbiesService {
       team: 'LEFT',
       ready: false,
     });
-    //TODO
     return updateLobby;
   }
 

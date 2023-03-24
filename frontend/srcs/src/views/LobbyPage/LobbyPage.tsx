@@ -10,17 +10,13 @@ function LobbyPage() {
   const { status } = useGlobal();
 
   return (
-    <LobbyProvider>
-      <LobbyLayout>
-        {status === "LOBBY" ? (
-          <LobbySocketProvider>
-            <Lobby />
-          </LobbySocketProvider>
-        ) : (
-          <GameModeSelector />
-        )}
-      </LobbyLayout>
-    </LobbyProvider>
+    <LobbySocketProvider>
+      <LobbyProvider>
+        <LobbyLayout>
+          {status === "LOBBY" ? <Lobby /> : <GameModeSelector />}
+        </LobbyLayout>
+      </LobbyProvider>
+    </LobbySocketProvider>
   );
 }
 
