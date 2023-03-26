@@ -3,7 +3,7 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
-import { Message, Participant, Role, Room } from '@prisma/client';
+import { Message, Participant, Role, Room, User } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
 import { SocialsGateway } from '../socials.gateway';
@@ -57,6 +57,7 @@ export class RoomsService {
       include: {
         participants: true,
         owner: true,
+        banned: true,
       },
     });
 
@@ -105,6 +106,7 @@ export class RoomsService {
       },
       include: {
         participants: true,
+        banned: true,
       }
     });
     this.socialGateway.emitToUser(room.id, 'on-chat-update', {
@@ -126,6 +128,7 @@ export class RoomsService {
       where: { id },
       include: {
         participants: true,
+        banned: true,
       },
     });
   }
@@ -135,6 +138,7 @@ export class RoomsService {
       where: { name },
       include: {
         participants: true,
+        banned: true,
       },
     });
   }
@@ -164,7 +168,7 @@ export class RoomsService {
           },
         },
       },
-      include: { participants: true },
+      include: { participants: true, banned: true },
     });
   }
 
@@ -203,7 +207,7 @@ export class RoomsService {
   }
 
   async createRoomReturnEntity(
-    room: Room & { participants: Participant[] },
+    room: Room & { participants: Participant[], banned: User[] },
     lastMessage: Message,
   ): Promise<ReturnRoomEntity> {
     return {
@@ -217,6 +221,7 @@ export class RoomsService {
       participants: await this.participantService.createParticipantFromRoom(
         room,
       ),
+      banned: room.banned.map((banned) => banned.username),
     };
   }
 

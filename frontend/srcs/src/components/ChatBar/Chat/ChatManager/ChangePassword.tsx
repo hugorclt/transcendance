@@ -9,8 +9,8 @@ function ChangePassword() {
             <h4>{"password"}</h4>
         </div>
         <h3>Change Password</h3>
-        <input type="text" placeholder='new'></input>
-        <input type="text" placeholder='confirm'></input>
+        <input type="text" placeholder='New password'></input>
+        <input type="text" placeholder='Confirm password'></input>
         <button>Change Password</button>
     </ChangePasswordContainer>
   )

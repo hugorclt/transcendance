@@ -170,7 +170,7 @@ function Chat({ chat }: TChatProps) {
               }
               modal
               nested>
-                <ChatManager />
+                <ChatManager chat={chat}  />
               </Popup>
             <AiOutlineClose
               onClick={() => {
