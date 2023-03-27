@@ -1,15 +1,15 @@
 import {
-  forwardRef,
-  Inject,
+  ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
 import { Message, Participant, Role, Room, User } from '@prisma/client';
-import { UsersService } from 'src/users/users.service';
 import { MessagesService } from './messages/messages.service';
 import { SocialsGateway } from '../socials.gateway';
 import { ReturnRoomEntity } from './entities/room.entity';
@@ -23,8 +23,6 @@ export class RoomsService {
   constructor(
     private prisma: PrismaService,
     private participantService: ParticipantService,
-    @Inject(forwardRef(() => UsersService))
-    private usersService: UsersService,
     private messageService: MessagesService,
     private socialGateway: SocialsGateway,
   ) {}
@@ -119,15 +117,16 @@ export class RoomsService {
     joinRoomDto: JoinRoomDto,
   ): Promise<ReturnRoomEntity> {
     const room = await this.findOneByName(joinRoomDto.name);
+    if (!room) throw new NotFoundException();
     const isAlreadyIn = room.participants.find((user) => user.id == userId);
-    if (isAlreadyIn) return;
+    if (isAlreadyIn) throw new UnprocessableEntityException();
     const isBanned = room.banned.find((user) => user.id == userId);
-    if (isBanned) return;
+    if (isBanned) throw new ConflictException();
     const checkPassword = await bcrypt.compare(
       joinRoomDto.password,
       room.password,
     );
-    if (!checkPassword) return;
+    if (!checkPassword) throw new ForbiddenException();
     const newRoom = await this.prisma.room.update({
       where: {
         id: room.id,
@@ -160,6 +159,7 @@ export class RoomsService {
 
   async leaveRoom(userId: string, roomId: string) {
     const oldRoom = await this.findOne(roomId);
+    if (!oldRoom) throw new NotFoundException();
     var nbParticipant = oldRoom.participants.length;
     const participantToDel = await this.prisma.participant.findFirst({
       where: {
@@ -167,7 +167,7 @@ export class RoomsService {
         roomId: roomId,
       },
     });
-    if (!participantToDel) return;
+    if (!participantToDel) throw new NotFoundException();
     await this.prisma.participant.delete({
       where: {
         id: participantToDel.id,
@@ -201,8 +201,11 @@ export class RoomsService {
     senderId: string,
     newMessage: CreateMessageDto,
   ): Promise<ReturnMessageEntity> {
-    if (newMessage.content == '' || newMessage.content.length > 256) return;
-    const room = await this.findUserInRoom(newMessage.roomId, {userId: senderId});
+    if (newMessage.content == '' || newMessage.content.length > 256)
+      throw new ForbiddenException();
+    const room = await this.findUserInRoom(newMessage.roomId, {
+      userId: senderId,
+    });
     if (!room) throw new NotFoundException();
     const sender = room.participants.find((user) => user.userId == senderId);
     if (sender.isMute == true) return { isMuted: true };
@@ -211,25 +214,19 @@ export class RoomsService {
       senderId,
       roomId: room.id,
     });
-    if (!message) return;
+    if (!message) throw new UnprocessableEntityException();
     this.socialGateway.sendMessageToRoom(message);
 
     return { ...message, isMuted: false };
   }
 
-  async kickFromRoom(kickerId: string, managerRoomDto: ManagerRoomDto){
-    if (kickerId == managerRoomDto.targetId) return;
-    if (!this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId)) return;
-    const kicker = await this.findUserInRoom(managerRoomDto.roomId, {
-      userId: kickerId,
-      role: Role.OWNER || Role.ADMIN,
-    });
-    if (!kicker) return;
+  async kickFromRoom(kickerId: string, managerRoomDto: ManagerRoomDto) {
+    this.checkManagerState(kickerId, managerRoomDto);
     const newRoom = await this.leaveRoom(
       managerRoomDto.targetId,
       managerRoomDto.roomId,
     );
-    if (!newRoom) return;
+    if (!newRoom) throw new NotFoundException();
     this.socialGateway.leaveUserFromRoom(
       managerRoomDto.roomId,
       managerRoomDto.targetId,
@@ -246,17 +243,7 @@ export class RoomsService {
   }
 
   async muteFromRoom(muterId: string, managerRoomDto: ManagerRoomDto) {
-    if (muterId == managerRoomDto.targetId) return;
-    if (!this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId)) return;
-    const muter = await this.findUserInRoom(managerRoomDto.roomId, {
-      userId: muterId,
-      role: Role.OWNER || Role.ADMIN,
-    });
-    if (!muter) return;
-    const user = await this.findUserInRoom(managerRoomDto.roomId, {
-      userId: managerRoomDto.targetId,
-    });
-    if (!user) return;
+    this.checkManagerState(muterId, managerRoomDto);
     const newRoom = await this.prisma.room.update({
       where: {
         id: managerRoomDto.roomId,
@@ -284,17 +271,7 @@ export class RoomsService {
   }
 
   async banFromRoom(bannerId: string, managerRoomDto: ManagerRoomDto) {
-    if (bannerId == managerRoomDto.targetId) return;
-    if (!this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId)) return;
-    const banner = await this.findUserInRoom(managerRoomDto.roomId, {
-      userId: bannerId,
-      role: Role.OWNER || Role.ADMIN,
-    });
-    if (!banner) return;
-    const user = await this.findUserInRoom(managerRoomDto.roomId, {
-      userId: managerRoomDto.targetId,
-    });
-    if (!user) return;
+    this.checkManagerState(bannerId, managerRoomDto);
     await this.prisma.room.update({
       where: {
         id: managerRoomDto.roomId,
@@ -310,7 +287,7 @@ export class RoomsService {
         participants: true,
       },
     });
-    const newRoom = this.kickFromRoom(bannerId, managerRoomDto);
+    await this.kickFromRoom(bannerId, managerRoomDto);
   }
 
   /* -------------------------------------------------------------------------- */
@@ -347,7 +324,6 @@ export class RoomsService {
         },
       },
     });
-    console.log(room);
     if (!room) return false;
     return true;
   }
@@ -403,7 +379,7 @@ export class RoomsService {
     });
   }
 
-    async createRoomReturnEntity(
+  async createRoomReturnEntity(
     room: Room & { participants: Participant[]; banned: User[] },
     lastMessage: Message,
   ): Promise<ReturnRoomEntity> {
@@ -420,5 +396,21 @@ export class RoomsService {
       ),
       banned: room.banned.map((banned) => banned.username),
     };
+  }
+
+  async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
+    if (managerId == managerRoomDto.targetId)
+      throw new UnprocessableEntityException();
+    if (!this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId))
+      throw new ForbiddenException();
+    const kicker = await this.findUserInRoom(managerRoomDto.roomId, {
+      userId: managerId,
+      role: Role.OWNER || Role.ADMIN,
+    });
+    if (!kicker) throw new NotFoundException();
+    const user = await this.findUserInRoom(managerRoomDto.roomId, {
+      userId: managerRoomDto.targetId,
+    });
+    if (!user) throw new NotFoundException();
   }
 }
