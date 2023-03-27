@@ -14,14 +14,14 @@ function AdminInteraction(props: TAdminInteractionProps) {
 
   const handleKick = () => {
     axiosPrivate.post("/rooms/kick", {
-      userId: props.userId,
+      targetId: props.userId,
       roomId: props.roomId,
     });
   };
 
   const handleMute = () => {
     axiosPrivate.post("rooms/mute", {
-      userId: props.userId,
+      targetId: props.userId,
       roomId: props.roomId,
       isMute: props.isMute,
       time: sliderValue,
@@ -30,7 +30,7 @@ function AdminInteraction(props: TAdminInteractionProps) {
 
   const handleBan = () => {
     axiosPrivate.post("rooms/ban", {
-      userId: props.userId,
+      targetId: props.userId,
       roomId: props.roomId,
     });
   };

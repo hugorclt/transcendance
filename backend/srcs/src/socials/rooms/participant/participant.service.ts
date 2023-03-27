@@ -9,9 +9,9 @@ export class ParticipantService {
   constructor(private prisma: PrismaService) {}
 
   create(createParticipantDto: CreateParticipantDto) {
-    return this.prisma.participant.create({
-      data: createParticipantDto,
-    });
+    // return this.prisma.participant.create({
+      // data: createParticipantDto,
+    // });
   }
 
   findAll() {
