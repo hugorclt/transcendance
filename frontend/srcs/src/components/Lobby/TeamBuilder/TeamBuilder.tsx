@@ -23,7 +23,6 @@ function TeamBuilder() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
 
   const leaveLobby = (e: React.SyntheticEvent) => {
-    console.log("Leave Button pressed");
     e.preventDefault();
     axiosPrivate
       .post("http://localhost:3000/lobbies/leave", {
