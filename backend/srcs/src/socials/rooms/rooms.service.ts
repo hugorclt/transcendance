@@ -118,7 +118,7 @@ export class RoomsService {
   ): Promise<ReturnRoomEntity> {
     const room = await this.findOneByName(joinRoomDto.name);
     if (!room) throw new NotFoundException();
-    const isAlreadyIn = room.participants.find((user) => user.id == userId);
+    const isAlreadyIn = room.participants.find((user) => user.userId == userId);
     if (isAlreadyIn) throw new UnprocessableEntityException();
     const isBanned = room.banned.find((user) => user.id == userId);
     if (isBanned) throw new ConflictException();
