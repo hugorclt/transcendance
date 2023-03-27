@@ -221,6 +221,7 @@ export class LobbiesService {
     if (check2) {
       console.log('User is lobby participant, disconnecting user...');
       //disconnect user from lobby by deleting lobbyMember
+      //todo save old member id to send back
       const updateLobby = await this.prisma.lobby.update({
         where: {
           id: joinLobbyDto.lobbyId,

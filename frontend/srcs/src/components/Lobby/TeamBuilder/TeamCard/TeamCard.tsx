@@ -20,7 +20,6 @@ function TeamCard(props: TeamCardProps) {
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const teamMembers = lobby.members?.flatMap((member) => {
     if (member.team == props.team) {
-      console.log("member team ", props.team, ": ", member);
       return member;
     }
   });
@@ -40,7 +39,6 @@ function TeamCard(props: TeamCardProps) {
         {teamMembers &&
           teamMembers[0] &&
           teamMembers.map((member) => {
-            console.log("teamMembers: ", teamMembers);
             return (
               <PlayerCard key={nanoid()} team={props.team} member={member!} />
             );
