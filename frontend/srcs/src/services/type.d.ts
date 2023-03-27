@@ -15,13 +15,17 @@ export interface TLobby {
   ownerId: string;
   mode: string;
   nbPlayers: number;
-  lobbyMembers: TLobbyMember[];
+  members: TLobbyMember[];
 }
 
 export interface TLobbyMember {
   id: string;
+  userId: string;
   team: string;
   ready: boolean;
+  user: {
+    username: string;
+  };
 }
 
 export interface TFriend {

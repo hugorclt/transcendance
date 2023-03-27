@@ -37,6 +37,7 @@ function FriendNotifications() {
           ownerId: response.data.ownerId,
           nbPlayers: +response.data.nbPlayers,
           mode: response.data.mode,
+          members: response.data.members,
         });
       })
       .catch((error: AxiosError) => {

@@ -49,9 +49,18 @@ export class LobbiesService {
         },
       },
       include: {
-        members: true,
+        members: {
+          include: {
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
+    console.log('created lobby: ', lobby);
     await this.usersService.updateStatus(user.id, 'LOBBY');
     await this.lobbiesGateway.joinUserToLobby(user.id, lobby.id);
     return lobby;
@@ -77,7 +86,15 @@ export class LobbiesService {
         },
       },
       include: {
-        members: true,
+        members: {
+          include: {
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
     return lobby;
@@ -95,8 +112,6 @@ export class LobbiesService {
 
   async delete(id: string): Promise<LobbyEntity> {
     //check if user  is lobbyOwner
-    //remove all lobby participants
-    console.log('Disconnecting all lobby players...');
     const users = await this.prisma.user.findMany({
       where: {
         lobbyMember: {
@@ -106,7 +121,6 @@ export class LobbiesService {
         },
       },
     });
-    console.log('Updating user status...');
     await Promise.all(
       users.map(async (user) => {
         await this.usersService.updateStatus(user.id, 'CONNECTED');
@@ -125,10 +139,7 @@ export class LobbiesService {
   async joinLobby(userId: string, joinLobbyDto: JoinLobbyDto) {
     //is user the one sending the request
     if (userId != joinLobbyDto.userId) return;
-    //user exists and is not already in a lobby?
     const user = await this.canUserJoinLobbies(joinLobbyDto.userId);
-    //===> check if lobby is joinable
-    //check lobby exists
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: joinLobbyDto.lobbyId },
       include: {
@@ -137,7 +148,6 @@ export class LobbiesService {
       },
     });
     if (!lobby) throw new NotFoundException('Lobby not found');
-    //check if user has been invited to lobby
     await Promise.all(
       lobby.invitations.map(async (invitation) => {
         if (invitation.userId == joinLobbyDto.userId) {
@@ -145,7 +155,6 @@ export class LobbiesService {
         }
       }),
     );
-    //check if lobby is not full
     if (
       (!lobby.private && lobby.members.length == lobby.nbPlayers / 2) ||
       (lobby.private && lobby.members.length == lobby.nbPlayers)
@@ -169,15 +178,24 @@ export class LobbiesService {
         },
       },
       include: {
-        members: true,
+        members: {
+          include: {
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
-    //update new member status to lobby
     await this.usersService.updateStatus(joinLobbyDto.userId, 'LOBBY');
-    console.log('User successfully joined lobby');
-    //update lobby status to all participants
     await this.lobbiesGateway.joinUserToLobby(joinLobbyDto.userId, lobby.id);
+    const member = updateLobby.members.find(
+      (member) => member.userId === joinLobbyDto.userId,
+    );
     this.lobbiesGateway.emitToLobby(lobby.id, 'user-joined-lobby', {
+      memberId: member.id,
       userId: user.id,
       username: user.username,
       avatar: user.avatar,

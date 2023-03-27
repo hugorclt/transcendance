@@ -41,6 +41,7 @@ function GameModeSelector() {
           ownerId: response.data.ownerId,
           nbPlayers: +response.data.nbPlayers,
           mode: response.data.mode,
+          members: response.data.members,
         });
         setSelectedMode("");
         setOnModeSelected(false);

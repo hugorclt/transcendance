@@ -13,6 +13,7 @@ export const COLORS = {
   black: "#000000",
   darkgrey: "#737373",
   darkergrey: "#292929",
+  red: "#FF0000",
 };
 
 export const convertStatusColor = (status: string): string => {
