@@ -1,9 +1,15 @@
 import React from 'react'
+import { ProfileContainer } from "./ProfileStyle"
+import { TopProfile } from "./TopProfile/TopProfile";
+import { BotProfile } from "./BotProfile/BotProfile";
+import { TopProfileContainer } from "./TopProfile/TopProfileStyle.js";
+import { BotProfileContainer } from "./BotProfile/BotProfileStyle.js";
 
-function Profile() {
+export function Profile() {
   return (
-    <div>Profile</div>
+    <ProfileContainer>
+        <TopProfile/>
+        <BotProfile/>  
+    </ProfileContainer>
   )
 }
-
-export default Profile
