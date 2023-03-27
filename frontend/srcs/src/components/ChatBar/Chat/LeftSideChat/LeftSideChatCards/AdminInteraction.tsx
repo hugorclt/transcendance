@@ -32,6 +32,8 @@ function AdminInteraction(props: TAdminInteractionProps) {
     axiosPrivate.post("rooms/ban", {
       targetId: props.userId,
       roomId: props.roomId,
+    }).then(() => {
+      
     });
   };
   return (

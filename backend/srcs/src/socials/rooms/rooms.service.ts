@@ -217,7 +217,7 @@ export class RoomsService {
     return { ...message, isMuted: false };
   }
 
-  async kickFromRoom(kickerId: string, managerRoomDto: ManagerRoomDto) {
+  async kickFromRoom(kickerId: string, managerRoomDto: ManagerRoomDto){
     if (kickerId == managerRoomDto.targetId) return;
     if (!this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId)) return;
     const kicker = await this.findUserInRoom(managerRoomDto.roomId, {
@@ -271,10 +271,12 @@ export class RoomsService {
       },
       include: {
         participants: true,
+        banned: true,
       },
     });
     this.socialGateway.emitToUser(managerRoomDto.roomId, 'on-chat-update', {
       id: managerRoomDto.roomId,
+      banned: newRoom.banned.map((user) => user.username),
       participants: await this.participantService.createParticipantFromRoom(
         newRoom,
       ),
@@ -308,7 +310,7 @@ export class RoomsService {
         participants: true,
       },
     });
-    this.kickFromRoom(bannerId, managerRoomDto);
+    const newRoom = this.kickFromRoom(bannerId, managerRoomDto);
   }
 
   /* -------------------------------------------------------------------------- */

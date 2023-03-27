@@ -5,8 +5,7 @@ import { UnbanContainer } from './UnbanStyle'
 import {nanoid} from 'nanoid';
 import { TChatProps } from '../ChatType';
 
-function Uban({chat}: TChatProps) {
-
+function Uban({chat}: TChatProps) {  
   return (
     <UnbanContainer>
       <h3>Banned Player</h3>
