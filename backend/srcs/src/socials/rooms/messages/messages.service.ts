@@ -8,8 +8,8 @@ import { UpdateMessageDto } from './dto/update-message.dto';
 export class MessagesService {
   constructor(private prisma: PrismaService) {}
 
-  create(createMessageDto: CreateMessageDto) {
-    return this.prisma.message.create({
+  async create(createMessageDto: CreateMessageDto) {
+    return await this.prisma.message.create({
       data: createMessageDto,
     });
   }

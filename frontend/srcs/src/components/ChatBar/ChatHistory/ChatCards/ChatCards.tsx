@@ -48,7 +48,7 @@ function ChatCards({ conversation }: ChatCardsProps) {
 
   const leaveConversation = () => {
     axiosPrivate
-      .post("/rooms/leave", { roomId: conversation.id })
+      .get(`/rooms/leave/${conversation.id}`)
       .then((res: AxiosResponse) => {
         setChat((prev) =>
           prev.map((chat) => {
