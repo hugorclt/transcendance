@@ -11,18 +11,20 @@ import {
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <MainLayoutStyle>
-      <MainLayoutContainer>
-        <NavBarLayoutContainer>
-          <NavBarPage />
-        </NavBarLayoutContainer>
-        {children}
-      </MainLayoutContainer>
+    <>
+      <MainLayoutStyle>
+        <MainLayoutContainer>
+          <NavBarLayoutContainer>
+            <NavBarPage />
+          </NavBarLayoutContainer>
+          {children}
+        </MainLayoutContainer>
 
-      <ChatLayoutContainer>
-        <ChatPage />
-      </ChatLayoutContainer>
-    </MainLayoutStyle>
+        <ChatLayoutContainer>
+          <ChatPage />
+        </ChatLayoutContainer>
+      </MainLayoutStyle>
+    </>
   );
 };
 

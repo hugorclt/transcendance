@@ -9,6 +9,7 @@ import axios from "../../../services/axios";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
+import { SocialContainer } from "../AuthFormStyle";
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
@@ -74,9 +75,10 @@ function GoogleAuth() {
 
   //----- Rendering -----
   return (
-    <div>
+    <SocialContainer>
       <GoogleOAuthProvider clientId={clientId}>
         <GoogleLogin
+          width="32px"
           shape="circle"
           type="icon"
           onSuccess={onSuccess}
@@ -88,7 +90,7 @@ function GoogleAuth() {
         />
       </GoogleOAuthProvider>
       <SubmitNote />
-    </div>
+    </SocialContainer>
   );
 }
 
