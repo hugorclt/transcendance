@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { MatchEntity } from './entities/match.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
+import {
+  Injectable,
+  MethodNotAllowedException,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Injectable()
 export class MatchesService {
@@ -29,19 +33,41 @@ export class MatchesService {
     return match;
   }
 
-  findAll() {
-    return `This action returns all matches`;
+  async findAll(): Promise<MatchEntity[]> {
+    const matches: any = await this.prisma.match.findMany({});
+    return matches
+  }
+  
+
+  async findOne(id: string): Promise<MatchEntity> {
+    const match = await this.prisma.match.findUnique({ 
+      where: { id },
+      include: { winners: true, losers: true, }
+    })
+    if (!match) throw new NotFoundException('Match not found');
+    return match;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} match`;
+  async update(id: string, updateMatchDto: UpdateMatchDto): Promise<MatchEntity> {
+    return await this.prisma.match.update({
+      where: { id },
+      data: {
+        date: updateMatchDto.date,
+        duration: updateMatchDto.duration,
+        winnerScore: updateMatchDto.winnerScore,
+      },
+      include: {
+        winners: true,
+        losers: true,
+      }
+    });
   }
 
-  update(id: number, updateMatchDto: UpdateMatchDto) {
-    return `This action updates a #${id} match`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} match`;
+  async delete(id: string): Promise<MatchEntity> {
+    const match = await this.prisma.match.delete({ 
+      where: { id },
+      include: { winners: true, losers: true, }
+    });
+    return match;
   }
 }
