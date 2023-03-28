@@ -79,11 +79,13 @@ export class GameGateway
     });
     this.game.launch();
     setInterval(() => {
-      this.io.to(client.userId).emit('ball-position', {
+      this.game.processBallMovement()
+      this.io.to(client.userId).emit('ball', {
         x: this.game.getBall().getPosition().x,
         z: this.game.getBall().getPosition().z,
       });
-    }, 1000 / 60); // 60 frames per second
+    }, 1000 / 1); // 60 frames per second
+
   }
 
   /*======= pause game =======*/

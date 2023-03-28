@@ -50,7 +50,7 @@ interface GameInfo {
   paddleOppStartX: number;
   paddleOppStartZ: number;
   ballStartX: number;
-  ballSTartZ: number;
+  ballStartZ: number;
   scorePlayer1: number;
   scorePlayer2: number;
 }
@@ -68,7 +68,7 @@ const defaultValue = {
   paddleOppStartX: 0,
   paddleOppStartZ: 0,
   ballStartX: 0,
-  ballSTartZ: 0,
+  ballStartZ: 0,
 };
 
 function Game() {
@@ -101,7 +101,7 @@ function Game() {
       <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
       <Ball
         radius={gameInfo.ballRadius}
-        startPos={new Vector3(gameInfo.ballStartX, 0, gameInfo.ballSTartZ)}
+        startPos={new Vector3(gameInfo.ballStartX, 0, gameInfo.ballStartZ)}
       />
       <PlayerPaddle
         width={gameInfo.paddleWidth}

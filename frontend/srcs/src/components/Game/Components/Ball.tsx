@@ -23,8 +23,11 @@ const Ball = (props: TBallProps) => {
 
   useEffect(() => {
     socket?.on("ball", (data) => {
+      console.log("useEffectBall");
       ballRef.current.position.x = data.x;
       ballRef.current.position.z = data.z;
+      console.log("x",ballRef.current.position.x);
+      console.log("z",ballRef.current.position.z);
     });
     return () => {
       socket?.off("ball");
