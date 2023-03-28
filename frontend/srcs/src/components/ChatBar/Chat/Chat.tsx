@@ -53,7 +53,7 @@ function Chat({ chat }: TChatProps) {
     e.preventDefault();
     if (message == "" || message.length > 256) return;
     axiosPrivate
-      .post("/rooms/message", { message: message, roomId: chat.id })
+      .post("/rooms/message", { content: message, roomId: chat.id })
       .then((res: AxiosResponse) => {
         if (res.data.isMuted == false)
           setMessageList((prev) => [...prev, res.data]);
@@ -80,7 +80,7 @@ function Chat({ chat }: TChatProps) {
 
   useEffect(() => {
     axiosPrivate
-      .post("/rooms/conv/history", { roomName: chat.name })
+      .get(`/rooms/history/${chat.id}`)
       .then((res: AxiosResponse) => {
         setMessageList(
           res.data.map((message: TMessage) => ({
@@ -170,7 +170,7 @@ function Chat({ chat }: TChatProps) {
               }
               modal
               nested>
-                <ChatManager />
+                <ChatManager chat={chat}  />
               </Popup>
             <AiOutlineClose
               onClick={() => {

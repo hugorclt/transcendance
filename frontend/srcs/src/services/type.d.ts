@@ -43,6 +43,7 @@ export interface TConversation {
   isDm: boolean;
   isRead: boolean;
   isActive: boolean;
+  banned: string[];
   participants: TParticipant[];
 }
 
