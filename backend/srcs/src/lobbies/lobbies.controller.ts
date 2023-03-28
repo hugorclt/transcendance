@@ -91,6 +91,34 @@ export class LobbiesController {
     return await this.lobbiesService.findLobbyBanned(id);
   }
 
+  @Get(':id/changeTeam')
+  @ApiOkResponse({ type: LobbyMemberEntity })
+  async changeTeam(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyMemberEntity> {
+    console.log('changing team for user: ', req.user.sub, ' in lobby: ', id);
+    return await this.lobbiesService.changeTeam(id, req.user.sub);
+  }
+
+  @Get(':id/changePrivacy')
+  @ApiOkResponse({ type: LobbyEntity })
+  async changePrivacy(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyEntity> {
+    return await this.lobbiesService.changePrivacy(id, req.user.sub);
+  }
+
+  @Get(':id/changeReady')
+  @ApiOkResponse({ type: LobbyMemberEntity })
+  async changeReady(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyMemberEntity> {
+    return await this.lobbiesService.changeReady(id, req.user.sub);
+  }
+
   @Patch(':id')
   @ApiOkResponse({ type: LobbyEntity })
   async update(

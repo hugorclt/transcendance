@@ -11,7 +11,7 @@ import {
 } from "./PlayerCardStyle";
 
 interface PlayerCardProps {
-  team: string;
+  team: boolean;
   member: TLobbyMember;
 }
 
@@ -19,7 +19,7 @@ function PlayerCard(props: PlayerCardProps) {
   return (
     <PlayerCardContainer>
       <PlayerCardLeftBorder
-        color={props.team == "LEFT" ? COLORS.red : COLORS.blue}
+        color={props.team == false ? COLORS.red : COLORS.blue}
       />
       <PlayerInfoContainer>
         <PlayerCardAvatar />

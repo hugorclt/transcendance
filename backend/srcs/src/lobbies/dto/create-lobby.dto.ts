@@ -26,6 +26,10 @@ export class CreateLobbyDto {
   maxDuration: number;
 
   @ApiProperty()
+  @IsOptional()
+  private: boolean;
+
+  @ApiProperty()
   @IsNotEmpty()
   mode: Mode;
 
