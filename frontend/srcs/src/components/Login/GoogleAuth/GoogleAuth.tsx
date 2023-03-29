@@ -54,6 +54,7 @@ function GoogleAuth() {
   };
 
   var onSuccess = async (credentialResponse: GoogleCredentialResponse) => {
+    console.log(credentialResponse);
     await axios
       .post("/auth/google/login", {
         token: credentialResponse.credential,

@@ -53,6 +53,7 @@ export class LobbiesService {
             user: {
               select: {
                 username: true,
+                avatar: true,
               },
             },
           },
@@ -188,6 +189,7 @@ export class LobbiesService {
             user: {
               select: {
                 username: true,
+                avatar: true,
               },
             },
           },
@@ -281,15 +283,70 @@ export class LobbiesService {
   async changePrivacy(lobbyId: string, userId: string): Promise<LobbyEntity> {
     const check = await this.isUserLobbyOwner(userId, lobbyId);
     if (!check) throw new MethodNotAllowedException('You are not lobby owner');
-    const lobby = await this.findOne(lobbyId);
-    const updateLobby = await this.update(lobbyId, { private: !lobby.private });
-    //TODO: detect team of lobby owner
-    //check if team is full
-    // ==> yes : kick other team
-    //     ==> if
-    this.lobbiesGateway.emitToLobby(lobby.id, 'lobby-privacy-update', {
-      private: updateLobby.private,
+    const lobby = await this.findLobbyWithMembers(lobbyId);
+    const ownerTeam = lobby.members.find(
+      (user) => user.userId == lobby.ownerId,
+    ).team;
+    var updateLobby;
+    var ownerTeamMembers = lobby.members.filter((el) => el.team == ownerTeam);
+    var opponentTeamMembers = lobby.members.filter(
+      (el) => el.team != ownerTeam,
+    );
+    if (ownerTeamMembers.length < lobby.nbPlayers / 2) {
+      while (
+        opponentTeamMembers.length > 0 &&
+        ownerTeamMembers.length < lobby.nbPlayers / 2
+      ) {
+        const member = opponentTeamMembers.at(0);
+        const updateMember = await this.lobbyMembersService.update(member.id, {
+          team: !member.team,
+          ready: false,
+        });
+        updateLobby = await this.findLobbyWithMembers(lobby.id);
+        opponentTeamMembers = updateLobby.members.filter(
+          (el) => el.team != ownerTeam,
+        );
+        ownerTeamMembers = updateLobby.members.filter(
+          (el) => el.team == ownerTeam,
+        );
+      }
+    }
+    await Promise.all(
+      opponentTeamMembers.flatMap(async (player) => {
+        await this.makePlayerLeaveLobby(lobby.id, player.userId);
+      }),
+    );
+    if (ownerTeam) {
+      await Promise.all(
+        ownerTeamMembers.map(async (member) => {
+          await this.lobbyMembersService.update(member.id, {
+            team: !member.team,
+            ready: false,
+          });
+        }),
+      );
+    }
+    updateLobby = await this.prisma.lobby.update({
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        private: !lobby.private,
+      },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
     });
+    this.lobbiesGateway.emitToLobby(lobby.id, 'on-lobby-update', updateLobby);
     return updateLobby;
   }
 

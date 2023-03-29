@@ -66,10 +66,15 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
         members: updateArray(prev.members, member),
       }));
     });
+    socket?.on("on-lobby-update", (lobby) => {
+      console.log("lobby updated: ", lobby);
+      setLobby(lobby);
+    });
     return () => {
       socket?.off("user-joined-lobby");
       socket?.off("user-left-lobby");
       socket?.off("on-member-update");
+      socket?.off("on-lobby-update");
     };
   }, [socket]);
 
