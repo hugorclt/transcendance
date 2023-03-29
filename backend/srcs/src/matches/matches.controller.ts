@@ -20,11 +20,12 @@ export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: MatchEntity})
+  @ApiCreatedResponse({ type: MatchEntity })
   async create(
     @Request() req: any,
     @Body()
-    createMatchDto: CreateMatchDto): Promise<MatchEntity> {
+    createMatchDto: CreateMatchDto,
+  ): Promise<MatchEntity> {
     const match = await this.matchesService.create(createMatchDto);
     if (match) {
       return match;
@@ -32,22 +33,29 @@ export class MatchesController {
   }
 
   @Get()
-  findAll() {
-    return this.matchesService.findAll();
+  @ApiOkResponse({ type: MatchEntity, isArray: true })
+  async findAll(): Promise<MatchEntity[]> {
+    return await this.matchesService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.matchesService.findOne(id);
+  @ApiOkResponse({ type: MatchEntity })
+  async findOne(@Param('id') id: string): Promise<MatchEntity> {
+    return await this.matchesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
+  @ApiOkResponse({ type: MatchEntity })
+  async update(
+    @Param('id') id: string,
+    @Body() updateMatchDto: UpdateMatchDto,
+  ): Promise<MatchEntity> {
     return this.matchesService.update(id, updateMatchDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
+  @ApiOkResponse({ type: MatchEntity })
+  delete(@Param('id') id: string): Promise<MatchEntity> {
     return this.matchesService.delete(id);
   }
 }

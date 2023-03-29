@@ -34,21 +34,28 @@ export class MatchesService {
   }
 
   async findAll(): Promise<MatchEntity[]> {
-    const matches: any = await this.prisma.match.findMany({});
-    return matches
+    const matches = await this.prisma.match.findMany({
+      include: {
+        winners: true,
+        losers: true,
+      },
+    });
+    return matches;
   }
-  
 
   async findOne(id: string): Promise<MatchEntity> {
-    const match = await this.prisma.match.findUnique({ 
+    const match = await this.prisma.match.findUnique({
       where: { id },
-      include: { winners: true, losers: true, }
-    })
+      include: { winners: true, losers: true },
+    });
     if (!match) throw new NotFoundException('Match not found');
     return match;
   }
 
-  async update(id: string, updateMatchDto: UpdateMatchDto): Promise<MatchEntity> {
+  async update(
+    id: string,
+    updateMatchDto: UpdateMatchDto,
+  ): Promise<MatchEntity> {
     return await this.prisma.match.update({
       where: { id },
       data: {
@@ -59,14 +66,14 @@ export class MatchesService {
       include: {
         winners: true,
         losers: true,
-      }
+      },
     });
   }
 
   async delete(id: string): Promise<MatchEntity> {
-    const match = await this.prisma.match.delete({ 
+    const match = await this.prisma.match.delete({
       where: { id },
-      include: { winners: true, losers: true, }
+      include: { winners: true, losers: true },
     });
     return match;
   }
