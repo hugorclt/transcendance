@@ -161,10 +161,7 @@ export class LobbiesService {
       console.log('lobby full');
       throw new MethodNotAllowedException('Lobby is already full');
     }
-    //join lobby
-    //TODO : check if team is full => join the right team accordingly
     var team;
-    //if left team is full
     if (
       lobby.members.filter((el) => el.team == false).length <
       lobby.nbPlayers / 2
@@ -214,22 +211,16 @@ export class LobbiesService {
   }
 
   async leaveLobby(joinLobbyDto: JoinLobbyDto) {
-    //check if user is lobby owner: delete lobby
     if (
       await this.isUserLobbyOwner(joinLobbyDto.userId, joinLobbyDto.lobbyId)
     ) {
-      console.log('player is lobby Owner, deleting lobby...');
       return await this.delete(joinLobbyDto.lobbyId);
     }
-    //check if user is lobby participant:
     const check2 = await this.isUserInLobby(
       joinLobbyDto.userId,
       joinLobbyDto.lobbyId,
     );
     if (check2) {
-      console.log('User is lobby participant, disconnecting user...');
-      //disconnect user from lobby by deleting lobbyMember
-      //todo save old member id to send back
       const updateLobby = await this.prisma.lobby.update({
         where: {
           id: joinLobbyDto.lobbyId,
@@ -242,13 +233,10 @@ export class LobbiesService {
           },
         },
       });
-      console.log('Updating user status...');
       const user = await this.usersService.updateStatus(
         joinLobbyDto.userId,
         'CONNECTED',
       );
-      console.log('User successfully left lobby');
-      //update lobby members of departure
       this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
         userId: joinLobbyDto.userId,
       });
@@ -262,26 +250,20 @@ export class LobbiesService {
   ): Promise<LobbyMemberEntity> {
     const lobby = await this.findLobbyWithMembers(lobbyId);
     if (lobby.private == false) {
-      console.log('Lobby is not private, cannot change team');
       throw new MethodNotAllowedException(
         'Cannot change team, lobby is not private',
       );
     }
-    //extract concerned member
     const member = lobby.members.find((member) => member.userId == userId);
-    //check if member is already ready
     if (member.ready)
       throw new MethodNotAllowedException('Cannot change team, you are ready');
-    //check if other team full
     const opponentTeamSize = lobby.members.filter(
       (el) => el.team != member.team,
     ).length;
     if (opponentTeamSize < lobby.nbPlayers / 2) {
-      //update team for concerned member
       const updateMember = await this.lobbyMembersService.update(member.id, {
         team: !member.team,
       });
-      //send update via socket to lobby
       this.lobbiesGateway.emitToLobby(
         lobbyId,
         'on-member-update',
@@ -320,12 +302,10 @@ export class LobbiesService {
     userId: string,
   ): Promise<LobbyMemberEntity> {
     const lobby = await this.findLobbyWithMembers(lobbyId);
-    //extract concerned member
     const member = lobby.members.find((member) => member.userId == userId);
     const updateMember = await this.lobbyMembersService.update(member.id, {
       ready: !member.ready,
     });
-    //send update via socket to lobby
     this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', updateMember);
     return updateMember;
   }
