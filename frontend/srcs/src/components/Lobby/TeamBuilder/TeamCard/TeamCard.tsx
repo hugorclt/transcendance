@@ -46,7 +46,7 @@ function TeamCard(props: TeamCardProps) {
       <TeamCardsContainer>
         {teamMembers?.flatMap((member) => {
           return (
-            <PlayerCard key={member.id} team={props.team} member={member} />
+            <PlayerCard key={nanoid()} team={props.team} member={member} />
           );
         })}
       </TeamCardsContainer>

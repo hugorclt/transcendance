@@ -163,6 +163,15 @@ export class LobbiesService {
     }
     //join lobby
     //TODO : check if team is full => join the right team accordingly
+    var team;
+    //if left team is full
+    if (
+      lobby.members.filter((el) => el.team == false).length <
+      lobby.nbPlayers / 2
+    ) {
+      team = false;
+    } else team = true;
+
     const updateLobby = await this.prisma.lobby.update({
       where: {
         id: joinLobbyDto.lobbyId,
@@ -170,7 +179,7 @@ export class LobbiesService {
       data: {
         members: {
           create: {
-            team: false,
+            team: team,
             ready: false,
             userId: joinLobbyDto.userId,
           },
@@ -198,7 +207,7 @@ export class LobbiesService {
       userId: user.id,
       username: user.username,
       avatar: user.avatar,
-      team: false,
+      team: team,
       ready: false,
     });
     return updateLobby;
@@ -313,7 +322,7 @@ export class LobbiesService {
     const lobby = await this.findLobbyWithMembers(lobbyId);
     //extract concerned member
     const member = lobby.members.find((member) => member.userId == userId);
-    const updateMember = this.lobbyMembersService.update(member.id, {
+    const updateMember = await this.lobbyMembersService.update(member.id, {
       ready: !member.ready,
     });
     //send update via socket to lobby

@@ -1,5 +1,7 @@
-import React from "react";
+import { useAtom } from "jotai";
+import React, { useEffect, useState } from "react";
 import { COLORS } from "../../../../colors";
+import { lobbyAtom } from "../../../../services/store";
 import { TLobbyMember } from "../../../../services/type";
 import {
   PlayerCardAvatar,
@@ -15,18 +17,16 @@ interface PlayerCardProps {
   member: TLobbyMember;
 }
 
-function PlayerCard(props: PlayerCardProps) {
+function PlayerCard({ team, member }: PlayerCardProps) {
+  const [lobby, setLobby] = useAtom(lobbyAtom);
+
   return (
     <PlayerCardContainer>
-      <PlayerCardLeftBorder
-        color={props.team == false ? COLORS.red : COLORS.blue}
-      />
+      <PlayerCardLeftBorder color={team == false ? COLORS.red : COLORS.blue} />
       <PlayerInfoContainer>
         <PlayerCardAvatar />
-        <PlayerCardName>{props.member?.user?.username}</PlayerCardName>
-        <PlayerCardStatus>
-          {props.member?.ready ? "READY" : "..."}
-        </PlayerCardStatus>
+        <PlayerCardName>{member?.user?.username}</PlayerCardName>
+        <PlayerCardStatus>{member.ready ? "READY" : "..."}</PlayerCardStatus>
       </PlayerInfoContainer>
     </PlayerCardContainer>
   );
