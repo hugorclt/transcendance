@@ -5,23 +5,31 @@ import GoogleAuth from "./GoogleAuth/GoogleAuth";
 import Icon42 from "./Icons/Icon42";
 import LoginForm from "./Form/LoginForm";
 import RegisterForm from "./Form/RegisterForm";
+import {
+  CSSTransition,
+  SwitchTransition,
+  Transition,
+} from "react-transition-group";
+
+const animationsClassNames = {
+  enter: "fade-enter",
+  enterActive: "fade-enter-active",
+  exit: "fade-exit",
+  exitActive: "fade-exit-active",
+};
 
 function AuthForm() {
-  const borderBottomRef = useRef(null);
   const [isRegister, setRegister] = useState(true);
-  const [face, setFace] = useState("left");
   const clientId: string = import.meta.env["VITE_GOOGLE_CLIENT_ID"]!;
 
   const loginClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setRegister(true);
-    setFace("left");
   };
 
   const registerClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setRegister(false);
-    setFace("right");
   };
 
   function isActive() {
@@ -50,7 +58,7 @@ function AuthForm() {
           </GoogleOAuthProvider>
           <Icon42 />
         </div>
-        {isRegister ? <LoginForm /> : <RegisterForm /> }
+        {isRegister ? <LoginForm /> : <RegisterForm />}
       </AuthFormContainer>
     </>
   );

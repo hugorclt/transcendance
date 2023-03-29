@@ -36,6 +36,27 @@ export const AuthFormContainer = styled.div`
     justify-content: space-between;
     padding: 16px;
   }
+
+  .fade-enter .btn {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+.fade-enter-active .btn {
+  opacity: 1;
+  transform: translateX(0%);
+}
+.fade-exit .btn {
+  opacity: 1;
+  transform: translateX(0%);
+}
+.fade-exit-active .btn {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.fade-enter-active .btn,
+.fade-exit-active .btn {
+  transition: opacity 500ms, transform 500ms;
+}
 `;
 
 export const FormSelector = styled.form`
