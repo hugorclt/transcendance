@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Team } from '@prisma/client';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -12,7 +11,7 @@ export class CreateLobbyMemberDto {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  team: Team;
+  team: boolean;
 
   @IsOptional()
   @IsBoolean()
