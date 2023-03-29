@@ -38,6 +38,7 @@ import {
   TiltShift,
 } from "@react-three/postprocessing";
 import Particles from "./Components/Particles";
+import SceneCamera from "./Components/SceneCamera";
 
 interface GameInfo {
   floorWidth: number;
@@ -50,6 +51,7 @@ interface GameInfo {
   paddleOppStartX: number;
   paddleOppStartZ: number;
   ballStartX: number;
+  ballStartY: number;
   ballStartZ: number;
   scorePlayer1: number;
   scorePlayer2: number;
@@ -68,6 +70,7 @@ const defaultValue = {
   paddleOppStartX: 0,
   paddleOppStartZ: 0,
   ballStartX: 0,
+  ballStartY: 0,
   ballStartZ: 0,
 };
 
@@ -92,16 +95,16 @@ function Game() {
 
   return (
     <Suspense fallback={null}>
-      {/* <PerspectiveCamera makeDefault /> */}
+      {/* <SceneCamera /> */}
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
-      <OrbitControls />
+      {/* <OrbitControls /> */}
       <primitive object={new AxesHelper(10)} />
       <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
       <Ball
         radius={gameInfo.ballRadius}
-        startPos={new Vector3(gameInfo.ballStartX, 0, gameInfo.ballStartZ)}
+        startPos={new Vector3(gameInfo.ballStartX, gameInfo.ballStartY, gameInfo.ballStartZ)}
       />
       <PlayerPaddle
         width={gameInfo.paddleWidth}

@@ -2,6 +2,8 @@ import { Ball } from './ball';
 import { Paddle } from './paddle';
 import { Scoreboard } from './scoreboard';
 import { Field } from './field';
+import { isValidationOptions } from 'class-validator';
+import { zipAll } from 'rxjs';
 
 export class Game {
   private ball: Ball;
@@ -25,12 +27,13 @@ export class Game {
   }
 
   startBallMovement() {
+    console.log("start-ball-movement");
     const direction = Math.random() > 0.5 ? -1 : 1;
-    // this.ball.setVelocity({ x: 0, z: direction * 1 }); // this is a possibility 
-    this.ball.setVelocity({x:1, z:0});
+    this.ball.setVelocity({ x: 0, z: direction * 0.3 }); // this is a possibility 
+    // this.ball.setVelocity({x:0, z:1});
     this.ball.setStopped(false);
   }
-
+d
   processBallMovement() {
     if (!this.ball.getVelocity()) this.startBallMovement();
 
@@ -39,16 +42,15 @@ export class Game {
     this.updateBallPosition();
 
     if (this.isSideCollision() == true) {
-        console.log("test");
-      const newBallVelocity = this.ball.getVelocity().x * -1;
-      this.ball.setVelocityX(newBallVelocity);
+        const newBallVelocity = this.ball.getVelocity().x * -1;
+        this.ball.setVelocityX(newBallVelocity);
     }
 
-    if (this.isPaddleCollision(this.paddle1)) {
+    if (this.isPaddleCollision1()) {
       this.hitBallBack(this.paddle1);
     }
 
-    if (this.isPaddleCollision(this.paddle2)) {
+    if (this.isPaddleCollision2()) {
       this.hitBallBack(this.paddle2);
     }
 
@@ -57,14 +59,26 @@ export class Game {
     if (this.isGoalTeam2()) return;
   }
 
+  calculateParabola(z: number, vertexH:number): number {
+    const roots = [-32, 32];
+    const vertex = [0, vertexH];
+    const a = 1 / (4 * (vertex[1] - roots[1]));
+    const y = a * Math.pow(z - vertex[0], 2) + vertex[1];
+    return y;
+  }
+  
+
   updateBallPosition() {
     const ballPos = this.ball.getPosition();
 
     ballPos.x += this.ball.getVelocity().x;
     ballPos.z += this.ball.getVelocity().z;
 
+    ballPos.y = this.calculateParabola(ballPos.z, 20);
+
     this.ball.setPositionX(ballPos.x);
     this.ball.setPositionZ(ballPos.z);
+    this.ball.setPositionY(ballPos.y);
   }
 
   isSideCollision() {
@@ -78,23 +92,21 @@ export class Game {
     );
   }
 
-  isPaddleCollision(paddle: Paddle) {
+  isPaddleCollision1() {
     const ballZ = this.ball.getPosition().z;
     const ballRadius = this.ball.getRadius();
-    const paddlePosZ = paddle.getPosition().z;
-    const direction = this.ball.getVelocity().z > 0 ? 'up' : 'down';
+    const paddle1Z = this.paddle1.getPosition().z;
 
-    if (direction === 'up') {
-      return (
-        ballZ + ballRadius >= paddlePosZ && this.isBallAlignedWithPaddle(paddle)
-      );
-    } else if (direction === 'down') {
-      return (
-        ballZ - ballRadius <= paddlePosZ && this.isBallAlignedWithPaddle(paddle)
-      );
-    }
+    return ballZ + ballRadius >= paddle1Z && this.isBallAlignedWithPaddle(this.paddle1);
   }
 
+  isPaddleCollision2() {
+    const ballZ = this.ball.getPosition().z;
+    const ballRadius = this.ball.getRadius();
+    const paddle2Z = this.paddle2.getPosition().z;
+
+    return ballZ - ballRadius <= paddle2Z && this.isBallAlignedWithPaddle(this.paddle2);
+  }
   isBallAlignedWithPaddle(paddle: Paddle) {
     const halfPaddleWidth = paddle.getWidth() / 2;
     const paddlePosX = paddle.getPosition().x;
@@ -107,6 +119,7 @@ export class Game {
   }
 
   hitBallBack(paddle: Paddle) {
+    console.log("hitBall");
     const ballX = this.ball.getPosition().x;
     const paddlePosX = paddle.getPosition().x;
 
@@ -119,9 +132,9 @@ export class Game {
 
   isGoalTeam2() {
     const ballZ = this.ball.getPosition().z;
-    const fieldZ = this.field.getLength();
+    const hallfFieldLength = this.field.getLength() /2;
 
-    if (ballZ > fieldZ + 100) {
+    if (ballZ > hallfFieldLength + 2) {
       this.scoreboard.incrementPlayer2();
       this.stopBall();
       this.reset();
@@ -131,9 +144,9 @@ export class Game {
 
   isGoalTeam1() {
     const ballZ = this.ball.getPosition().z;
-    const fieldZ = this.field.getLength();
+    const hallfFieldLength = this.field.getLength() /2;
 
-    if (ballZ < fieldZ - 100) {
+    if (ballZ < -hallfFieldLength - 2) {
       this.scoreboard.incrementPlayer1();
       this.stopBall();
       this.reset();
@@ -146,19 +159,24 @@ export class Game {
   }
 
   reset() {
-    this.ball.setPositionX(0);
-    this.ball.setPositionY(0);
-    this.ball.setPositionZ(0);
-    this.ball.setVelocity(null);
+    setTimeout(() => {
+      this.ball.setPositionX(0);
+      this.ball.setPositionY(0);
+      this.ball.setPositionZ(0);
+      this.ball.setVelocityX(0);
+      this.ball.setVelocityZ(0);
+      this.ball.setVelocity(null);
+    }, 2000);
   }
+  
 
   async init() {
     const BALL_X = 0;
-    const BALL_Y = 0;
+    const BALL_Y = 10;
     const BALL_Z = 0;
     const FIELD_WIDTH = 32; //this.field.getWidth();
     const FIELD_LENGTH = 64; //this.field.getLength();
-    const BALL_RADIUS = 1; //this.ball.getRadius();
+    const BALL_RADIUS = 0.5; //this.ball.getRadius();
     const PADDLE_WIDTH = 5;
     const PADDLE_LENGTH = 2;
 
