@@ -18,6 +18,7 @@ import { LobbyEntity, LobbyWithMembersEntity } from './entities/lobby.entity';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JoinLobbyDto } from './dto/join-lobby.dto';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
+import { KickLobbyMemberDto } from './members/dto/kick-lobby-member.dto';
 
 @Controller('lobbies')
 @UseGuards(AccessAuthGard)
@@ -77,6 +78,19 @@ export class LobbiesController {
     return await this.lobbiesService.leaveLobby(joinLobbyDto);
   }
 
+  @Post('kick')
+  @ApiOkResponse({ type: LobbyEntity })
+  async kickMember(
+    @Request() req: any,
+    @Body() kickLobbyMemberDto: KickLobbyMemberDto,
+  ): Promise<LobbyEntity> {
+    return await this.lobbiesService.kickPlayer(
+      kickLobbyMemberDto.lobbyId,
+      req.user.sub,
+      kickLobbyMemberDto.playerId,
+    );
+  }
+
   @Get(':id/participants')
   @ApiOkResponse({ type: LobbyMemberEntity, isArray: true })
   async findLobbyParticipants(
@@ -89,6 +103,34 @@ export class LobbiesController {
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findLobbyBanned(@Param('id') id: string): Promise<ReturnUserEntity[]> {
     return await this.lobbiesService.findLobbyBanned(id);
+  }
+
+  @Get(':id/changeTeam')
+  @ApiOkResponse({ type: LobbyMemberEntity })
+  async changeTeam(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyMemberEntity> {
+    console.log('changing team for user: ', req.user.sub, ' in lobby: ', id);
+    return await this.lobbiesService.changeTeam(id, req.user.sub);
+  }
+
+  @Get(':id/changePrivacy')
+  @ApiOkResponse({ type: LobbyEntity })
+  async changePrivacy(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyEntity> {
+    return await this.lobbiesService.changePrivacy(id, req.user.sub);
+  }
+
+  @Get(':id/changeReady')
+  @ApiOkResponse({ type: LobbyMemberEntity })
+  async changeReady(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyMemberEntity> {
+    return await this.lobbiesService.changeReady(id, req.user.sub);
   }
 
   @Patch(':id')

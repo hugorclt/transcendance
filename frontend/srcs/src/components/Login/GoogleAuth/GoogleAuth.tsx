@@ -41,7 +41,8 @@ function GoogleAuth() {
               display: isVisible,
               color: "green",
             } as CSSProperties
-          }>
+          }
+        >
           Login Success!
         </p>
       );
@@ -54,7 +55,8 @@ function GoogleAuth() {
               display: isVisible,
               color: "red",
             } as CSSProperties
-          }>
+          }
+        >
           {errMsg}
         </p>
       );

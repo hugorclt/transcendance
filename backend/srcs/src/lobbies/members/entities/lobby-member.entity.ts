@@ -1,12 +1,12 @@
-import { LobbyMember, Team } from '@prisma/client';
+import { LobbyMember } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LobbyMemberEntity implements LobbyMember {
   @ApiProperty()
   id: string;
 
-  @ApiProperty({ default: Team.LEFT })
-  team: Team = Team.LEFT;
+  @ApiProperty({ default: false })
+  team: boolean = false;
 
   @ApiProperty({ default: false })
   ready: boolean = false;

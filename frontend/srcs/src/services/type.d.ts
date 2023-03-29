@@ -21,7 +21,7 @@ export interface TLobby {
 export interface TLobbyMember {
   id: string;
   userId: string;
-  team: string;
+  team: boolean;
   ready: boolean;
   user: {
     username: string;

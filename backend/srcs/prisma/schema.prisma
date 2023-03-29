@@ -83,17 +83,12 @@ model Lobby {
 
 model LobbyMember {
   id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  team    Team    @default(LEFT)
+  team    Boolean @default(false)
   ready   Boolean @default(false)
   userId  String  @db.Uuid
   lobbyId String  @db.Uuid
   user    User    @relation(fields: [userId], references: [id])
   lobby   Lobby   @relation(fields: [lobbyId], references: [id])
-}
-
-enum Team {
-  LEFT
-  RIGHT
 }
 
 enum MapName {
