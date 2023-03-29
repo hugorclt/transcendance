@@ -70,7 +70,7 @@ export const SocialContainer = styled.div`
   }
 
   &:hover {
-    box-shadow: rgba(255, 127, 0, 0.4) -3px 3px, rgba(255, 127, 0, 0.3) -6px 6px,
-      rgba(255, 127, 0, 0.2) -9px 9px;
+    box-shadow: rgba(219, 80, 74, 0.4) -3px 3px, rgba(219, 80, 74, 0.3) -6px 6px,
+      rgba(219, 80, 74, 0.2) -9px 9px;
   }
 `;
