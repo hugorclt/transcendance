@@ -1,7 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import React, { FC, useEffect, useRef, useState } from "react";
+import { AxesHelper } from "three";
 import { COLORS } from "../../colors";
 import Game from "./Game";
+import ProceduralMap from "./maps/ProceduralMap";
 import SeaMap from "./maps/SeaMap";
 
 const GameScreen = () => {
@@ -9,8 +11,11 @@ const GameScreen = () => {
     <Canvas
       tabIndex={0}
       style={{ background: COLORS.background, height: "100vh" }}>
-      <Game />
-      <SeaMap />
+              <primitive object={new AxesHelper(10)} />
+      {/* <Game /> */}
+      {/* <SeaMap /> */}
+      <ProceduralMap />
+      {/* <Scene /> */}
     </Canvas>
   );
 };

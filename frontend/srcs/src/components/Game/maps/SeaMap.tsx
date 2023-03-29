@@ -13,7 +13,7 @@ const SeaMap = () => {
           azimuth={0.25}
         />
       </Environment>
-      {/* <Stars
+      <Stars
         radius={100}
         depth={50}
         count={5000}
@@ -21,7 +21,7 @@ const SeaMap = () => {
         saturation={0}
         fade
         speed={1}
-      /> */}
+      />
       <Ocean />
     </>
   );
