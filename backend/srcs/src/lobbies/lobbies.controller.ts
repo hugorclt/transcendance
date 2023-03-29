@@ -18,6 +18,7 @@ import { LobbyEntity, LobbyWithMembersEntity } from './entities/lobby.entity';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JoinLobbyDto } from './dto/join-lobby.dto';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
+import { KickLobbyMemberDto } from './members/dto/kick-lobby-member.dto';
 
 @Controller('lobbies')
 @UseGuards(AccessAuthGard)
@@ -75,6 +76,19 @@ export class LobbiesController {
     @Body() joinLobbyDto: JoinLobbyDto,
   ): Promise<LobbyEntity> {
     return await this.lobbiesService.leaveLobby(joinLobbyDto);
+  }
+
+  @Post('kick')
+  @ApiOkResponse({ type: LobbyEntity })
+  async kickMember(
+    @Request() req: any,
+    @Body() kickLobbyMemberDto: KickLobbyMemberDto,
+  ): Promise<LobbyEntity> {
+    return await this.lobbiesService.kickPlayer(
+      kickLobbyMemberDto.lobbyId,
+      req.user.sub,
+      kickLobbyMemberDto.playerId,
+    );
   }
 
   @Get(':id/participants')

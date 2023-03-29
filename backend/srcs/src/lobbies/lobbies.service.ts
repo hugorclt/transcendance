@@ -210,6 +210,26 @@ export class LobbiesService {
     return updateLobby;
   }
 
+  async makePlayerLeaveLobby(lobbyId: string, userId: string) {
+    const updateLobby = await this.prisma.lobby.update({
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        members: {
+          deleteMany: {
+            userId: userId,
+          },
+        },
+      },
+    });
+    const user = await this.usersService.updateStatus(userId, 'CONNECTED');
+    this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
+      userId: userId,
+    });
+    return updateLobby;
+  }
+
   async leaveLobby(joinLobbyDto: JoinLobbyDto) {
     if (
       await this.isUserLobbyOwner(joinLobbyDto.userId, joinLobbyDto.lobbyId)
@@ -221,25 +241,10 @@ export class LobbiesService {
       joinLobbyDto.lobbyId,
     );
     if (check2) {
-      const updateLobby = await this.prisma.lobby.update({
-        where: {
-          id: joinLobbyDto.lobbyId,
-        },
-        data: {
-          members: {
-            deleteMany: {
-              userId: joinLobbyDto.userId,
-            },
-          },
-        },
-      });
-      const user = await this.usersService.updateStatus(
+      const updateLobby = this.makePlayerLeaveLobby(
+        joinLobbyDto.lobbyId,
         joinLobbyDto.userId,
-        'CONNECTED',
       );
-      this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
-        userId: joinLobbyDto.userId,
-      });
       return updateLobby;
     }
   }
@@ -278,9 +283,28 @@ export class LobbiesService {
     if (!check) throw new MethodNotAllowedException('You are not lobby owner');
     const lobby = await this.findOne(lobbyId);
     const updateLobby = await this.update(lobbyId, { private: !lobby.private });
+    //TODO: detect team of lobby owner
+    //check if team is full
+    // ==> yes : kick other team
+    //     ==> if
     this.lobbiesGateway.emitToLobby(lobby.id, 'lobby-privacy-update', {
       private: updateLobby.private,
     });
+    return updateLobby;
+  }
+
+  async kickPlayer(lobbyId: string, senderId: string, playerId: string) {
+    const lobby = await this.findLobbyWithMembers(lobbyId);
+    if (lobby.ownerId != senderId || playerId == senderId)
+      throw new MethodNotAllowedException(
+        'You are not allowed to kick players',
+      );
+    const member = lobby.members.find((player) => player.userId == playerId);
+    if (!member)
+      throw new MethodNotAllowedException(
+        'Cannot kick player who is not in lobby',
+      );
+    const updateLobby = await this.makePlayerLeaveLobby(lobby.id, playerId);
     return updateLobby;
   }
 
