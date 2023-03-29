@@ -22,8 +22,8 @@ export const LoginFormContainer = styled.div`
 
   input:hover {
     transform: translateY(-2px);
-    box-shadow: rgba(255, 127, 0, 0.4) -3px 5px,
-      rgba(255, 127, 0, 0.3) -6px 10px, rgba(255, 127, 0, 0.2) -9px 15px;
+    box-shadow: rgba(219, 80, 74, 0.4) -3px 5px,
+      rgba(219, 80, 74, 0.3) -6px 10px, rgba(219, 80, 74, 0.2) -9px 15px;
   }
 
   input::placeholder {
