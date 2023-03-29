@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Login from "../../components/Login/Login";
 import LoginLayout from "../../layouts/LoginLayout/LoginLayout";
 import { LoginPageContext } from "../../views/LoginPage/LoginPageContext";
 
@@ -8,9 +7,7 @@ function LoginPage() {
 
   return (
     <LoginPageContext.Provider value={{ isSignIn, setIsSignIn }}>
-      <LoginLayout>
-        <Login />
-      </LoginLayout>
+      <LoginLayout />
     </LoginPageContext.Provider>
   );
 }
