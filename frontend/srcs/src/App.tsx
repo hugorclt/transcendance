@@ -27,14 +27,7 @@ function App() {
         {/* Public route */}
         <Route element={<RequireUnAuth />}>
           <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/login/42"
-            element={
-              <LoginLayout>
-                <Login42 />
-              </LoginLayout>
-            }
-          />
+          <Route path="/login/42" element={<Login42 />} />
         </Route>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
@@ -49,7 +42,7 @@ function App() {
               </Route>
             </Route>
             {/* <Route element={<RequireInGameStatus />}> */}
-              <Route path="/game" element={<GamePage />} />
+            <Route path="/game" element={<GamePage />} />
             {/* </Route> */}
           </Route>
         </Route>

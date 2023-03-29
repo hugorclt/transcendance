@@ -9,16 +9,26 @@ import axios from "../../../services/axios";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
+import { SocialContainer } from "../AuthFormStyle";
+import { COLORS } from "../../../colors";
+import { useGoogleLogin } from "@react-oauth/google";
+import { BsGoogle } from "react-icons/bs";
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
-  const clientId: string = import.meta.env["VITE_GOOGLE_CLIENT_ID"]!;
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
   const { setAuth } = useGlobal();
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      onSuccess(codeResponse.code);
+    },
+    flow: "auth-code",
+  });
 
   //----- DEFINING SUCCESS/ERROR MESSAGE ON SUBMIT -----
   const SubmitNote = () => {
@@ -53,11 +63,11 @@ function GoogleAuth() {
     }
   };
 
-  var onSuccess = async (credentialResponse: GoogleCredentialResponse) => {
+  var onSuccess = async (credentialResponse: string) => {
     console.log(credentialResponse);
     await axios
       .post("/auth/google/login", {
-        token: credentialResponse.credential,
+        token: credentialResponse,
       })
       .then((response: AxiosResponse) => {
         setSuccess(true);
@@ -75,21 +85,12 @@ function GoogleAuth() {
 
   //----- Rendering -----
   return (
-    <div>
-      <GoogleOAuthProvider clientId={clientId}>
-        <GoogleLogin
-          shape="circle"
-          type="icon"
-          onSuccess={onSuccess}
-          onError={() => {
-            setErrMsg("Google Auth failed");
-            setSuccess(false);
-            setIsVisible("block");
-          }}
-        />
-      </GoogleOAuthProvider>
+    <SocialContainer>
+      <button onClick={() => login()}>
+        <BsGoogle size={24} color={COLORS.lightgrey} />
+      </button>
       <SubmitNote />
-    </div>
+    </SocialContainer>
   );
 }
 

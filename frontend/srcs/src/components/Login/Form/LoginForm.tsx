@@ -1,11 +1,12 @@
 import React, { CSSProperties, useState } from "react";
-import { axiosClient } from "../../../../services/axios";
+import { axiosClient } from "../../../services/axios";
 
-import "../../Login.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { AxiosError, AxiosResponse } from "axios";
-import { useGlobal } from "../../../../services/Global/GlobalProvider";
+import { useGlobal } from "../../../services/Global/GlobalProvider";
+import HeptaButton from "../../common/HeptaButton/HeptaButton";
+import { LoginFormContainer } from "./LoginFormStyle";
 
 function LoginForm() {
   const { setAuth } = useGlobal();
@@ -21,12 +22,7 @@ function LoginForm() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
 
-  const userRef = useRef(document.createElement("input"));
   const errRef = useRef(document.createElement("input"));
-
-  useEffect(() => {
-    userRef.current.focus();
-  }, []);
 
   useEffect(() => {
     setErrMsg("");
@@ -43,8 +39,7 @@ function LoginForm() {
               visibility: isVisible,
               color: "green",
             } as CSSProperties
-          }
-        >
+          }>
           Login Success!
         </p>
       );
@@ -57,8 +52,7 @@ function LoginForm() {
               visibility: isVisible,
               color: "red",
             } as CSSProperties
-          }
-        >
+          }>
           {errMsg}
         </p>
       );
@@ -100,20 +94,20 @@ function LoginForm() {
 
   //===== Rendering =====
   return (
-    <div>
-      <form id="form-login" method="post" onSubmit={handleSubmit}>
+    <form id="form-login" method="post" onSubmit={handleSubmit}>
+      <LoginFormContainer>
         <input
           type="text"
           id="username"
           name="username"
           placeholder="Username"
-          ref={userRef}
           autoComplete="off"
           onChange={(e) => setUsername(e.target.value)}
           value={username}
           required
         />
         <input
+          autoFocus={false}
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
@@ -123,9 +117,11 @@ function LoginForm() {
           required
         />
         <SubmitNote />
-        <button form="form-login">Sign In</button>
-      </form>
-    </div>
+        <button form="form-login">
+          <HeptaButton width={120} height={90} text="LOGIN" />
+        </button>
+      </LoginFormContainer>
+    </form>
   );
 }
 
