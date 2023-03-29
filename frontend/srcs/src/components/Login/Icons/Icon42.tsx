@@ -1,4 +1,5 @@
 import React, { MouseEvent } from "react";
+import { COLORS } from "../../../colors";
 import { SocialContainer } from "../AuthFormStyle";
 
 function Icon42() {
@@ -16,6 +17,7 @@ function Icon42() {
           version="1.1"
           strokeWidth="0"
           enableBackground="new 0 0 48 48"
+          fill={COLORS.lightgrey}
           viewBox="0 -200 960 960">
           <path d="M32 412.6L362.1 412.6 362.1 578 526.8 578 526.8 279.1 197.3 279.1 526.8 -51.1 362.1 -51.1 32 279.1z"></path>
           <path d="M597.9 114.2L762.7 -51.1 597.9 -51.1z"></path>

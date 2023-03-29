@@ -1,5 +1,5 @@
 import MediaQuery from "react-responsive";
-import HeptaHeader from "../../components/General/Heptahedre/HeptaHeader";
+import Heptahedre from "../../components/common/Heptahedre/Heptahedre";
 import AuthForm from "../../components/Login/AuthForm";
 import { mediaSize } from "../../mediaSize";
 import { LoginLayoutContainer } from "./LoginLayoutStyle";
@@ -8,20 +8,20 @@ const LoginLayout = () => {
   return (
     <main>
       {/* desktop */}
-      <MediaQuery minWidth={mediaSize.desktop}></MediaQuery>
+      {/* <MediaQuery minWidth={mediaSize.desktop}></MediaQuery> */}
 
       {/* tablet */}
-      <MediaQuery
+      {/* <MediaQuery
         maxWidth={mediaSize.tablet}
-        minWidth={mediaSize.mobile + 1}></MediaQuery>
+        minWidth={mediaSize.mobile + 1}></MediaQuery> */}
 
       {/* mobile */}
-      <MediaQuery maxWidth={mediaSize.mobile}>
-        <HeptaHeader firstText="PONG" secondText="CHAMPIONS" />
+      {/* <MediaQuery maxWidth={mediaSize.mobile}> */}
         <LoginLayoutContainer>
+          <Heptahedre firstText="PONG" secondText="CHAMPIONS" />
           <AuthForm />
         </LoginLayoutContainer>
-      </MediaQuery>
+      {/* </MediaQuery> */}
     </main>
   );
 };

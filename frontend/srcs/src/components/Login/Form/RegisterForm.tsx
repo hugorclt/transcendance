@@ -2,7 +2,9 @@ import { useRef, useState, useEffect } from "react";
 import React, { CSSProperties } from "react";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "../../../../services/axios";
+import axios from "../../../services/axios";
+import { LoginFormContainer } from "./LoginFormStyle";
+import HeptaButton from "../../common/HeptaButton/HeptaButton";
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PASSWORD_REGEX =
@@ -33,11 +35,6 @@ function RegisterForm() {
   const [success, setSuccess] = useState(false); //success submitting form ?
 
   const [isVisible, setIsVisible] = useState<string>("hidden");
-
-  //--- PUTS FOCUS ON USERNAME ON COMPONENT LOADING ---
-  useEffect(() => {
-    userRef.current.focus();
-  }, []);
 
   //--- CHECK USERNAME REGEX VALIDITY ---
   useEffect(() => {
@@ -118,8 +115,7 @@ function RegisterForm() {
               visibility: isVisible,
               color: "green",
             } as CSSProperties
-          }
-        >
+          }>
           Success, try to connect!
         </p>
       );
@@ -132,8 +128,7 @@ function RegisterForm() {
               visibility: isVisible,
               color: "red",
             } as CSSProperties
-          }
-        >
+          }>
           {errMsg}
         </p>
       );
@@ -174,51 +169,54 @@ function RegisterForm() {
   return (
     <div>
       <form id="form-register" method="post" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          id="username"
-          ref={userRef}
-          data-autocomplete="off"
-          autoComplete="off"
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-          required
-          name="username"
-          onFocus={() => setUsernameFocus(true)}
-          onBlur={() => setUsernameFocus(false)}
-        />
-        {usernameNote}
-        <input
-          type="email"
-          placeholder="Email"
-          id="email"
-          data-autocomplete="off"
-          autoComplete="off"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          name="email"
-          required
-          onFocus={() => setEmailFocus(true)}
-          onBlur={() => setEmailFocus(false)}
-        />
-        {emailNote}
-        <input
-          type="password"
-          placeholder="Password"
-          id="password"
-          data-autocomplete="off"
-          autoComplete="off"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-          name="password"
-          required
-          onFocus={() => setPasswordFocus(true)}
-          onBlur={() => setPasswordFocus(false)}
-        />
-        {passwordNote}
-        <SubmitNote />
-        <button form="form-register">Sign Up</button>
+        <LoginFormContainer>
+          <input
+            type="text"
+            placeholder="Username"
+            id="username"
+            data-autocomplete="off"
+            autoComplete="off"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            required
+            name="username"
+            onFocus={() => setUsernameFocus(true)}
+            onBlur={() => setUsernameFocus(false)}
+          />
+          {usernameNote}
+          <input
+            type="email"
+            placeholder="Email"
+            id="email"
+            data-autocomplete="off"
+            autoComplete="off"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            name="email"
+            required
+            onFocus={() => setEmailFocus(true)}
+            onBlur={() => setEmailFocus(false)}
+          />
+          {emailNote}
+          <input
+            type="password"
+            placeholder="Password"
+            id="password"
+            data-autocomplete="off"
+            autoComplete="off"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            name="password"
+            required
+            onFocus={() => setPasswordFocus(true)}
+            onBlur={() => setPasswordFocus(false)}
+          />
+          {passwordNote}
+          <SubmitNote />
+          <button form="form-register">
+            <HeptaButton width={120} height={90} text="LOGIN" />
+          </button>
+        </LoginFormContainer>
       </form>
     </div>
   );
