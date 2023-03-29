@@ -73,17 +73,21 @@ export class GameGateway
       paddleOppStartX: this.game.getPaddle2().getPosition().x,
       paddleOppStartZ: this.game.getPaddle2().getPosition().z,
       ballStartX: this.game.getBall().getPosition().x,
+      ballStartY: this.game.getBall().getPosition().y,
       ballStartZ: this.game.getBall().getPosition().z,
       scorePlayer1: this.game.getScoreboard().getPlayer1(),
       scorePlayer2: this.game.getScoreboard().getPlayer2(),
     });
     this.game.launch();
     setInterval(() => {
-      this.io.to(client.userId).emit('ball-position', {
+      this.game.processBallMovement()
+      this.io.to(client.userId).emit('ball', {
         x: this.game.getBall().getPosition().x,
+        y: this.game.getBall().getPosition().y,
         z: this.game.getBall().getPosition().z,
       });
     }, 1000 / 60); // 60 frames per second
+
   }
 
   /*======= pause game =======*/
