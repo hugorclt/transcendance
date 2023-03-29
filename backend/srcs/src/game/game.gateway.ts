@@ -86,6 +86,10 @@ export class GameGateway
         y: this.game.getBall().getPosition().y,
         z: this.game.getBall().getPosition().z,
       });
+
+      this.io.to(client.userId).emit('player2', {
+        x: this.game.getPaddle2().getPosition().x,
+      });
     }, 1000 / 60); // 60 frames per second
 
   }

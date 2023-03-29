@@ -4,6 +4,7 @@ import { Scoreboard } from './scoreboard';
 import { Field } from './field';
 import { isValidationOptions } from 'class-validator';
 import { zipAll } from 'rxjs';
+import { cp } from 'fs';
 
 export class Game {
   private ball: Ball;
@@ -40,6 +41,9 @@ d
     if (this.ball.getStopped() == true) return;
 
     this.updateBallPosition();
+
+    // CPU UPDATE
+    this.cpuPaddleUpdate();
 
     if (this.isSideCollision() == true) {
         const newBallVelocity = this.ball.getVelocity().x * -1;
@@ -217,5 +221,17 @@ d
 
   getField() {
     return this.field;
+  }
+
+  cpuPaddleUpdate() {
+    const ballPosX = this.ball.getPosition().x;
+    const cpuPaddlePos = this.paddle2.getPosition().x;
+    console.log("paddlecpu", cpuPaddlePos);
+    console.log("ballpos", ballPosX);
+    if (cpuPaddlePos - 0.1 > ballPosX ) {
+      this.paddle2.setPositionX(cpuPaddlePos - Math.min(cpuPaddlePos - ballPosX, 0.2));
+    } else if (cpuPaddlePos + 0.1 < ballPosX ) {
+      this.paddle2.setPositionX(cpuPaddlePos + Math.min(ballPosX - cpuPaddlePos, 0.2));
+    }
   }
 }

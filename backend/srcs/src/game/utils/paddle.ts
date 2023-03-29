@@ -42,4 +42,12 @@ export class Paddle {
     moveRight() {
         this.position.x += 0.2;
     }
+
+    setPositionX(x: number) {
+        this.position.x = x;
+    }
+
+    setPositionZ(z: number) {
+        this.position.z = z;
+    }
 }
