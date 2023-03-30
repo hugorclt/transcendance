@@ -12,14 +12,14 @@ const GameScreen = () => {
   return (
     <Canvas
       tabIndex={0}
-      camera={{position:[0,6,53]}}
+      camera={{ position: [0, 6, 53] }}
       style={{ background: COLORS.background, height: "100vh" }}>
-              <primitive object={new AxesHelper(10)} />
-              <OrbitControls />
-              <Island />
-              <hemisphereLight args={["#ffff", 0.6]} />
-      {/* <Game /> */}
-      <SeaMap />
+      {/* <primitive object={new AxesHelper(10)} /> */}
+      <OrbitControls />
+      {/* <Island /> */}
+      {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
+      <Game />
+      {/* <SeaMap /> */}
       {/* <ProceduralMap /> */}
       {/* <Scene /> */}
     </Canvas>

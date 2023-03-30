@@ -30,7 +30,6 @@ export const GameModeButtonBody = styled.div`
 
   @media (min-width: ${(mediaSize.mobile + 1).toString() + "px"}) {
     top: 80vh;
-   
   }
 
   @media (max-width: ${mediaSize.mobile.toString() + "px"}) {
