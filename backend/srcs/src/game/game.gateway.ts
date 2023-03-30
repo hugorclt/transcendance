@@ -16,6 +16,7 @@ import { Ball } from './utils/ball';
 import { Paddle } from './utils/paddle';
 import { Scoreboard } from './utils/scoreboard';
 import { Field } from './utils/field';
+import { SpecialShot } from './utils/specialShot';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -38,8 +39,8 @@ export class GameGateway
     console.log('GameGateway initialized');
     this.game = new Game(
       new Ball({ x: 0, y: 0, z: 0 }, 0, undefined, false),
-      new Paddle(0, 0, { x: 0, z: 0 }),
-      new Paddle(0, 0, { x: 0, z: 0 }),
+      new Paddle(0, 0, { x: 0, z: 0 }, new SpecialShot("blue")),
+      new Paddle(0, 0, { x: 0, z: 0 }, new SpecialShot("blue")),
       new Scoreboard(0, 0),
       new Field(0, 0),
     );
@@ -132,6 +133,16 @@ export class GameGateway
       this.io.to(client.userId).emit('player2', {
         x: this.game.getPaddle2().getPosition().x,
       });
+    }
+  }
+
+  @SubscribeMessage('special-shot')
+  async OnSpecialShot(client: AuthSocket): Promise<void> {
+    if (client.userId == this.player1) {
+      this.game.getPaddle1().trigger()
+    }
+    if (client.userId == this.player2) {
+
     }
   }
 }

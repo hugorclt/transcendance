@@ -18,6 +18,7 @@ const PlayerPaddle = (props: TPaddleProps, ref: any) => {
   useFrame((_, delta) => {
     keyMap['KeyA'] && socket?.emit("left-move")
     keyMap['KeyD'] && socket?.emit("right-move")
+    keyMap['Space'] && socket?.emit("special-shot")
   })
 
   useEffect(() => {

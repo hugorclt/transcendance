@@ -30,11 +30,10 @@ export class Game {
   startBallMovement() {
     console.log("start-ball-movement");
     const direction = Math.random() > 0.5 ? -1 : 1;
-    this.ball.setVelocity({ x: 0, z: direction * 0.3 }); // this is a possibility 
-    // this.ball.setVelocity({x:0, z:1});
+    this.ball.setVelocity({ x: 0, z: direction * 0.1 }); // this is a possibility 
     this.ball.setStopped(false);
   }
-d
+
   processBallMovement() {
     if (!this.ball.getVelocity()) this.startBallMovement();
 
@@ -50,11 +49,21 @@ d
         this.ball.setVelocityX(newBallVelocity);
     }
 
-    if (this.isPaddleCollision1()) {
-      this.hitBallBack(this.paddle1);
+    if (this.isPaddleCollision2() && this.getPaddle2().getIsSpecialShot() == false) {
+      this.hitBallBack(this.paddle2);
     }
 
-    if (this.isPaddleCollision2()) {
+
+    if (this.isPaddleCollision1()) {
+      if (this.getPaddle1().getIsSpecialShot() == true && this.getPaddle1().getSpecialShot().getIsReady()) {
+        this.specialShot(this.paddle1);
+      } else {
+        this.hitBallBack(this.paddle1);
+        this.paddle1.getSpecialShot().incrementCharge();
+      }
+    }
+
+    if (this.isPaddleCollision2() && this.getPaddle2().getIsSpecialShot() == true) {
       this.hitBallBack(this.paddle2);
     }
 
@@ -226,12 +235,43 @@ d
   cpuPaddleUpdate() {
     const ballPosX = this.ball.getPosition().x;
     const cpuPaddlePos = this.paddle2.getPosition().x;
-    console.log("paddlecpu", cpuPaddlePos);
-    console.log("ballpos", ballPosX);
     if (cpuPaddlePos - 0.1 > ballPosX ) {
       this.paddle2.setPositionX(cpuPaddlePos - Math.min(cpuPaddlePos - ballPosX, 0.2));
     } else if (cpuPaddlePos + 0.1 < ballPosX ) {
       this.paddle2.setPositionX(cpuPaddlePos + Math.min(ballPosX - cpuPaddlePos, 0.2));
     }
   }
+
+
+  /*================================ SPECIAL SHOT ==============================*/
+  
+  specialShot(paddle: Paddle) {
+    console.log("SpecialShot");
+
+    const colorPaddle = paddle.getSpecialShot().getColor();
+    const ballX = this.ball.getPosition().x;
+    const paddlePosX = paddle.getPosition().x;
+
+
+    if (colorPaddle == "red") {
+      const newVelocityX = (ballX - paddlePosX) / 5;
+      const newVelocityZ = this.ball.getVelocity().z * -1 * 3;
+  
+      this.ball.setVelocityX(newVelocityX);
+      this.ball.setVelocityZ(newVelocityZ);
+
+      this.paddle1.getSpecialShot().resetCharge();
+    }
+    if (colorPaddle == "blue") {
+      const newVelocityZ = this.ball.getVelocity().z * -1;
+      const randomVelocityX = Math.random() * 2 - 1;
+      const newVelocityX = (ballX - paddlePosX) / 5 + randomVelocityX;
+      
+      this.ball.setVelocityX(newVelocityX);
+      this.ball.setVelocityZ(newVelocityZ);
+    
+      this.paddle1.getSpecialShot().resetCharge();
+    }
+  }
+
 }
