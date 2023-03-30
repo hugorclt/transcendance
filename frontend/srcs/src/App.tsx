@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import LoginPage from "./views/LoginPage/LoginPage";
-import HomePage from "./views/HomePage/HomePage";
 import LeaderboardsPage from "./views/LeaderboardsPage/LeaderboardsPage";
 import ProfilePage from "./views/ProfilePage/ProfilePage";
 import ShopPage from "./views/ShopPage/ShopPage";
@@ -34,10 +33,9 @@ function App() {
           <Route element={<ProvideSocket />}>
             <Route element={<RequireStatus />}>
               <Route element={<MainPage />}>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<LobbyPage />} />
                 <Route path="/shop" element={<ShopPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/lobby" element={<LobbyPage />} />
                 <Route path="/leaderboards" element={<LeaderboardsPage />} />
               </Route>
             </Route>
