@@ -30,7 +30,7 @@ export class Game {
   startBallMovement() {
     console.log("start-ball-movement");
     const direction = Math.random() > 0.5 ? -1 : 1;
-    this.ball.setVelocity({ x: 0, z: direction * 0.1 }); // this is a possibility 
+    this.ball.setVelocity({ x: 0, z: direction * 0.2 }); // this is a possibility 
     this.ball.setStopped(false);
   }
 
@@ -39,7 +39,10 @@ export class Game {
 
     if (this.ball.getStopped() == true) return;
 
-    this.updateBallPosition();
+    if (this.ball.getSpecialBall() == false)
+      this.updateBallPosition();
+    else
+      this.updateSpecialBallPosition();
 
     // CPU UPDATE
     this.cpuPaddleUpdate();
@@ -141,6 +144,7 @@ export class Game {
 
     this.ball.setVelocityX(newVelocityX);
     this.ball.setVelocityZ(newVelocityZ);
+    this.ball.setSpecialBall(false);
   }
 
   isGoalTeam2() {
@@ -261,6 +265,8 @@ export class Game {
       this.ball.setVelocityZ(newVelocityZ);
 
       this.paddle1.getSpecialShot().resetCharge();
+      this.ball.setSpecialBall(true);
+      this.ball.setLastHitColor("red");
     }
     if (colorPaddle == "blue") {
       const newVelocityZ = this.ball.getVelocity().z * -1;
@@ -271,7 +277,29 @@ export class Game {
       this.ball.setVelocityZ(newVelocityZ);
     
       this.paddle1.getSpecialShot().resetCharge();
+      this.ball.setSpecialBall(true);
+      this.ball.setLastHitColor("blue");
+    }
+    if (colorPaddle == "green") {
+
     }
   }
 
+  updateSpecialBallPosition() {
+    if (this.ball.getLastHitColor() == "red") {
+      const ballPos = this.ball.getPosition();
+
+      ballPos.x += this.ball.getVelocity().x;
+      ballPos.z += this.ball.getVelocity().z;
+  
+      ballPos.y = this.calculateParabola(ballPos.z, 32);
+  
+      this.ball.setPositionX(ballPos.x);
+      this.ball.setPositionZ(ballPos.z);
+      this.ball.setPositionY(ballPos.y);
+    }
+    else if (this.ball.getLastHitColor() == "blue") {
+
+    }
+  }
 }

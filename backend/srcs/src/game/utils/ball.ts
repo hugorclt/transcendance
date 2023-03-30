@@ -4,12 +4,15 @@ export class Ball {
   private radius: number;
   private velocity: {x: number, z: number};
   private stopped: boolean;
+  private specialBall: boolean;
+  private lastHitColor: string;
   
   constructor (position: {x: number, y: number, z: number}, radius: number, velocity: {x: number, z: number}, stopped: boolean) {
     this.position = position;
     this.radius = radius;
     this.velocity = velocity;
     this.stopped = false;
+    this.specialBall = false;
   }
 
   getVelocity() {
@@ -58,5 +61,21 @@ export class Ball {
 
   setRadius(radius: number) {
     this.radius = radius;
+  }
+
+  getSpecialBall() {
+    return this.specialBall;
+  }
+
+  setSpecialBall(bool: boolean) {
+    this.specialBall = bool;
+  }
+
+  getLastHitColor() {
+    return this.lastHitColor;
+  }
+
+  setLastHitColor(color: string) {
+    this.lastHitColor = color;
   }
 }
