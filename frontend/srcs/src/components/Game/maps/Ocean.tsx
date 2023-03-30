@@ -35,7 +35,7 @@ function Ocean() {
   useFrame(
     (state, delta) => (ref.current.material.uniforms.time.value += delta)
   );
-  return <water ref={ref} args={[geom, config]} rotation-x={-Math.PI / 2} position-y={-2}/>;
+  return <water ref={ref} args={[geom, config]} rotation-x={-Math.PI / 2} position-y={0.15}/>;
 }
 
 export default Ocean;

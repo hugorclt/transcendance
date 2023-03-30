@@ -36,10 +36,18 @@ export class Paddle {
     }
 
     moveLeft() {
-        this.position.x -= 1
+        this.position.x -= 0.2;
     }
 
     moveRight() {
-        this.position.x += 1;
+        this.position.x += 0.2;
+    }
+
+    setPositionX(x: number) {
+        this.position.x = x;
+    }
+
+    setPositionZ(z: number) {
+        this.position.z = z;
     }
 }

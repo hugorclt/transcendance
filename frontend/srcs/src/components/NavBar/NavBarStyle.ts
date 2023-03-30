@@ -6,25 +6,29 @@ export const NavBarContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 `;
 
 export const NavBarItemStyle = styled.div`
-  height: 100%;
-  flex: 0 0 25%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: 16px;
 `;
 
 export const NavBarLink = styled(Link)`
   color: ${(props) => props.color};
   font-weight: bold;
-  font-size: 2vw;
+  font-size: 1.5em;
   text-decoration: none;
   &:hover,
   &:focus {
-    color: ${COLORS.secondary};
+    color: ${COLORS.background};
   }
 `;
+
+export const NavBarSelect = styled.select`
+  border: none;
+  background-color: ${COLORS.secondary};
+  color: ${COLORS.primary};
+  font-size: 2em;
+  font-weight: bold;
+`
