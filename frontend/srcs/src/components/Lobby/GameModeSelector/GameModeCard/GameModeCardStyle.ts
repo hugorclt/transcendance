@@ -1,23 +1,30 @@
 import styled, { keyframes } from "styled-components";
 import { COLORS } from "../../../../colors";
+import { mediaSize } from "../../../../mediaSize";
 
 export const GameModeCardsContainer = styled.div`
-  background-color: ${COLORS.darkgrey};
+  background-color: ${COLORS.grey};
   border-radius: 5px;
   border: 1px solid ${COLORS.border};
-  width: 15%;
-  height: 50%;
+  border-radius: 8px;
+
   transition: all 0.7s cubic-bezier(0.45, 0, 0.55, 1) 0.1s;
-  &:hover {
-    width: 25%;
-    height: 60%;
+
+  @media (min-width: ${(mediaSize.mobile + 1).toString() + "px"}) {
+    height: 50vh;
+    width: 40%;
+  }
+
+  @media (max-width: ${mediaSize.mobile.toString() + "px"}) {
+    width: 70%;
+    height: 50vh;
   }
 `;
 
 export const GameModeCardsUpper = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${COLORS.darkgrey};
+  background-color: ${COLORS.grey};
   width: 100%;
   height: 75%;
 `;
@@ -55,7 +62,7 @@ export const GameModeCardsBottom = styled.div`
 `;
 
 export const GameModeCardsGameTitle = styled.h1`
-  color: ${COLORS.darkgrey};
+  background-color: ${COLORS.grey};
 `;
 
 export const GameModeCardsText = styled.p`
