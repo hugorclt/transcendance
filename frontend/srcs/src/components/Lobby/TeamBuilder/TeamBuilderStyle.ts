@@ -1,28 +1,12 @@
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 
-export const TeamBuilderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${COLORS.darkergrey};
-  width: flex-grow;
-  height: 100%;
-`;
-
 export const GameTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 15%;
-`;
-
-export const GameTitle = styled.h1`
-  color: ${COLORS.primary};
-`;
-
-export const GamePlayersMode = styled.h3`
-  color: ${COLORS.primary};
 `;
 
 export const GameTitleCard = styled.div`
@@ -32,6 +16,14 @@ export const GameTitleCard = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  h1 {
+    color: ${COLORS.primary};
+  }
+
+  h3 {
+    color: ${COLORS.primary};
+  }
 `;
 
 export const CentralContainer = styled.div`

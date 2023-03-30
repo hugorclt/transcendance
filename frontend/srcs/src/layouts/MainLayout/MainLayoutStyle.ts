@@ -25,7 +25,7 @@ export const NavBarLayoutContainer = styled.div`
   background-color: #19191a;
 `;
 
-export const HeptaHeaderContainer = styled.div`
+export const HeaderContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -38,5 +38,5 @@ export const NavBarContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -100%);
-  color: ${COLORS.primary}
+  color: ${COLORS.primary};
 `;

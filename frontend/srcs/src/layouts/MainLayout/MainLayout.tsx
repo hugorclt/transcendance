@@ -11,7 +11,7 @@ import {
   ChatLayoutContainer,
   MainLayoutContainer,
   NavBarLayoutContainer,
-  HeptaHeaderContainer,
+  HeaderContainer,
   NavBarContainer,
 } from "./MainLayoutStyle";
 
@@ -22,12 +22,12 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       <MediaQuery minWidth={mediaSize.desktop}>
         <MainLayoutStyle>
           <MainLayoutContainer>
-            <HeptaHeaderContainer>
+            <HeaderContainer>
               <Heptahedre firstText="" secondText="" />
               <NavBarContainer>
                 <NavBarPage />
               </NavBarContainer>
-            </HeptaHeaderContainer>
+            </HeaderContainer>
             {children}
           </MainLayoutContainer>
 
@@ -39,23 +39,23 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
 
       {/* tablet */}
       <MediaQuery maxWidth={mediaSize.tablet} minWidth={mediaSize.mobile + 1}>
-        <HeptaHeaderContainer>
+        <HeaderContainer>
           <Heptahedre firstText="" secondText="" />
           <NavBarContainer>
             <NavBar />
           </NavBarContainer>
-        </HeptaHeaderContainer>
+        </HeaderContainer>
         {children}
       </MediaQuery>
 
       {/* mobile */}
       <MediaQuery maxWidth={mediaSize.mobile}>
-        <HeptaHeaderContainer>
+        <HeaderContainer>
           <Heptahedre firstText="" secondText="" />
           <NavBarContainer>
             <NavBar />
           </NavBarContainer>
-        </HeptaHeaderContainer>
+        </HeaderContainer>
         {children}
       </MediaQuery>
     </>

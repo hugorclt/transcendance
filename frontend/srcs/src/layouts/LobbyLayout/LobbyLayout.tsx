@@ -1,11 +1,12 @@
-import { LobbyLayoutBox } from "./LobbyLayoutStyle";
+import TeamBuilder from "../../components/Lobby/TeamBuilder/TeamBuilder";
+import { LobbyLayoutContainer } from "./LobbyLayoutStyle";
 
-interface LobbyLayoutProps {
-  children: React.ReactNode;
+function LobbyLayout() {
+  return (
+    <LobbyLayoutContainer>
+      <TeamBuilder />
+    </LobbyLayoutContainer>
+  );
 }
-
-const LobbyLayout = (props: LobbyLayoutProps) => {
-  return <LobbyLayoutBox>{props.children}</LobbyLayoutBox>;
-};
 
 export default LobbyLayout;
