@@ -10,6 +10,7 @@ import { refreshStrategy } from './utils/refresh-strategy';
 import { accessStrategy } from './utils/access-strategy';
 import { HttpModule } from '@nestjs/axios';
 import { SocialsModule } from 'src/socials/socials.module';
+import { LobbiesModule } from 'src/lobbies/lobbies.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SocialsModule } from 'src/socials/socials.module';
       },
     }),
     SocialsModule,
+    LobbiesModule,
   ],
   controllers: [AuthController],
   providers: [

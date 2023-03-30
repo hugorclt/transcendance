@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PlayerCard from "./PlayerCard/PlayerCard";
 import {
   BotContainer,
@@ -9,32 +9,22 @@ import {
   GameTitleCard,
   GameTitleContainer,
   TeamBuilderContainer,
-  TeamCardsContainer,
-  TeamContainer,
-  TeamName,
-  TeamNbPlayers,
-  TeamInfoContainer,
-  TeamStatusContainer,
   LobbyLeaveButton,
 } from "./TeamBuilderStyle";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { AxiosError, AxiosResponse } from "axios";
+import { Axios, AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import { userAtom, lobbyAtom, friendAtom } from "../../../services/store";
-import InviteFriendsButton from "./InviteFriendsButton/InviteFriendsButton";
+import TeamCard from "./TeamCard/TeamCard";
+import ChangeTeamButton from "./ChangeTeamButton/ChangeTeamButton";
+import ChangePrivacyButton from "./ChangePrivacyButton/ChangePrivacyButton";
 
 function TeamBuilder() {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useAtom(userAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
-  const [friendsList, setFriendsList] = useAtom(friendAtom);
-
-  const inviteFriends = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-  };
 
   const leaveLobby = (e: React.SyntheticEvent) => {
-    console.log("Leave Button pressed");
     e.preventDefault();
     axiosPrivate
       .post("http://localhost:3000/lobbies/leave", {
@@ -42,6 +32,8 @@ function TeamBuilder() {
         lobbyId: lobby.id,
       })
       .then((response: AxiosResponse) => {
+        //should set lobbyAtom to default / undefined
+        //TODO
         console.log("success leaving lobby");
       })
       .catch((error: AxiosError) => {
@@ -49,7 +41,20 @@ function TeamBuilder() {
       });
   };
 
-  useEffect(() => {}, []);
+  const changeReady = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    axiosPrivate
+      .get(`lobbies/${lobby.id}/changeReady`)
+      .then((response: AxiosResponse) => {
+        console.log("changed ready status: ", JSON.stringify(response.data));
+      })
+      .catch((error: AxiosError) => {
+        console.log(
+          "error changing ready status: ",
+          JSON.stringify(error.message)
+        );
+      });
+  };
 
   return (
     <TeamBuilderContainer>
@@ -57,44 +62,24 @@ function TeamBuilder() {
         <GameTitleCard>
           <GameTitle>PONG CHAMPIONS</GameTitle>
           <GameTitle>{lobby.mode}</GameTitle>
-          <GamePlayersMode>2 vs 2</GamePlayersMode>
+          <GamePlayersMode>
+            {lobby.nbPlayers / 2} vs {lobby.nbPlayers / 2}
+          </GamePlayersMode>
         </GameTitleCard>
       </GameTitleContainer>
       <CentralContainer>
-        <TeamContainer>
-          <TeamInfoContainer>
-            <TeamStatusContainer>
-              <TeamName>RED TEAM</TeamName>
-              <TeamNbPlayers>2/4</TeamNbPlayers>
-            </TeamStatusContainer>
-            <InviteFriendsButton />
-          </TeamInfoContainer>
-          <TeamCardsContainer>
-            <PlayerCard />
-            <PlayerCard />
-            <PlayerCard />
-            <PlayerCard />
-          </TeamCardsContainer>
-        </TeamContainer>
-        <TeamContainer>
-          <TeamInfoContainer>
-            <TeamStatusContainer>
-              <TeamName>BLUE TEAM</TeamName>
-              <TeamNbPlayers>2/4</TeamNbPlayers>
-            </TeamStatusContainer>
-            <InviteFriendsButton />
-          </TeamInfoContainer>
-          <TeamCardsContainer>
-            <PlayerCard />
-            <PlayerCard />
-            <PlayerCard />
-            <PlayerCard />
-          </TeamCardsContainer>
-        </TeamContainer>
+        <TeamCard team={false} />
+        <ChangeTeamButton />
+        <ChangePrivacyButton />
+        <TeamCard team={true} />
       </CentralContainer>
       <BotContainer>
         <LobbyLeaveButton onClick={leaveLobby}>LEAVE</LobbyLeaveButton>
-        <GameStartButton>PLAY</GameStartButton>
+        {lobby.ownerId == user.id ? (
+          <GameStartButton>PLAY</GameStartButton>
+        ) : (
+          <GameStartButton onClick={changeReady}>READY</GameStartButton>
+        )}
       </BotContainer>
     </TeamBuilderContainer>
   );

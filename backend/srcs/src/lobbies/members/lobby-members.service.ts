@@ -21,11 +21,19 @@ export class LobbyMembersService {
     return await this.prisma.lobbyMember.findMany({});
   }
 
+  async findByUserId(userId: string): Promise<LobbyMemberEntity> {
+    const lobbyMember = await this.prisma.lobbyMember.findFirst({
+      where: { userId: userId },
+    });
+    if (!lobbyMember) throw new NotFoundException('LobbyMember not found');
+    return lobbyMember;
+  }
+
   async findOne(id: string): Promise<LobbyMemberEntity> {
     const lobbyMember = await this.prisma.lobbyMember.findUnique({
       where: { id },
     });
-    if (!lobbyMember) throw new NotFoundException('Lobby not found');
+    if (!lobbyMember) throw new NotFoundException('LobbyMember not found');
     return lobbyMember;
   }
 

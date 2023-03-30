@@ -1,13 +1,13 @@
 export const COLORS = {
   background: "#19191A",
   primary: "#fdfdfd",
-  secondary: "#ff7f00",
+  secondary: "#DB504A",
   tertiary: "#464545",
   green: "#0CFC07",
   orange: "#FFA800",
   blue: "#075AFC",
-  grey: "#404040",
-  lightgrey: "#B6B6B6",
+  grey: "#404041",
+  lightgrey: "#9a9a9b",
   border: "#464545",
   disabled: "#2d2d2d",
   purple: "#7c3296",
@@ -15,6 +15,7 @@ export const COLORS = {
   black: "#000000",
   darkgrey: "#737373",
   darkergrey: "#292929",
+  red: "#FF0000",
 };
 
 export const convertStatusColor = (status: string): string => {
