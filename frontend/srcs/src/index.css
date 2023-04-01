@@ -1,11 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&display=swap");
 
 * {
-  margin:0;
+  margin: 0;
   padding: 0;
   font-family: "IBM Plex Mono";
 }
@@ -13,7 +9,7 @@
 body {
   padding: 0;
   margin: 0;
-  background-color: #19191A;
+  background-color: #19191a;
 }
 
 .example::-webkit-scrollbar {
@@ -26,7 +22,7 @@ body {
 }
 
 .popup-overlay {
-  background: rgba(0,0,0,.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .callout {

@@ -113,7 +113,8 @@ function GameModeSelector() {
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
+            >
               <MdKeyboardArrowLeft size={32} color={COLORS.primary} />
             </ButtonNoStyle>
             <GameModeCard
@@ -121,7 +122,8 @@ function GameModeSelector() {
               description={dataGameMode[slider].description}
             />
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
+            >
               <MdKeyboardArrowRight size={32} color={COLORS.primary} />
             </ButtonNoStyle>
           </GameModeHero>

@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from "react";
-import PlayerCard from "./PlayerCard/PlayerCard";
+import React from "react";
 import {
   BotContainer,
   CentralContainer,
-  GamePlayersMode,
   GameStartButton,
-  GameTitle,
   GameTitleCard,
   GameTitleContainer,
-  TeamBuilderContainer,
   LobbyLeaveButton,
 } from "./TeamBuilderStyle";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { Axios, AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import { userAtom, lobbyAtom, friendAtom } from "../../../services/store";
 import TeamCard from "./TeamCard/TeamCard";
@@ -57,14 +53,14 @@ function TeamBuilder() {
   };
 
   return (
-    <TeamBuilderContainer>
+    <>
       <GameTitleContainer>
         <GameTitleCard>
-          <GameTitle>PONG CHAMPIONS</GameTitle>
-          <GameTitle>{lobby.mode}</GameTitle>
-          <GamePlayersMode>
+          <h1>PONG CHAMPIONS</h1>
+          <h1>{lobby.mode}</h1>
+          <h3>
             {lobby.nbPlayers / 2} vs {lobby.nbPlayers / 2}
-          </GamePlayersMode>
+          </h3>
         </GameTitleCard>
       </GameTitleContainer>
       <CentralContainer>
@@ -81,7 +77,7 @@ function TeamBuilder() {
           <GameStartButton onClick={changeReady}>READY</GameStartButton>
         )}
       </BotContainer>
-    </TeamBuilderContainer>
+    </>
   );
 }
 

@@ -1,6 +1,10 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+import { COLORS } from "../../colors";
 
-export const LobbyLayoutBox = styled.main`
-    width: 100%;
-    height:100%
-`
+export const LobbyLayoutContainer = styled.main`
+  display: flex;
+  flex-direction: column;
+  background-color: ${COLORS.darkergrey};
+  width: flex-grow;
+  height: 100%;
+`;
