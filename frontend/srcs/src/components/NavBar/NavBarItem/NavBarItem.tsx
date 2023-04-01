@@ -23,7 +23,7 @@ export function NavBarItem({ value, index, path, onClick }: TNavBarItemProps) {
   return (
     <NavBarItemStyle>
       <NavBarLink onClick={onClick} color={color} to={path}>
-        {value}
+        <h1>{value}</h1>
       </NavBarLink>
     </NavBarItemStyle>
   );

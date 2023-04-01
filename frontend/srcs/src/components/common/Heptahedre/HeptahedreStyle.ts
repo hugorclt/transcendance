@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 
-export const HeptahedreContainer = styled.div`
+export const HeptahedreContainer = styled.div<{width: string}>`
   height: auto;
-  width: 100%;
+  width: ${props => props.width};
   max-width: 600px;
   display: flex;
   justify-content: center;
@@ -14,7 +14,5 @@ export const HeptahedreContainer = styled.div`
   }
   h1 {
     position: absolute;
-    font-size: 300%;
-    top: 15%;
   }
 `;

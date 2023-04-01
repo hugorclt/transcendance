@@ -99,13 +99,13 @@ function Game() {
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
-      {/* <OrbitControls /> */}
-      {/* <primitive object={new AxesHelper(10)} /> */}
-      {/* <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} /> */}
-      {/* <Ball
+      <OrbitControls />
+      <primitive object={new AxesHelper(10)} />
+      <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
+      <Ball
         radius={gameInfo.ballRadius}
         startPos={new Vector3(gameInfo.ballStartX, gameInfo.ballStartY, gameInfo.ballStartZ)}
-      /> */}
+      />
       <PlayerPaddle
         width={gameInfo.paddleWidth}
         length={gameInfo.paddleLength}
@@ -117,13 +117,13 @@ function Game() {
           )
         }
       />
-      {/* <OpponentPaddle
+      <OpponentPaddle
         width={gameInfo.paddleWidth}
         length={gameInfo.paddleLength}
         startPos={
           new Vector3(gameInfo.paddleOppStartX, 0, gameInfo.paddleOppStartZ)
         }
-      /> */}
+      />
       <hemisphereLight args={["#ffff", 0.6]} />
       {/* <Particles /> */}
       {/* <ambientLight color="#fff" /> */}

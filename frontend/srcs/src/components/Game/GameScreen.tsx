@@ -19,7 +19,7 @@ const GameScreen = () => {
       {/* <Island /> */}
       {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
       <Game />
-      {/* <SeaMap /> */}
+      <SeaMap />
       {/* <ProceduralMap /> */}
       {/* <Scene /> */}
     </Canvas>

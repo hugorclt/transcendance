@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import ItemsCards from "./ItemsCard/ItemsCards";
 import {
   CardsContainer,
-  ScrollableDiv,
-  ShopBarSelect,
   ShopTopBarContainer,
   ShopTopBarFilter,
+  ShopTopBarSelect,
 } from "./ItemsListStyle";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../mediaSize";
 // import greenp from "../../../assets/images/paddle/green.png";
 import bluep from "../../../assets/images/paddle/bluep.gif";
+import { nanoid } from "nanoid";
 // import yellowp from "../../../assets/images/paddle/yellow.png";
 // import purplep from "../../../assets/images/paddle/purple.png";
 
@@ -55,6 +55,7 @@ function ItemsList() {
   return (
     <>
       <ShopTopBarContainer>
+
         <MediaQuery minWidth={mediaSize.mobile + 1}>
           <ShopTopBarFilter>
             <button onClick={() => setFilter("ALL")}>ALL</button>
@@ -63,24 +64,28 @@ function ItemsList() {
             <button onClick={() => setFilter("GOAL")}>GOAL</button>
           </ShopTopBarFilter>
         </MediaQuery>
+
         <MediaQuery maxWidth={mediaSize.mobile}>
-          <ShopBarSelect onChange={(e) => setFilter(e.target.value)}>
+          <ShopTopBarSelect onChange={(e) => setFilter(e.target.value)}>
             <option value="ALL">ALL</option>
             <option value="PADDLE">PADDLE</option>
             <option value="TRAILS">TRAILS</option>
             <option value="GOAL">GOAL</option>
-          </ShopBarSelect>
+          </ShopTopBarSelect>
         </MediaQuery>
-        <input type="text" placeholder="SEARCH" />
+
+        <input className="search-input" type="text" placeholder="SEARCH" />
       </ShopTopBarContainer>
       <CardsContainer>
-        <ScrollableDiv>
+        {/* <ScrollableDiv> */}
           {data.flatMap((item) => {
             if (filter != "ALL") {
               if (item.type != filter) return;
             }
+            console.log(item.image)
             return (
               <ItemsCards
+                key={nanoid()}
                 name={item.name}
                 desc={item.desc}
                 price={item.price}
@@ -88,7 +93,7 @@ function ItemsList() {
               />
             );
           })}
-        </ScrollableDiv>
+        {/* </ScrollableDiv> */}
       </CardsContainer>
     </>
   );

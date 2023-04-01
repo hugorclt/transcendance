@@ -38,38 +38,40 @@ function NavBar() {
 
   return (
     <>
-    {/* desktop - tablet */}
-      <MediaQuery minWidth={mediaSize.mobile + 1}>
+      {/* desktop - tablet */}
+      <MediaQuery minWidth={mediaSize.desktop}>
         <NavBarContainer>
-          <NavBarItem
-            index={1}
-            path="/"
-            value={"PLAY"}
-            onClick={() => handleTabClick(1)}
-          />
-          <NavBarItem
-            index={2}
-            path="/shop"
-            value={"SHOP"}
-            onClick={() => handleTabClick(2)}
-          />
-          <NavBarItem
-            index={3}
-            path="/leaderboards"
-            value={"RANKING"}
-            onClick={() => handleTabClick(3)}
-          />
-          <NavBarItem
-            index={4}
-            path="/profile"
-            value={"PROFILE"}
-            onClick={() => handleTabClick(4)}
-          />
+            <NavBarItem
+              index={2}
+              path="/shop"
+              value={"SHOP"}
+              onClick={() => handleTabClick(2)}
+            />
+            <NavBarItem
+              index={3}
+              path="/leaderboards"
+              value={"RANKING"}
+              onClick={() => handleTabClick(3)}
+            />
+          <div className="navbar-middle">
+            <NavBarItem
+              index={1}
+              path="/"
+              value={"PLAY"}
+              onClick={() => handleTabClick(1)}
+            />
+          </div>
+            <NavBarItem
+              index={4}
+              path="/profile"
+              value={"PROFILE"}
+              onClick={() => handleTabClick(4)}
+            />
         </NavBarContainer>
       </MediaQuery>
 
       {/* mobile */}
-      <MediaQuery maxWidth={mediaSize.mobile}>
+      <MediaQuery maxWidth={mediaSize.tablet}>
         <NavBarSelect onChange={handleSelect}>
           <option value="/">PLAY</option>
           <option value="/shop">SHOP</option>

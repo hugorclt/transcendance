@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { COLORS } from "../../colors";
+import NavBarItem from "./NavBarItem/NavBarItem";
 
 export const NavBarContainer = styled.div`
-  width: 100%;
+  width: 82%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-around;
+
+  .navbar-item:nth-child(3) {
+    text-align: center;
+  }
 `;
 
 export const NavBarItemStyle = styled.div`
@@ -17,11 +22,11 @@ export const NavBarItemStyle = styled.div`
 export const NavBarLink = styled(Link)`
   color: ${(props) => props.color};
   font-weight: bold;
-  font-size: 1.5em;
   text-decoration: none;
+  font-size: 1.5rem;
   &:hover,
   &:focus {
-    color: ${COLORS.background};
+    color: ${COLORS.primary};
   }
 `;
 
@@ -31,4 +36,4 @@ export const NavBarSelect = styled.select`
   color: ${COLORS.primary};
   font-size: 2em;
   font-weight: bold;
-`
+`;

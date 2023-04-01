@@ -23,22 +23,22 @@ const PlayerPaddle = (props: TPaddleProps, ref: any) => {
   const socket = useContext(GameSocket);
 
   useFrame((_, delta) => {
-    // keyMap["KeyA"] && socket?.emit("left-move");
-    // keyMap["KeyD"] && socket?.emit("right-move");
-    paddleRef.current.rotation.y += 0.03;
+    keyMap["KeyA"] && socket?.emit("left-move");
+    keyMap["KeyD"] && socket?.emit("right-move");
+    // paddleRef.current.rotation.y += 0.03;
   });
 
   useEffect(() => {
-    // socket?.on("player1", (data) => {
-    //   paddleRef.current.position.x = data.x;
-    // });
-    // return () => {
-    //   socket?.off("player1");
-    // };
+    socket?.on("player1", (data) => {
+      paddleRef.current.position.x = data.x;
+    });
+    return () => {
+      socket?.off("player1");
+    };
   }, [socket]);
 
   return (
-    <mesh ref={paddleRef} position={[0, 0, 0]} rotation={[0, 0, degreeToRad(15)]}>
+    <mesh ref={paddleRef} position={props.startPos}>
       <boxGeometry args={[props.width, props.length, 1]} />
       <meshToonMaterial
         color={"#ffff"}

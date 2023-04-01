@@ -33,10 +33,15 @@ export const HeaderContainer = styled.div`
   position: relative;
 `;
 
+export const MainContainer = styled.div`
+  background-color: ${COLORS.darkergrey};
+  height: 100%;
+  padding: 16px;
+`
+
 export const NavBarContainer = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -100%);
+  justify-content: start;
+  width: 100%;
   color: ${COLORS.primary};
 `;

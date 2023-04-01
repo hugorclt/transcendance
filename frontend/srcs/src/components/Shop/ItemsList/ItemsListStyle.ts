@@ -1,56 +1,38 @@
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 
-export const CardsContainer = styled.div`
-  height: 70vh;
-  overflow-y: scroll;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  box-sizing: border-box;
-  width: 100%;
-`;
-
-export const ScrollableDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-`;
-
 export const ShopTopBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 8px;
 
   input {
-    padding: 6px;
-    background-color: ${COLORS.grey};
-    border: 1px;
-    border-color: ${COLORS.border};
-    border-radius: 8px;
-  }
-
-  input::placeholder {
+    border: none;
+    background-color: ${COLORS.border};
     color: ${COLORS.primary};
+    padding: 8px;
+    border-radius: 8px;
   }
 `;
 
 export const ShopTopBarFilter = styled.div`
-  display: flex;
-
   button {
+    margin-right: 32px;
     border: none;
-    background-color: ${COLORS.background};
+    background-color: inherit;
     color: ${COLORS.primary};
+    font-size: 2rem;
     font-weight: bold;
-    font-size:1.5em;
-    margin: 16px;
   }
 `;
 
-export const ShopBarSelect = styled.select`
-  border: none;
+export const ShopTopBarSelect = styled.select`
   background-color: ${COLORS.secondary};
+  border: none;
   border-radius: 8px;
+  color: ${COLORS.primary};
+`;
+
+export const CardsContainer = styled.div`
+  display: flex;
+  flex-wrap: no-wrap;
 `;

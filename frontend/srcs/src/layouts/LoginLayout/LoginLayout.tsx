@@ -18,7 +18,7 @@ const LoginLayout = () => {
       {/* mobile */}
       {/* <MediaQuery maxWidth={mediaSize.mobile}> */}
       <LoginLayoutContainer>
-        <Heptahedre firstText="PONG" secondText="CHAMPIONS" />
+        <Heptahedre firstText="PONG" secondText="CHAMPIONS" width="100%" />
         <AuthForm />
       </LoginLayoutContainer>
       {/* </MediaQuery> */}
