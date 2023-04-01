@@ -36,3 +36,13 @@ body {
 .admin {
   background-color: orange;
 }
+
+@media screen and (min-width: 1191){
+  
+}
+@media screen and (max-width: 1190) and (min-width: 601){
+  
+}
+@media screen and (max-width: 600){
+  
+}

@@ -38,7 +38,7 @@ function NavBar() {
 
   return (
     <>
-    {/* desktop - tabel */}
+    {/* desktop - tablet */}
       <MediaQuery minWidth={mediaSize.mobile + 1}>
         <NavBarContainer>
           <NavBarItem
