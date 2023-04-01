@@ -34,11 +34,91 @@ body {
 }
 
 @media screen and (min-width: 1191){
-  
+  h1 {
+    font-size:  3rem;
+    font-weight: bold;
+  }  
+
+  h2 {
+    font-size:  2.25rem;
+    font-weight: bold;
+  }  
+
+  h3 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  h5 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 1.25rem;
+  }
 }
+
 @media screen and (max-width: 1190) and (min-width: 601){
-  
+  h1 {
+    font-size:  3rem;
+    font-weight: bold;
+  }  
+
+  h2 {
+    font-size:  2.25rem;
+    font-weight: bold;
+  }  
+
+  h3 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  h5 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 1.25rem;
+  }
 }
+
 @media screen and (max-width: 600){
-  
+  h1 {
+    font-size:  2.25rem;
+    font-weight: bold;
+  }  
+
+  h2 {
+    font-size:  2rem;
+    font-weight: bold;
+  }  
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  h5 {
+    font-size: 1.25rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+  }
 }
