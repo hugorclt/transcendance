@@ -5,6 +5,7 @@ export const HeptahedreContainer = styled.div<{width: string}>`
   height: auto;
   width: ${props => props.width};
   max-width: 600px;
+  min-width: 438px;
   display: flex;
   justify-content: center;
   position: relative;

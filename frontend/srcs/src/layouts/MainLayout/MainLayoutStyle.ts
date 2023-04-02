@@ -18,19 +18,13 @@ export const ChatLayoutContainer = styled.div`
   background-color: #19191a;
 `;
 
-export const NavBarLayoutContainer = styled.div`
-  display: flex;
-  width: full;
-  height: 98px;
-  background-color: #19191a;
-`;
-
 export const HeaderContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
+  height:112px;
 `;
 
 export const MainContainer = styled.div`

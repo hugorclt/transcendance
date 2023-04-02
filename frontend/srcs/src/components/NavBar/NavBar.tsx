@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect } from "react";
 import NavBarItem from "./NavBarItem/NavBarItem";
-import { NavBarContainer, NavBarSelect } from "./NavBarStyle";
+import { NavBarContainer, NavBarContainerMobile, NavBarSelect } from "./NavBarStyle";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { selectedPageAtom } from "../../services/store";
@@ -72,12 +72,14 @@ function NavBar() {
 
       {/* mobile */}
       <MediaQuery maxWidth={mediaSize.tablet}>
+      <NavBarContainerMobile>
         <NavBarSelect onChange={handleSelect}>
           <option value="/">PLAY</option>
           <option value="/shop">SHOP</option>
           <option value="/leaderboards">RANKING</option>
           <option value="/profile">PROFILE</option>
         </NavBarSelect>
+        </NavBarContainerMobile>
       </MediaQuery>
     </>
   );

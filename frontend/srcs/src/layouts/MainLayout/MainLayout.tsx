@@ -10,7 +10,6 @@ import {
   MainLayoutStyle,
   ChatLayoutContainer,
   MainLayoutContainer,
-  NavBarLayoutContainer,
   HeaderContainer,
   NavBarContainer,
   MainContainer,
@@ -41,7 +40,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       {/* tablet */}
       <MediaQuery maxWidth={mediaSize.tablet}>
         <HeaderContainer>
-          <Heptahedre firstText="" secondText="" width="100%" />
+          <Heptahedre firstText="" secondText="" width="45%" />
           <NavBarContainer>
             <NavBar />
           </NavBarContainer>

@@ -34,5 +34,9 @@ export const ShopTopBarSelect = styled.select`
 
 export const CardsContainer = styled.div`
   display: flex;
-  flex-wrap: no-wrap;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-grow: 1;
+  overflow-y: auto;
 `;
+

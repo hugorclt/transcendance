@@ -47,15 +47,23 @@ const data = [
     owned: true,
     image: "purplep",
   },
+  {
+    name: "PURPLE-PADDLE",
+    desc: "yo le rap",
+    price: "1500",
+    type: "PADDLE",
+    owned: true,
+    image: "purplep",
+  },
 ];
 
 function ItemsList() {
   const [filter, setFilter] = useState("ALL");
+  const [search, setSearch] = useState("");
 
   return (
     <>
       <ShopTopBarContainer>
-
         <MediaQuery minWidth={mediaSize.mobile + 1}>
           <ShopTopBarFilter>
             <button onClick={() => setFilter("ALL")}>ALL</button>
@@ -74,26 +82,34 @@ function ItemsList() {
           </ShopTopBarSelect>
         </MediaQuery>
 
-        <input className="search-input" type="text" placeholder="SEARCH" />
+        <input
+          className="search-input"
+          type="text"
+          placeholder="SEARCH"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </ShopTopBarContainer>
       <CardsContainer>
-        {/* <ScrollableDiv> */}
-          {data.flatMap((item) => {
-            if (filter != "ALL") {
-              if (item.type != filter) return;
-            }
-            console.log(item.image)
-            return (
-              <ItemsCards
-                key={nanoid()}
-                name={item.name}
-                desc={item.desc}
-                price={item.price}
-                image={item.image}
-              />
-            );
-          })}
-        {/* </ScrollableDiv> */}
+        {data.flatMap((item) => {
+          if (filter != "ALL") {
+            if (item.type != filter) return;
+          }
+          const matches = item.name
+            .toLocaleUpperCase()
+            .includes(search.toLocaleUpperCase());
+          if (!matches) return;
+          
+          return (
+            <ItemsCards
+              key={nanoid()}
+              name={item.name}
+              desc={item.desc}
+              price={item.price}
+              image={item.image}
+            />
+          );
+        })}
       </CardsContainer>
     </>
   );

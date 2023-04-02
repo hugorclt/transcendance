@@ -4,12 +4,10 @@ import { COLORS } from "../../../../colors";
 export const ItemsCardsContainer = styled.div`
   width: 304px;
   height: 304px;
-  /* background-color: ${COLORS.grey}; */
   border-radius: 8px;
-  /* border: 1px solid ${COLORS.border}; */
   box-sizing: border-box;
   position: relative;
-  margin:16px;
+  margin:32px;
 
   .top-text {
     display: flex;
@@ -34,10 +32,5 @@ export const ItemsCardsContainer = styled.div`
     object-fit: cover;
     border-radius: 8px;
     z-index: -1;
-    border: 1px solid ${COLORS.border};
-    /* filter: blur(3px); */
-    &:hover {
-        
-    }
   }
 `;

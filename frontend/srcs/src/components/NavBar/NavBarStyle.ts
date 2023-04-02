@@ -15,6 +15,14 @@ export const NavBarContainer = styled.div`
   }
 `;
 
+export const NavBarContainerMobile = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height:112px;
+  justify-content: space-around;
+`
+
 export const NavBarItemStyle = styled.div`
   margin: 16px;
 `;
