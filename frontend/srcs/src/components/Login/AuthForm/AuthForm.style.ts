@@ -74,34 +74,3 @@ export const SocialContainer = styled.div`
       rgba(219, 80, 74, 0.2) -9px 9px;
   }
 `;
-
-export const LoginFormContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  input {
-    transition: ease-in 350ms;
-    padding: 12px;
-    width: 100%;
-    border: none;
-    border-radius: 8px;
-    box-sizing: border-box;
-    margin: 12px 0;
-    background-color: ${COLORS.grey};
-    box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.7);
-  }
-
-  input:hover {
-    transform: translateY(-2px);
-    box-shadow: rgba(219, 80, 74, 0.4) -3px 5px,
-      rgba(219, 80, 74, 0.3) -6px 10px, rgba(219, 80, 74, 0.2) -9px 15px;
-  }
-
-  input::placeholder {
-    color: ${COLORS.primary};
-    font-size: 1.5em;
-  }
-`;

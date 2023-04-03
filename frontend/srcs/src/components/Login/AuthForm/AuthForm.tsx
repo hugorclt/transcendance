@@ -1,95 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { AuthFormContainer, LoginFormContainer } from "./AuthForm.style";
-import Form from "../../common/Form/Form";
-import FormTopper from "./FormTopper/FormTopper";
-import HeptaButton from "../../common/Button/HeptaButton/HeptaButton";
-import { axiosClient } from "../../../services/axios";
-import { useGlobal } from "../../../services/Global/GlobalProvider";
-import { AxiosError, AxiosResponse } from "axios";
-import { useLocation, useNavigate } from "react-router";
-import { TFormData } from "../../common/Form/TForm";
-
-const initialValue = {
-  username: "",
-  password: "",
-  email: "",
-};
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import React, { MouseEvent, useState } from "react";
+import GoogleAuth from "../GoogleAuth/GoogleAuth";
+import Icon42 from "../Icons/Icon42";
+import LoginForm from "./Form/LoginForm";
+import RegisterForm from "./Form/RegisterForm";
+import { AuthFormContainer, FormSelector } from "./AuthForm.style";
 
 function AuthForm() {
-  const [isRegister, setIsRegister] = useState(true);
-  const [success, setSuccess] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
-  const { auth, setAuth } = useGlobal();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
-  const [formData, setFormData] = useState<TFormData>(initialValue);
+  const [isRegister, setRegister] = useState(true);
   const clientId: string = import.meta.env["VITE_GOOGLE_CLIENT_ID"]!;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    if (!formData.username || !formData.password) return;
+  const loginClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    axiosClient()
-      .post(
-        isRegister ? "/auth/login" : "/auth/register",
-        isRegister
-          ? {
-              username: formData.username,
-              password: formData.password,
-            }
-          : {
-              username: formData.username,
-              password: formData.password,
-              email: formData.email,
-            }
-      )
-      .then((response: AxiosResponse) => {
-        setSuccess(true);
-        const accessToken = response?.data?.access_token;
-        setAuth({ username: formData.username, accessToken });
-        setFormData(initialValue);
-        navigate(from, { replace: true });
-      })
-      .catch((error: AxiosError) => {
-        if (!error?.response) {
-          setErrMsg("No server response");
-        } else if (error.response?.status === 400) {
-          setErrMsg("Missing username or password");
-        } else if (error.response?.status === 401) {
-          setErrMsg("Unauthorized");
-        } else {
-          setErrMsg("Login Failed");
-        }
-        setSuccess(false);
-      });
+    setRegister(true);
   };
 
-  const SubmitNote = () => {
-    if (success == false && errMsg == "") return <></>;
-    return <p style={{ color: success ? "green" : "red" }}>{errMsg}</p>;
+  const registerClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setRegister(false);
   };
+
+  function isActive() {
+    return isRegister
+      ? "border-slider"
+      : "border-slider border-slider-register";
+  }
 
   return (
     <>
       <AuthFormContainer>
-        <FormTopper
-          clientId={clientId}
-          isRegister={isRegister}
-          setIsRegister={setIsRegister}
-        />
-        <LoginFormContainer>
-          <Form setFormData={setFormData} formData={formData}>
-            <input key="name" type="text" placeholder="Username" required></input>
-            <input key="password" type="password" placeholder="Password" required></input>
-            {isRegister ? (
-              <></>
-            ) : (
-              <input key="email" type="email" placeholder="Email" required></input>
-            )}
-          </Form>
-          <HeptaButton onClick={handleSubmit} width={120} height={90} text="LOGIN" />
-          <SubmitNote />
-        </LoginFormContainer>
+        <FormSelector>
+          <button className="button-login" onClick={loginClick}>
+            LOGIN
+          </button>
+          <button className="button-register" onClick={registerClick}>
+            REGISTER
+          </button>
+        </FormSelector>
+        <div className="border-bottom">
+          <div className={isActive()}></div>
+        </div>
+        <div className="div-social">
+          <GoogleOAuthProvider clientId={clientId}>
+            <GoogleAuth />
+          </GoogleOAuthProvider>
+          <Icon42 />
+        </div>
+        {isRegister ? <LoginForm /> : <RegisterForm />}
       </AuthFormContainer>
     </>
   );

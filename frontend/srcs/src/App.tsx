@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 
 import LoginPage from "./views/LoginPage/LoginPage";
 // import LeaderboardsPage from "./views/LeaderboardsPage/LeaderboardsPage";
-// import ProfilePage from "./views/ProfilePage/ProfilePage";
+import ProfilePage from "./views/ProfilePage/ProfilePage";
 // import ShopPage from "./views/ShopPage/ShopPage";
 // import LobbyPage from "./views/LobbyPage/LobbyPage";
 // import GamePage from "./views/GamePage/GamePage";
@@ -16,7 +16,7 @@ import RequireStatus from "./services/Status/RequireStatus";
 import RequireInGameStatus from "./services/Status/RequireInGameStatus";
 import RequireUnAuth from "./services/Auth/RequiredUnAuth";
 import ProvideSocket from "./services/Auth/ProvideSocket";
-// import MainPage from "./views/MainPage/MainPage";
+import MainPage from "./views/MainPage/MainPage";
 
 function App() {
   return (
@@ -31,12 +31,12 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route element={<ProvideSocket />}>
             <Route element={<RequireStatus />}>
-              {/* <Route element={<MainPage />}> */}
-              {/* <Route path="/" element={<LobbyPage />} /> */}
-              {/* <Route path="/shop" element={<ShopPage />} /> */}
-              {/* <Route path="/profile" element={<ProfilePage />} /> */}
-              {/* <Route path="/leaderboards" element={<LeaderboardsPage />} /> */}
-              {/* </Route> */}
+              <Route element={<MainPage />}>
+                {/* <Route path="/" element={<LobbyPage />} /> */}
+                {/* <Route path="/shop" element={<ShopPage />} /> */}
+                <Route path="/" element={<ProfilePage />} />
+                {/* <Route path="/leaderboards" element={<LeaderboardsPage />} /> */}
+              </Route>
             </Route>
             {/* <Route element={<RequireInGameStatus />}> */}
             {/* <Route path="/game" element={<GamePage />} /> */}
