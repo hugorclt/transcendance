@@ -99,7 +99,7 @@ function ItemsList() {
             .toLocaleUpperCase()
             .includes(search.toLocaleUpperCase());
           if (!matches) return;
-          
+
           return (
             <ItemsCards
               key={nanoid()}

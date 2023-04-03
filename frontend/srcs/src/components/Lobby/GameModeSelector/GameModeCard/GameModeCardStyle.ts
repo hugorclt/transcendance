@@ -10,12 +10,12 @@ export const GameModeCardsContainer = styled.div`
 
   transition: all 0.7s cubic-bezier(0.45, 0, 0.55, 1) 0.1s;
 
-  @media (min-width: ${(mediaSize.mobile + 1).toString() + "px"}) {
+  @media (min-width: ${mediaSize.mobile}) {
     height: 50vh;
     width: 40%;
   }
 
-  @media (max-width: ${mediaSize.mobile.toString() + "px"}) {
+  @media (max-width: ${mediaSize.mobile}) {
     width: 70%;
     height: 50vh;
   }

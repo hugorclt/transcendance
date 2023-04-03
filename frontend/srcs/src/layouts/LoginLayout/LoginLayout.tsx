@@ -1,27 +1,22 @@
-import MediaQuery from "react-responsive";
 import Heptahedre from "../../components/common/Heptahedre/Heptahedre";
 import AuthForm from "../../components/Login/AuthForm";
-import { mediaSize } from "../../mediaSize";
-import { LoginLayoutContainer } from "./LoginLayoutStyle";
+import { LoginHeaderContainer, LoginLayoutContainer } from "./LoginLayoutStyle";
+import { Heading1 } from "../../components/common/commonStyle";
 
 const LoginLayout = () => {
   return (
     <main>
-      {/* desktop */}
-      {/* <MediaQuery minWidth={mediaSize.desktop}></MediaQuery> */}
-
-      {/* tablet */}
-      {/* <MediaQuery
-        maxWidth={mediaSize.tablet}
-        minWidth={mediaSize.mobile + 1}></MediaQuery> */}
-
-      {/* mobile */}
-      {/* <MediaQuery maxWidth={mediaSize.mobile}> */}
       <LoginLayoutContainer>
-        <Heptahedre firstText="PONG" secondText="CHAMPIONS" width="100%" />
+        <LoginHeaderContainer>
+          <Heptahedre />
+          <Heading1>
+            PONG
+            <br />
+            CHAMPIONS
+          </Heading1>
+        </LoginHeaderContainer>
         <AuthForm />
       </LoginLayoutContainer>
-      {/* </MediaQuery> */}
     </main>
   );
 };

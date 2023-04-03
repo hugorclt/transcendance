@@ -27,12 +27,11 @@ export const GameModeButtonBody = styled.div`
   align-items: center;
   position: absolute;
 
-
-  @media (min-width: ${(mediaSize.mobile + 1).toString() + "px"}) {
+  @media (min-width: ${mediaSize.mobile}) {
     top: 80vh;
   }
 
-  @media (max-width: ${mediaSize.mobile.toString() + "px"}) {
+  @media (max-width: ${mediaSize.mobile}) {
     top: 65vh;
   }
 `;
@@ -47,7 +46,7 @@ export const GameModeButton = styled.button`
 
 export const GameModeContainerMobile = styled.div`
   width: 100%;
-  box-sizing:border-box;
+  box-sizing: border-box;
   padding: 8px;
   border-radius: 8px;
   position: absolute;
@@ -61,4 +60,4 @@ export const GameModeContainerMobile = styled.div`
 export const GameModeHero = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
