@@ -1,24 +1,27 @@
+import React from "react";
 import Heptahedre from "../../components/common/Heptahedre/Heptahedre";
-import AuthForm from "../../components/Login/AuthForm";
-import { LoginHeaderContainer, LoginLayoutContainer } from "./LoginLayoutStyle";
-import { Heading1 } from "../../components/common/commonStyle";
+import {
+  LoginHeaderContainer,
+  LoginLayoutContainer,
+} from "./LoginLayout.style";
+import AuthForm from "../../components/Login/AuthForm/AuthForm";
 
-const LoginLayout = () => {
+function LoginLayout() {
   return (
-    <main>
+    <>
       <LoginLayoutContainer>
         <LoginHeaderContainer>
           <Heptahedre />
-          <Heading1>
+          <h1>
             PONG
             <br />
             CHAMPIONS
-          </Heading1>
+          </h1>
         </LoginHeaderContainer>
         <AuthForm />
       </LoginLayoutContainer>
-    </main>
+    </>
   );
-};
+}
 
 export default LoginLayout;

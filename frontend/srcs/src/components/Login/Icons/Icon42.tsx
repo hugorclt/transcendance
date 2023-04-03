@@ -1,6 +1,6 @@
 import React, { MouseEvent } from "react";
 import { COLORS } from "../../../colors";
-import { SocialContainer } from "../AuthFormStyle";
+import { SocialContainer } from "../AuthForm/AuthForm.style";
 
 function Icon42() {
   const url42: string = import.meta.env["VITE_42URL"]!;

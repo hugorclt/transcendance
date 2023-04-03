@@ -9,7 +9,7 @@ import axios from "../../../services/axios";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
 import { useGlobal } from "../../../services/Global/GlobalProvider";
-import { SocialContainer } from "../AuthFormStyle";
+import { SocialContainer } from "../AuthForm/AuthForm.style";
 import { COLORS } from "../../../colors";
 import { useGoogleLogin } from "@react-oauth/google";
 import { BsGoogle } from "react-icons/bs";
