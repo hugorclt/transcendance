@@ -39,7 +39,7 @@ export class GameGateway
     console.log('GameGateway initialized');
     this.game = new Game(
       new Ball({ x: 0, y: 0, z: 0 }, 0, undefined, false),
-      new Paddle(0, 0, { x: 0, z: 0 }, new SpecialShot("blue")),
+      new Paddle(0, 0, { x: 0, z: 0 }, new SpecialShot("red")),
       new Paddle(0, 0, { x: 0, z: 0 }, new SpecialShot("blue")),
       new Scoreboard(0, 0),
       new Field(0, 0),
@@ -56,13 +56,11 @@ export class GameGateway
     // toDO
   }
 
-  /*======= start game =======*/
+  /*======= start game & process ball =======*/
 
   @SubscribeMessage('start-game')
   async onStart(client: AuthSocket): Promise<void> {
-    console.log('start-game received');
     await this.game.init();
-    console.log('end-init');
     this.io.to(client.userId).emit('game-info', {
       floorWidth: this.game.getField().getWidth(),
       floorLength: this.game.getField().getLength(),
@@ -78,6 +76,7 @@ export class GameGateway
       ballStartZ: this.game.getBall().getPosition().z,
       scorePlayer1: this.game.getScoreboard().getPlayer1(),
       scorePlayer2: this.game.getScoreboard().getPlayer2(),
+      chargePlayer1: this.game.getPaddle1().getSpecialShot().getCharge(),
     });
     this.game.launch();
     setInterval(() => {
@@ -91,6 +90,14 @@ export class GameGateway
       this.io.to(client.userId).emit('player2', {
         x: this.game.getPaddle2().getPosition().x,
       });
+
+      this.io.to(client.userId).emit('charge', {
+        charge: this.game.getPaddle1().getSpecialShot().getCharge(),
+      })
+      this.io.to(client.userId).emit('score', {
+        scorePlayer1: this.game.getScoreboard().getPlayer1(),
+        scorePlayer2: this.game.getScoreboard().getPlayer2(),
+      })
     }, 1000 / 60); // 60 frames per second
 
   }
@@ -135,6 +142,8 @@ export class GameGateway
       });
     }
   }
+
+  /*======= special shot =======*/
 
   @SubscribeMessage('special-shot')
   async OnSpecialShot(client: AuthSocket): Promise<void> {

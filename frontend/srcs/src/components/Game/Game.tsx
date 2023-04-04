@@ -19,7 +19,7 @@ import {
   Stats,
   SoftShadows,
 } from "@react-three/drei";
-import { AxesHelper, Vector3 } from "three";
+import { AxesHelper, Vector2, Vector3 } from "three";
 import { nanoid } from "nanoid";
 import { toonShaderMaterial } from "../../services/Game/shaders/shadersUtils";
 import { GameSocket } from "../../services/Game/SocketContext";
@@ -39,6 +39,8 @@ import {
 } from "@react-three/postprocessing";
 import Particles from "./Components/Particles";
 import SceneCamera from "./Components/SceneCamera";
+import ChargeCounter from "./Components/Charge";
+import Scoreboard from "./Components/Scoreboard";
 
 interface GameInfo {
   floorWidth: number;
@@ -55,6 +57,7 @@ interface GameInfo {
   ballStartZ: number;
   scorePlayer1: number;
   scorePlayer2: number;
+  chargePlayer1: number;
 }
 
 const defaultValue = {
@@ -72,6 +75,7 @@ const defaultValue = {
   ballStartX: 0,
   ballStartY: 0,
   ballStartZ: 0,
+  chargePlayer1: 0,
 };
 
 function Game() {
@@ -104,7 +108,13 @@ function Game() {
       <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
       <Ball
         radius={gameInfo.ballRadius}
-        startPos={new Vector3(gameInfo.ballStartX, gameInfo.ballStartY, gameInfo.ballStartZ)}
+        startPos={
+          new Vector3(
+            gameInfo.ballStartX,
+            gameInfo.ballStartY,
+            gameInfo.ballStartZ
+          )
+        }
       />
       <PlayerPaddle
         width={gameInfo.paddleWidth}
@@ -123,6 +133,13 @@ function Game() {
         startPos={
           new Vector3(gameInfo.paddleOppStartX, 0, gameInfo.paddleOppStartZ)
         }
+      />
+      <ChargeCounter
+        charge={gameInfo.chargePlayer1}
+      />
+      <Scoreboard
+        score1={gameInfo.scorePlayer1}
+        score2={gameInfo.scorePlayer2}
       />
       <hemisphereLight args={["#ffff", 0.6]} />
       {/* <Particles /> */}

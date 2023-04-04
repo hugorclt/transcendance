@@ -28,6 +28,10 @@ export class SpecialShot {
         return this.color;
     }
 
+    getCharge() {
+        return this.charge;
+    }
+
     resetCharge() {
         this.charge = 0;
         this.isReady = false;

@@ -72,9 +72,11 @@ export class Paddle {
     
 
     trigger() {
-        if (this.isSpecialShot == false)
-            this.isSpecialShot = true;
-        else
+        if (this.isSpecialShot === false) {
+          this.isSpecialShot = true;
+          setTimeout(() => {
             this.isSpecialShot = false;
-    }
+          }, 1000);
+        }
+      }
 }

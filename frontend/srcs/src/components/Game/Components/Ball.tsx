@@ -23,14 +23,11 @@ const Ball = (props: TBallProps) => {
 
   useEffect(() => {
     socket?.on("ball", (data) => {
-      console.log("useEffectBall");
-      console.log(data);
+      // console.log("useEffectBall");
+      // console.log(data);
       ballRef.current.position.x = data.x;
       ballRef.current.position.y = data.y;
       ballRef.current.position.z = data.z;
-      console.log("x",ballRef.current.position.x);
-      console.log("y",ballRef.current.position.y);
-      console.log("z",ballRef.current.position.z);
     });
     return () => {
       socket?.off("ball");
@@ -41,9 +38,9 @@ const Ball = (props: TBallProps) => {
 
   return (
     <Trail
-      width={5} // Width of the line
+      width={2} // Width of the line
       color={"skyblue"} // Color of the line
-      length={10} // Length of the line
+      length={3} // Length of the line
       decay={1} // How fast the line fades away
       local={false} // Wether to use the target's world or local positions
       stride={0} // Min distance between previous and current point
