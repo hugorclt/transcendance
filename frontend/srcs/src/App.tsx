@@ -3,9 +3,8 @@ import { Route, Routes } from "react-router-dom";
 
 import LoginPage from "./views/LoginPage/LoginPage";
 import ProfilePage from "./views/ProfilePage/ProfilePage";
-// import LeaderboardsPage from "./views/LeaderboardsPage/LeaderboardsPage";
+import RankingPage from "./views/RankingPage/RankingPage";
 import ShopPage from "./views/ShopPage/ShopPage";
-// import GamePage from "./views/GamePage/GamePage";
 import MissingPage from "./components/common/Missing/MissingPage";
 
 import RequireAuth from "./services/Auth/RequireAuth";
@@ -34,7 +33,7 @@ function App() {
                 <Route path="/" element={<LobbyPage />} />
                 <Route path="/shop" element={<ShopPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                {/* <Route path="/leaderboards" element={<LeaderboardsPage />} /> */}
+                <Route path="/ranking" element={<RankingPage />} />
               </Route>
             </Route>
             {/* <Route element={<RequireInGameStatus />}> */}
