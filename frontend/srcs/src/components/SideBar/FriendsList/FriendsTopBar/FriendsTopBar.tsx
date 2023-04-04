@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AiOutlineUsergroupAdd,
   AiOutlineSearch,
@@ -6,25 +6,23 @@ import {
 } from "react-icons/ai";
 import { COLORS } from "../../../../colors";
 import {
-  AddFriendsForm,
   FriendsTopBarContainer,
-  ModalBox,
   RightFriendsTopBarBox,
-  StyledInput,
-  StyledButton,
-  ModalTitle,
 } from "./FriendsTopBarStyle";
-import Popup from "reactjs-popup";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import { useAtom } from "jotai";
+import { searchUserAtom } from "../../../../services/store";
 
 function FriendsTopBar() {
-  const [open, setOpen] = useState(false);
+  const [openInvite, setOpenInvite] = useState(false);
+  const [openFilter, setOpenFilter] = useState(false);
   const [username, setUsername] = useState("");
+  const [searchFriend, setSearchFriends] = useAtom(searchUserAtom);
   const axiosPrivate = useAxiosPrivate();
 
   const handleSubmit = () => {
-    setOpen(false);
+    setOpenInvite(false);
     axiosPrivate
       .post("/invitations", { type: "FRIEND", username: username })
       .then((response: AxiosResponse) => {
@@ -36,9 +34,9 @@ function FriendsTopBar() {
     setUsername("");
   };
 
-  return (
-    <FriendsTopBarContainer>
-      {open ? (
+  const renderTopBar = () => {
+    if (openInvite) {
+      return (
         <>
           <input
             type="text"
@@ -50,24 +48,48 @@ function FriendsTopBar() {
           <AiOutlineClose
             size={24}
             color={COLORS.secondary}
-            onClick={() => setOpen(false)}
+            onClick={() => setOpenInvite(false)}
           />
         </>
-      ) : (
+      );
+    } else if (openFilter) {
+      return (
         <>
-          <h4>FRIENDS</h4>
-          <RightFriendsTopBarBox>
-            <AiOutlineUsergroupAdd
-              onClick={() => setOpen(true)}
-              size={22}
-              color={COLORS.secondary}
-            />
-            <AiOutlineSearch size={22} color={COLORS.secondary} />
-          </RightFriendsTopBarBox>
+          <input
+            type="text"
+            placeholder="Search Friends"
+            onChange={(e) => setSearchFriends(e.target.value)}></input>
+          <AiOutlineClose
+            size={24}
+            color={COLORS.secondary}
+            onClick={() => {
+              setSearchFriends("");
+              setOpenFilter(false);
+            }}
+          />
         </>
-      )}
-    </FriendsTopBarContainer>
-  );
+      );
+    }
+    return (
+      <>
+        <h4>FRIENDS</h4>
+        <RightFriendsTopBarBox>
+          <AiOutlineUsergroupAdd
+            onClick={() => setOpenInvite(true)}
+            size={22}
+            color={COLORS.secondary}
+          />
+          <AiOutlineSearch
+            size={22}
+            color={COLORS.secondary}
+            onClick={() => setOpenFilter(true)}
+          />
+        </RightFriendsTopBarBox>
+      </>
+    );
+  };
+
+  return <FriendsTopBarContainer>{renderTopBar()}</FriendsTopBarContainer>;
 }
 
 export default FriendsTopBar;

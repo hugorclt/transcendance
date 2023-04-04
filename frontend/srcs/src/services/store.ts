@@ -17,6 +17,8 @@ export const userAtom = atom<TUser>({
   balance: 0,
 });
 
+export const searchUserAtom = atom<string>("");
+
 export const userPreferencesAtom = atom<TUserPreferences>({
   visibility: "",
 });
