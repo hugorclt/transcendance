@@ -12,7 +12,7 @@ function LobbyPage() {
   return (
     <LobbySocketProvider>
       <LobbyProvider>
-        {user.status == "LOBBY" ? <LobbyLayout /> : /*<GameModeSelector /> */ <></>}
+        {user.status == "LOBBY" ? <LobbyLayout /> : /*<GameModeSelector />*/ <></>}
       </LobbyProvider>
     </LobbySocketProvider>
   );

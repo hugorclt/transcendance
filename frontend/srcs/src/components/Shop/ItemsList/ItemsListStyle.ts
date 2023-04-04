@@ -33,11 +33,9 @@ export const ShopTopBarSelect = styled.select`
 `;
 
 export const CardsContainer = styled.div`
-  /* display: flex; */
-  /* flex-wrap: wrap; */
-  /* justify-content: center; */
-  /* flex-grow: 1; */
+  width:100%;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(304px, 1fr));
+  gap: 32px;
 `;

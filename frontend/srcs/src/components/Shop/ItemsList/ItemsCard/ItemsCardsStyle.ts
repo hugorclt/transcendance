@@ -7,7 +7,6 @@ export const ItemsCardsContainer = styled.div`
   border-radius: 8px;
   box-sizing: border-box;
   position: relative;
-  margin:32px;
 
   .top-text {
     display: flex;
