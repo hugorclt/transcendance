@@ -5,7 +5,7 @@ export const DrawerContainer = styled.div`
   display: flex;
   height: 100%;
   width: 318px;
-  transition: all 400ms ease-in;
+  transition: all 400ms;
   position: absolute;
   background-color: ${COLORS.background};
   right: -270px;
@@ -15,9 +15,13 @@ export const DrawerContainer = styled.div`
   }
 
   .rotate-arrow {
-    transform:rotate(180deg);
-    -ms-transform:rotate(180deg);
-    -webkit-transform:rotate(180deg);
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+  }
+
+  .arrow {
+    transition: all 400ms ease-in;
   }
 `;
 

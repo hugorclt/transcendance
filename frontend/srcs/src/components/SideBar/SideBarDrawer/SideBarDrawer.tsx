@@ -11,27 +11,16 @@ function SideBarDrawer() {
   };
 
   const animateArrow = () => {
-    return isOpen ? "rotate-arrow" : "";
+    return isOpen ? "arrow rotate-arrow" : "arrow";
   }
   return (
     <DrawerContainer className={animateDrawer()}>
       <ButtonSlider>
-        {/* {isOpen ? <MdKeyboardDoubleArrowRight
-          onClick={() => setIsOpen(!isOpen)}
-          size={32}
-          color={COLORS.secondary}
-        />: <MdKeyboardDoubleArrowLeft
-          onClick={() => setIsOpen(!isOpen)}
-          size={32}
-          color={COLORS.secondary}
-        /> } */}
-
         <MdKeyboardDoubleArrowLeft
           className={animateArrow()}
           onClick={() => setIsOpen(!isOpen)}
           size={32}
           color={COLORS.secondary} />
-        
       </ButtonSlider>
       <SideBar />
     </DrawerContainer>

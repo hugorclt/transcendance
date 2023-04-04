@@ -5,6 +5,7 @@ import { screenSize } from "../../mediaSize";
 export const MainLayoutContainer = styled.div`
   height: 100vh;
   width: 100%;
+  overflow-x: hidden;
   display: flex;
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
