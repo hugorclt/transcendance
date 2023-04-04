@@ -8,11 +8,12 @@ import {
 import axios from "../../../services/axios";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError, AxiosResponse } from "axios";
-import { useGlobal } from "../../../services/Global/GlobalProvider";
 import { SocialContainer } from "../AuthForm/AuthForm.style";
 import { COLORS } from "../../../colors";
 import { useGoogleLogin } from "@react-oauth/google";
 import { BsGoogle } from "react-icons/bs";
+import { useAtom } from "jotai";
+import { userAtom } from "../../../services/store";
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
@@ -21,7 +22,7 @@ function GoogleAuth() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; //where the user came from, if we can't get it, root
-  const { setAuth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
@@ -74,7 +75,11 @@ function GoogleAuth() {
         setIsVisible("block");
         const username = response?.data.username;
         const accessToken = response?.data.access_token;
-        setAuth({ username, accessToken });
+        setUser((prev) => ({
+          ...prev,
+          username: username,
+          accessToken: accessToken,
+        }));
         navigate(from, { replace: true });
         navigate(from, { replace: true });
       })

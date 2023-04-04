@@ -10,6 +10,7 @@ import {
 export const userAtom = atom<TUser>({
   id: "",
   username: "",
+  accessToken: "",
   status: "",
   avatar: "",
   exp: 0,

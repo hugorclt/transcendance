@@ -14,9 +14,6 @@ export const DrawerContainer = styled.div`
     transform: translate(-270px);
     background-color: ${COLORS.red};
   }
-  &.drawer-close {
-    transform: translate(270px);
-  }
 `;
 
 export const ButtonSlider = styled.div`

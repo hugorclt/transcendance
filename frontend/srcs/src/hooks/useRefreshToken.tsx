@@ -1,19 +1,18 @@
+import { useAtom } from "jotai";
 import axios from "../services/axios";
-import { useGlobal } from "../services/Global/GlobalProvider";
+import { userAtom } from "../services/store";
 
 function useRefreshToken() {
-  const { setAuth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   const refresh = async () => {
     const response = await axios.get("/auth/refresh");
 
-    setAuth((prev) => {
-      return {
-        ...prev,
-        accessToken: response.data.access_token,
-        username: response.data.username,
-      };
-    });
+    setUser((prev) => ({
+      ...prev,
+      username: response.data.username,
+      accessToken: response.data.access_token,
+    }));
     return response.data.access_token;
   };
   return refresh;

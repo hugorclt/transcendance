@@ -1,11 +1,12 @@
 import { axiosPrivate } from "../services/axios";
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
-import { useGlobal } from "../services/Global/GlobalProvider";
+import { useAtom } from "jotai";
+import { userAtom } from "../services/store";
 
 function useAxiosPrivate() {
   const refresh = useRefreshToken();
-  const { auth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   //this hook will attach the interceptors to the axios instance
   useEffect(() => {
@@ -13,7 +14,7 @@ function useAxiosPrivate() {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
+          config.headers["Authorization"] = `Bearer ${user?.accessToken}`;
         }
         return config;
       },
@@ -44,7 +45,7 @@ function useAxiosPrivate() {
       axiosPrivate.interceptors.response.eject(responseIntercept);
       axiosPrivate.interceptors.request.eject(requestIntercept);
     };
-  }, [auth, refresh]);
+  }, [user.accessToken, refresh]);
   return axiosPrivate;
 }
 

@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import GlobalProvider from "./services/Global/GlobalProvider";
 import { GlobalStyle } from "./globalStyle";
 
 // if (import.meta.env["ENV_MODE"] === "production") {
@@ -17,10 +16,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <GlobalStyle />
-    <GlobalProvider>
-      <Routes>
-        <Route path="/*" element={<App />} />
-      </Routes>
-    </GlobalProvider>
+    <Routes>
+      <Route path="/*" element={<App />} />
+    </Routes>
   </BrowserRouter>
 );

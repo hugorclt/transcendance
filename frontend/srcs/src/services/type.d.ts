@@ -1,6 +1,7 @@
 export interface TUser {
   id: string;
   username: string;
+  accessToken: string;
   status: string;
   avatar: string;
   exp: number;

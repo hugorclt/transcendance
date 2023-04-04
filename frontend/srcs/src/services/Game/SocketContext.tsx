@@ -1,3 +1,4 @@
+import { useAtom } from "jotai";
 import React, {
   createContext,
   useRef,
@@ -6,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { useGlobal } from "../Global/GlobalProvider";
+import { userAtom } from "../store";
 
 async function initializeSocket(token: string) {
   try {
@@ -26,13 +27,13 @@ export const GameSocket = createContext<Socket | null>(null);
 export function GameSocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const connected = useRef(false);
-  const { auth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
     async function initSocket() {
       if (!connected.current) {
         console.log("init game socket");
-        const s: any = await initializeSocket(auth?.accessToken);
+        const s: any = await initializeSocket(user?.accessToken);
         setSocket(s);
       }
       connected.current = true;

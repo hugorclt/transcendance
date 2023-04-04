@@ -1,14 +1,15 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useGlobal } from "../Global/GlobalProvider";
+import { useAtom } from "jotai";
+import { userAtom } from "../store";
 
 function RequireInGameStatus() {
-  const { status } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
   const location = useLocation();
 
-  return (status == "GAME") ? (
-      <Outlet />
-      ) : (
-      <Navigate to="/" state={{ from: location }} replace />
+  return user.status == "GAME" ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" state={{ from: location }} replace />
   );
 }
 

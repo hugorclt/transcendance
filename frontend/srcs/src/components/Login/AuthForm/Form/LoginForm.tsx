@@ -3,12 +3,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { AxiosError, AxiosResponse } from "axios";
 import { LoginFormContainer } from "./LoginFormStyle";
-import { useGlobal } from "../../../../services/Global/GlobalProvider";
 import { axiosClient } from "../../../../services/axios";
 import HeptaButton from "../../../common/Button/HeptaButton/HeptaButton";
+import { useAtom } from "jotai";
+import { userAtom } from "../../../../services/store";
 
 function LoginForm() {
-  const { setAuth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -72,7 +73,12 @@ function LoginForm() {
         setSuccess(true);
         setIsVisible("visible");
         const accessToken = response?.data?.access_token;
-        setAuth({ username, accessToken });
+        setUser((prev) => ({
+          ...prev,
+          username: username,
+          accessToken: accessToken,
+        }));
+        console.log("user ", username, " logged in: ", accessToken);
         setUsername("");
         setPassword("");
         navigate(from, { replace: true });

@@ -6,7 +6,8 @@ import React, {
   useEffect,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { useGlobal } from "../../services/Global/GlobalProvider";
+import { userAtom } from "../store";
+import { useAtom } from "jotai";
 
 async function initializeSocket(token: string) {
   try {
@@ -26,13 +27,13 @@ export const SocketContext = createContext<Socket | null>(null);
 export function SocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const connected = useRef(false);
-  const { auth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
     async function initSocket() {
       if (!connected.current) {
         console.log("init socket");
-        const s: any = await initializeSocket(auth?.accessToken);
+        const s: any = await initializeSocket(user?.accessToken);
         setSocket(s);
       }
       connected.current = true;
