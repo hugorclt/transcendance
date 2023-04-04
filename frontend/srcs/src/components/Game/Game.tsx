@@ -41,6 +41,7 @@ import Particles from "./Components/Particles";
 import SceneCamera from "./Components/SceneCamera";
 import ChargeCounter from "./Components/Charge";
 import Scoreboard from "./Components/Scoreboard";
+import { Euler } from "three";
 
 interface GameInfo {
   floorWidth: number;
@@ -103,7 +104,7 @@ function Game() {
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
-      {/* <OrbitControls /> */}
+      <OrbitControls />
       <primitive object={new AxesHelper(10)} />
       <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
       <Ball
@@ -134,15 +135,20 @@ function Game() {
           new Vector3(gameInfo.paddleOppStartX, 0, gameInfo.paddleOppStartZ)
         }
       />
-      <ChargeCounter
-        charge={gameInfo.chargePlayer1}
-      />
+      <ChargeCounter charge={gameInfo.chargePlayer1} />
       <Scoreboard
         score1={gameInfo.scorePlayer1}
         score2={gameInfo.scorePlayer2}
       />
+      <Wall
+        position={new Vector3(-gameInfo.floorWidth / 2, 0, 0)}
+        color="#6f6f6f"
+        sectionColor="#9d4b4b"
+        infiniteGrid={true}
+        // rotation={[0,0,0]}
+      />
       <hemisphereLight args={["#ffff", 0.6]} />
-      {/* <Particles /> */}
+      {/* <Particles /> */}s
       {/* <ambientLight color="#fff" /> */}
       <SoftShadows />
       <Stats />

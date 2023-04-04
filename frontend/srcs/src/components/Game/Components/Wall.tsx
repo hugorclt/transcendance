@@ -1,19 +1,20 @@
-import { Vector3 } from "three";
+import { Vector3, Euler } from "three";
+import { Grid, GridProps } from "@react-three/drei";
 
-interface TWallProps {
+interface TWallProps extends GridProps {
   position: Vector3;
-  width: number;
-  height: number;
-  depth: number;
   color: string;
+  rotation?: Euler;
 }
 
 const Wall = (props: TWallProps) => {
+  const { position, color, rotation, ...gridProps } = props;
   return (
-    <mesh position={props.position}>
-      <boxGeometry args={[props.width, props.height, props.depth]} />
-      <meshToonMaterial color={props.color} />
-    </mesh>
+    <group position={position} rotation={[0,0,0]}>
+      <Grid {...gridProps}/>
+      <mesh>
+      </mesh>
+    </group>
   );
 };
 
