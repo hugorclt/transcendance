@@ -5,6 +5,7 @@ import { screenSize } from "../../mediaSize";
 export const MainLayoutContainer = styled.div`
   height: 100vh;
   width: 100%;
+  overflow-x: hidden;
   display: flex;
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
@@ -12,7 +13,6 @@ export const MainLayoutContainer = styled.div`
 `;
 
 export const SideBarContainer = styled.div`
-  width: 270px;
   background-color: #19191a;
 `;
 

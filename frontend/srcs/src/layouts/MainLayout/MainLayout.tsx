@@ -10,6 +10,7 @@ import {
   SideBarContainer,
   PageContainer,
 } from "./MainLayout.style";
+import SideBarPage from "../../views/SideBarPage/SideBarPage";
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -24,11 +25,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
             <PageContainer>{children}</PageContainer>
           </MainContainer>
 
-          {/* A remplacer par query sur desktop / laptop */}
-          <SideBarContainer>
-            <h1>SIDEBAR</h1>
-            {/* <SideBarPage /> */}
-          </SideBarContainer>
+          <SideBarPage />
         </MainLayoutContainer>
       </MediaQuery>
 
