@@ -32,4 +32,4 @@ export const friendAtom = atom<TFriend[]>([]);
 
 export const conversationAtom = atom<TConversation[]>([]);
 
-export const selectedPageAtom = atom<number>(0);
+export const selectedPageAtom = atom<string>("/");

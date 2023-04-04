@@ -8,6 +8,7 @@ export const HeptahedreContainer = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+  cursor: pointer;
   svg {
     -webkit-filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.7));
     filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.7));

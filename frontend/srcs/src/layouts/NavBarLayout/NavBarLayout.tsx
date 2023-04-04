@@ -3,24 +3,26 @@ import Heptahedre from "../../components/common/Heptahedre/Heptahedre";
 import {
   ItemsContainer,
   MiddleItemContainer,
-  NavBarItem,
 } from "./NavBarLayout.style";
 import MainButton from "../../components/NavBar/MainButton/MainButton";
+import NavBarItem from "../../components/NavBar/NavBarItem/NavBarItem";
 
 function NavBarLayout() {
   return (
     <>
       <ItemsContainer>
-        <NavBarItem />
-        <NavBarItem />
+        <NavBarItem path="/shop" value={"SHOP"} />
+        <NavBarItem path="/leaderboards" value={"RANKING"} />
       </ItemsContainer>
 
       <MiddleItemContainer>
-        <MainButton />
+        <MainButton>
+          <h1>PLAY</h1>
+        </MainButton>
       </MiddleItemContainer>
 
       <ItemsContainer>
-        <NavBarItem />
+        <NavBarItem path="/profile" value={"PROFILE"} />
       </ItemsContainer>
     </>
   );

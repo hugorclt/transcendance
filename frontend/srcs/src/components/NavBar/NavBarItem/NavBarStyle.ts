@@ -1,31 +1,10 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { COLORS } from "../../colors";
-import NavBarItem from "./NavBarItem/NavBarItem";
-
-export const NavBarContainer = styled.div`
-  width: 82%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-
-  .navbar-item:nth-child(3) {
-    text-align: center;
-  }
-`;
-
-export const NavBarContainerMobile = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  height:112px;
-  justify-content: space-around;
-`
+import { COLORS } from "../../../colors";
 
 export const NavBarItemStyle = styled.div`
-  margin: 16px;
-`;
+  margin: 24px;
+`
 
 export const NavBarLink = styled(Link)`
   color: ${(props) => props.color};
