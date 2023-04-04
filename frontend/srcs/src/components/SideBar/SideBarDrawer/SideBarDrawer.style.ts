@@ -5,14 +5,19 @@ export const DrawerContainer = styled.div`
   display: flex;
   height: 100%;
   width: 318px;
-  transition: all 400ms;
+  transition: all 400ms ease-in;
   position: absolute;
   background-color: ${COLORS.background};
   right: -270px;
 
   &.drawer-open {
     transform: translate(-270px);
-    background-color: ${COLORS.red};
+  }
+
+  .rotate-arrow {
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
   }
 `;
 

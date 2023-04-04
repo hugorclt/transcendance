@@ -1,13 +1,11 @@
 import React, { ReactNode } from "react";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../mediaSize";
-// import ChatPage from "../../views/ChatPage/ChatPage";
 import NavBarPage from "../../views/NavBarPage/NavBarPage";
 import {
   MainLayoutContainer,
   NavBarContainer,
   MainContainer,
-  SideBarContainer,
   PageContainer,
 } from "./MainLayout.style";
 import SideBarPage from "../../views/SideBarPage/SideBarPage";
