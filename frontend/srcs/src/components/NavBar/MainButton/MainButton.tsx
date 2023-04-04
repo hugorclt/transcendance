@@ -32,7 +32,9 @@ function MainButton({ children }: TMainButtonProps) {
           fill={COLORS.secondary}
         />
       </svg>
-      <MainButtonTextContainer>{children}</MainButtonTextContainer>
+      <MainButtonTextContainer onClick={handleClick}>
+        {children}
+      </MainButtonTextContainer>
     </HeptahedreContainer>
   );
 }
