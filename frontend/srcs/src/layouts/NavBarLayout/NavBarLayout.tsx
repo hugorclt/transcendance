@@ -12,7 +12,7 @@ function NavBarLayout() {
     <>
       <ItemsContainer>
         <NavBarItem path="/shop" value={"SHOP"} />
-        <NavBarItem path="/leaderboards" value={"RANKING"} />
+        <NavBarItem path="/ranking" value={"RANKING"} />
       </ItemsContainer>
 
       <MiddleItemContainer>

@@ -12,7 +12,16 @@ export const DrawerContainer = styled.div`
 
   &.drawer-open {
     transform: translate(-270px);
-    background-color: ${COLORS.red};
+  }
+
+  .rotate-arrow {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+  }
+
+  .arrow {
+    transition: all 400ms ease-in;
   }
 `;
 
