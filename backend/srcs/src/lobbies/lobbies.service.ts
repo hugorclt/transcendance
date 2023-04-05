@@ -258,7 +258,6 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
       userId: userId,
     });
-    //return updated lobby with potential new state
     return await this.updateLobbyState(lobbyId, null);
   }
 
