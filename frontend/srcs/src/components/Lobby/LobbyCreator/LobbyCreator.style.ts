@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { COLORS } from "../../colors";
-import { mediaSize } from "../../mediaSize";
+import { COLORS } from "../../../colors";
+import { mediaSize } from "../../../mediaSize";
 
 export const GameModeContainer = styled.div`
   width: 100%;

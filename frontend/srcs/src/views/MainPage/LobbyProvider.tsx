@@ -16,6 +16,7 @@ function LobbyProvider({ children }: { children: ReactNode }) {
       })
       .catch((err: AxiosError) => {
         console.log("Error while fetching lobby");
+        //SET LOBBY TO DEFAULT DISCRIMINATORY VALUE ?
       });
   }, []);
 

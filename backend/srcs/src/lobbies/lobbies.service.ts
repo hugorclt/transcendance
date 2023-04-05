@@ -220,13 +220,17 @@ export class LobbiesService {
         (!lobby.private && lobby.members.length == lobby.nbPlayers / 2) ||
         (lobby.private && lobby.members.length == lobby.nbPlayers)
       ) {
-        console.log('lobby full');
         if (lobby.state == LobbyState.JOINABLE) {
           return await this.prisma.lobby.update({
             where: { id: lobby.id },
-            data: { state: state as LobbyState },
+            data: { state: LobbyState.FULL },
           });
         }
+      } else if (lobby.state == LobbyState.FULL) {
+        return await this.prisma.lobby.update({
+          where: { id: lobby.id },
+          data: { state: LobbyState.JOINABLE },
+        });
       }
     } else {
       return await this.prisma.lobby.update({

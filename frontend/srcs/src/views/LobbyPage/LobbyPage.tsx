@@ -1,10 +1,11 @@
 import React from "react";
-import LobbyLayout from "../../layouts/LobbyLayout/LobbyLayout";
+import LobbyLayout from "../../layouts/LobbyLayout/TeamBuilderLayout/TeamBuilderLayout";
 import { LobbySocketProvider } from "../../services/Lobby/LobbySocketContext";
 import LobbyProvider from "../MainPage/LobbyProvider";
 import { useAtom } from "jotai";
 import { userAtom } from "../../services/store";
-import GameModeSelector from "../../components/GameModeSelector/GameModeSelector";
+import LobbyCreatorLayout from "../../layouts/LobbyLayout/LobbyCreatorLayout/LobbyCreatorLayout";
+import LobbyCreatorProvider from "./LobbyCreatorProvider";
 
 function LobbyPage() {
   const [user, setUser] = useAtom(userAtom);
@@ -12,7 +13,13 @@ function LobbyPage() {
   return (
     <LobbySocketProvider>
       <LobbyProvider>
-        {user.status == "LOBBY" ? <LobbyLayout /> : /*<GameModeSelector />*/ <></>}
+        {user.status == "LOBBY" ? (
+          <LobbyLayout />
+        ) : (
+          <LobbyCreatorProvider>
+            <LobbyCreatorLayout />
+          </LobbyCreatorProvider>
+        )}
       </LobbyProvider>
     </LobbySocketProvider>
   );

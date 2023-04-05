@@ -1,10 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { useLobbyContext } from "../../../../views/LobbyPage/LobbyContext";
-import {
-  GameModeButtonBody,
-  GameModeCardsBody,
-} from "../GamemodeSelectorStyle";
 import {
   GameModeCardsBottom,
   GameModeCardsButton,
@@ -14,7 +9,8 @@ import {
   GameModeCardsText,
   GameModeCardsTitleBox,
   GameModeCardsUpper,
-} from "./GameModeCardStyle";
+} from "./GameModeCard.style";
+import { useLobbyCreatorContext } from "../../../../views/LobbyPage/LobbyCreatorProvider";
 
 interface Props {
   mode: string;
@@ -23,7 +19,8 @@ interface Props {
 
 function GameModeCard(props: Props) {
   const [onHover, setOnHover] = useState(false);
-  const { setOnModeSelected, setSelectedMode, setPlayers } = useLobbyContext();
+  const { setOnModeSelected, setSelectedMode, setPlayers } =
+    useLobbyCreatorContext();
   const handle1v1Click = (e: React.SyntheticEvent) => {
     e.preventDefault();
     setOnModeSelected(true);
