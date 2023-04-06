@@ -20,6 +20,26 @@ const data = [
   { name: "hugo", stats: ["10560", "200", "1000540"] },
   { name: "hugo", stats: ["10052", "20004", "1000340"] },
   { name: "hugo", stats: ["104350", "20007", "1000230"] },
+  { name: "hugo", stats: ["1050", "2002", "10053400"] },
+  { name: "hugo", stats: ["1250", "20012", "10034500"] },
+  { name: "hugo", stats: ["15260", "203", "100300"] },
+  { name: "hugo", stats: ["10654", "210", "1002300"] },
+  { name: "hugo", stats: ["10560", "2020", "1002300"] },
+  { name: "hugo", stats: ["150", "20078", "100007"] },
+  { name: "hugo", stats: ["13400", "20060", "100500"] },
+  { name: "hugo", stats: ["10560", "200", "1000540"] },
+  { name: "hugo", stats: ["10052", "20004", "1000340"] },
+  { name: "hugo", stats: ["104350", "20007", "1000230"] },
+  { name: "hugo", stats: ["1050", "2002", "10053400"] },
+  { name: "hugo", stats: ["1250", "20012", "10034500"] },
+  { name: "hugo", stats: ["15260", "203", "100300"] },
+  { name: "hugo", stats: ["10654", "210", "1002300"] },
+  { name: "hugo", stats: ["10560", "2020", "1002300"] },
+  { name: "hugo", stats: ["150", "20078", "100007"] },
+  { name: "hugo", stats: ["13400", "20060", "100500"] },
+  { name: "hugo", stats: ["10560", "200", "1000540"] },
+  { name: "hugo", stats: ["10052", "20004", "1000340"] },
+  { name: "hugo", stats: ["104350", "20007", "1000230"] },
 ];
 
 function Ranking() {
@@ -64,14 +84,14 @@ function Ranking() {
       <MediaQuery minWidth={mediaSize.laptop}>
         <thead>
           <tr>
-            <td>
+            <th>
               <h4>NAME</h4>
-            </td>
+            </th>
             {stats.map((stat) => {
               return (
-                <td key={nanoid()}>
+                <th key={nanoid()}>
                   <h4>{stat}</h4>
-                </td>
+                </th>
               );
             })}
           </tr>

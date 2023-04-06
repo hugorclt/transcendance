@@ -5,7 +5,8 @@ import { nanoid } from "nanoid";
 
 function RankingCards({ name, stats, color, index }: TRankCardsProps) {
   return (
-    <tr style={{ backgroundColor: color }}>
+    // style={{ backgroundColor: color }}
+    <tr >
       <td>
         <h5>
           {index} {name}
