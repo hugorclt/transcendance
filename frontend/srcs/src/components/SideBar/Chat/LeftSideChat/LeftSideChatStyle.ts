@@ -9,7 +9,7 @@ export const ChatManagerBox = styled.div`
   background-color: ${COLORS.background};
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding:8px;
   border-top-left-radius: 8px;
   box-sizing: border-box;

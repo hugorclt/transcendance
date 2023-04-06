@@ -16,9 +16,11 @@ import JoinRoom from "./JoinRoom.tsx/JoinRoom";
 import { useAtom } from "jotai";
 import { conversationAtom, userAtom } from "../../../services/store";
 import { RoomModalOpenContext } from "../../../views/SideBarPage/RoomModalOpenContext";
+import SliderMenu from "../../common/SliderMenu/SliderMenu";
 
 function ChatHistory() {
   const { open, setOpen } = useContext(RoomModalOpenContext);
+  const [isCreate, setIsCreate] = useState("CREATE");
   const [chatHistory, setChatHistory] = useAtom(conversationAtom);
   const [user] = useAtom(userAtom);
 
@@ -42,8 +44,8 @@ function ChatHistory() {
         >
           <ModalBoxCreateRoom>
             <ModalCreateJoin>
-              <CreateRoom />
-              <JoinRoom />
+              <SliderMenu items={["CREATE", "JOIN"]} flex={"space-between"} state={isCreate} setState={setIsCreate}/>
+              {isCreate == "CREATE" ? <CreateRoom /> : <JoinRoom /> }
             </ModalCreateJoin>
           </ModalBoxCreateRoom>
         </Popup>

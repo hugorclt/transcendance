@@ -38,7 +38,7 @@ export const ChatMessageContainer = styled.form`
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 100%;
 `;
 

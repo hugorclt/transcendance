@@ -35,8 +35,9 @@ export const StyledInput = styled.input`
   background-color: ${COLORS.border};
   color: ${COLORS.primary};
   border: none;
-  padding: 4px;
+  padding: 6px;
   margin: 8px;
+  width: 50%;
   &[disabled] {
     background-color: ${COLORS.disabled};
   }

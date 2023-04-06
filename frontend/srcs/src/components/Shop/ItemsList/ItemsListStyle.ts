@@ -4,6 +4,7 @@ import { COLORS } from "../../../colors";
 export const ShopTopBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   input {
     border: none;
@@ -11,6 +12,7 @@ export const ShopTopBarContainer = styled.div`
     color: ${COLORS.primary};
     padding: 8px;
     border-radius: 8px;
+    height: 16px;
   }
 `;
 
@@ -30,10 +32,12 @@ export const ShopTopBarSelect = styled.select`
   border: none;
   border-radius: 8px;
   color: ${COLORS.primary};
+  padding: 8px;
 `;
 
 export const CardsContainer = styled.div`
   width:100%;
+  height:100%;
   overflow-y: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(304px, 1fr));
