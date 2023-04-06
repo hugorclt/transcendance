@@ -3,22 +3,37 @@ import styled from "styled-components";
 export const RankingTable = styled.table`
   width: 100%;
   height: 100%;
+  /* background-color: salmon; */
 
-  td {
-    padding: 12px;
+  thead {
+    display: inline-block;
+    width: 100%;
+  }
+
+  tbody {
+    width: 100%;
+    overflow-y: auto;
+    display: block;
+    height: calc(100vh - 205px);
   }
 
   tr {
     border-radius: 8px;
-
+    width: 20%;
+    background-color: red;
+    /* display: inline-block; */
+    /* display: flex; */
+    /* justify-content: space-between; */
   }
 
-  thead {
-    display: block;
+  td {
+    /* padding: 12px; */
+    width: 35%;
+    /* background-color: indigo; */
   }
 
-  tbody {
-    overflow-y: auto;
-    display: block;
+  th {
+    /* padding: 12px; */
+    width: 35%;
   }
 `;
