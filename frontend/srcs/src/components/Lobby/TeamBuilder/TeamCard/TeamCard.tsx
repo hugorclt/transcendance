@@ -33,10 +33,10 @@ function TeamCard(props: TeamCardProps) {
     <>
       <TeamInfoContainer>
         <TeamStatusContainer>
-          <h4>{props.team ? "RIGHT" : "LEFT"} TEAM</h4>
-          <h4>
+          <h5>{props.team ? "RIGHT" : "LEFT"} TEAM</h5>
+          <h5>
             {teamMembers?.length || "0"}/{lobby.nbPlayers / 2}
-          </h4>
+          </h5>
         </TeamStatusContainer>
         <InviteFriendsButton />
       </TeamInfoContainer>

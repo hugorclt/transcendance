@@ -10,9 +10,8 @@ import {
   PlayerCardAvatar,
   PlayerCardContainer,
   PlayerCardLeftBorder,
-  PlayerCardName,
-  PlayerCardStatus,
   PlayerInfoContainer,
+  PlayerNameContainer,
 } from "./PlayerCardStyle";
 
 interface PlayerCardProps {
@@ -48,9 +47,11 @@ function PlayerCard({ team, member }: PlayerCardProps) {
       <PlayerCardLeftBorder color={team == false ? COLORS.red : COLORS.blue} />
       <PlayerInfoContainer>
         <PlayerCardAvatar />
-        <PlayerCardName>{member?.user?.username}</PlayerCardName>
+        <PlayerNameContainer>
+          <h4>{member?.user?.username}</h4>
+        </PlayerNameContainer>
         {user.id == lobby.ownerId && <button onClick={kickPlayer}>KICK</button>}
-        <PlayerCardStatus>{member.ready ? "READY" : "..."}</PlayerCardStatus>
+        <h4>{member.ready ? "READY" : "..."}</h4>
       </PlayerInfoContainer>
     </PlayerCardContainer>
   );

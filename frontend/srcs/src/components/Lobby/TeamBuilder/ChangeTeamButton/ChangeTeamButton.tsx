@@ -22,9 +22,7 @@ function ChangeTeamButton() {
   };
 
   return (
-    <ChangeTeamButtonContainer>
-      <button onClick={changeTeam}>Change Team</button>
-    </ChangeTeamButtonContainer>
+    <ChangeTeamButtonContainer onClick={changeTeam}></ChangeTeamButtonContainer>
   );
 }
 

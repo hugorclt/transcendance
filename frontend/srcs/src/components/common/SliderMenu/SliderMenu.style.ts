@@ -10,7 +10,7 @@ export const SliderItems = styled.div`
   }
 
   h4 {
-    padding: 16px;
+    padding: 8px;
   }
 `;
 
@@ -22,11 +22,9 @@ export const SliderBarContainer = styled.div`
 `;
 
 export const SliderBar = styled.div`
-  /* width: 10%; */
   height: 2px;
   background-color: ${COLORS.secondary};
   position: absolute;
   transition: all 400ms ease-in-out;
   box-sizing: border-box;
-
 `;
