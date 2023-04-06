@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { COLORS } from "../../colors";
-import { RankingTable } from "./Ranking.style";
+import { RankingBody, RankingTable, TableData, TableRow } from "./Ranking.style";
 import RankingCards from "./RankingCards/RankingCards";
 import { useMediaQuery } from "react-responsive";
 import { screenSize, mediaSize } from "../../mediaSize";
@@ -10,7 +10,7 @@ import { nanoid } from "nanoid";
 const stats = ["win", "goal", "touch"];
 
 const data = [
-  { name: "hugo", stats: ["1050", "2002", "10053400"] },
+  { name: "hugo", stats: ["1050", "2002", "10053400"]},
   { name: "hugo", stats: ["1250", "20012", "10034500"] },
   { name: "hugo", stats: ["15260", "203", "100300"] },
   { name: "hugo", stats: ["10654", "210", "1002300"] },
@@ -82,35 +82,31 @@ function Ranking() {
   return (
     <RankingTable>
       <MediaQuery minWidth={mediaSize.laptop}>
-        <thead>
-          <tr>
-            <th>
-              <h4>NAME</h4>
-            </th>
-            {stats.map((stat) => {
-              return (
-                <th key={nanoid()}>
-                  <h4>{stat}</h4>
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
+        <TableRow>
+          <TableData>
+            <h4>NAME</h4>
+          </TableData>
+          {stats.map((stat) => {
+            return (
+              <TableData key={nanoid()}>
+                <h4>{stat}</h4>
+              </TableData>
+            );
+          })}
+        </TableRow>
       </MediaQuery>
       <MediaQuery maxWidth={mediaSize.laptop - 1}>
-        <thead>
-          <tr>
-            <td>
-              <select onChange={(e) => setSelect(e.target.value)}>
-                {stats.map((stat) => {
-                  return <option key={nanoid()}>{stat}</option>;
-                })}
-              </select>
-            </td>
-          </tr>
-        </thead>
+        <TableRow>
+          <TableData>
+            <select value={select} onChange={(e) => setSelect(e.target.value)}>
+              {stats.map((stat) => {
+                return <option key={nanoid()}>{stat}</option>;
+              })}
+            </select>
+          </TableData>
+        </TableRow>
       </MediaQuery>
-      <tbody>{renderRow()}</tbody>
+      <RankingBody>{renderRow()}</RankingBody>
     </RankingTable>
   );
 }
