@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import React from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { lobbyAtom } from "../../../../services/store";
+import { ChangeTeamButtonContainer } from "./ChangeTeamButton.style";
 
 function ChangeTeamButton() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
@@ -20,7 +21,11 @@ function ChangeTeamButton() {
       });
   };
 
-  return <button onClick={changeTeam}>Change Team</button>;
+  return (
+    <ChangeTeamButtonContainer>
+      <button onClick={changeTeam}>Change Team</button>
+    </ChangeTeamButtonContainer>
+  );
 }
 
 export default ChangeTeamButton;

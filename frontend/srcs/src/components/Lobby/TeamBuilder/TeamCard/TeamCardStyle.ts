@@ -12,11 +12,11 @@ export const TeamContainer = styled.div`
 
 export const TeamInfoContainer = styled.div`
   display: flex;
-  padding: 10px;
+  padding: 8px;
+  box-sizing: border-box;
   align-items: center;
   width: 100%;
   height: 10%;
-  background-color: ${COLORS.secondary};
 `;
 
 export const TeamStatusContainer = styled.div`

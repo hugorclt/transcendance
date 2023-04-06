@@ -65,7 +65,7 @@ export const TeamsContainer = styled.div`
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
     justify-content: space-around;
-    /* align-items: center;  */
+    align-items: center;
   }
 `;
 
