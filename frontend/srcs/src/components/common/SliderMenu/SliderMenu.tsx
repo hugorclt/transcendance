@@ -12,7 +12,7 @@ function SliderMenu({ items, setState, state, flex }: TSliderMenuProps) {
   useEffect(() => {
     setLeft(firstElemRef.current.offsetLeft);
     setWidth(firstElemRef.current.clientWidth);
-  }, [firstElemRef]);
+  }, [firstElemRef, state]);
 
   const handleClick = (e: any, item: string) => {
     setState(item);
@@ -21,8 +21,8 @@ function SliderMenu({ items, setState, state, flex }: TSliderMenuProps) {
   };
 
   return (
-    <div>
-      <SliderItems style={{ justifyContent: flex}}>
+    <div style={{ width: "100%" }}>
+      <SliderItems style={{ justifyContent: flex }}>
         {items.map((item) => {
           var color = COLORS.primary;
 
@@ -32,10 +32,10 @@ function SliderMenu({ items, setState, state, flex }: TSliderMenuProps) {
           return (
             <button
               ref={state == item ? firstElemRef : null}
-              style={{ color: color}}
               key={nanoid()}
-              onClick={(e) => handleClick(e, item)}>
-              <h4>{item}</h4>
+              onClick={(e) => handleClick(e, item)}
+            >
+              <h4 style={{ color: color }}>{item}</h4>
             </button>
           );
         })}

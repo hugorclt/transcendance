@@ -5,10 +5,7 @@ import InviteFriendsButton from "../InviteFriendsButton/InviteFriendsButton";
 import PlayerCard from "../PlayerCard/PlayerCard";
 import {
   TeamCardsContainer,
-  TeamContainer,
   TeamInfoContainer,
-  TeamName,
-  TeamNbPlayers,
   TeamStatusContainer,
 } from "./TeamCardStyle";
 import { nanoid } from "nanoid";
@@ -33,13 +30,13 @@ function TeamCard(props: TeamCardProps) {
   }, [lobby.members]);
 
   return (
-    <TeamContainer>
+    <>
       <TeamInfoContainer>
         <TeamStatusContainer>
-          <TeamName>{props.team ? "RIGHT" : "LEFT"} TEAM</TeamName>
-          <TeamNbPlayers>
+          <h4>{props.team ? "RIGHT" : "LEFT"} TEAM</h4>
+          <h4>
             {teamMembers?.length || "0"}/{lobby.nbPlayers / 2}
-          </TeamNbPlayers>
+          </h4>
         </TeamStatusContainer>
         <InviteFriendsButton />
       </TeamInfoContainer>
@@ -50,7 +47,7 @@ function TeamCard(props: TeamCardProps) {
           );
         })}
       </TeamCardsContainer>
-    </TeamContainer>
+    </>
   );
 }
 

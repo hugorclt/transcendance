@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
-import { screenSize } from "../../../mediaSize";
+import { mediaSize, screenSize } from "../../../mediaSize";
 
 export const TeamBuilderContainer = styled.div`
   width: 100%;
@@ -8,9 +8,11 @@ export const TeamBuilderContainer = styled.div`
   display: flex;
   white-space: nowrap;
   flex-direction: column;
+  align-items: center;
 `;
 
 export const GameTitleContainer = styled.div`
+  align-self: flex-start;
   @media (max-width: ${screenSize.tablet}) {
     height: 32px;
   }
@@ -33,7 +35,7 @@ export const GameTitleContainer = styled.div`
 `;
 
 export const SliderContainer = styled.div`
-  width: auto;
+  width: 80%;
   @media (max-width: ${screenSize.tablet}) {
     height: 48px;
   }
@@ -52,18 +54,22 @@ export const SliderContainer = styled.div`
 `;
 
 export const TeamsContainer = styled.div`
-  width: auto;
+  width: 100%;
   flex: 1;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  @media (min-width: ${mediaSize.laptop}) {
+    flex-direction: row;
+    /* justify-content: space-around;
+    align-items: center; */
+  }
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
+    justify-content: space-around;
+    /* align-items: center;  */
   }
 `;
 
 export const TeamContainer = styled.div`
-  background-color: ${COLORS.white};
   @media (max-width: ${screenSize.laptop}) {
     width: 100%;
     height: 30%;

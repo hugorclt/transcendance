@@ -20,19 +20,12 @@ export const TeamInfoContainer = styled.div`
 `;
 
 export const TeamStatusContainer = styled.div`
+  width: 100%;
   flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-right: 10px;
-`;
-
-export const TeamName = styled.h2`
-  color: ${COLORS.primary};
-`;
-
-export const TeamNbPlayers = styled.h2`
-  color: ${COLORS.primary};
 `;
 
 export const TeamCardsContainer = styled.div`

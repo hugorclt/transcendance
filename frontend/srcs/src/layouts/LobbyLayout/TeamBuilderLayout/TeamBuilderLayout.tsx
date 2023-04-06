@@ -10,6 +10,8 @@ import {
 import ChangeTeamButton from "../../../components/Lobby/TeamBuilder/ChangeTeamButton/ChangeTeamButton";
 import GameInfoCard from "../../../components/Lobby/TeamBuilder/GameInfoCard/GameInfoCard";
 import HeptaButton from "../../../components/common/Button/HeptaButton/HeptaButton";
+import PrivacyChanger from "../../../components/Lobby/TeamBuilder/PrivacyChanger/PrivacyChanger";
+import TeamCard from "../../../components/Lobby/TeamBuilder/TeamCard/TeamCard";
 
 function TeamBuilderLayout() {
   return (
@@ -18,13 +20,16 @@ function TeamBuilderLayout() {
         <GameInfoCard />
       </GameTitleContainer>
       <SliderContainer>
-        <h4>MATCHMAKING</h4>
-        <h4>PRIVATE</h4>
+        <PrivacyChanger />
       </SliderContainer>
       <TeamsContainer>
-        <TeamContainer></TeamContainer>
+        <TeamContainer>
+          <TeamCard team={false} />
+        </TeamContainer>
         <ChangeTeamButton />
-        <TeamContainer></TeamContainer>
+        <TeamContainer>
+          <TeamCard team={true} />
+        </TeamContainer>
       </TeamsContainer>
       <ButtonsContainer>
         <HeptaButton text="PLAY" width={100} />

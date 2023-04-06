@@ -18,6 +18,7 @@ export interface TLobby {
   nbPlayers: number;
   members: TLobbyMember[];
   state: string;
+  private: boolean;
 }
 
 export interface TLobbyMember {
