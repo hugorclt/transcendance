@@ -8,6 +8,7 @@ export const RankingTable = styled.div`
 
 export const RankingBody = styled.div`
   height: calc(100vh - 205px);
+  min-height: 395px;
   overflow-y: auto;
 `
 
