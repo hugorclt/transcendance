@@ -1,15 +1,24 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-export const RankingContainer = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 16px;
+export const RankingTable = styled.table`
+  width: 100%;
+  height: 100%;
+
+  td {
+    padding: 12px;
+  }
+
+  tr {
     border-radius: 8px;
-`
 
-export const RankingRightSide = styled.div`
-    flex: 1;
-    display: flex;
-    justify-content: space-around;
-`
+  }
+
+  thead {
+    display: block;
+  }
+
+  tbody {
+    overflow-y: auto;
+    display: block;
+  }
+`;
