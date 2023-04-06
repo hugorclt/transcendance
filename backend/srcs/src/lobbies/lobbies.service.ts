@@ -209,7 +209,8 @@ export class LobbiesService {
       ready: false,
     });
     //return updated lobby with potential new state
-    return await this.updateLobbyState(updateLobby.id, null);
+    await this.updateLobbyState(updateLobby.id, null);
+    return await this.findLobbyWithMembers(updateLobby.id);
   }
 
   /* ---------------- Update Lobby State (Backend Originated) ---------------- */
