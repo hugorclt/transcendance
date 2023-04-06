@@ -1,24 +1,23 @@
 import React, { useState } from "react";
 import GameModeCard from "./GameModeCard/GameModeCard";
-import { useLobbyContext } from "../../../views/LobbyPage/LobbyContext";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import {
-  GameModeButton,
   GameModeButtonBody,
   GameModeCardsBody,
   GameModeContainer,
   GameModeContainerMobile,
   GameModeHero,
-} from "./GamemodeSelectorStyle";
+} from "./LobbyCreator.style";
 import { useAtom } from "jotai";
-import { lobbyAtom, userAtom } from "../../services/store";
-import HeptaButton from "../common/Button/HeptaButton/HeptaButton";
-import { COLORS } from "../../colors";
 import MediaQuery from "react-responsive";
-import { mediaSize } from "../../mediaSize";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { ButtonNoStyle } from "./GamemodeSelectorStyle";
+import { ButtonNoStyle } from "./LobbyCreator.style";
+import { lobbyAtom, userAtom } from "../../../services/store";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { useLobbyCreatorContext } from "../../../views/LobbyPage/LobbyCreatorProvider";
+import HeptaButton from "../../common/Button/HeptaButton/HeptaButton";
+import { COLORS } from "../../../colors";
+import { mediaSize } from "../../../mediaSize";
 
 const dataGameMode = [
   { name: "Classic", description: "Le Pong originel, berceau du gaming" },
@@ -28,18 +27,18 @@ const dataGameMode = [
   },
 ];
 
-function GameModeSelector() {
+function LobbyCreator() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const axiosPrivate = useAxiosPrivate();
   const [errMsg, setErrMsg] = useState<string>("");
   const {
     onModeSelected,
-    selectedMode,
-    players,
-    setSelectedMode,
     setOnModeSelected,
+    players,
     setPlayers,
-  } = useLobbyContext();
+    selectedMode,
+    setSelectedMode,
+  } = useLobbyCreatorContext();
   const [slider, setSlider] = useState(0);
   const [user, setUser] = useAtom(userAtom);
 
@@ -57,16 +56,17 @@ function GameModeSelector() {
           ownerId: response.data.ownerId,
           nbPlayers: +response.data.nbPlayers,
           mode: response.data.mode,
+          state: response.data.state,
           members: response.data.members,
         });
         setSelectedMode("");
         setOnModeSelected(false);
         setPlayers(0);
-        setUser((prev) => ({...prev, status:"LOBBY"}));
+        setUser((prev) => ({ ...prev, status: "LOBBY" }));
       })
       .catch((error: AxiosError) => {
         if (error.response?.data) {
-          setErrMsg(JSON.stringify(error.response.data.message));
+          setErrMsg(JSON.stringify(error.message));
         }
       });
   };
@@ -143,4 +143,4 @@ function GameModeSelector() {
   );
 }
 
-export default GameModeSelector;
+export default LobbyCreator;

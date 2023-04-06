@@ -79,6 +79,15 @@ model Lobby {
   owner       User          @relation("lobbyOwner", fields: [ownerId], references: [id])
   members     LobbyMember[]
   spectators  User[]        @relation("lobbySpectator")
+  state       LobbyState
+}
+
+enum LobbyState {
+  JOINABLE
+  FULL
+  SELECTION
+  MATCHMAKING
+  GAME
 }
 
 model LobbyMember {

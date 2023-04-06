@@ -14,6 +14,7 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
+import { LobbyState } from '@prisma/client';
 
 @Injectable()
 export class LobbiesService {
@@ -37,6 +38,7 @@ export class LobbiesService {
         maxDuration: createLobbyDto.maxDuration,
         mode: createLobbyDto.mode,
         map: createLobbyDto.map,
+        state: LobbyState.JOINABLE,
         members: {
           create: {
             team: false,
@@ -60,7 +62,6 @@ export class LobbiesService {
         },
       },
     });
-    console.log('created lobby: ', lobby);
     await this.usersService.updateStatus(user.id, 'LOBBY');
     await this.lobbiesGateway.joinUserToLobby(user.id, lobby.id);
     return lobby;
@@ -91,6 +92,7 @@ export class LobbiesService {
             user: {
               select: {
                 username: true,
+                avatar: true,
               },
             },
           },
@@ -100,6 +102,7 @@ export class LobbiesService {
     return lobby;
   }
 
+  //A PROTEGER
   async update(
     id: string,
     updateLobbyDto: UpdateLobbyDto,
@@ -110,8 +113,8 @@ export class LobbiesService {
     });
   }
 
+  //A PROTEGER
   async delete(id: string): Promise<LobbyEntity> {
-    //check if user  is lobbyOwner
     const users = await this.prisma.user.findMany({
       where: {
         lobbyMember: {
@@ -130,15 +133,13 @@ export class LobbiesService {
       where: { id },
       data: { members: { deleteMany: {} } },
     });
-    console.log('deleting lobby...');
     return await this.prisma.lobby.delete({ where: { id } });
   }
 
   //====================== JOIN / LEAVE LOBBY ===========================
 
   async joinLobby(userId: string, joinLobbyDto: JoinLobbyDto) {
-    //is user the one sending the request
-    if (userId != joinLobbyDto.userId) return;
+    if (userId != joinLobbyDto.userId) return; //A COMPLETER ?
     const user = await this.canUserJoinLobbies(joinLobbyDto.userId);
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: joinLobbyDto.lobbyId },
@@ -155,12 +156,10 @@ export class LobbiesService {
         }
       }),
     );
-    if (
-      (!lobby.private && lobby.members.length == lobby.nbPlayers / 2) ||
-      (lobby.private && lobby.members.length == lobby.nbPlayers)
-    ) {
-      console.log('lobby full');
-      throw new MethodNotAllowedException('Lobby is already full');
+    if (lobby.state != LobbyState.JOINABLE) {
+      throw new MethodNotAllowedException(
+        'Lobby is not joinable / already full',
+      );
     }
     var team;
     if (
@@ -209,7 +208,37 @@ export class LobbiesService {
       team: team,
       ready: false,
     });
-    return updateLobby;
+    //return updated lobby with potential new state
+    return await this.updateLobbyState(updateLobby.id, null);
+  }
+
+  /* ---------------- Update Lobby State (Backend Originated) ---------------- */
+  async updateLobbyState(lobbyId: string, state: string): Promise<LobbyEntity> {
+    const lobby = await this.findLobbyWithMembers(lobbyId);
+    if (!state) {
+      if (
+        (!lobby.private && lobby.members.length == lobby.nbPlayers / 2) ||
+        (lobby.private && lobby.members.length == lobby.nbPlayers)
+      ) {
+        if (lobby.state == LobbyState.JOINABLE) {
+          return await this.prisma.lobby.update({
+            where: { id: lobby.id },
+            data: { state: LobbyState.FULL },
+          });
+        }
+      } else if (lobby.state == LobbyState.FULL) {
+        return await this.prisma.lobby.update({
+          where: { id: lobby.id },
+          data: { state: LobbyState.JOINABLE },
+        });
+      }
+    } else {
+      return await this.prisma.lobby.update({
+        where: { id: lobby.id },
+        data: { state: state as LobbyState },
+      });
+    }
+    return lobby;
   }
 
   async makePlayerLeaveLobby(lobbyId: string, userId: string) {
@@ -229,20 +258,16 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
       userId: userId,
     });
-    return updateLobby;
+    return await this.updateLobbyState(lobbyId, null);
   }
 
-  async leaveLobby(joinLobbyDto: JoinLobbyDto) {
+  async leaveLobby(joinLobbyDto: JoinLobbyDto): Promise<LobbyEntity> {
     if (
       await this.isUserLobbyOwner(joinLobbyDto.userId, joinLobbyDto.lobbyId)
     ) {
       return await this.delete(joinLobbyDto.lobbyId);
     }
-    const check2 = await this.isUserInLobby(
-      joinLobbyDto.userId,
-      joinLobbyDto.lobbyId,
-    );
-    if (check2) {
+    if (await this.isUserInLobby(joinLobbyDto.userId, joinLobbyDto.lobbyId)) {
       const updateLobby = this.makePlayerLeaveLobby(
         joinLobbyDto.lobbyId,
         joinLobbyDto.userId,
@@ -333,19 +358,11 @@ export class LobbiesService {
       data: {
         private: !lobby.private,
       },
-      include: {
-        members: {
-          include: {
-            user: {
-              select: {
-                username: true,
-                avatar: true,
-              },
-            },
-          },
-        },
-      },
     });
+    //UPDATE STATE AFTER PRIVACY CHANGE
+    await this.updateLobbyState(lobbyId, null);
+    //GET ALL INFOS ON LOBBY AND MEMBERS
+    updateLobby = await this.findLobbyWithMembers(lobbyId);
     this.lobbiesGateway.emitToLobby(lobby.id, 'on-lobby-update', updateLobby);
     return updateLobby;
   }
@@ -371,7 +388,16 @@ export class LobbiesService {
         id: lobbyId,
       },
       include: {
-        members: true,
+        members: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!lobby) throw new NotFoundException('Lobby not found');

@@ -17,6 +17,7 @@ export interface TLobby {
   mode: string;
   nbPlayers: number;
   members: TLobbyMember[];
+  state: string;
 }
 
 export interface TLobbyMember {

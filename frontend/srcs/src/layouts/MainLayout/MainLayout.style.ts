@@ -4,16 +4,15 @@ import { screenSize } from "../../mediaSize";
 
 export const MainLayoutContainer = styled.div`
   height: 100vh;
+  min-height: 600px;
   width: 100%;
-  overflow-x: hidden;
   display: flex;
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
   }
-`;
-
-export const SideBarContainer = styled.div`
-  background-color: #19191a;
+  @media (min-width: ${screenSize.laptop}) {
+    overflow-x: hidden;
+  }
 `;
 
 export const MainContainer = styled.main`
@@ -26,14 +25,21 @@ export const PageContainer = styled.div`
   background-color: ${COLORS.darkergrey};
   flex-grow: 1;
   padding: 16px;
+  min-width: 280px;
   @media (max-width: ${screenSize.laptop}) {
-    width: 100%;
+    width: auto;
   }
 `;
 
 export const NavBarContainer = styled.div`
   width: 100%;
-  height: 112px;
+  flex-shrink: 0;
+  @media (max-width: ${screenSize.laptop}) {
+    height: 60px;
+  }
+  @media (min-width: ${screenSize.laptop}) {
+    height: 112px;
+  }
   display: flex;
   justify-content: space-between;
 `;

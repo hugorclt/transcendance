@@ -29,6 +29,7 @@ export const lobbyAtom = atom<TLobby>({
   nbPlayers: 0,
   mode: "",
   members: [],
+  state: "",
 });
 
 export const friendAtom = atom<TFriend[]>([]);

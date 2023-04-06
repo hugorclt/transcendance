@@ -1,25 +1,22 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import React, { ReactNode, useContext, useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { lobbyAtom } from "../../services/store";
-import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 
 function LobbyProvider({ children }: { children: ReactNode }) {
   const [lobby, setLobby] = useAtom(lobbyAtom);
-  const socket = useContext(LobbySocketContext);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    console.log("getting lobby information on /lobbies/pistil");
     axiosPrivate
-      .get("lobbies/pistil")
+      .get("lobbies/current-lobby")
       .then((res: AxiosResponse) => {
-        console.log("the pistil: ", JSON.stringify(res.data));
         setLobby(res.data);
       })
       .catch((err: AxiosError) => {
         console.log("Error while fetching lobby");
+        //SET LOBBY TO DEFAULT DISCRIMINATORY VALUE ?
       });
   }, []);
 

@@ -38,6 +38,7 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     socket?.on("user-joined-lobby", (user) => {
+      console.log("user-joined-lobby", user);
       setLobby((prev?) => ({
         ...prev,
         members: updateArray(prev.members, {
@@ -52,6 +53,7 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
       }));
     });
     socket?.on("user-left-lobby", (user) => {
+      console.log("user-left-lobby", user);
       setLobby((prev?) => ({
         ...prev,
         members: prev.members.filter(
@@ -60,6 +62,7 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
       }));
     });
     socket?.on("on-member-update", (member) => {
+      console.log("on-member-update", member);
       setLobby((prev) => ({
         ...prev,
         members: updateArray(prev.members, member),
