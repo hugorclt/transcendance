@@ -25,6 +25,7 @@ export const PageContainer = styled.div`
   background-color: ${COLORS.darkergrey};
   flex-grow: 1;
   padding: 16px;
+  width: 90%;
   min-width: 280px;
   @media (max-width: ${screenSize.laptop}) {
     width: auto;

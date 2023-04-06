@@ -30,6 +30,7 @@ export const lobbyAtom = atom<TLobby>({
   mode: "",
   members: [],
   state: "",
+  private: false,
 });
 
 export const friendAtom = atom<TFriend[]>([]);
