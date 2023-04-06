@@ -6,8 +6,6 @@ export const ModalBoxCreateRoom = styled.div`
   padding: 8px;
   border-radius: 5px;
   border: 1px solid ${COLORS.border};
-  width: 512px;
-  height: 256px;
 `
 
 export const ChatHistoryTopBar = styled.div`
@@ -23,22 +21,22 @@ export const ChatHistoryTopBarTitle = styled.h3`
 `;
 
 export const ChatHistoryBox = styled.div`
-  overflow-y: scroll;
+  overflow-y: auto;
   flex-grow: 1;
 `;
 
 export const ModalCreateJoin = styled.div`
   width:100%;
-  display:flex;
-  justify-content: space-around;
 `
 
 export const CreateRoomBox = styled.div`
   background-color: ${COLORS.background};
+  width: 200px;
   padding: 8px;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
 `;
 
 export const CreateRoomTitle = styled.h3`
@@ -53,9 +51,7 @@ export const CreateRoomLabel = styled.label`
 
 export const CreateRoomForm = styled.form`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  height:100%;
+  align-items: space-between;
 `;
 
 export const CreateRoomButtonBox = styled.button`
@@ -84,5 +80,13 @@ export const CreateRoomFriends = styled.div`
 `
 
 export const CreateRoomScroll = styled.div`
-  overflow-y: scroll;
+  overflow-y: auto;
+  background-color: ${COLORS.darkergrey};
+  border-radius: 8px;
+  padding: 16px;
+  height: 300px;
+
+  h4 {
+    padding: 8px;
+  }
 `

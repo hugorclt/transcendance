@@ -90,23 +90,20 @@ function CreateRoom() {
   return (
     <>
       <CreateRoomFriends>
-        <h3>Friends</h3>
         <CreateRoomScroll>
           {friendList.map((val, index) => {
             return (
               <div key={index} onClick={() => handleAddFriends(val.id)}>
-                <p key={index} className={chooseColor(val.id)}>
+                <h4 key={index} className={chooseColor(val.id)}>
                   {val.username}
-                </p>
+                </h4>
               </div>
             );
           })}
         </CreateRoomScroll>
       </CreateRoomFriends>
       <CreateRoomBox>
-        <CreateRoomTitle>CREATE ROOM</CreateRoomTitle>
         <CreateRoomForm onSubmit={handleSubmit}>
-          <CreateRoomLabel htmlFor="name">Room name</CreateRoomLabel>
           <StyledInput
             name="name"
             value={name}
@@ -114,8 +111,8 @@ function CreateRoom() {
             type="text"
             required
             autoComplete="new-password"
+            placeholder="Room Name"
           ></StyledInput>
-          <CreateRoomLabel htmlFor="password">Password</CreateRoomLabel>
           <StyledInput
             name="password"
             value={password}
@@ -123,6 +120,7 @@ function CreateRoom() {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             autoComplete="new-password"
+            placeholder="Password"
           ></StyledInput>
           <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
           <CreateRoomCheckBox

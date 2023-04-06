@@ -11,6 +11,7 @@ import { mediaSize } from "../../../mediaSize";
 // import greenp from "../../../assets/images/paddle/green.png";
 // import bluep from "../../../assets/images/paddle/bluep.gif";
 import { nanoid } from "nanoid";
+import SliderMenu from "../../common/SliderMenu/SliderMenu";
 // import yellowp from "../../../assets/images/paddle/yellow.png";
 // import purplep from "../../../assets/images/paddle/purple.png";
 
@@ -281,12 +282,7 @@ function ItemsList() {
     <>
       <ShopTopBarContainer>
         <MediaQuery minWidth={mediaSize.tablet + 1}>
-          <ShopTopBarFilter>
-            <button onClick={() => setFilter("ALL")}>ALL</button>
-            <button onClick={() => setFilter("PADDLE")}>PADDLE</button>
-            <button onClick={() => setFilter("TRAILS")}>TRAILS</button>
-            <button onClick={() => setFilter("GOAL")}>GOAL</button>
-          </ShopTopBarFilter>
+          <SliderMenu items={["ALL", "PADDLE", "TRAILS", "GOAL"]} setState={setFilter} state={filter} flex={"flex-start"}/>
         </MediaQuery>
 
         <MediaQuery maxWidth={mediaSize.tablet}>
