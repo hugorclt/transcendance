@@ -32,22 +32,21 @@ function JoinRoom() {
 
   return (
     <CreateRoomBox>
-      <CreateRoomTitle>JOIN ROOM</CreateRoomTitle>
       <CreateRoomForm onSubmit={handleSubmit} autoComplete="off">
-        <CreateRoomLabel htmlFor="name">Room name</CreateRoomLabel>
         <StyledInput
           name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
-          autoComplete="new-password"></StyledInput>
-        <CreateRoomLabel htmlFor="password">Password</CreateRoomLabel>
+          autoComplete="new-password"
+          placeholder="Room Name"></StyledInput>
         <StyledInput
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
-          autoComplete="new-password"></StyledInput>
+          autoComplete="new-password"
+          placeholder="Password"></StyledInput>
         <CreateRoomButtonBox>
           <StyledButton type="submit" value="Join room" />
         </CreateRoomButtonBox>

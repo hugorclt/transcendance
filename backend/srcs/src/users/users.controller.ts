@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,6 +24,7 @@ import { SocialsGateway } from 'src/socials/socials.gateway';
 import { RemoveFriendsDto } from './dto/remove-friend.dto';
 import { UserPreferencesEntity } from './entities/user-preferences.entity';
 import { addFriendDto } from './dto/add-friend.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 @UseGuards(AccessAuthGard)
@@ -132,5 +135,11 @@ export class UsersController {
     );
     this.socialGateway.removeFriend(removed.id, req.user.username);
     return removed;
+  }
+
+  @Post('update-picture')
+  @UseInterceptors(FileInterceptor('picture'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
   }
 }

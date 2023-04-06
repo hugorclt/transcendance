@@ -8,6 +8,10 @@ import { SocketContext } from "../../../services/Auth/SocketContext";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import { userAtom } from "../../../services/store";
+import Popup from "reactjs-popup";
+import Settings from "../../Settings/Settings";
+import { ButtonNoStyle } from "../../Lobby/LobbyCreator/LobbyCreator.style";
+import { PopUpBox } from "../FriendsList/FriendsCards/FriendsCardsStyle";
 
 function BottomBar() {
   const navigate = useNavigate();
@@ -21,7 +25,12 @@ function BottomBar() {
     axios
       .get("/auth/logout")
       .then((response: AxiosResponse) => {
-        setUser((prev) => ({ ...prev, accessToken: "", username: "", status: "DISCONNECTED" }));
+        setUser((prev) => ({
+          ...prev,
+          accessToken: "",
+          username: "",
+          status: "DISCONNECTED",
+        }));
         socket?.emit("logout", response.data);
         navigate("/login", { replace: true });
       })
@@ -40,7 +49,16 @@ function BottomBar() {
   return (
     <BottomBarContainer>
       <MdNotificationsNone size={26} style={{ color: COLORS.secondary }} />
-      <MdSettings size={26} style={{ color: COLORS.secondary }} />
+      <Popup
+        modal
+        trigger={
+          <ButtonNoStyle>
+            <MdSettings size={26} style={{ color: COLORS.secondary }} />
+          </ButtonNoStyle>
+        }>
+          <Settings />
+      </Popup>
+
       <MdLogout
         onClick={logout}
         size={26}

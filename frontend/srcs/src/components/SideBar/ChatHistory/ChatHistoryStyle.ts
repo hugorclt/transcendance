@@ -6,7 +6,8 @@ export const ModalBoxCreateRoom = styled.div`
   padding: 8px;
   border-radius: 5px;
   border: 1px solid ${COLORS.border};
-`
+  width: 256px;
+`;
 
 export const ChatHistoryTopBar = styled.div`
   padding: 8px;
@@ -26,17 +27,12 @@ export const ChatHistoryBox = styled.div`
 `;
 
 export const ModalCreateJoin = styled.div`
-  width:100%;
-`
+  width: 100%;
+`;
 
 export const CreateRoomBox = styled.div`
-  background-color: ${COLORS.background};
-  width: 200px;
   padding: 8px;
   border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
 `;
 
 export const CreateRoomTitle = styled.h3`
@@ -47,22 +43,24 @@ export const CreateRoomCheckBox = styled.input``;
 
 export const CreateRoomLabel = styled.label`
   color: ${COLORS.primary};
+  padding: 6px;
+  margin: 8px;
 `;
 
 export const CreateRoomForm = styled.form`
   display: flex;
-  align-items: space-between;
+  flex-wrap: wrap;
 `;
 
 export const CreateRoomButtonBox = styled.button`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  border:none;
+  border: none;
   width: 100%;
   height: 100%;
   background-color: ${COLORS.background};
-`
+`;
 
 export const CreateRoomFriends = styled.div`
   padding: 8px;
@@ -72,12 +70,12 @@ export const CreateRoomFriends = styled.div`
   p {
     color: ${COLORS.primary};
   }
-  
+
   h3 {
     color: ${COLORS.primary};
     text-decoration: underline;
   }
-`
+`;
 
 export const CreateRoomScroll = styled.div`
   overflow-y: auto;
@@ -89,4 +87,4 @@ export const CreateRoomScroll = styled.div`
   h4 {
     padding: 8px;
   }
-`
+`;

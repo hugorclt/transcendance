@@ -12,7 +12,7 @@ model User {
   username         String        @unique
   email            String        @unique
   password         String
-  avatar           String?
+  avatar           Bytes?        @db.ByteA
   refreshToken     String?
   type             Type          @default(LOCAL)
   status           Status?       @default(DISCONNECTED)
