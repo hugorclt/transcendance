@@ -12,22 +12,22 @@ export const TeamBuilderContainer = styled.div`
 
 export const GameTitleContainer = styled.div`
   @media (max-width: ${screenSize.tablet}) {
-    height: 48px;
+    height: 32px;
   }
   @media (${screenSize.tablet} < width < ${screenSize.laptop}) {
-    height: 64px;
+    height: 48px;
   }
   @media (min-width: ${screenSize.laptop}) {
-    height: 64px;
+    height: 48px;
   }
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
   h3 {
-    padding: 8px;
+    padding: 4px;
   }
   h4 {
-    padding: 8px;
+    padding: 4px;
     color: ${COLORS.secondary};
   }
 `;
@@ -75,7 +75,7 @@ export const TeamContainer = styled.div`
     min-width: 400px;
     max-width: 600px;
     height: 70%;
-    min-height: 400px;
+    min-height: 280px;
     max-height: 600px;
   }
 `;
