@@ -9,19 +9,26 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const renderGeneral = () => {
   const axiosPrivate = useAxiosPrivate();
-  const [selectedFile, setSelectedFile] = useState<FileList>();
+  const [selectedFile, setSelectedFile] = useState<File>();
 
   const handlePicture = (e: FormEvent) => {
     e.preventDefault();
-    if (selectedFile) {
-      axiosPrivate.post("/users/update-picture", selectedFile);
+    if (selectedFile || selectedFile != undefined) {
+      let formData = new FormData();
+      formData.append("picture", selectedFile, selectedFile.name);
+      axiosPrivate.post("/users/update-picture", formData, {
+        headers: {
+          "content-type": selectedFile.type,
+          "content-length": `${selectedFile.size}`,
+        },
+      });
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      setSelectedFile(files);
+      setSelectedFile(files[0]);
     }
   };
   return (
@@ -29,11 +36,7 @@ const renderGeneral = () => {
       <p>Import a new Profile Picture </p>
       <PhotoContainer />
       <form onSubmit={handlePicture}>
-        <input
-          onChange={handleFileChange}
-          name="picture"
-          type="file"
-        />
+        <input onChange={handleFileChange} name="picture" type="file" />
         <button>Upload picture</button>
       </form>
       <p>Change username: </p>

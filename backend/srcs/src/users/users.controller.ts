@@ -139,7 +139,7 @@ export class UsersController {
 
   @Post('update-picture')
   @UseInterceptors(FileInterceptor('picture'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  async uploadFile(@Request() req, @UploadedFile() file: Express.Multer.File) {
+    await this.usersService.updateAvatar(req.user.sub, file.buffer);
   }
 }

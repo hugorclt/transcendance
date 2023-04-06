@@ -45,10 +45,14 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       });
   };
 
+  const handleImageUpload = () => {
+    return `data:image/jpeg;base64, ${friend.avatar}`
+  }
+
   return (
     <FriendsCardsBox>
       <LeftFriendsCardsBox>
-        <FriendsCardsAvatar src="" /> {/* toaddavatar */}
+        <FriendsCardsAvatar src={handleImageUpload()} />
         <MiddleFriendsCardsBox>
           <FriendsCardsName>
             <FriendsCardsStatusRound

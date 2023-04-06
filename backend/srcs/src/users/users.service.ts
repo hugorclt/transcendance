@@ -309,6 +309,15 @@ export class UsersService {
     };
   }
 
+  async updateAvatar(userId: string, buffer: Buffer) {
+    await this.prisma.user.update({
+      where: {id: userId},
+      data: {
+        avatar: buffer
+      }
+    });
+  }
+
   async removeFriends(
     userId: string,
     usernameToRemove: string,
