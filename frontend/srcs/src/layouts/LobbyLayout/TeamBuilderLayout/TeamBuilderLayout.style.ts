@@ -8,12 +8,9 @@ export const TeamBuilderContainer = styled.div`
   display: flex;
   white-space: nowrap;
   flex-direction: column;
-  background-color: ${COLORS.background};
 `;
 
 export const GameTitleContainer = styled.div`
-  background-color: ${COLORS.grey};
-  padding-left: 10px;
   @media (max-width: ${screenSize.tablet}) {
     height: 48px;
   }
@@ -36,7 +33,6 @@ export const GameTitleContainer = styled.div`
 `;
 
 export const SliderContainer = styled.div`
-  background-color: ${COLORS.darkgrey};
   width: auto;
   @media (max-width: ${screenSize.tablet}) {
     height: 48px;
@@ -60,6 +56,7 @@ export const TeamsContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: space-around;
+  align-items: center;
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
   }
@@ -69,14 +66,17 @@ export const TeamContainer = styled.div`
   background-color: ${COLORS.white};
   @media (max-width: ${screenSize.laptop}) {
     width: 100%;
-    height: 25%;
+    height: 30%;
     min-height: 150px;
+    max-height: 600px;
   }
   @media (min-width: ${screenSize.laptop}) {
     width: 40%;
     min-width: 400px;
     max-width: 600px;
-    height: auto;
+    height: 70%;
+    min-height: 400px;
+    max-height: 600px;
   }
 `;
 
@@ -84,5 +84,7 @@ export const ButtonsContainer = styled.div`
   width: auto;
   height: 10%;
   min-height: 50px;
-  background-color: ${COLORS.blue};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

@@ -1,5 +1,4 @@
 import React from "react";
-import TeamBuilder from "../../../components/Lobby/TeamBuilder/TeamBuilder";
 import {
   ButtonsContainer,
   GameTitleContainer,
@@ -9,14 +8,14 @@ import {
   TeamsContainer,
 } from "./TeamBuilderLayout.style";
 import ChangeTeamButton from "../../../components/Lobby/TeamBuilder/ChangeTeamButton/ChangeTeamButton";
+import GameInfoCard from "../../../components/Lobby/TeamBuilder/GameInfoCard/GameInfoCard";
+import HeptaButton from "../../../components/common/Button/HeptaButton/HeptaButton";
 
 function TeamBuilderLayout() {
-  // return <TeamBuilder />;
   return (
     <TeamBuilderContainer>
       <GameTitleContainer>
-        <h3>GAME MODE</h3>
-        <h4>2 vs 2</h4>
+        <GameInfoCard />
       </GameTitleContainer>
       <SliderContainer>
         <h4>MATCHMAKING</h4>
@@ -27,7 +26,9 @@ function TeamBuilderLayout() {
         <ChangeTeamButton />
         <TeamContainer></TeamContainer>
       </TeamsContainer>
-      <ButtonsContainer></ButtonsContainer>
+      <ButtonsContainer>
+        <HeptaButton text="PLAY" width={100} />
+      </ButtonsContainer>
     </TeamBuilderContainer>
   );
 }

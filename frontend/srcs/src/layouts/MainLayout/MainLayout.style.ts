@@ -4,6 +4,7 @@ import { screenSize } from "../../mediaSize";
 
 export const MainLayoutContainer = styled.div`
   height: 100vh;
+  min-height: 600px;
   width: 100%;
   display: flex;
   @media (max-width: ${screenSize.laptop}) {
