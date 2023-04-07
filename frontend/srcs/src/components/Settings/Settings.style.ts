@@ -52,7 +52,7 @@ export const SettingsRight = styled.div`
   }
 `;
 
-export const PhotoContainer = styled.div`
+export const PhotoContainer = styled.img`
   background-color: white;
   width: 250px;
   height: 250px;

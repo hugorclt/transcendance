@@ -310,12 +310,22 @@ export class UsersService {
   }
 
   async updateAvatar(userId: string, buffer: Buffer) {
-    await this.prisma.user.update({
-      where: {id: userId},
+    const user = await this.prisma.user.update({
+      where: { id: userId },
       data: {
-        avatar: buffer
-      }
+        avatar: buffer.toString('base64'),
+      },
     });
+    console.log(user.avatar);
+    this.socialsGateway.emitToList(
+      await this.getUserFriends(user.id),
+      "on-friend-update",
+      {
+        avatar: user.avatar,
+        id: user.id,
+      },
+    );
+    return exclude(user, ['password', 'type', 'refreshToken']);
   }
 
   async removeFriends(

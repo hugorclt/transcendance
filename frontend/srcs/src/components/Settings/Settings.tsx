@@ -6,22 +6,37 @@ import {
   SettingsRight,
 } from "./Settings.style";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
+import { getImageBase64 } from "../../services/utils/getImageBase64";
+import { useAtom } from "jotai";
+import { userAtom } from "../../services/store";
 
 const renderGeneral = () => {
   const axiosPrivate = useAxiosPrivate();
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [photo, setPhoto] = useState("");
+  const [errMsg, setErrMsg] = useState("");
+  const [user, setUser] = useAtom(userAtom);
 
   const handlePicture = (e: FormEvent) => {
     e.preventDefault();
     if (selectedFile || selectedFile != undefined) {
       let formData = new FormData();
       formData.append("picture", selectedFile, selectedFile.name);
-      axiosPrivate.post("/users/update-picture", formData, {
-        headers: {
-          "content-type": selectedFile.type,
-          "content-length": `${selectedFile.size}`,
-        },
-      });
+      axiosPrivate
+        .post("/users/update-picture", formData, {
+          headers: {
+            "content-type": selectedFile.type,
+            "content-length": `${selectedFile.size}`,
+          },
+        })
+        .then((res: AxiosResponse) => {
+          console.log(res.data);
+          setPhoto(getImageBase64(res.data.avatar));
+        })
+        .catch((err: AxiosError) => {
+          setErrMsg("Error while uploading picture please retry");
+        });
     }
   };
 
@@ -34,7 +49,7 @@ const renderGeneral = () => {
   return (
     <>
       <p>Import a new Profile Picture </p>
-      <PhotoContainer />
+      <PhotoContainer src={photo == "" ? getImageBase64(user.avatar) : photo} />
       <form onSubmit={handlePicture}>
         <input onChange={handleFileChange} name="picture" type="file" />
         <button>Upload picture</button>
@@ -49,6 +64,7 @@ const renderGeneral = () => {
         <input placeholder="New password" type="password" />
         <button>Change Password</button>
       </form>
+      <p style={{ color: "red" }}>{errMsg}</p>
     </>
   );
 };
