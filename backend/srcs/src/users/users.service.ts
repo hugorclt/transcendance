@@ -355,6 +355,7 @@ export class UsersService {
   }
 
   async updatePassword(userId: string, newPassword: string) {
+    console.log(newPassword.length)
     if (newPassword.length == 0) throw new BadRequestException();
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(newPassword, salt);
@@ -363,7 +364,7 @@ export class UsersService {
         id: userId,
       },
       data: {
-        password: newPassword,
+        password: hash,
       },
     });
   }

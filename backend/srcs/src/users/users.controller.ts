@@ -150,6 +150,6 @@ export class UsersController {
 
   @Post('update-password')
   async updatePassword(@Request() req) {
-    return await this.usersService.updateUsername(req.user.sub, req.body.password);
+    return await this.usersService.updatePassword(req.user.sub, req.body.password);
   }
 }
