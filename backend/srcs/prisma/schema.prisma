@@ -34,6 +34,7 @@ model User {
   roomOwner        Room[]        @relation("owner")
   matchWinner      Match[]       @relation("Winner")
   matchLoser       Match[]       @relation("Loser")
+  stat             Stat?
 }
 
 model Preference {
@@ -117,6 +118,16 @@ model Match {
   winners         User[] @relation("Winner")
   loserScore      Int
   losers          User[] @relation("Loser")
+}
+
+model Stat {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  xp            Int     @default(0)
+  lvl           Int     @default(0)
+  nbGame        Int     @default(0)
+  nbWin         Int     @default(0)
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String     @unique @db.Uuid
 }
 
 //================== SHOP =======================

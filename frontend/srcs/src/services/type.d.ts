@@ -6,6 +6,7 @@ export interface TUser {
   avatar: string;
   exp: number;
   balance: number;
+  stats: TStat;
 }
 
 export interface TUserPreferences {
@@ -60,4 +61,12 @@ export interface TParticipant {
 
 export interface TSelectedPage {
   selectedPage: number;
+}
+
+export interface TStat {
+  id: string;
+  xp: number;
+  lvl: number;
+  nbGame: number;
+  nbWin: number;
 }

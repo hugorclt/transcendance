@@ -7,15 +7,18 @@ import {
   Param,
   Delete,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { MatchesService } from './matches.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { MatchEntity } from './entities/match.entity';
+import { AccessAuthGard } from 'src/auth/utils/guards';
 
 @Controller('matches')
-@ApiTags()
+@ApiTags('matches')
+@UseGuards(AccessAuthGard)
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
 

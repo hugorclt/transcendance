@@ -12,9 +12,11 @@ function UserProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   useEffect(() => {
+    console.log("user provider");
     axiosPrivate
       .get("/users/me")
-      .then((res: AxiosResponse) =>
+      .then((res: AxiosResponse) => {
+        console.log("id: ", res.data.id);
         setUser((prev) => ({
           ...prev,
           id: res.data.id,
@@ -23,8 +25,8 @@ function UserProvider({ children }: { children: ReactNode }) {
           avatar: res.data.avatar,
           exp: res.data.exp,
           balance: res.data.balance,
-        }))
-      )
+        }));
+      })
       .catch((res: AxiosError) =>
         navigate("/login", { state: { from: location }, replace: true })
       );

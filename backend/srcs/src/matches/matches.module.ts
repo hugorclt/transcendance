@@ -4,10 +4,8 @@ import { MatchesController } from './matches.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-imports: [
-  PrismaModule,
-],
+  imports: [PrismaModule],
   controllers: [MatchesController],
-  providers: [MatchesService]
+  providers: [MatchesService],
 })
 export class MatchesModule {}

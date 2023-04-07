@@ -62,6 +62,7 @@ export class MatchesService {
         date: updateMatchDto.date,
         duration: updateMatchDto.duration,
         winnerScore: updateMatchDto.winnerScore,
+        loserScore: updateMatchDto.loserScore,
       },
       include: {
         winners: true,
