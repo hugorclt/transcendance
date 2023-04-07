@@ -1,18 +1,22 @@
-import { useState } from "react";
-import { degreeToRad } from "../../../services/Game/utilsGame";
+import { Vector3, Euler } from "three";
+import { Grid, GridProps } from "@react-three/drei";
+import { GridFloor } from "./GridZ";
 
-interface TFloorProps {
-    width: number,
-    length: number,
+interface TWallProps extends GridProps {
+  position: Vector3;
+  color: string;
+  rotation?: Euler;
 }
 
-const Floor = (props: TFloorProps) => {
+const FloorGrid = (props: TWallProps) => {
+  const { position, color, rotation, ...gridProps } = props;
   return (
-    <mesh rotation={[degreeToRad(-90), 0, 0]} position={[0, 0,0]}>
-      <planeGeometry args={[props.width, props.length]} />
-      <meshToonMaterial color={"#000000"} />
-    </mesh>
+    <group position={[0, -2, 0]} rotation={[0,0,0]}>
+      <GridFloor {...gridProps}/>
+      <mesh>
+      </mesh>
+    </group>
   );
 };
 
-export default Floor;
+export default FloorGrid;

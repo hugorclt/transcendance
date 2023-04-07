@@ -97,11 +97,14 @@ const GridMaterial = shaderMaterial(
    }`
 );
 
+/*================================ RIGHT WALL ==============================*/
+
+
 export const GridRightWall = React.forwardRef(
   (
     {
       args,
-      cellColor = "#000000",
+      cellColor = "#F607DC",
       sectionColor = "#2080ff",
       cellSize = 0.5,
       sectionSize = 1,
@@ -151,11 +154,15 @@ export const GridRightWall = React.forwardRef(
   }
 );
 
+/*================================ LEFT WALL ==============================*/
+
+
+
 export const GridLeftWall = React.forwardRef(
   (
     {
       args,
-      cellColor = "#000000",
+      cellColor = "#F607DC",
       sectionColor = "#2080ff",
       cellSize = 0.5,
       sectionSize = 1,
@@ -190,6 +197,63 @@ export const GridLeftWall = React.forwardRef(
         ref={fRef}
         frustumCulled={true}
         rotation={[0, 0, Math.PI / 2]}
+        visible={true}
+        {...props}
+      >
+        <gridMaterial
+          transparent
+          extensions-derivatives
+          side={side}
+          {...uniforms1}
+          {...uniforms2}
+        />
+        <planeGeometry args={args} />
+      </mesh>
+    );
+  }
+);
+
+/*================================ FLOOR ==============================*/
+
+export const GridFloor = React.forwardRef(
+  (
+    {
+      args,
+      cellColor = "#F607DC",
+      sectionColor = "#2080ff",
+      cellSize = 0,
+      sectionSize = 1,
+      followCamera = false,
+      infiniteGrid = false,
+      fadeDistance = 100,
+      fadeStrength = 1,
+      cellThickness = 0,
+      sectionThickness = 1,
+      side = THREE.DoubleSide,
+      ...props
+    }: Omit<JSX.IntrinsicElements["mesh"], "args"> & GridProps,
+    fRef: React.ForwardedRef<THREE.Mesh>
+  ) => {
+    extend({ GridMaterial });
+    const uniforms1 = {
+      cellSize,
+      sectionSize,
+      cellColor,
+      sectionColor,
+      cellThickness,
+      sectionThickness,
+    };
+    const uniforms2 = {
+      fadeDistance,
+      fadeStrength,
+      infiniteGrid,
+      followCamera,
+    };
+    return (
+      <mesh
+        ref={fRef}
+        frustumCulled={true}
+        rotation={[0, 0, 0]}
         visible={true}
         {...props}
       >

@@ -11,6 +11,7 @@ import {
 import { Mesh, Vector2, Vector3 } from "three";
 import { useForwardRaycast } from "../../../hooks/useForwardRaycast";
 import { GameSocket } from "../../../services/Game/SocketContext";
+import BlueFlame from "../effects/BlueFlame";
 
 interface TBallProps {
   radius: number;
@@ -51,10 +52,11 @@ const Ball = (props: TBallProps) => {
       <mesh ref={ballRef} position={props.startPos}>
         <sphereGeometry args={[props.radius, 32, 32]} />
         <meshToonMaterial
-          emissive="blue"
+          emissive="red"
           emissiveIntensity={3}
           toneMapped={false}
         />
+        {/* <BlueFlame/> */}
       </mesh>
     </Trail>
   );

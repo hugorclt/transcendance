@@ -184,7 +184,7 @@ export class Game {
       this.ball.setVelocityZ(0);
       this.ball.setVelocity(null);
       this.ball.setSpecialBall(false);
-    }, 5000);
+    }, 3000);
   }
   
 

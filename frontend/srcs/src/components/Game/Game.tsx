@@ -44,6 +44,7 @@ import Scoreboard from "./Components/Scoreboard";
 import { Euler } from "three";
 import WallRight from "./Components/WallRight";
 import WallLeft from "./Components/WallLeft";
+import FloorGrid from "./Components/Floor";
 
 interface GameInfo {
   floorWidth: number;
@@ -107,8 +108,6 @@ function Game() {
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
       {/* <OrbitControls /> */}
-      {/* <primitive object={new AxesHelper(10)} /> */}
-      {/* <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} /> */}
       <Ball
         radius={gameInfo.ballRadius}
         startPos={
@@ -142,19 +141,25 @@ function Game() {
         score1={gameInfo.scorePlayer1}
         score2={gameInfo.scorePlayer2}
       /> */}
-      <WallRight
+      {/* <WallRight
         position={new Vector3(-gameInfo.floorWidth / 2, 0, 0)}
         color="#6f6f6f"
         sectionColor="#9d4b4b"
         infiniteGrid={true}
         // rotation={[0,0,0]}
-      />
-      <WallLeft
+      /> */}
+      {/* <WallLeft
         position={new Vector3(gameInfo.floorWidth / 2, 0, 0)}
         color="#6f6f6f"
         sectionColor="#9d4b4b"
         infiniteGrid={true}
         // rotation={[0,0,0]}
+      /> */}
+      <FloorGrid
+        position={new Vector3(0, 0, 0)}
+        color="#6f6f6f"
+        sectionColor="#9d4b4b"
+        infiniteGrid={true}
       />
       <hemisphereLight args={["#ffff", 0.6]} />
       {/* <Particles /> */}s

@@ -11,7 +11,7 @@ interface TWallProps extends GridProps {
 const WallLeft = (props: TWallProps) => {
     const { position, color, rotation, ...gridProps } = props;
     return (
-      <group position={[-16, 0, 0]} rotation={[0, 0, 0]}>
+      <group position={[-16, 0, 0]} rotation={[0, 0, Math.PI /2 ]}>
         <GridLeftWall {...gridProps} visible={true}/>
         <mesh />
       </group>
