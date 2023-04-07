@@ -59,10 +59,10 @@ export const TeamsContainer = styled.div`
   width: 100%;
   flex: 1;
   display: flex;
-  @media (min-width: ${mediaSize.laptop}) {
+  @media (min-width: ${screenSize.laptop}) {
     flex-direction: row;
-    /* justify-content: space-around;
-    align-items: center; */
+    justify-content: space-around;
+    align-items: center;
   }
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
@@ -95,4 +95,5 @@ export const ButtonsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 `;

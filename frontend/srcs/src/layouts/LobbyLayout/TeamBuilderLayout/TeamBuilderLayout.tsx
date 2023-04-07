@@ -7,11 +7,12 @@ import {
   TeamContainer,
   TeamsContainer,
 } from "./TeamBuilderLayout.style";
-import ChangeTeamButton from "../../../components/Lobby/TeamBuilder/ChangeTeamButton/ChangeTeamButton";
 import GameInfoCard from "../../../components/Lobby/TeamBuilder/GameInfoCard/GameInfoCard";
-import HeptaButton from "../../../components/common/Button/HeptaButton/HeptaButton";
 import PrivacyChanger from "../../../components/Lobby/TeamBuilder/PrivacyChanger/PrivacyChanger";
 import TeamCard from "../../../components/Lobby/TeamBuilder/TeamCard/TeamCard";
+import LeaveLobbyButton from "../../../components/Lobby/TeamBuilder/TeamBuilderButtons/LeaveLobbyButton/LeaveLobbyButton";
+import ChangeTeamButton from "../../../components/Lobby/TeamBuilder/TeamBuilderButtons/ChangeTeamButton/ChangeTeamButton";
+import ReadyButton from "../../../components/Lobby/TeamBuilder/TeamBuilderButtons/ReadyButton/ReadyButton";
 
 function TeamBuilderLayout() {
   return (
@@ -32,7 +33,8 @@ function TeamBuilderLayout() {
         </TeamContainer>
       </TeamsContainer>
       <ButtonsContainer>
-        <HeptaButton text="PLAY" width={100} />
+        <ReadyButton />
+        <LeaveLobbyButton />
       </ButtonsContainer>
     </TeamBuilderContainer>
   );

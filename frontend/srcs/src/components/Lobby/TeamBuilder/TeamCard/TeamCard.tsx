@@ -1,7 +1,6 @@
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { lobbyAtom } from "../../../../services/store";
-import InviteFriendsButton from "../InviteFriendsButton/InviteFriendsButton";
 import PlayerCard from "../PlayerCard/PlayerCard";
 import {
   TeamCardsContainer,
@@ -10,6 +9,7 @@ import {
 } from "./TeamCardStyle";
 import { nanoid } from "nanoid";
 import { TLobbyMember } from "../../../../services/type";
+import InviteFriendsButton from "../TeamBuilderButtons/InviteFriendsButton/InviteFriendsButton";
 
 interface TeamCardProps {
   team: boolean;
