@@ -8,7 +8,7 @@ const GameScreen = () => {
   return (
     <Canvas
       tabIndex={0}
-      camera={{position:[0,6,53]}}
+      camera={{position:[0,6.5,53]}}
       style={{ background: COLORS.background, height: "100vh" }}>
       <Game />
       <SeaMap />

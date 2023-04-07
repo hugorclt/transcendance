@@ -26,7 +26,7 @@ import { GameSocket } from "../../services/Game/SocketContext";
 import SkyBox from "./Components/SkyBox";
 import Floor from "./Components/Floor";
 import Ball from "./Components/Ball";
-import Wall from "./Components/Wall";
+import Wall from "./Components/WallRight";
 import Paddle from "./Components/PlayerPaddle";
 import PlayerPaddle from "./Components/PlayerPaddle";
 import OpponentPaddle from "./Components/OpponentPaddle";
@@ -42,6 +42,8 @@ import SceneCamera from "./Components/SceneCamera";
 import ChargeCounter from "./Components/Charge";
 import Scoreboard from "./Components/Scoreboard";
 import { Euler } from "three";
+import WallRight from "./Components/WallRight";
+import WallLeft from "./Components/WallLeft";
 
 interface GameInfo {
   floorWidth: number;
@@ -104,9 +106,9 @@ function Game() {
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
-      <OrbitControls />
-      <primitive object={new AxesHelper(10)} />
-      <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} />
+      {/* <OrbitControls /> */}
+      {/* <primitive object={new AxesHelper(10)} /> */}
+      {/* <Floor width={gameInfo.floorWidth} length={gameInfo.floorLength} /> */}
       <Ball
         radius={gameInfo.ballRadius}
         startPos={
@@ -136,12 +138,19 @@ function Game() {
         }
       />
       <ChargeCounter charge={gameInfo.chargePlayer1} />
-      <Scoreboard
+      {/* <Scoreboard
         score1={gameInfo.scorePlayer1}
         score2={gameInfo.scorePlayer2}
-      />
-      <Wall
+      /> */}
+      <WallRight
         position={new Vector3(-gameInfo.floorWidth / 2, 0, 0)}
+        color="#6f6f6f"
+        sectionColor="#9d4b4b"
+        infiniteGrid={true}
+        // rotation={[0,0,0]}
+      />
+      <WallLeft
+        position={new Vector3(gameInfo.floorWidth / 2, 0, 0)}
         color="#6f6f6f"
         sectionColor="#9d4b4b"
         infiniteGrid={true}
