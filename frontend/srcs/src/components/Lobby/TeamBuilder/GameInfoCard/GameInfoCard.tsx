@@ -7,7 +7,7 @@ function GameInfoCard() {
 
   return (
     <>
-      <h3>MODE {lobby.mode}</h3>
+      <h3>{lobby.mode}</h3>
       <h4>
         {lobby.nbPlayers / 2} vs {lobby.nbPlayers / 2}
       </h4>

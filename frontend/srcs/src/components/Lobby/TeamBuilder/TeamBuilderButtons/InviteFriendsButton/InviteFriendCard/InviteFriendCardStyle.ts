@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { COLORS } from "../../../../../colors";
+import { COLORS } from "../../../../../../colors";
 
 export const InviteFriendCardContainer = styled.div`
   width: 200px;

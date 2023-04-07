@@ -12,6 +12,7 @@ export const TeamBuilderContainer = styled.div`
 `;
 
 export const GameTitleContainer = styled.div`
+  width: 100%;
   align-self: flex-start;
   @media (max-width: ${screenSize.tablet}) {
     height: 32px;
@@ -23,8 +24,8 @@ export const GameTitleContainer = styled.div`
     height: 48px;
   }
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
+  justify-content: space-between;
+  align-items: flex-start;
   h3 {
     padding: 4px;
   }
@@ -35,7 +36,8 @@ export const GameTitleContainer = styled.div`
 `;
 
 export const SliderContainer = styled.div`
-  width: 80%;
+  margin-bottom: 16px;
+  width: 100%;
   @media (max-width: ${screenSize.tablet}) {
     height: 48px;
   }
@@ -57,15 +59,15 @@ export const TeamsContainer = styled.div`
   width: 100%;
   flex: 1;
   display: flex;
-  @media (min-width: ${mediaSize.laptop}) {
+  @media (min-width: ${screenSize.laptop}) {
     flex-direction: row;
-    /* justify-content: space-around;
-    align-items: center; */
+    justify-content: space-around;
+    align-items: center;
   }
   @media (max-width: ${screenSize.laptop}) {
     flex-direction: column;
-    justify-content: space-around;
-    /* align-items: center;  */
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -73,7 +75,7 @@ export const TeamContainer = styled.div`
   @media (max-width: ${screenSize.laptop}) {
     width: 100%;
     height: 30%;
-    min-height: 150px;
+    min-height: 120px;
     max-height: 600px;
   }
   @media (min-width: ${screenSize.laptop}) {
@@ -93,4 +95,5 @@ export const ButtonsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 `;

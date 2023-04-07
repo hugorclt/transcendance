@@ -1,18 +1,17 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { userAtom } from "../../../../services/store";
+import { userAtom } from "../../../../../services/store";
 import React, { useEffect, useState } from "react";
-import { COLORS } from "../../../../colors";
-import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { lobbyAtom } from "../../../../services/store";
-import { TLobbyMember } from "../../../../services/type";
+import { COLORS } from "../../../../../colors";
+import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
+import { lobbyAtom } from "../../../../../services/store";
+import { TLobbyMember } from "../../../../../services/type";
 import {
   PlayerCardAvatar,
   PlayerCardContainer,
   PlayerCardLeftBorder,
-  PlayerCardName,
-  PlayerCardStatus,
   PlayerInfoContainer,
+  PlayerNameContainer,
 } from "./PlayerCardStyle";
 
 interface PlayerCardProps {
@@ -48,9 +47,11 @@ function PlayerCard({ team, member }: PlayerCardProps) {
       <PlayerCardLeftBorder color={team == false ? COLORS.red : COLORS.blue} />
       <PlayerInfoContainer>
         <PlayerCardAvatar />
-        <PlayerCardName>{member?.user?.username}</PlayerCardName>
+        <PlayerNameContainer>
+          <h4>{member?.user?.username}</h4>
+        </PlayerNameContainer>
         {user.id == lobby.ownerId && <button onClick={kickPlayer}>KICK</button>}
-        <PlayerCardStatus>{member.ready ? "READY" : "..."}</PlayerCardStatus>
+        <h4>{member.ready ? "READY" : "..."}</h4>
       </PlayerInfoContainer>
     </PlayerCardContainer>
   );

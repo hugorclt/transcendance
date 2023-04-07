@@ -2,16 +2,16 @@ import { useAtom } from "jotai";
 import React, { FormEvent, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import Popup from "reactjs-popup";
-import { COLORS } from "../../../../colors";
-import { friendAtom, lobbyAtom } from "../../../../services/store";
-import { TFriend } from "../../../../services/type";
+import { COLORS } from "../../../../../colors";
+import { friendAtom, lobbyAtom } from "../../../../../services/store";
+import { TFriend } from "../../../../../services/type";
 import InviteFriendCard from "./InviteFriendCard/InviteFriendCard";
 import {
   InviteFriendButtonContainer,
   ModalBox,
   StyledButton,
 } from "./InviteFriendsButtonStyle";
-import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 
 function InviteFriendsButton() {

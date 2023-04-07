@@ -1,8 +1,6 @@
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { lobbyAtom } from "../../../../services/store";
-import InviteFriendsButton from "../InviteFriendsButton/InviteFriendsButton";
-import PlayerCard from "../PlayerCard/PlayerCard";
 import {
   TeamCardsContainer,
   TeamInfoContainer,
@@ -10,13 +8,27 @@ import {
 } from "./TeamCardStyle";
 import { nanoid } from "nanoid";
 import { TLobbyMember } from "../../../../services/type";
+import InviteFriendsButton from "../TeamBuilderButtons/InviteFriendsButton/InviteFriendsButton";
+import EmptyCard from "./EmptyCard/EmptyCard";
+import PlayerCard from "./PlayerCard/PlayerCard";
 
 interface TeamCardProps {
   team: boolean;
 }
 function TeamCard(props: TeamCardProps) {
   const [lobby, setLobby] = useAtom(lobbyAtom);
-  const [teamMembers, setTeamMembers] = useState<TLobbyMember[]>();
+  const [teamMembers, setTeamMembers] = useState<TLobbyMember[]>(
+    lobby.members
+      ?.flatMap((member) => {
+        if (member.team == props.team) {
+          return member;
+        }
+      })
+      .filter((member): member is TLobbyMember => member !== undefined)
+  );
+  const [availableSpace, setAvailableSpace] = useState<number>(
+    lobby.nbPlayers / 2 - (teamMembers?.length ?? 0)
+  );
 
   useEffect(() => {
     const members = lobby.members
@@ -26,17 +38,18 @@ function TeamCard(props: TeamCardProps) {
         }
       })
       .filter((member): member is TLobbyMember => member !== undefined); //this is to trim undefined values due to flatMap
-    if (members) setTeamMembers(members);
-  }, [lobby.members]);
+    setTeamMembers(members);
+    setAvailableSpace(lobby.nbPlayers / 2 - (teamMembers?.length ?? 0));
+  }, [lobby]);
 
   return (
     <>
       <TeamInfoContainer>
         <TeamStatusContainer>
-          <h4>{props.team ? "RIGHT" : "LEFT"} TEAM</h4>
-          <h4>
-            {teamMembers?.length || "0"}/{lobby.nbPlayers / 2}
-          </h4>
+          <h5>{props.team ? "RIGHT" : "LEFT"} TEAM</h5>
+          <h5>
+            {teamMembers?.length ?? 0}/{lobby.nbPlayers / 2}
+          </h5>
         </TeamStatusContainer>
         <InviteFriendsButton />
       </TeamInfoContainer>
@@ -46,6 +59,11 @@ function TeamCard(props: TeamCardProps) {
             <PlayerCard key={nanoid()} team={props.team} member={member} />
           );
         })}
+        {Array.from({
+          length: lobby.nbPlayers / 2 - (teamMembers?.length ?? 0),
+        }).map(() => (
+          <EmptyCard key={nanoid()} />
+        ))}
       </TeamCardsContainer>
     </>
   );

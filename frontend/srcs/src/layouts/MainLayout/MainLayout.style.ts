@@ -4,7 +4,6 @@ import { screenSize } from "../../mediaSize";
 
 export const MainLayoutContainer = styled.div`
   height: 100vh;
-  min-height: 600px;
   width: 100%;
   display: flex;
   @media (max-width: ${screenSize.laptop}) {
@@ -12,6 +11,7 @@ export const MainLayoutContainer = styled.div`
   }
   @media (min-width: ${screenSize.laptop}) {
     overflow-x: hidden;
+    min-height: 600px;
   }
 `;
 
@@ -24,12 +24,13 @@ export const MainContainer = styled.main`
 export const PageContainer = styled.div`
   background-color: ${COLORS.darkergrey};
   flex-grow: 1;
+  width: 100%;
   padding: 16px;
-  width: 90%;
   min-width: 280px;
   @media (max-width: ${screenSize.laptop}) {
-    width: auto;
+    padding: 8px;
   }
+  box-sizing: border-box;
 `;
 
 export const NavBarContainer = styled.div`
