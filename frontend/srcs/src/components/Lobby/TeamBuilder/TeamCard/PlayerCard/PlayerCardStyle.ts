@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { COLORS } from "../../../../colors";
-import { screenSize } from "../../../../mediaSize";
+import { COLORS } from "../../../../../colors";
+import { screenSize } from "../../../../../mediaSize";
 
 export const PlayerCardLeftBorder = styled.div`
   @media (max-width: ${screenSize.laptop}) {

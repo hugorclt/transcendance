@@ -1,11 +1,11 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { userAtom } from "../../../../services/store";
+import { userAtom } from "../../../../../services/store";
 import React, { useEffect, useState } from "react";
-import { COLORS } from "../../../../colors";
-import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { lobbyAtom } from "../../../../services/store";
-import { TLobbyMember } from "../../../../services/type";
+import { COLORS } from "../../../../../colors";
+import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
+import { lobbyAtom } from "../../../../../services/store";
+import { TLobbyMember } from "../../../../../services/type";
 import {
   PlayerCardAvatar,
   PlayerCardContainer,
