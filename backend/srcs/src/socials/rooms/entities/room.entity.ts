@@ -51,5 +51,9 @@ export class ReturnRoomEntity {
     @ApiProperty()
     lastMessage: string;
 
+    @ApiProperty()
     participants: ReturnParticipantEntity[];
+
+    @ApiProperty()
+    banned: string[]
 }

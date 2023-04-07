@@ -14,7 +14,17 @@ function UserProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     axiosPrivate
       .get("/users/me")
-      .then((res: AxiosResponse) => setUser(res.data))
+      .then((res: AxiosResponse) =>
+        setUser((prev) => ({
+          ...prev,
+          id: res.data.id,
+          username: res.data.username,
+          status: res.data.status,
+          avatar: res.data.avatar,
+          exp: res.data.exp,
+          balance: res.data.balance,
+        }))
+      )
       .catch((res: AxiosError) =>
         navigate("/login", { state: { from: location }, replace: true })
       );

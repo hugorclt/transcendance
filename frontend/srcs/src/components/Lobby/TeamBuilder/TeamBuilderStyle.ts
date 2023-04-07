@@ -1,28 +1,12 @@
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 
-export const TeamBuilderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${COLORS.darkergrey};
-  width: flex-grow;
-  height: 100%;
-`;
-
 export const GameTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 15%;
-`;
-
-export const GameTitle = styled.h1`
-  color: ${COLORS.primary};
-`;
-
-export const GamePlayersMode = styled.h3`
-  color: ${COLORS.primary};
 `;
 
 export const GameTitleCard = styled.div`
@@ -32,6 +16,14 @@ export const GameTitleCard = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  h1 {
+    color: ${COLORS.primary};
+  }
+
+  h3 {
+    color: ${COLORS.primary};
+  }
 `;
 
 export const CentralContainer = styled.div`
@@ -40,49 +32,6 @@ export const CentralContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   height: 70%;
-`;
-
-export const TeamContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-  height: 80%;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-export const TeamInfoContainer = styled.div`
-  display: flex;
-  padding: 10px;
-  align-items: center;
-  width: 100%;
-  height: 10%;
-  background-color: ${COLORS.secondary};
-`;
-
-export const TeamStatusContainer = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 10px;
-`;
-
-export const TeamName = styled.h2`
-  color: ${COLORS.primary};
-`;
-
-export const TeamNbPlayers = styled.h2`
-  color: ${COLORS.primary};
-`;
-
-export const TeamCardsContainer = styled.div`
-  height: 90%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
 `;
 
 export const BotContainer = styled.div`

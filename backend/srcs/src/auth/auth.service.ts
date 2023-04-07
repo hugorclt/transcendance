@@ -14,6 +14,7 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, lastValueFrom, map, throwError } from 'rxjs';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Api42TokenEntity } from './entities/api42-token.entity';
+import { LobbiesService } from 'src/lobbies/lobbies.service';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -27,6 +28,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly httpService: HttpService,
+    private readonly lobbiesService: LobbiesService,
   ) {}
 
   /* ---------------------------------- Local --------------------------------- */
@@ -136,6 +138,13 @@ export class AuthService {
         status: 'DISCONNECTED',
       },
     });
+    //should disconnect from lobby
+    const lobby = await this.lobbiesService.findLobbyForUser(userId);
+    if (lobby)
+      await this.lobbiesService.leaveLobby({
+        userId: userId,
+        lobbyId: lobby.id,
+      });
     await this.usersService.updateStatus(userId, 'DISCONNECTED');
   }
 

@@ -2,23 +2,19 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import LoginPage from "./views/LoginPage/LoginPage";
-import HomePage from "./views/HomePage/HomePage";
-import LeaderboardsPage from "./views/LeaderboardsPage/LeaderboardsPage";
 import ProfilePage from "./views/ProfilePage/ProfilePage";
+import RankingPage from "./views/RankingPage/RankingPage";
 import ShopPage from "./views/ShopPage/ShopPage";
-import LobbyPage from "./views/LobbyPage/LobbyPage";
-import MissingPage from "./views/MissingPage/MissingPage";
-import GamePage from "./views/GamePage/GamePage";
+import MissingPage from "./components/common/Missing/MissingPage";
 
 import RequireAuth from "./services/Auth/RequireAuth";
 import PersistLogin from "./services/Auth/PersistLogin";
-import Login42 from "./components/Login/Auth42/Login42";
-import LoginLayout from "./layouts/LoginLayout/LoginLayout";
+import Login42 from "./components/Login/Login42/Login42";
 import RequireStatus from "./services/Status/RequireStatus";
-import RequireInGameStatus from "./services/Status/RequireInGameStatus";
 import RequireUnAuth from "./services/Auth/RequiredUnAuth";
 import ProvideSocket from "./services/Auth/ProvideSocket";
 import MainPage from "./views/MainPage/MainPage";
+import LobbyPage from "./views/LobbyPage/LobbyPage";
 
 function App() {
   return (
@@ -27,29 +23,21 @@ function App() {
         {/* Public route */}
         <Route element={<RequireUnAuth />}>
           <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/login/42"
-            element={
-              <LoginLayout>
-                <Login42 />
-              </LoginLayout>
-            }
-          />
+          <Route path="/login/42" element={<Login42 />} />
         </Route>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
           <Route element={<ProvideSocket />}>
             <Route element={<RequireStatus />}>
               <Route element={<MainPage />}>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<LobbyPage />} />
                 <Route path="/shop" element={<ShopPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/lobby" element={<LobbyPage />} />
-                <Route path="/leaderboards" element={<LeaderboardsPage />} />
+                <Route path="/ranking" element={<RankingPage />} />
               </Route>
             </Route>
             {/* <Route element={<RequireInGameStatus />}> */}
-              <Route path="/game" element={<GamePage />} />
+            {/* <Route path="/game" element={<GamePage />} /> */}
             {/* </Route> */}
           </Route>
         </Route>

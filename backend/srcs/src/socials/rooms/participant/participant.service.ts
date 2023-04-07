@@ -9,9 +9,9 @@ export class ParticipantService {
   constructor(private prisma: PrismaService) {}
 
   create(createParticipantDto: CreateParticipantDto) {
-    return this.prisma.participant.create({
-      data: createParticipantDto,
-    });
+    // return this.prisma.participant.create({
+      // data: createParticipantDto,
+    // });
   }
 
   findAll() {
@@ -45,6 +45,7 @@ export class ParticipantService {
           role: participant.role,
           name: user.username,
           status: user.status,
+          isMute: participant.isMute,
         };
       }),
     );

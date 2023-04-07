@@ -1,28 +1,42 @@
 import React, { ReactNode } from "react";
-import { Outlet } from "react-router";
-import ChatPage from "../../views/ChatPage/ChatPage";
+import MediaQuery from "react-responsive";
+import { mediaSize } from "../../mediaSize";
 import NavBarPage from "../../views/NavBarPage/NavBarPage";
 import {
-  MainLayoutStyle,
-  ChatLayoutContainer,
   MainLayoutContainer,
-  NavBarLayoutContainer,
-} from "./MainLayoutStyle";
+  NavBarContainer,
+  MainContainer,
+  PageContainer,
+} from "./MainLayout.style";
+import SideBarPage from "../../views/SideBarPage/SideBarPage";
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <MainLayoutStyle>
-      <MainLayoutContainer>
-        <NavBarLayoutContainer>
-          <NavBarPage />
-        </NavBarLayoutContainer>
-        {children}
-      </MainLayoutContainer>
+    <>
+      {/* laptop and desktop */}
+      <MediaQuery minWidth={mediaSize.laptop + 1}>
+        <MainLayoutContainer>
+          <MainContainer>
+            <NavBarContainer>
+              <NavBarPage />
+            </NavBarContainer>
+            <PageContainer>{children}</PageContainer>
+          </MainContainer>
 
-      <ChatLayoutContainer>
-        <ChatPage />
-      </ChatLayoutContainer>
-    </MainLayoutStyle>
+          <SideBarPage />
+        </MainLayoutContainer>
+      </MediaQuery>
+
+      {/* tablet and mobile */}
+      <MediaQuery maxWidth={mediaSize.laptop}>
+        <MainLayoutContainer>
+          <NavBarContainer>
+            <h1>NAVBAR</h1>
+          </NavBarContainer>
+          <PageContainer>{children}</PageContainer>
+        </MainLayoutContainer>
+      </MediaQuery>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Lobby } from '@prisma/client';
+import { Lobby, LobbyMember, LobbyState } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, MapName } from '@prisma/client';
 
@@ -23,4 +23,12 @@ export class LobbyEntity implements Lobby {
 
   @ApiProperty({ default: MapName.CLASSIC })
   map: MapName = MapName.CLASSIC;
+
+  @ApiProperty()
+  state: LobbyState;
+}
+
+export class LobbyWithMembersEntity extends LobbyEntity {
+  @ApiProperty()
+  members: LobbyMember[];
 }

@@ -1,11 +1,12 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useGlobal } from "../Global/GlobalProvider";
+import { useAtom } from "jotai";
+import { userAtom } from "../store";
 
 function RequireUnAuth() {
-  const { auth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
   const location = useLocation();
 
-  return auth?.accessToken ? (
+  return user?.accessToken ? (
     <Navigate to="/" state={{ from: location }} replace />
   ) : (
     <Outlet />

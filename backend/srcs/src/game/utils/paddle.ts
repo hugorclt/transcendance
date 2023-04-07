@@ -1,89 +1,53 @@
 export class Paddle {
-    private x: number;
-    private y: number;
-    private z: number;
+
     private width: number;
-    private height: number;
-    private depth: number;
-    private mass:number;
-    private speed:number;
-    private positionBuffer: [];
-  
-    constructor(x: number, y: number, z: number, width: number, height: number, depth: number, mass: number, speed: number) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
-      this.width = width;
-      this.height = height;
-      this.depth = depth;
-      this.mass = mass;
-      this.speed = speed;
-    }
-  
-    /*================================ getter and setter ==============================*/
-    
-    
+    private length: number;
+    private position: {x: number, z: number};
 
-    getX(): number {
-      return this.x;
+    constructor (width: number, length: number, position: {x: number, z:number}) {
+        this.width = width;
+        this.length = length;
+        this.position = position;
     }
 
-    setX(x: number) {
-        this.x = x
+    getWidth() {
+        return this.width;
     }
 
-    getY(): number {
-      return this.y;
-    }
-  
-    setY(y: number) {
-        this.y = y;
+    getLength() {
+        return this.length;
     }
 
-    getZ(): number {
-      return this.z;
+    getPosition() {
+        return this.position;
     }
 
-    setZ(z: number) {
-        this.z = z;
+    setPosition(x: number, z: number) {
+        this.position.x = x;
+        this.position.z = z;
     }
-  
-    getWidth(): number {
-      return this.width;
-    }
-  
+
     setWidth(width: number) {
         this.width = width;
     }
 
-    getHeight(): number {
-      return this.height;
+    setLength(length: number) {
+        this.length= length;
     }
 
-    setHeight(height: number) {
-        this.height = height;
+    moveLeft() {
+        this.position.x -= 0.2;
     }
 
-    getDepth(): number {
-      return this.depth;
+    moveRight() {
+        this.position.x += 0.2;
     }
 
-    setDepth(depth: number) {
-        this.depth = depth;
+    setPositionX(x: number) {
+        this.position.x = x;
     }
 
-    getMass(): number {
-      return this.mass;
+    setPositionZ(z: number) {
+        this.position.z = z;
     }
-
-    setMass(mass: number) {
-      this.mass = mass;
-    }
-
-    /*================================ GAME MOVE ==============================*/
-    // input is either 1 or -1;
-    applyInput(input: number) {
-      this.x += input * this.speed;
-    }
-  };
-  
+}

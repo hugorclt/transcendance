@@ -1,10 +1,8 @@
-import React from 'react'
-import { ProfileLayout } from "../../layouts/ProfileLayout/ProfileLayout.tsx";
+import React from "react";
+import { ProfileLayout } from "../../layouts/ProfileLayout/ProfileLayout";
 
 function ProfilePage() {
-  return (
-    <ProfileLayout/>
-  )
+  return <ProfileLayout />;
 }
 
-export default ProfilePage
+export default ProfilePage;

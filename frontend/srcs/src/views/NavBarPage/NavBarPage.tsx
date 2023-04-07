@@ -1,7 +1,7 @@
-import NavBar from "../../components/NavBar/NavBar";
+import NavBarLayout from "../../layouts/NavBarLayout/NavBarLayout";
 
 function NavBarPage() {
-  return <NavBar />;
+  return <NavBarLayout />;
 }
 
 export default NavBarPage;

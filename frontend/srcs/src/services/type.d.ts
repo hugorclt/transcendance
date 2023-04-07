@@ -1,6 +1,7 @@
 export interface TUser {
   id: string;
   username: string;
+  accessToken: string;
   status: string;
   avatar: string;
   exp: number;
@@ -15,12 +16,19 @@ export interface TLobby {
   ownerId: string;
   mode: string;
   nbPlayers: number;
+  members: TLobbyMember[];
+  state: string;
+  private: boolean;
 }
 
-export interface TPlayer {
+export interface TLobbyMember {
   id: string;
-  team: number;
-  status: string;
+  userId: string;
+  team: boolean;
+  ready: boolean;
+  user: {
+    username: string;
+  };
 }
 
 export interface TFriend {
@@ -38,6 +46,7 @@ export interface TConversation {
   isDm: boolean;
   isRead: boolean;
   isActive: boolean;
+  banned: string[];
   participants: TParticipant[];
 }
 
@@ -46,6 +55,7 @@ export interface TParticipant {
   name: string;
   role: string;
   status: string;
+  isMute: boolean;
 }
 
 export interface TSelectedPage {

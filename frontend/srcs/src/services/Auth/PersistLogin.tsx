@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import useRefreshToken from "../../hooks/useRefreshToken";
-import { useGlobal } from "../Global/GlobalProvider";
-import Loading from "../../components/Loading/Loading";
+import Loading from "../../components/common/Loading/Loading";
+import { useAtom } from "jotai";
+import { userAtom } from "../store";
 
 function PersistLogin() {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
-  const { auth } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
@@ -21,7 +22,7 @@ function PersistLogin() {
     };
 
     //On component mount we run this function only if our accesToken is not set.
-    !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);
+    !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
   return <>{isLoading ? <Loading /> : <Outlet />}</>;

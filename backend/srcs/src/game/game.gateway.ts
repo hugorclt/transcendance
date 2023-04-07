@@ -10,6 +10,12 @@ import {
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { UsersService } from 'src/users/users.service';
 import { Namespace } from 'socket.io';
+import { Game } from './utils/game';
+import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
+import { Ball } from './utils/ball';
+import { Paddle } from './utils/paddle';
+import { Scoreboard } from './utils/scoreboard';
+import { Field } from './utils/field';
 
 @Injectable()
 @UseFilters(new WsCatchAllFilter())
@@ -21,18 +27,28 @@ export class GameGateway
 {
   constructor(private usersService: UsersService) {}
   /*========================================================================*/
-  
-  
+
   @WebSocketServer()
   public io: Namespace;
+  private game: Game;
+  private player1: string;
+  private player2: string;
 
   afterInit() {
     console.log('GameGateway initialized');
-    this.io.on('connection', (socket) => {});
+    this.game = new Game(
+      new Ball({ x: 0, y: 0, z: 0 }, 0, undefined, false),
+      new Paddle(0, 0, { x: 0, z: 0 }),
+      new Paddle(0, 0, { x: 0, z: 0 }),
+      new Scoreboard(0, 0),
+      new Field(0, 0),
+    );
   }
 
-  async handleConnection(client: any, ...args: any[]) {
-    // toDO
+  async handleConnection(client: AuthSocket) {
+    await client.join(client.userId);
+    if (!this.player1) this.player1 = client.userId;
+    else this.player2 = client.userId;
   }
 
   async handleDisconnect(client: any) {
@@ -42,7 +58,41 @@ export class GameGateway
   /*======= start game =======*/
 
   @SubscribeMessage('start-game')
-  async onStart(): Promise<void> {}
+  async onStart(client: AuthSocket): Promise<void> {
+    console.log('start-game received');
+    await this.game.init();
+    console.log('end-init');
+    this.io.to(client.userId).emit('game-info', {
+      floorWidth: this.game.getField().getWidth(),
+      floorLength: this.game.getField().getLength(),
+      ballRadius: this.game.getBall().getRadius(),
+      paddleWidth: this.game.getPaddle1().getWidth(),
+      paddleLength: this.game.getPaddle1().getLength(),
+      paddlePlayerStartX: this.game.getPaddle1().getPosition().x,
+      paddlePlayerStartZ: this.game.getPaddle1().getPosition().z,
+      paddleOppStartX: this.game.getPaddle2().getPosition().x,
+      paddleOppStartZ: this.game.getPaddle2().getPosition().z,
+      ballStartX: this.game.getBall().getPosition().x,
+      ballStartY: this.game.getBall().getPosition().y,
+      ballStartZ: this.game.getBall().getPosition().z,
+      scorePlayer1: this.game.getScoreboard().getPlayer1(),
+      scorePlayer2: this.game.getScoreboard().getPlayer2(),
+    });
+    this.game.launch();
+    setInterval(() => {
+      this.game.processBallMovement()
+      this.io.to(client.userId).emit('ball', {
+        x: this.game.getBall().getPosition().x,
+        y: this.game.getBall().getPosition().y,
+        z: this.game.getBall().getPosition().z,
+      });
+
+      this.io.to(client.userId).emit('player2', {
+        x: this.game.getPaddle2().getPosition().x,
+      });
+    }, 1000 / 60); // 60 frames per second
+
+  }
 
   /*======= pause game =======*/
 
@@ -52,10 +102,36 @@ export class GameGateway
   /*======= left move =======*/
 
   @SubscribeMessage('left-move')
-  async OnLeftMove(): Promise<void> {}
+  async OnLeftMove(client: AuthSocket): Promise<void> {
+    if (client.userId == this.player1) {
+      this.game.getPaddle1().moveLeft();
+      this.io.to(client.userId).emit('player1', {
+        x: this.game.getPaddle1().getPosition().x,
+      });
+    }
+    if (client.userId == this.player2) {
+      this.game.getPaddle2().moveLeft();
+      this.io.to(client.userId).emit('player2', {
+        x: this.game.getPaddle2().getPosition().x,
+      });
+    }
+  }
 
   /*======= right move =======*/
 
-  @SubscribeMessage('left-move')
-  async OnRightMove(): Promise<void> {}
+  @SubscribeMessage('right-move')
+  async OnRightMove(client: AuthSocket): Promise<void> {
+    if (client.userId == this.player1) {
+      this.game.getPaddle1().moveRight();
+      this.io.to(client.userId).emit('player1', {
+        x: this.game.getPaddle1().getPosition().x,
+      });
+    }
+    if (client.userId == this.player2) {
+      this.game.getPaddle2().moveRight();
+      this.io.to(client.userId).emit('player2', {
+        x: this.game.getPaddle2().getPosition().x,
+      });
+    }
+  }
 }

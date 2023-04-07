@@ -1,26 +1,27 @@
-import React, { useState } from "react";
-import { LobbySocketProvider } from "./LobbySocketContext";
-import { LobbyProvider } from "./LobbyContext";
-import LobbyLayout from "../../layouts/LobbyLayout/LobbyLayout";
-import Lobby from "../../components/Lobby/Lobby";
-import { useGlobal } from "../../services/Global/GlobalProvider";
-import GameModeSelector from "../../components/Lobby/GameModeSelector/GameModeSelector";
+import React from "react";
+import LobbyLayout from "../../layouts/LobbyLayout/TeamBuilderLayout/TeamBuilderLayout";
+import { LobbySocketProvider } from "../../services/Lobby/LobbySocketContext";
+import LobbyProvider from "../MainPage/LobbyProvider";
+import { useAtom } from "jotai";
+import { userAtom } from "../../services/store";
+import LobbyCreatorLayout from "../../layouts/LobbyLayout/LobbyCreatorLayout/LobbyCreatorLayout";
+import LobbyCreatorProvider from "./LobbyCreatorProvider";
 
 function LobbyPage() {
-  const { status } = useGlobal();
+  const [user, setUser] = useAtom(userAtom);
 
   return (
-    <LobbyProvider>
-      <LobbyLayout>
-        {status === "LOBBY" ? (
-          <LobbySocketProvider>
-            <Lobby />
-          </LobbySocketProvider>
+    <LobbySocketProvider>
+      <LobbyProvider>
+        {user.status == "LOBBY" ? (
+          <LobbyLayout />
         ) : (
-          <GameModeSelector />
+          <LobbyCreatorProvider>
+            <LobbyCreatorLayout />
+          </LobbyCreatorProvider>
         )}
-      </LobbyLayout>
-    </LobbyProvider>
+      </LobbyProvider>
+    </LobbySocketProvider>
   );
 }
 

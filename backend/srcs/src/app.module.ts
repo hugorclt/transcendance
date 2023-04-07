@@ -15,6 +15,7 @@ import { ItemsModule } from './items/items.module';
 import { InvitationsModule } from './invitations/invitations.module';
 import { ConfigModule } from '@nestjs/config';
 import { MatchesModule } from './matches/matches.module';
+import { GameModule } from './game/game.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,6 +34,7 @@ import { MatchesModule } from './matches/matches.module';
     ItemsModule,
     InvitationsModule,
     MatchesModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],
