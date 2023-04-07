@@ -142,4 +142,14 @@ export class UsersController {
   async uploadFile(@Request() req, @UploadedFile() file: Express.Multer.File) {
     return await this.usersService.updateAvatar(req.user.sub, file.buffer);
   }
+
+  @Post('update-username')
+  async updateUsername(@Request() req) {
+    return await this.usersService.updateUsername(req.user.sub, req.body.username);
+  }
+
+  @Post('update-password')
+  async updatePassword(@Request() req) {
+    return await this.usersService.updateUsername(req.user.sub, req.body.password);
+  }
 }

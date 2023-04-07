@@ -17,6 +17,8 @@ const renderGeneral = () => {
   const [photo, setPhoto] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [user, setUser] = useAtom(userAtom);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handlePicture = (e: FormEvent) => {
     e.preventDefault();
@@ -46,6 +48,30 @@ const renderGeneral = () => {
       setSelectedFile(files[0]);
     }
   };
+
+  const handleUsername = (e: FormEvent) => {
+    e.preventDefault();
+    axiosPrivate
+      .post("/users/update-username", { username: username })
+      .then((res: AxiosResponse) => {
+        setUser((prev) => ({...prev, username: username}));
+      })
+      .catch((err) => {
+        setErrMsg("Error while setting username please retry");
+      });
+  };
+
+  const handlePassword = (e: FormEvent) => {
+    e.preventDefault();
+    axiosPrivate.post("/users/update-password", {password: password})
+    .then((res: AxiosResponse) => {
+
+    })
+    .catch((err) => {
+      setErrMsg("Error while setting password please retry");
+    })
+  }
+
   return (
     <>
       <p>Import a new Profile Picture </p>
@@ -55,8 +81,13 @@ const renderGeneral = () => {
         <button>Upload picture</button>
       </form>
       <p>Change username: </p>
-      <form>
-        <input placeholder="New username" type="text" />
+      <form onSubmit={handleUsername}>
+        <input
+          onChange={(e) => setUsername(e.target.value)}
+          value={username}
+          placeholder="New username"
+          type="text"
+        />
         <button>Change Username</button>
       </form>
       <p>Change password: </p>
