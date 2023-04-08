@@ -6,7 +6,6 @@ export interface TUser {
   avatar: string;
   exp: number;
   balance: number;
-  stats: TStat;
 }
 
 export interface TUserPreferences {

@@ -15,13 +15,6 @@ export const userAtom = atom<TUser>({
   avatar: "",
   exp: 0,
   balance: 0,
-  stats: {
-    id: "",
-    xp: 0,
-    lvl: 0,
-    nbGame: 0,
-    nbWin: 0,
-  },
 });
 
 export const searchUserAtom = atom<string>("");

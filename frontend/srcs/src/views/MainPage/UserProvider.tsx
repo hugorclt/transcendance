@@ -1,12 +1,13 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { userAtom } from "../../services/store";
 
 function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useAtom(userAtom);
+  const [isLoaded, setIsLoaded] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,12 +27,13 @@ function UserProvider({ children }: { children: ReactNode }) {
           exp: res.data.exp,
           balance: res.data.balance,
         }));
+        setIsLoaded(true);
       })
       .catch((res: AxiosError) =>
         navigate("/login", { state: { from: location }, replace: true })
       );
   }, []);
-  return <>{children}</>;
+  return <>{isLoaded ? children : <></>}</>;
 }
 
 export default UserProvider;
