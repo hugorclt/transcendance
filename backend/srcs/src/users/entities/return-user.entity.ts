@@ -14,7 +14,7 @@ export class ReturnUserEntity {
   email: string;
 
   @ApiProperty({ required: false, nullable: true })
-  avatar: string | null;
+  avatar: string | Buffer | null;
 
   @ApiProperty({ required: false, default: Status.DISCONNECTED })
   status: Status = Status.DISCONNECTED;

@@ -32,12 +32,13 @@ export const ModalBox = styled.div`
 export const AddFriendsForm = styled.form``;
 
 export const StyledInput = styled.input`
+  margin: 4px;
   background-color: ${COLORS.border};
   color: ${COLORS.primary};
   border: none;
   padding: 6px;
   margin: 8px;
-  width: 50%;
+  width: 100%;
   &[disabled] {
     background-color: ${COLORS.disabled};
   }

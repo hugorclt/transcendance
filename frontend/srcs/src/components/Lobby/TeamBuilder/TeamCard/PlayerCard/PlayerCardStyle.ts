@@ -19,6 +19,7 @@ export const PlayerCardContainer = styled.div`
   width: 90%;
   max-width: 600px;
   height: 30%;
+  min-height: 40px;
   background-color: ${COLORS.primary};
   border-bottom-right-radius: 8px;
   border-top-right-radius: 8px;

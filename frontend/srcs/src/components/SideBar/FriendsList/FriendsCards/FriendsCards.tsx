@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   FriendsCardsAvatar,
@@ -17,10 +17,11 @@ import Popup from "reactjs-popup";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { TFriendCardsProps } from "./FriendsCardsType";
+import { getImageBase64 } from "../../../../services/utils/getImageBase64";
 
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
-
+  
   const handleRemove = () => {
     axiosPrivate
       .post("/users/friends/remove", { usernameToRemove: friend.username })
@@ -48,7 +49,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
   return (
     <FriendsCardsBox>
       <LeftFriendsCardsBox>
-        <FriendsCardsAvatar src="" /> {/* toaddavatar */}
+        <FriendsCardsAvatar src={getImageBase64(friend.avatar)} />
         <MiddleFriendsCardsBox>
           <FriendsCardsName>
             <FriendsCardsStatusRound
@@ -71,8 +72,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }
-      >
+        }>
         <PopUpBox>
           <InsidePopUpButton onClick={handleChat}>
             Send message

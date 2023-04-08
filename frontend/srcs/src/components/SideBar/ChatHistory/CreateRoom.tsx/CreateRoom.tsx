@@ -2,7 +2,11 @@ import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { conversationAtom, friendAtom, userAtom } from "../../../../services/store";
+import {
+  conversationAtom,
+  friendAtom,
+  userAtom,
+} from "../../../../services/store";
 import { updateArray } from "../../../../services/utils/updateArray";
 import {
   StyledButton,
@@ -111,8 +115,7 @@ function CreateRoom() {
             type="text"
             required
             autoComplete="new-password"
-            placeholder="Room Name"
-          ></StyledInput>
+            placeholder="Room Name"></StyledInput>
           <StyledInput
             name="password"
             value={password}
@@ -120,15 +123,13 @@ function CreateRoom() {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             autoComplete="new-password"
-            placeholder="Password"
-          ></StyledInput>
+            placeholder="Password"></StyledInput>
           <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
           <CreateRoomCheckBox
             name="checkbox"
             checked={isPrivate}
             onChange={handleCheck}
-            type="checkbox"
-          ></CreateRoomCheckBox>
+            type="checkbox"></CreateRoomCheckBox>
           <CreateRoomButtonBox>
             <StyledButton type="submit" value="Create Room" />
           </CreateRoomButtonBox>

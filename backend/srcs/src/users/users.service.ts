@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -13,6 +14,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Status, Type, VisibilityMode } from '@prisma/client';
 import { exclude } from 'src/utils/exclude';
 import { UserEntity } from './entities/user.entity';
+import bcrypt from 'bcrypt';
 import {
   ReturnUserEntity,
   ReturnUserEntityWithPreferences,
@@ -21,12 +23,16 @@ import { UserPreferencesEntity } from './entities/user-preferences.entity';
 import { getStatusFromVisibility } from './utils/friend-status';
 import { addFriendDto } from './dto/add-friend.dto';
 import { SocialsGateway } from 'src/socials/socials.gateway';
+import { RoomsService } from 'src/socials/rooms/rooms.service';
+import { ParticipantService } from 'src/socials/rooms/participant/participant.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly socialsGateway: SocialsGateway,
+    private readonly roomService: RoomsService,
+    private readonly participantService: ParticipantService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
@@ -310,6 +316,74 @@ export class UsersService {
       status: status,
       id: newFriend.id,
     };
+  }
+
+  async updateAvatar(userId: string, buffer: Buffer) {
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        avatar: buffer.toString('base64'),
+      },
+    });
+    console.log(user.avatar);
+    this.socialsGateway.emitToList(
+      await this.getUserFriends(user.id),
+      'on-friend-update',
+      {
+        avatar: user.avatar,
+        id: user.id,
+      },
+    );
+    return exclude(user, ['password', 'type', 'refreshToken']);
+  }
+
+  async updateUsername(userId: string, newUsername: string) {
+    if (newUsername.length <= 3) throw new BadRequestException();
+
+    const user = await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        username: newUsername,
+      },
+    });
+
+    this.socialsGateway.emitToList(
+      await this.getUserFriends(user.id),
+      'on-friend-update',
+      {
+        username: user.username,
+        id: user.id,
+      },
+    );
+
+    const rooms = await this.roomService.findRoomsForUser(user.id);
+    Promise.all(
+      rooms.map(async (room) => {
+        const participant =
+          await this.participantService.createParticipantFromRoom(room);
+        this.socialsGateway.emitToUser(room.id, 'on-chat-update', {
+          id: room.id,
+          participants: participant,
+        });
+      }),
+    );
+  }
+
+  async updatePassword(userId: string, newPassword: string) {
+    console.log(newPassword.length);
+    if (newPassword.length == 0) throw new BadRequestException();
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(newPassword, salt);
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: hash,
+      },
+    });
   }
 
   async removeFriends(
