@@ -23,13 +23,12 @@ import { AxesHelper, Vector2, Vector3 } from "three";
 import { nanoid } from "nanoid";
 import { toonShaderMaterial } from "../../services/Game/shaders/shadersUtils";
 import { GameSocket } from "../../services/Game/SocketContext";
-import SkyBox from "./Components/SkyBox";
 import Floor from "./Components/Floor";
 import Ball from "./Components/Ball";
 import Wall from "./Components/WallRight";
+import OpponentPaddle from "./Components/OpponentPaddle";
 import Paddle from "./Components/PlayerPaddle";
 import PlayerPaddle from "./Components/PlayerPaddle";
-import OpponentPaddle from "./Components/OpponentPaddle";
 import {
   Bloom,
   EffectComposer,
@@ -37,8 +36,6 @@ import {
   Pixelation,
   TiltShift,
 } from "@react-three/postprocessing";
-import Particles from "./Components/Particles";
-import SceneCamera from "./Components/SceneCamera";
 import ChargeCounter from "./Components/Charge";
 import Scoreboard from "./Components/Scoreboard";
 import { Euler } from "three";
