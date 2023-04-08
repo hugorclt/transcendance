@@ -362,11 +362,10 @@ export class UsersService {
           await this.participantService.createParticipantFromRoom(room);
         this.socialsGateway.emitToUser(room.id, 'on-chat-update', {
           id: room.id,
-          participant: participant,
+          participants: participant,
         });
       }),
     );
-    //TODO: send via socket the name updated to all room
   }
 
   async updatePassword(userId: string, newPassword: string) {
