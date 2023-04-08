@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { StatBoxContainer } from "./StatBoxStyle.js";
+import {
+  IdContainer,
+  LvlBoxContainer,
+  NbGameContainer,
+  NbWinContainer,
+  StatBoxContainer,
+} from "./StatBoxStyle.js";
 import { userAtom } from "../../../../services/store.js";
 import { useAtom } from "jotai";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate.js";
 import { AxiosError, AxiosResponse } from "axios";
 import { TStat } from "../../../../services/type.js";
+import { AiFillTrophy } from "react-icons/ai";
+import { IoLogoGameControllerB } from "react-icons/io";
+import { FaCrown } from "react-icons/fa";
+import { COLORS } from "../../../../colors.js";
 
 export function StatBox() {
   const [user, setUser] = useAtom(userAtom);
@@ -31,11 +41,22 @@ export function StatBox() {
   }, []);
 
   return (
-    <div>
-      <div>ID = {stats.id}</div>
-      <div>LVL = {stats.lvl}</div>
-      <div>GAMES = {stats.nbGame}</div>
-      <div>WINS = {stats.nbWin}</div>
-    </div>
+    <StatBoxContainer>
+      <IdContainer>
+        <div>ID = {stats.id} </div>
+      </IdContainer>
+      <LvlBoxContainer>
+        <FaCrown size={42} color={COLORS.white} />
+        <div>LVL = {stats.lvl}</div>
+      </LvlBoxContainer>
+      <NbGameContainer>
+        <IoLogoGameControllerB size={42} color={COLORS.white} />
+        <div>GAMES = {stats.nbGame}</div>
+      </NbGameContainer>
+      <NbWinContainer>
+        <AiFillTrophy size={42} color={COLORS.white} />
+        <div>WINS = {stats.nbWin}</div>
+      </NbWinContainer>
+    </StatBoxContainer>
   );
 }
