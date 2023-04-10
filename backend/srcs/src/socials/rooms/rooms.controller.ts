@@ -135,8 +135,8 @@ export class RoomsController {
     @Request() req,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    console.log(req.body);
     console.log(updatePasswordDto);
+    console.log(req.body);
     return await this.roomsService.updatePassword(
       req.user.sub,
       updatePasswordDto,

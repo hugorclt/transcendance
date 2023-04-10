@@ -273,7 +273,7 @@ export class RoomsService {
   }
 
   async banFromRoom(bannerId: string, managerRoomDto: ManagerRoomDto) {
-    this.checkManagerState(bannerId, managerRoomDto);
+    await this.checkManagerState(bannerId, managerRoomDto);
     await this.prisma.room.update({
       where: {
         id: managerRoomDto.roomId,

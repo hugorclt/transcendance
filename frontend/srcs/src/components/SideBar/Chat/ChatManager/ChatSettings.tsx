@@ -65,13 +65,19 @@ function ChatSettings({ chat }: TChatProps) {
 
   const changePassword = (e: FormEvent) => {
     e.preventDefault();
-    axiosPrivate.post("rooms/update-password", {roomId: chat.id, password: newPassword, confirm: confirmPassword})
-    .then((res: AxiosResponse) => {
-
-    }).catch((err: AxiosError) => {
-      setErrMsg("Error while changing password please retry");
-    })
-  }
+    axiosPrivate
+      .post("rooms/update-password", {
+        roomId: chat.id,
+        password: newPassword,
+        confirm: confirmPassword,
+      })
+      .then((res: AxiosResponse) => {})
+      .catch((err: AxiosError) => {
+        if (err.code == "ERR_BAD_REQUEST")
+          setErrMsg("Error password doesn't match");
+        else setErrMsg("Error while changing password please retry");
+      });
+  };
 
   return (
     <ChangePasswordContainer>
@@ -97,8 +103,18 @@ function ChatSettings({ chat }: TChatProps) {
       <h4>Change password</h4>
       <InputButtonContainer>
         <form onSubmit={changePassword}>
-          <input value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required type="text" placeholder="New password"></input>
-          <input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required type="text" placeholder="Confirm password"></input>
+          <input
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+            type="text"
+            placeholder="New password"></input>
+          <input
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            type="text"
+            placeholder="Confirm password"></input>
           <button>Change Password</button>
         </form>
       </InputButtonContainer>
