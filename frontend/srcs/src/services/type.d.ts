@@ -52,6 +52,7 @@ export interface TConversation {
 
 export interface TParticipant {
   id: string;
+  avatar: string;
   name: string;
   role: string;
   status: string;

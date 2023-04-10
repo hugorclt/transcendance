@@ -20,7 +20,7 @@ export function updateArray(array: any[], newObj: any) {
   } else {
     return array.map((obj, i) => {
       if (i === index) {
-        if (obj.hasOwnProperty("participants")) {
+        if (newObj.hasOwnProperty("participants")) {
           newObj.participant = mergeParticipants(
             obj.participants,
             newObj.participants

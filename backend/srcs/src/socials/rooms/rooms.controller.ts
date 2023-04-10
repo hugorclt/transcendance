@@ -97,4 +97,14 @@ export class RoomsController {
     await this.roomsService.banFromRoom(req.user.sub, managerRoomDto);
     return 'success';
   }
+
+  @Post('/unban')
+  async unbanFromRoom(@Request() req) {
+    return await this.roomsService.unbanFromRoom(req.user.sub, req.body.roomId, req.body.bannedName)
+  }
+
+  @Post('/update-name')
+  async updateName(@Request() req) {
+    return await this.roomsService.updateRoomName(req.user.sub, req.body.newName, req.body.roomId)
+  }
 }

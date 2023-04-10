@@ -401,7 +401,7 @@ export class RoomsService {
   async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
     if (managerId == managerRoomDto.targetId)
       throw new UnprocessableEntityException();
-    if (!this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId))
+    if (!(await this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId)))
       throw new ForbiddenException();
     const kicker = await this.findUserInRoom(managerRoomDto.roomId, {
       userId: managerId,
@@ -412,5 +412,39 @@ export class RoomsService {
       userId: managerRoomDto.targetId,
     });
     if (!user) throw new NotFoundException();
+  }
+
+  async unbanFromRoom(ownerId: string, roomId: string, bannedName: string) {
+    if (!(await this.isOwner(ownerId, roomId))) throw new ForbiddenException();
+    await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        banned: {
+          disconnect: {
+            username: bannedName,
+          },
+        },
+      },
+    });
+    return 'success';
+  }
+
+  async updateRoomName(userId: string, newName: string, roomId: string) {
+    if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
+    const room = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        name: newName,
+      },
+    });
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      name: room.name,
+      id: roomId,
+    });
+    return { name: room.name, id: roomId };
   }
 }
