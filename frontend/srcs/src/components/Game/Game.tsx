@@ -159,7 +159,9 @@ function Game() {
         position={new Vector3(0, 0, 0)}
         color="#6f6f6f"
         sectionColor="#9d4b4b"
-        infiniteGrid={true}
+        infiniteGrid={false  }
+        gridLength={64}
+        gridWidth={128}
       />
       <hemisphereLight args={["#ffff", 0.6]} />
       {/* <Particles /> */}s

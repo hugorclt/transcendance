@@ -30,6 +30,9 @@ export type GridMaterialType = {
   fadeStrength?: number;
   /** Material side, default: THREE.BackSide */
   side?: THREE.Side;
+
+  gridLength ?: number;
+  gridWidth ?: number;
 };
 
 export type GridProps = GridMaterialType & {
@@ -222,14 +225,16 @@ export const GridFloor = React.forwardRef(
       cellColor = "#F607DC",
       sectionColor = "#2080ff",
       cellSize = 0,
-      sectionSize = 1,
+      sectionSize = 4,
       followCamera = false,
       infiniteGrid = false,
-      fadeDistance = 100,
-      fadeStrength = 1,
-      cellThickness = 0,
+      fadeDistance = 200,
+      fadeStrength = 5,
+      cellThickness = 1,
       sectionThickness = 1,
       side = THREE.DoubleSide,
+      gridLength = 64,
+      gridWidth = 32,
       ...props
     }: Omit<JSX.IntrinsicElements["mesh"], "args"> & GridProps,
     fRef: React.ForwardedRef<THREE.Mesh>
@@ -264,7 +269,7 @@ export const GridFloor = React.forwardRef(
           {...uniforms1}
           {...uniforms2}
         />
-        <planeGeometry args={args} />
+        <planeGeometry args={[gridLength, gridWidth]} />
       </mesh>
     );
   }
