@@ -23,12 +23,16 @@ import { UserPreferencesEntity } from './entities/user-preferences.entity';
 import { getStatusFromVisibility } from './utils/friend-status';
 import { addFriendDto } from './dto/add-friend.dto';
 import { SocialsGateway } from 'src/socials/socials.gateway';
+import { RoomsService } from 'src/socials/rooms/rooms.service';
+import { ParticipantService } from 'src/socials/rooms/participant/participant.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly socialsGateway: SocialsGateway,
+    private readonly roomService: RoomsService,
+    private readonly participantService: ParticipantService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
@@ -351,10 +355,21 @@ export class UsersService {
       },
     );
 
-    //TODO: send via socket the name updated to all room
+    const rooms = await this.roomService.findRoomsForUser(user.id);
+    Promise.all(
+      rooms.map(async (room) => {
+        const participant =
+          await this.participantService.createParticipantFromRoom(room);
+        this.socialsGateway.emitToUser(room.id, 'on-chat-update', {
+          id: room.id,
+          participants: participant,
+        });
+      }),
+    );
   }
 
   async updatePassword(userId: string, newPassword: string) {
+    console.log(newPassword.length);
     if (newPassword.length == 0) throw new BadRequestException();
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(newPassword, salt);
@@ -363,7 +378,7 @@ export class UsersService {
         id: userId,
       },
       data: {
-        password: newPassword,
+        password: hash,
       },
     });
   }

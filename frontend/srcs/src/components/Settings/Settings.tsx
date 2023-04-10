@@ -33,7 +33,6 @@ const renderGeneral = () => {
           },
         })
         .then((res: AxiosResponse) => {
-          console.log(res.data);
           setPhoto(getImageBase64(res.data.avatar));
         })
         .catch((err: AxiosError) => {
@@ -91,8 +90,8 @@ const renderGeneral = () => {
         <button>Change Username</button>
       </form>
       <p>Change password: </p>
-      <form>
-        <input placeholder="New password" type="password" />
+      <form onSubmit={handlePassword}>
+        <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New password" type="password" />
         <button>Change Password</button>
       </form>
       <p style={{ color: "red" }}>{errMsg}</p>

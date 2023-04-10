@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -17,6 +18,7 @@ import { JoinRoomDto } from './dto/join-room-dto';
 import { ReturnMessageEntity } from './messages/entities/return-message-entity';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class RoomsService {
@@ -271,7 +273,7 @@ export class RoomsService {
   }
 
   async banFromRoom(bannerId: string, managerRoomDto: ManagerRoomDto) {
-    this.checkManagerState(bannerId, managerRoomDto);
+    await this.checkManagerState(bannerId, managerRoomDto);
     await this.prisma.room.update({
       where: {
         id: managerRoomDto.roomId,
@@ -288,6 +290,75 @@ export class RoomsService {
       },
     });
     await this.kickFromRoom(bannerId, managerRoomDto);
+  }
+
+  async unbanFromRoom(ownerId: string, roomId: string, bannedName: string) {
+    if (!(await this.isOwner(ownerId, roomId))) throw new ForbiddenException();
+    await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        banned: {
+          disconnect: {
+            username: bannedName,
+          },
+        },
+      },
+    });
+    return 'success';
+  }
+
+  async updateRoomName(userId: string, newName: string, roomId: string) {
+    if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
+    const room = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        name: newName,
+      },
+    });
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      name: room.name,
+      id: roomId,
+    });
+    return { name: room.name, id: roomId };
+  }
+
+  async updatePhoto(userId: string, roomId: string, file: Buffer) {
+    if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
+    const room = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        avatar: file.toString('base64'),
+      },
+    });
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      avatar: room.avatar,
+      id: roomId,
+    });
+    return room.avatar;
+  }
+
+  async updatePassword(userId: string, updatePasswordDto: UpdatePasswordDto) {
+    if (!(await this.isOwner(userId, updatePasswordDto.roomId)))
+      throw new ForbiddenException();
+    if (updatePasswordDto.password != updatePasswordDto.confirm)
+      throw new BadRequestException();
+    const salt = await bcrypt.genSalt();
+    console.log(salt, updatePasswordDto.password);
+    const hash = await bcrypt.hash(updatePasswordDto.password, salt);
+    const room = await this.prisma.room.update({
+      where: {
+        id: updatePasswordDto.roomId,
+      },
+      data: {
+        password: hash,
+      },
+    });
   }
 
   /* -------------------------------------------------------------------------- */
@@ -401,7 +472,7 @@ export class RoomsService {
   async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
     if (managerId == managerRoomDto.targetId)
       throw new UnprocessableEntityException();
-    if (!this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId))
+    if (!(await this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId)))
       throw new ForbiddenException();
     const kicker = await this.findUserInRoom(managerRoomDto.roomId, {
       userId: managerId,

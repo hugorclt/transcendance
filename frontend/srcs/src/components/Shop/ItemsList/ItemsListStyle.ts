@@ -16,6 +16,10 @@ export const ShopTopBarContainer = styled.div`
   }
 `;
 
+export const SliderShopContainer = styled.div`
+  width: fit-content;
+`
+
 export const ShopTopBarFilter = styled.div`
   button {
     margin-right: 32px;

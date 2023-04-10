@@ -5,6 +5,7 @@ import {
   ShopTopBarContainer,
   ShopTopBarFilter,
   ShopTopBarSelect,
+  SliderShopContainer,
 } from "./ItemsListStyle";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../mediaSize";
@@ -103,168 +104,192 @@ const data = [
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
     type: "PADDLE",
     owned: true,
     image: "purplep",
-  },  {
+  },
+  {
     name: "PURPLE-PADDLE",
     desc: "yo le rap",
     price: "1500",
@@ -282,7 +307,14 @@ function ItemsList() {
     <>
       <ShopTopBarContainer>
         <MediaQuery minWidth={mediaSize.tablet + 1}>
-          <SliderMenu items={["ALL", "PADDLE", "TRAILS", "GOAL"]} setState={setFilter} state={filter} flex={"flex-start"}/>
+          <SliderShopContainer>
+            <SliderMenu
+              items={["ALL", "PADDLE", "TRAILS", "GOAL"]}
+              setState={setFilter}
+              state={filter}
+              flex={"flex-start"}
+            />
+          </SliderShopContainer>
         </MediaQuery>
 
         <MediaQuery maxWidth={mediaSize.tablet}>

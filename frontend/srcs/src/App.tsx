@@ -15,6 +15,7 @@ import RequireUnAuth from "./services/Auth/RequiredUnAuth";
 import ProvideSocket from "./services/Auth/ProvideSocket";
 import MainPage from "./views/MainPage/MainPage";
 import LobbyPage from "./views/LobbyPage/LobbyPage";
+import GamePage from "./views/GamePage/GamePage";
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
               </Route>
             </Route>
             {/* <Route element={<RequireInGameStatus />}> */}
-            {/* <Route path="/game" element={<GamePage />} /> */}
+            <Route path="/game" element={<GamePage />} />
             {/* </Route> */}
           </Route>
         </Route>

@@ -11,7 +11,7 @@ import { useMediaQuery } from "react-responsive";
 import { screenSize, mediaSize } from "../../mediaSize";
 import MediaQuery from "react-responsive";
 import { nanoid } from "nanoid";
-import { IoMdArrowDropup } from "react-icons/io";
+import { IoMdArrowDropup, IoMdArrowDropdown } from "react-icons/io";
 import { ShopTopBarSelect } from "../Shop/ItemsList/ItemsListStyle";
 
 const stats = ["WIN", "GOALS", "TOUCH"];
@@ -25,6 +25,7 @@ const data = [
 
 function Ranking() {
   const [select, setSelect] = useState("WIN");
+  const [asc, setAsc] = useState(true);
   const isTabletOrMobile = useMediaQuery({
     query: `(max-width: ${screenSize.laptop})`,
   });
@@ -35,7 +36,11 @@ function Ranking() {
   };
 
   const renderRow = (selected) => {
-    data.sort((a, b) => getCategory(a) < getCategory(b) ? 1 : -1)
+    if (asc == true)
+      data.sort((a, b) => (getCategory(a) < getCategory(b) ? 1 : -1));
+    else
+      data.sort((a, b) => (getCategory(a) > getCategory(b) ? 1 : -1));
+
 
     return data.map((user, index) => {
       var color;
@@ -69,9 +74,17 @@ function Ranking() {
           </TableData>
           {stats.map((stat) => {
             return (
-              <TableData onClick={() => setSelect(stat)} key={nanoid()}>
+              <TableData onClick={() => {setAsc(!asc); setSelect(stat)}} key={nanoid()}>
                 <h4>{stat}</h4>
-                {stat == select ? <IoMdArrowDropup color={COLORS.primary} size={22} /> : <></>}
+                {stat == select ? (
+                  asc == true ? (
+                    <IoMdArrowDropup color={COLORS.primary} size={22} />
+                  ) : (
+                    <IoMdArrowDropdown color={COLORS.primary} size={22} />
+                  )
+                ) : (
+                  <></>
+                )}
               </TableData>
             );
           })}
@@ -80,7 +93,9 @@ function Ranking() {
       <MediaQuery maxWidth={mediaSize.laptop - 1}>
         <TableRow>
           <TableData>
-            <ShopTopBarSelect value={select} onChange={(e) => setSelect(e.target.value)}>
+            <ShopTopBarSelect
+              value={select}
+              onChange={(e) => setSelect(e.target.value)}>
               {stats.map((stat) => {
                 return <option key={nanoid()}>{stat}</option>;
               })}

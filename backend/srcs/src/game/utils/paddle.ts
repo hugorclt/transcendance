@@ -1,14 +1,23 @@
+import { SpecialShot } from "./specialShot";
+
 export class Paddle {
 
     private width: number;
     private length: number;
     private position: {x: number, z: number};
 
-    constructor (width: number, length: number, position: {x: number, z:number}) {
+    private specialShot: SpecialShot;
+    private isSpecialShot: boolean;
+
+    constructor (width: number, length: number, position: {x: number, z:number}, specialShot: SpecialShot) {
         this.width = width;
         this.length = length;
         this.position = position;
+        this.specialShot = specialShot;
+        this.isSpecialShot = false;
     }
+
+    /*======= getter and setter =======*/
 
     getWidth() {
         return this.width;
@@ -50,4 +59,24 @@ export class Paddle {
     setPositionZ(z: number) {
         this.position.z = z;
     }
+
+    getSpecialShot() {
+        return this.specialShot;
+    }
+
+    getIsSpecialShot() {
+        return this.isSpecialShot;
+    }
+
+    /*======= special shot =======*/
+    
+
+    trigger() {
+        if (this.isSpecialShot === false) {
+          this.isSpecialShot = true;
+          setTimeout(() => {
+            this.isSpecialShot = false;
+          }, 1000);
+        }
+      }
 }
