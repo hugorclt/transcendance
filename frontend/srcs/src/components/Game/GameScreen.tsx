@@ -10,14 +10,47 @@ import { Vector3 } from "three";
 import Scene from "./Scene";
 
 const GameScreen = () => {
+  const screenRef = useRef<any>();
+  const downloadRef = useRef<any>();
+
+  useEffect(() => {
+    if (screenRef.current == undefined || screenRef.current == null) return;
+    const stream = screenRef.current!.captureStream(60);
+    const recordedChunks = [];
+    const options = {
+      mimeType: "video/webm",
+    };
+    const mediaRecorder = new MediaRecorder(stream, options);
+    mediaRecorder.ondataavailable = handleDataAvailable;
+    mediaRecorder.start();
+
+    function handleDataAvailable(event: any) {
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+      }
+    }
+
+    setTimeout((event) => {
+      mediaRecorder.stop();
+      const blob = new Blob(recordedChunks, {
+        type: "video/webm",
+      });
+      var url = URL.createObjectURL(blob);
+      downloadRef.current.href = url;
+      downloadRef.current.download("paddle.webm");
+    }, 9000);
+  }, [screenRef]);
+
   return (
-    <Canvas
-      tabIndex={0}
-      camera={{ position: [0, 6.5, 53] }}
-      style={{ background: COLORS.background, height: "100vh" }}>
-      {/* <Game /> */}
-      {/* <SeaMap /> */}
-      {/* <Stars
+    <>
+      <Canvas
+        ref={screenRef}
+        tabIndex={0}
+        camera={{ position: [0, 6.5, 53] }}
+        style={{ background: COLORS.background, height: "100vh" }}>
+          {/* <Game /> */}
+          {/* <SeaMap /> */}
+          {/* <Stars
         radius={100}
         depth={50}
         count={5000}
@@ -26,8 +59,10 @@ const GameScreen = () => {
         fade
         speed={1}
       /> */}
-      <Scene />
-    </Canvas>
+          <Scene />
+      </Canvas>
+      <a ref={downloadRef}>Download</a>
+    </>
   );
 };
 
