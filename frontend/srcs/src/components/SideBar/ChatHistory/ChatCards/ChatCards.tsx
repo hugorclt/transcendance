@@ -18,6 +18,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { COLORS } from "../../../../colors";
+import { getImageBase64 } from "../../../../services/utils/getImageBase64";
 
 function ChatCards({ conversation }: ChatCardsProps) {
   const [chat, setChat] = useAtom(conversationAtom);
@@ -66,7 +67,7 @@ function ChatCards({ conversation }: ChatCardsProps) {
   return (
     <ChatCardsBox onMouseEnter={openCross} onMouseLeave={closeCross}>
       <div onClick={addChatToTab} style={{ display: "flex", width: "90%" }}>
-        <ChatCardsRoundedAvatar src={conversation.avatar} />
+        <ChatCardsRoundedAvatar src={getImageBase64(conversation.avatar)} />
         <ChatCardsMiddle>
           <h5>{displayName(conversation, user)}</h5>
           <p>

@@ -36,6 +36,7 @@ import Popup from "reactjs-popup";
 import { IoIosSettings } from "react-icons/io";
 // import { ModalBox } from "../../Lobby/TeamBuilder/InviteFriendsButton/InviteFriendsButtonStyle";
 import ChatManager from "./ChatManager/ChatManager";
+import { getImageBase64 } from "../../../services/utils/getImageBase64";
 
 function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
@@ -154,7 +155,7 @@ function Chat({ chat }: TChatProps) {
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
-            <ChatIcon src="" />
+            <ChatIcon src={getImageBase64(chat.avatar)} />
             <ChatTitle>{displayName(chat, user)}</ChatTitle>
             {!chat.isDm && (
               <FaUserFriends

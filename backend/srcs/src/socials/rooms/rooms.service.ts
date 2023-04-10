@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -17,6 +18,7 @@ import { JoinRoomDto } from './dto/join-room-dto';
 import { ReturnMessageEntity } from './messages/entities/return-message-entity';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class RoomsService {
@@ -337,6 +339,25 @@ export class RoomsService {
     this.socialGateway.emitToUser(roomId, 'on-chat-update', {
       avatar: room.avatar,
       id: roomId,
+    });
+    return room.avatar;
+  }
+
+  async updatePassword(userId: string, updatePasswordDto: UpdatePasswordDto) {
+    if (!(await this.isOwner(userId, updatePasswordDto.roomId)))
+      throw new ForbiddenException();
+    if (updatePasswordDto.password != updatePasswordDto.confirm)
+      throw new BadRequestException();
+    const salt = await bcrypt.genSalt();
+    console.log(salt, updatePasswordDto.password);
+    const hash = await bcrypt.hash(updatePasswordDto.password, salt);
+    const room = await this.prisma.room.update({
+      where: {
+        id: updatePasswordDto.roomId,
+      },
+      data: {
+        password: hash,
+      },
     });
   }
 

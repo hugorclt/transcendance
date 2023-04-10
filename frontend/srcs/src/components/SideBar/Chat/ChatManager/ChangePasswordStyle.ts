@@ -69,7 +69,7 @@ export const ChangeImageContainer = styled.div`
   }
 
   input {
-    width: 50%;
+    width: 100%;
   }
 `;
 
