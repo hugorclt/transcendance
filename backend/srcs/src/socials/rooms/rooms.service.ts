@@ -290,6 +290,56 @@ export class RoomsService {
     await this.kickFromRoom(bannerId, managerRoomDto);
   }
 
+  async unbanFromRoom(ownerId: string, roomId: string, bannedName: string) {
+    if (!(await this.isOwner(ownerId, roomId))) throw new ForbiddenException();
+    await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        banned: {
+          disconnect: {
+            username: bannedName,
+          },
+        },
+      },
+    });
+    return 'success';
+  }
+
+  async updateRoomName(userId: string, newName: string, roomId: string) {
+    if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
+    const room = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        name: newName,
+      },
+    });
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      name: room.name,
+      id: roomId,
+    });
+    return { name: room.name, id: roomId };
+  }
+
+  async updatePhoto(userId: string, roomId: string, file: Buffer) {
+    if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
+    const room = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        avatar: file.toString('base64'),
+      },
+    });
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      avatar: room.avatar,
+      id: roomId,
+    });
+  }
+
   /* -------------------------------------------------------------------------- */
   /*                                    UTILS                                   */
   /* -------------------------------------------------------------------------- */
@@ -412,39 +462,5 @@ export class RoomsService {
       userId: managerRoomDto.targetId,
     });
     if (!user) throw new NotFoundException();
-  }
-
-  async unbanFromRoom(ownerId: string, roomId: string, bannedName: string) {
-    if (!(await this.isOwner(ownerId, roomId))) throw new ForbiddenException();
-    await this.prisma.room.update({
-      where: {
-        id: roomId,
-      },
-      data: {
-        banned: {
-          disconnect: {
-            username: bannedName,
-          },
-        },
-      },
-    });
-    return 'success';
-  }
-
-  async updateRoomName(userId: string, newName: string, roomId: string) {
-    if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
-    const room = await this.prisma.room.update({
-      where: {
-        id: roomId,
-      },
-      data: {
-        name: newName,
-      },
-    });
-    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
-      name: room.name,
-      id: roomId,
-    });
-    return { name: room.name, id: roomId };
   }
 }

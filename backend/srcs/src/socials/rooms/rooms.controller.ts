@@ -6,6 +6,8 @@ import {
   Request,
   UseGuards,
   Param,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -18,6 +20,7 @@ import { ReturnMessageEntity } from './messages/entities/return-message-entity';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
 import { Message } from '@prisma/client';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('rooms')
 @ApiTags('rooms')
@@ -106,5 +109,12 @@ export class RoomsController {
   @Post('/update-name')
   async updateName(@Request() req) {
     return await this.roomsService.updateRoomName(req.user.sub, req.body.newName, req.body.roomId)
+  }
+
+  @Post('update-picture')
+  @UseInterceptors(FileInterceptor('picture'))
+  async uploadFile(@Request() req, @UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+    // return await this.roomsService.updatePhoto(req.user.sub, req.body.roomId, );
   }
 }
