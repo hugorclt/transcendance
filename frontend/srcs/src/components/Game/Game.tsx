@@ -104,7 +104,7 @@ function Game() {
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
-      {/* <OrbitControls /> */}
+      <OrbitControls />
       <Ball
         radius={gameInfo.ballRadius}
         startPos={
@@ -159,8 +159,7 @@ function Game() {
         infiniteGrid={true}
       />
       <hemisphereLight args={["#ffff", 0.6]} />
-      {/* <Particles /> */}s
-      {/* <ambientLight color="#fff" /> */}
+      {/* <Particles /> */}s{/* <ambientLight color="#fff" /> */}
       <SoftShadows />
       <Stats />
     </Suspense>
