@@ -472,7 +472,9 @@ export class RoomsService {
   async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
     if (managerId == managerRoomDto.targetId)
       throw new UnprocessableEntityException();
-    if (!(await this.isOwner(managerRoomDto.targetId, managerRoomDto.roomId)))
+    const test = (await this.isOwner(managerId, managerRoomDto.roomId));
+    console.log(test);
+    if (!test)
       throw new ForbiddenException();
     const kicker = await this.findUserInRoom(managerRoomDto.roomId, {
       userId: managerId,
