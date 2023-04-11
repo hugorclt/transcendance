@@ -1,4 +1,4 @@
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, SoftShadows, Stats } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import React from "react";
 
@@ -12,7 +12,6 @@ function Effects() {
       <SoftShadows />
       <Stats />
 
-      <hemisphereLight args={["#ffff", 0.6]} />
     </>
   );
 }

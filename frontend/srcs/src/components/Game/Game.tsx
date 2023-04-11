@@ -3,17 +3,20 @@ import { PerspectiveCamera } from "@react-three/drei";
 import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Ball from "./Components/Ball";
+import { Vector3 } from "three";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
   const [gameInfo, setGameInfo] = useState<any>({});
   const axiosPrivate = useAxiosPrivate();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
       console.log("game info received");
       console.log(data);
       setGameInfo((prev) => ({ ...prev, ...data }));
+      setIsLoading(false);
     });
     return () => {
       socket?.off("game-info");
@@ -27,11 +30,25 @@ function Game() {
 
   return (
     <Suspense fallback={null}>
-      <PerspectiveCamera makeDefault position={[0, 0, 0]} />
-      <Ball
-        radius={gameInfo.ball._hitbox.width / 2}
-        startPos={gameInfo.ball._initalPosition}
-      />
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          <PerspectiveCamera makeDefault position={[0, 0, 2000]} />
+          <Ball
+            radius={gameInfo.ball._hitBox._width / 2}
+            startPos={
+              new Vector3(
+                gameInfo.ball._initialPosition._x,
+                gameInfo.ball._initialPosition._y,
+                gameInfo.ball._initialPosition._z
+              )
+            }
+          />
+          <Wall>
+          <hemisphereLight args={["#ffff", 0.6]} />
+        </>
+      )}
     </Suspense>
   );
 }
