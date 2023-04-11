@@ -1,45 +1,24 @@
-import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
-import { Ball } from '../Ball';
 import { IObject } from '../interfaces/IObject';
-import { BallConfig, BaseFieldConfig } from '../utils/config/config';
-import { Wall } from '../wall/Wall';
 import { Vector3 } from '../utils/Vector3';
-import { Player } from '../player/Player';
-import { EPaddle } from '../utils/types';
+import { BaseFieldConfig } from '../utils/config/config';
+import { EField } from '../utils/types';
+import { Wall } from './wall/Wall';
 
-export class Game {
-  private _id: string;
-  private _players: Set<Player>;
-  // private field: IObject;  => define different pre designed fields
-  private _walls: Set<Wall>;
-  private _ball: Ball;
+export class Field {
+  private _walls: Map<string, Wall>;
+  private _panel: Set<IObject>;
 
-  public constructor(lobby: LobbyWithMembersEntity) {
-    this._id = lobby.id;
-    this._ball = new Ball(
-      BallConfig.width,
-      BallConfig.height,
-      BallConfig.depth,
-      BallConfig.position,
-      BallConfig.speed,
-    );
-    this._createBasicWalls();
-    lobby.members.forEach((member) => {
-      this._players.add(
-        new Player(
-          member.userId,
-          member.team,
-          EPaddle.BASIC,
-          BaseFieldConfig.depth,
-        ),
-      );
-    });
+  constructor(fieldType: EField) {
+    switch (fieldType) {
+        case EField.BASIC:
+            this._createBasicWalls();
+            break ;
+    }
   }
-
-  /* ---------------------------- helper functions ---------------------------- */
   private _createBasicWalls() {
     //vertical wall left
-    this._walls.add(
+    this._walls.set(
+      'VL',
       new Wall(
         BaseFieldConfig.VerticalWallConfig.width,
         BaseFieldConfig.VerticalWallConfig.height,
@@ -48,7 +27,8 @@ export class Game {
       ),
     );
     //vertical wall right
-    this._walls.add(
+    this._walls.set(
+      'VR',
       new Wall(
         BaseFieldConfig.VerticalWallConfig.width,
         BaseFieldConfig.VerticalWallConfig.height,
@@ -57,7 +37,8 @@ export class Game {
       ),
     );
     //floor
-    this._walls.add(
+    this._walls.set(
+      'HB',
       new Wall(
         BaseFieldConfig.HorizontalWallConfig.width,
         BaseFieldConfig.HorizontalWallConfig.height,
@@ -66,7 +47,8 @@ export class Game {
       ),
     );
     //ceiling
-    this._walls.add(
+    this._walls.set(
+      'HT',
       new Wall(
         BaseFieldConfig.HorizontalWallConfig.width,
         BaseFieldConfig.HorizontalWallConfig.height,

@@ -3,3 +3,7 @@ export enum EPaddle {
   RED,
   BLUE,
 }
+
+export enum EField {
+  BASIC,
+}

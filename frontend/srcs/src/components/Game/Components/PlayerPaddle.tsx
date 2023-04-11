@@ -1,5 +1,11 @@
-import { useFrame } from "@react-three/fiber";
-import { forwardRef, useContext, useEffect, useImperativeHandle, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import {
+  forwardRef,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { Mesh, Vector3 } from "three";
 import useKeyboard from "../../../hooks/useKeyboard";
 import { GameSocket } from "../../../services/Game/SocketContext";
@@ -14,21 +20,23 @@ const PlayerPaddle = (props: TPaddleProps, ref: any) => {
   const paddleRef = useRef<Mesh>(null!);
   const keyMap = useKeyboard();
   const socket = useContext(GameSocket);
+  const { viewport } = useThree()
 
-  useFrame((_, delta) => {
-    keyMap['KeyA'] && socket?.emit("left-move")
-    keyMap['KeyD'] && socket?.emit("right-move")
-    keyMap['Space'] && socket?.emit("special-shot")
-  })
+  useFrame(({ mouse }) => {
+    // keyMap['KeyA'] && socket?.emit("left-move")
+    // keyMap['KeyD'] && socket?.emit("right-move")
+    console.log(mouse.x, mouse.y);
+    keyMap["Space"] && socket?.emit("special-shot");
+  });
 
   useEffect(() => {
     socket?.on("player1", (data) => {
-      paddleRef.current.position.x = data.x
-    })
+      paddleRef.current.position.x = data.x;
+    });
     return () => {
       socket?.off("player1");
-    }
-  }, [socket])
+    };
+  }, [socket]);
 
   return (
     <mesh ref={paddleRef} position={props.startPos}>
