@@ -12,10 +12,10 @@ import PersistLogin from "./services/Auth/PersistLogin";
 import Login42 from "./components/Login/Login42/Login42";
 import RequireStatus from "./services/Status/RequireStatus";
 import RequireUnAuth from "./services/Auth/RequiredUnAuth";
-import ProvideSocket from "./services/Auth/ProvideSocket";
 import MainPage from "./views/MainPage/MainPage";
 import LobbyPage from "./views/LobbyPage/LobbyPage";
 import GamePage from "./views/GamePage/GamePage";
+import ProvideSockets from "./services/Auth/ProvideSockets";
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
         </Route>
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
-          <Route element={<ProvideSocket />}>
+          <Route element={<ProvideSockets />}>
             <Route element={<RequireStatus />}>
               <Route element={<MainPage />}>
                 <Route path="/" element={<LobbyPage />} />

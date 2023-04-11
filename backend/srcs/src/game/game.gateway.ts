@@ -37,12 +37,12 @@ export class GameGateway
   private player2: string;
 
   afterInit() {
-    console.log('GameGateway initialized');
-    this.game = new Game(
-      new Ball({ x: 0, y: 0, z: 0 }, 0, undefined, false),
-      new BasePaddle(0, 0, { x: 0, z: 0 }
-      new BasePaddle(0, 0, { x: 0, z: 0 }
-    );
+    // console.log('GameGateway initialized');
+    // this.game = new Game(
+    //   new Ball({ x: 0, y: 0, z: 0 }, 0, undefined, false),
+    //   new BasePaddle(0, 0, { x: 0, z: 0 }
+    //   new BasePaddle(0, 0, { x: 0, z: 0 }
+    // );
   }
 
   async handleConnection(client: AuthSocket) {
@@ -79,7 +79,7 @@ export class GameGateway
     });
     this.game.launch();
     setInterval(() => {
-      this.game.processBallMovement()
+      this.game.processBallMovement();
       this.io.to(client.userId).emit('ball', {
         x: this.game.getBall().getPosition().x,
         y: this.game.getBall().getPosition().y,
@@ -92,13 +92,12 @@ export class GameGateway
 
       this.io.to(client.userId).emit('charge', {
         charge: this.game.getPaddle1().getSpecialShot().getCharge(),
-      })
+      });
       this.io.to(client.userId).emit('score', {
         scorePlayer1: this.game.getScoreboard().getPlayer1(),
         scorePlayer2: this.game.getScoreboard().getPlayer2(),
-      })
+      });
     }, 1000 / 60); // 60 frames per second
-
   }
 
   /*======= pause game =======*/
@@ -147,10 +146,9 @@ export class GameGateway
   @SubscribeMessage('special-shot')
   async OnSpecialShot(client: AuthSocket): Promise<void> {
     if (client.userId == this.player1) {
-      this.game.getPaddle1().trigger()
+      this.game.getPaddle1().trigger();
     }
     if (client.userId == this.player2) {
-
     }
   }
 }

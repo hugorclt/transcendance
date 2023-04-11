@@ -125,11 +125,11 @@ export class LobbiesController {
   }
 
   @Get(':id/changeReady')
-  @ApiOkResponse({ type: LobbyMemberEntity })
+  @ApiOkResponse({ type: LobbyWithMembersEntity })
   async changeReady(
     @Param('id') id: string,
     @Request() req: any,
-  ): Promise<LobbyMemberEntity> {
+  ): Promise<void> {
     return await this.lobbiesService.changeReady(id, req.user.sub);
   }
 

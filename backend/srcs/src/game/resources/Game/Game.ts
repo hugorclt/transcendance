@@ -1,20 +1,18 @@
 import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
 import { Ball } from '../Ball';
-import { IObject } from '../interfaces/IObject';
 import { BallConfig, BaseFieldConfig } from '../utils/config/config';
-import { Wall } from '../Field/wall/Wall';
-import { Vector3 } from '../utils/Vector3';
 import { Player } from '../player/Player';
-import { EField, EPaddle } from '../utils/types';
 import { Field } from '../Field/Field';
+import { EField, EPaddle } from '../utils/config/enums';
 
 export class Game {
   private _id: string;
-  private _players: Set<Player>;
+  private _players: Map<string, Player>;
   private _field: Field;
   private _ball: Ball;
 
   public constructor(lobby: LobbyWithMembersEntity) {
+    this._players = new Map<string, Player>();
     this._id = lobby.id;
     this._ball = new Ball(
       BallConfig.width,
@@ -25,7 +23,8 @@ export class Game {
     );
     this._field = new Field(EField.BASIC);
     lobby.members.forEach((member) => {
-      this._players.add(
+      this._players.set(
+        member.userId,
         new Player(
           member.userId,
           member.team,

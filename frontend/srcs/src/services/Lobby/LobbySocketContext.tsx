@@ -5,6 +5,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { lobbyAtom, userAtom } from "../../services/store";
 import { TLobbyMember } from "../../services/type";
 import { updateArray } from "../../services/utils/updateArray";
+import { useNavigate } from "react-router";
 
 async function initializeSocket(axiosPrivate: any, token: string) {
   try {
@@ -26,6 +27,7 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useAtom(userAtom);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function initSocket() {
@@ -72,11 +74,16 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
       console.log("lobby updated: ", lobby);
       setLobby(lobby);
     });
+    socket?.on("redirect-to-game", () => {
+      console.log("redirect-to-game");
+      navigate("/game");
+    });
     return () => {
       socket?.off("user-joined-lobby");
       socket?.off("user-left-lobby");
       socket?.off("on-member-update");
       socket?.off("on-lobby-update");
+      socket?.off("redirect-to-game");
     };
   }, [socket]);
 

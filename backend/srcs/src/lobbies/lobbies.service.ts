@@ -214,7 +214,10 @@ export class LobbiesService {
   }
 
   /* ---------------- Update Lobby State (Backend Originated) ---------------- */
-  async updateLobbyState(lobbyId: string, state: string): Promise<LobbyEntity> {
+  async updateLobbyState(
+    lobbyId: string,
+    state: LobbyState,
+  ): Promise<LobbyWithMembersEntity> {
     const lobby = await this.findLobbyWithMembers(lobbyId);
     if (!state) {
       if (
@@ -225,18 +228,21 @@ export class LobbiesService {
           return await this.prisma.lobby.update({
             where: { id: lobby.id },
             data: { state: LobbyState.FULL },
+            include: { members: true },
           });
         }
       } else if (lobby.state == LobbyState.FULL) {
         return await this.prisma.lobby.update({
           where: { id: lobby.id },
           data: { state: LobbyState.JOINABLE },
+          include: { members: true },
         });
       }
     } else {
       return await this.prisma.lobby.update({
         where: { id: lobby.id },
         data: { state: state as LobbyState },
+        include: { members: true },
       });
     }
     return lobby;
@@ -405,17 +411,54 @@ export class LobbiesService {
     return lobby;
   }
 
-  async changeReady(
-    lobbyId: string,
-    userId: string,
-  ): Promise<LobbyMemberEntity> {
+  async changeReady(lobbyId: string, userId: string): Promise<void> {
     const lobby = await this.findLobbyWithMembers(lobbyId);
-    const member = lobby.members.find((member) => member.userId == userId);
-    const updateMember = await this.lobbyMembersService.update(member.id, {
-      ready: !member.ready,
+    let member = lobby.members.find((member) => member.userId == userId);
+    let lobbyUpdated = await this.prisma.lobby.update({
+      where: {
+        id: lobby.id,
+      },
+      data: {
+        members: {
+          update: {
+            where: {
+              id: member.id,
+            },
+            data: {
+              ready: !member.ready,
+            },
+          },
+        },
+      },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
     });
-    this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', updateMember);
-    return updateMember;
+    member = lobbyUpdated.members.find((member) => member.userId == userId);
+    this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
+    //check if game should move to next stage
+    const notReady = lobbyUpdated.members.find(
+      (member) => member.ready == false,
+    );
+    console.log('notReady? : ', notReady);
+    //TODO ========> ADD OTHER STATES
+    if (!notReady) {
+      console.log('everybody ready');
+      const lobbyWithMembers = await this.updateLobbyState(
+        lobby.id,
+        LobbyState.GAME,
+      );
+      this.lobbiesGateway.readyToStart(lobbyWithMembers);
+    }
   }
 
   //========================== LOBBY INFOS ===============================

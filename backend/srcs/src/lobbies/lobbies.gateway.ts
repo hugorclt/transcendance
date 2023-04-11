@@ -27,22 +27,16 @@ export class LobbiesGateway
   io: Namespace;
   private _games: Map<string, Game>;
 
-  afterInit(): void {}
+  afterInit(): void {
+    this._games = new Map<string, Game>();
+  }
 
   async handleConnection(client: AuthSocket) {
     await client.join(client.userId);
-    const lobby = await this.prisma.lobby.findFirst({
-      where: {
-        members: {
-          some: {
-            userId: client.userId,
-          },
-        },
-      },
-    });
-    if (lobby) {
-      console.log('user ', client.username, ' is in lobby ', lobby.id);
-      await client.join(lobby.id);
+    const lobbyId = await this.getLobby(client);
+    if (lobbyId) {
+      console.log('user ', client.username, ' is in lobby ', lobbyId);
+      await client.join(lobbyId);
     }
   }
 
@@ -52,22 +46,51 @@ export class LobbiesGateway
 
   async readyToStart(lobby: LobbyWithMembersEntity) {
     //wait 3 seconds before start
+    console.log('ready to start: ', lobby);
     this._games.set(lobby.id, new Game(lobby));
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
   }
 
-  @SubscribeMessage('start-game')
-  async onStartGame(userId: string, lobbyId: string) {
+  @SubscribeMessage('get-game-info')
+  async onStartGame(client: AuthSocket) {
+    console.log(
+      'user ',
+      client.username,
+      ' with id: ',
+      client.userId,
+      ' asking for game info',
+    );
+    const lobbyId = await this.getLobby(client);
+    console.log(lobbyId);
     const game = this._games.get(lobbyId);
+    console.log(game);
     //wait 3 second until all player has loaded the game screen in front
-    this.io.emit('game-info', {
-      field: game.field,
-      players: game.players,
+    console.log({
+      fieldWalls: Object.fromEntries(game.field.walls),
+      players: Object.fromEntries(game.players),
+      ball: game.ball,
+    });
+    this.io.to(client.userId).emit('game-info', {
+      fieldWalls: Object.fromEntries(game.field.walls),
+      players: Object.fromEntries(game.players),
       ball: game.ball,
     });
   }
 
   /* ------------------------------- helper func ------------------------------ */
+  async getLobby(client: AuthSocket): Promise<string> {
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        members: {
+          some: {
+            userId: client.userId,
+          },
+        },
+      },
+    });
+    return lobby?.id;
+  }
+
   async joinUserToLobby(userId: string, lobbyId: string) {
     const socketId = (await this.io.adapter.sockets(new Set([userId])))
       .values()

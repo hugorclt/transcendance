@@ -1,19 +1,23 @@
 import { IObject } from '../interfaces/IObject';
 import { Vector3 } from '../utils/Vector3';
 import { BaseFieldConfig } from '../utils/config/config';
-import { EField } from '../utils/types';
+import { EField } from '../utils/config/enums';
 import { Wall } from './wall/Wall';
 
 export class Field {
   private _walls: Map<string, Wall>;
-  private _panel: Set<IObject>;
 
   constructor(fieldType: EField) {
+    this._walls = new Map<string, Wall>();
     switch (fieldType) {
-        case EField.BASIC:
-            this._createBasicWalls();
-            break ;
+      case EField.BASIC:
+        this._createBasicWalls();
+        break;
     }
+  }
+
+  public get walls(): Map<string, Wall> {
+    return this._walls;
   }
   private _createBasicWalls() {
     //vertical wall left

@@ -8,7 +8,7 @@ import { exclude } from '../utils/exclude';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginTicket, OAuth2Client } from 'google-auth-library';
-import { Type } from '@prisma/client';
+import { LobbyState, Type } from '@prisma/client';
 import { Api42CodeDto, Api42LogDto } from './dto/api42-log.dto';
 import { HttpService } from '@nestjs/axios';
 import { catchError, lastValueFrom, map, throwError } from 'rxjs';
@@ -122,7 +122,23 @@ export class AuthService {
       maxAge: 7 * 24 * 3600000,
       httpOnly: true,
     });
-    await this.usersService.updateStatus(user.id, 'CONNECTED');
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        members: {
+          some: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+    let status;
+    if (lobby) {
+      if (lobby.state == 'GAME') status = 'GAME';
+      else status = 'LOBBY';
+    } else {
+      status = 'CONNECTED';
+    }
+    await this.usersService.updateStatus(user.id, status);
     await this.updateRefreshHash(user.id, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
