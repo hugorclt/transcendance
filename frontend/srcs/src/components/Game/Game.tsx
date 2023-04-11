@@ -45,6 +45,7 @@ import { Euler } from "three";
 import WallRight from "./Components/WallRight";
 import WallLeft from "./Components/WallLeft";
 import FloorGrid from "./Components/Floor";
+import BounceEffect from "./Components/BounceEffect";
 
 interface GameInfo {
   floorWidth: number;
@@ -62,6 +63,7 @@ interface GameInfo {
   scorePlayer1: number;
   scorePlayer2: number;
   chargePlayer1: number;
+  velocityX: number;
 }
 
 const defaultValue = {
@@ -80,6 +82,7 @@ const defaultValue = {
   ballStartY: 0,
   ballStartZ: 0,
   chargePlayer1: 0,
+  velocityX: 0,
 };
 
 function Game() {
@@ -107,7 +110,7 @@ function Game() {
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
-      {/* <OrbitControls /> */}
+      <OrbitControls />
       <Ball
         radius={gameInfo.ballRadius}
         startPos={
@@ -141,13 +144,14 @@ function Game() {
         score1={gameInfo.scorePlayer1}
         score2={gameInfo.scorePlayer2}
       /> */}
-      {/* <WallRight
+      <WallRight
         position={new Vector3(-gameInfo.floorWidth / 2, 0, 0)}
         color="#6f6f6f"
         sectionColor="#9d4b4b"
         infiniteGrid={true}
+        visible={true}
         // rotation={[0,0,0]}
-      /> */}
+      />
       {/* <WallLeft
         position={new Vector3(gameInfo.floorWidth / 2, 0, 0)}
         color="#6f6f6f"
@@ -159,15 +163,18 @@ function Game() {
         position={new Vector3(0, 0, 0)}
         color="#6f6f6f"
         sectionColor="#9d4b4b"
-        infiniteGrid={false  }
-        gridLength={64}
-        gridWidth={128}
+        infiniteGrid={false}
+        gridLength={gameInfo.floorLength}
+        gridWidth={gameInfo.floorWidth}
       />
       <hemisphereLight args={["#ffff", 0.6]} />
       {/* <Particles /> */}s
       {/* <ambientLight color="#fff" /> */}
       <SoftShadows />
       <Stats />
+      <BounceEffect
+        active={false}
+      />
     </Suspense>
   );
 }

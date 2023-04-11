@@ -40,13 +40,13 @@ export type GridProps = GridMaterialType & {
   args?: ConstructorParameters<typeof THREE.PlaneGeometry>;
 };
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      gridMaterial: JSX.IntrinsicElements["shaderMaterial"] & GridMaterialType;
-    }
-  }
-}
+// declare global {
+//   namespace JSX {
+//     interface IntrinsicElements {
+//       gridMaterial: JSX.IntrinsicElements["shaderMaterial"] & GridMaterialType;
+//     }
+//   }
+// }
 
 const GridMaterial = shaderMaterial(
   {
@@ -233,8 +233,8 @@ export const GridFloor = React.forwardRef(
       cellThickness = 1,
       sectionThickness = 1,
       side = THREE.DoubleSide,
-      gridLength = 64,
       gridWidth = 32,
+      gridLength = 64,
       ...props
     }: Omit<JSX.IntrinsicElements["mesh"], "args"> & GridProps,
     fRef: React.ForwardedRef<THREE.Mesh>
@@ -269,7 +269,7 @@ export const GridFloor = React.forwardRef(
           {...uniforms1}
           {...uniforms2}
         />
-        <planeGeometry args={[gridLength, gridWidth]} />
+        <planeGeometry args={[gridWidth, gridLength]} />
       </mesh>
     );
   }

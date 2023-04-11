@@ -77,6 +77,7 @@ export class GameGateway
       scorePlayer1: this.game.getScoreboard().getPlayer1(),
       scorePlayer2: this.game.getScoreboard().getPlayer2(),
       chargePlayer1: this.game.getPaddle1().getSpecialShot().getCharge(),
+      velocityX: this.game.getBall().getVelocity(),
     });
     this.game.launch();
     setInterval(() => {
@@ -84,7 +85,8 @@ export class GameGateway
       this.io.to(client.userId).emit('ball', {
         x: this.game.getBall().getPosition().x,
         y: this.game.getBall().getPosition().y,
-        z: this.game.getBall().getPosition().z,
+        z: this.game.getBall().getPosition().z, 
+        vx: this.game.getBall().getVelocity().x,
       });
 
       this.io.to(client.userId).emit('player2', {
@@ -94,7 +96,7 @@ export class GameGateway
       this.io.to(client.userId).emit('charge', {
         charge: this.game.getPaddle1().getSpecialShot().getCharge(),
       })
-      this.io.to(client.userId).emit('score', {
+      this.io.to(client.userId).emit('score', { 
         scorePlayer1: this.game.getScoreboard().getPlayer1(),
         scorePlayer2: this.game.getScoreboard().getPlayer2(),
       })
