@@ -19,6 +19,22 @@ export class Vector3 {
     return this._z;
   }
 
+  public set x(x: number) {
+    this._x = x;
+  }
+  public set y(y: number) {
+    this._y = y;
+  }
+  public set z(z: number) {
+    this._z = z;
+  }
+
+  public setPosition(x: number, y: number, z: number) {
+    this._x = x;
+    this._y = y;
+    this._z = z;
+  }
+
   public distanceTo(other: Vector3): number {
     const a = other.x - this.x;
     const b = other.y - this.y;
