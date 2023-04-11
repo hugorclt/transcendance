@@ -149,7 +149,8 @@ function Game() {
         color="#6f6f6f"
         sectionColor="#9d4b4b"
         infiniteGrid={true}
-        visible={true}
+        visible={false}
+        opacity={0}
         // rotation={[0,0,0]}
       />
       {/* <WallLeft

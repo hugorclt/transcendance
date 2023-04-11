@@ -4,12 +4,15 @@ import { GridRightWall } from "./GridZ";
 import { useEffect, useRef, useState, useContext } from "react";
 import { Mesh } from "three";
 import { GameSocket } from "../../../services/Game/SocketContext";
+import { useFrame } from "@react-three/fiber";
+import { MdOpacity } from "react-icons/md";
 
 interface TWallProps extends GridProps {
   position: Vector3;
   color: string;
   rotation?: Euler;
   visible: boolean;
+  opacity: number;
 }
 
 interface GameInfo {
@@ -56,6 +59,9 @@ const WallRight = (props: TWallProps) => {
   const [gameInfo, setGameInfo] = useState<GameInfo>(defaultValue);
   const [isWallVisible, setIsWallVisible] = useState(false);
   const socket = useContext(GameSocket);
+  const [opacity, setOpacity] = useState(0);
+  const [ballPosition, setBallPosition] = useState(new Vector3(0, 0, 0));
+
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
@@ -65,19 +71,23 @@ const WallRight = (props: TWallProps) => {
       const BallRef = new Vector3(data.x, data.y, data.z);
       const wallXPosition = 16;
       const visibilityThreshold = 1;
-      setIsWallVisible(Math.abs(data.x - wallXPosition) < visibilityThreshold);
+      const opacity : number = isWallVisible ? 1 : 0;
+      // setIsWallVisible(Math.abs(data.x - wallXPosition) < visibilityThreshold);
+      setIsWallVisible(true);
+      setOpacity(Math.abs(data.x - wallXPosition));
+      setBallPosition(BallRef);
 
     });
     return () => {
       socket?.off("ball");
       socket?.off("game-info");
-    };
+    };  
   }, [socket]);
 
-
+  console.log("GridRightWall ballPosition:", ballPosition);
   return (
-    <group position={[16, 0, 0]} rotation={[0, 0, 0]}>
-      <GridRightWall visible={isWallVisible} {...gridProps} />
+    <group position={[16, 50, 0]} rotation={[0, 0, 0]}>
+      <GridRightWall visible={isWallVisible} ballPosition={ballPosition} {...gridProps} />
       <mesh>
       </mesh>
     </group>
