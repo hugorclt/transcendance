@@ -2,14 +2,11 @@ import React, { Suspense, useContext, useEffect, useState } from "react";
 import { PerspectiveCamera } from "@react-three/drei";
 import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-
-interface GameInfo {}
-
-const defaultValue = {};
+import Ball from "./Components/Ball";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
-  const [gameInfo, setGameInfo] = useState<GameInfo>(defaultValue);
+  const [gameInfo, setGameInfo] = useState<any>({});
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -31,6 +28,10 @@ function Game() {
   return (
     <Suspense fallback={null}>
       <PerspectiveCamera makeDefault position={[0, 0, 0]} />
+      <Ball
+        radius={gameInfo.ball._hitbox.width / 2}
+        startPos={gameInfo.ball._initalPosition}
+      />
     </Suspense>
   );
 }
