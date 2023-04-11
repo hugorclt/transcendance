@@ -10,6 +10,7 @@ import { Namespace } from 'socket.io';
 import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Game } from 'src/game/resources/game/Game';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -21,6 +22,7 @@ export class LobbiesGateway
 
   @WebSocketServer()
   io: Namespace;
+  private _games: Set<Game>;
 
   afterInit(): void {}
 
