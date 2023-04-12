@@ -11,7 +11,7 @@ interface TWallProps extends GridProps {
 const FloorGrid = (props: TWallProps) => {
   const { position, color, rotation, ...gridProps } = props;
   return (
-    <group position={[0, -2, 0]} rotation={[0,0,0]}>
+    <group position={[0, -1, 0]} rotation={[0,0,0]}>
       <GridFloor {...gridProps}/>
       <mesh>
       </mesh>

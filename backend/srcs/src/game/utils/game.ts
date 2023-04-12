@@ -48,8 +48,19 @@ export class Game {
     this.cpuPaddleUpdate();
 
     if (this.isSideCollision() == true) {
-        const newBallVelocity = this.ball.getVelocity().x * -1;
-        this.ball.setVelocityX(newBallVelocity);
+      const oldBallVelocityX = this.ball.getVelocity().x;
+      const oldBallVelocityZ = this.ball.getVelocity().z;
+  
+      const newBallVelocityX = oldBallVelocityX * -1;
+  
+      // Calculate the scaling factor to maintain the overall speed
+      const scalingFactor = Math.abs(oldBallVelocityX / newBallVelocityX);
+  
+      // Adjust the z velocity to maintain the overall speed
+      const newBallVelocityZ = oldBallVelocityZ * scalingFactor;
+  
+      this.ball.setVelocityX(newBallVelocityX);
+      this.ball.setVelocityZ(newBallVelocityZ);
     }
 
     if (this.isPaddleCollision2() && this.getPaddle2().getIsSpecialShot() == false) {
@@ -82,7 +93,16 @@ export class Game {
     const y = a * Math.pow(z - vertex[0], 2) + vertex[1];
     return y;
   }
-  
+
+  calculateSineWave(z: number, amplitude: number, periods: number, range: number, phase: number = 0): number {
+    const frequency = (periods * 2 * Math.PI) / range;
+    if (periods  == 0.5)
+      phase = Math.PI / 2;
+    const y = amplitude * Math.abs(Math.sin(frequency * z + phase));
+    return y;
+  }
+
+
 
   updateBallPosition() {
     const ballPos = this.ball.getPosition();
@@ -90,7 +110,9 @@ export class Game {
     ballPos.x += this.ball.getVelocity().x;
     ballPos.z += this.ball.getVelocity().z;
 
-    ballPos.y = this.calculateParabola(ballPos.z, 20);
+    // ballPos.y = this.calculateParabola(ballPos.z, 20);
+    ballPos.y = this.calculateSineWave(ballPos.z, 1, 3, 64);
+
 
     this.ball.setPositionX(ballPos.x);
     this.ball.setPositionZ(ballPos.z);
@@ -122,7 +144,7 @@ export class Game {
     const paddle2Z = this.paddle2.getPosition().z;
 
     return ballZ - ballRadius <= paddle2Z && this.isBallAlignedWithPaddle(this.paddle2);
-  }
+  } 
   isBallAlignedWithPaddle(paddle: Paddle) {
     const halfPaddleWidth = paddle.getWidth() / 2;
     const paddlePosX = paddle.getPosition().x;
@@ -139,13 +161,29 @@ export class Game {
     const ballX = this.ball.getPosition().x;
     const paddlePosX = paddle.getPosition().x;
 
-    const newVelocityX = (ballX - paddlePosX) / 5;
+    const oldVelocityX = this.ball.getVelocity().x;
+    const oldVelocityZ = this.ball.getVelocity().z;
+
+    const positionDifference = (ballX - paddlePosX) / 5;
+    const newVelocityX = oldVelocityX + positionDifference;
     const newVelocityZ = this.ball.getVelocity().z * -1;
 
-    this.ball.setVelocityX(newVelocityX);
-    this.ball.setVelocityZ(newVelocityZ);
+    // Calculate the initial velocity magnitude
+    const initialVelocityMagnitude = Math.sqrt(Math.pow(oldVelocityX, 2) + Math.pow(oldVelocityZ, 2));
+
+    // Calculate the new velocity magnitude
+    const newVelocityMagnitude = Math.sqrt(Math.pow(newVelocityX, 2) + Math.pow(newVelocityZ, 2));
+
+    // Calculate the scaling factor to maintain the overall speed
+    const scalingFactor = initialVelocityMagnitude / newVelocityMagnitude;
+
+    // Adjust the x and z velocities to maintain the overall speed
+    this.ball.setVelocityX(newVelocityX * scalingFactor);
+    this.ball.setVelocityZ(newVelocityZ * scalingFactor);
     this.ball.setSpecialBall(false);
   }
+
+
 
   isGoalTeam2() {
     const ballZ = this.ball.getPosition().z;

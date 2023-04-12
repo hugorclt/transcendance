@@ -128,7 +128,7 @@ function Game() {
           new Vector3(
             gameInfo.paddlePlayerStartX,
             0,
-            gameInfo.paddlePlayerStartZ
+            gameInfo.paddlePlayerStartZ + 0.5
           )
         }
       />
@@ -136,7 +136,7 @@ function Game() {
         width={gameInfo.paddleWidth}
         length={gameInfo.paddleLength}
         startPos={
-          new Vector3(gameInfo.paddleOppStartX, 0, gameInfo.paddleOppStartZ)
+          new Vector3(gameInfo.paddleOppStartX, 0, gameInfo.paddleOppStartZ - 0.5)
         }
       />
       <ChargeCounter charge={gameInfo.chargePlayer1} />
