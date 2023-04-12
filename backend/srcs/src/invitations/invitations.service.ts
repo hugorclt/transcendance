@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,20 +6,26 @@ import {
   InvitationEntity,
   InvitationExtendedEntity,
 } from './entities/invitation.entity';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class InvitationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private socialsGateway: SocialsGateway) {}
 
   async create(
     createInvitationDto: CreateInvitationDto,
     sender: any,
   ): Promise<InvitationExtendedEntity> {
+    var invitation;
     if (createInvitationDto.type == 'FRIEND') {
-      return await this.createFriendInvitation(createInvitationDto, sender);
+      if (createInvitationDto.username == sender.username) throw new UnprocessableEntityException();
+      console.log(createInvitationDto.username, sender.username)
+      invitation = await this.createFriendInvitation(createInvitationDto, sender);
     } else if (createInvitationDto.type == 'LOBBY') {
-      return await this.createLobbyInvitation(createInvitationDto);
+      invitation = await this.createLobbyInvitation(createInvitationDto);
     }
+    this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
+    return invitation;
   }
 
   async createLobbyInvitation(

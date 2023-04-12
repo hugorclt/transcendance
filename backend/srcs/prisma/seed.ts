@@ -76,18 +76,18 @@ async function main() {
       },
     },
   });
-  // const hugoUpdate = await prisma.user.update({
-  //   where: {
-  //     id: hugo.id,
-  //   },
-  //   data: {
-  //     friends: {
-  //       connect: {
-  //         id: dylan.id,
-  //       },
-  //     },
-  //   },
-  // });
+  const hugoUpdate = await prisma.user.update({
+    where: {
+      id: hugo.id,
+    },
+    data: {
+      friends: {
+        connect: {
+          id: dylan.id,
+        },
+      },
+    },
+  });
   // const lobby = await prisma.lobby.create({
   //   data: {
   //     ownerId: dylan.id,
