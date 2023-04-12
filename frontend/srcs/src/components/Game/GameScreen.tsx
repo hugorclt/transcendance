@@ -43,13 +43,15 @@ const GameScreen = () => {
 
   return (
     <>
-      <Canvas
-        ref={screenRef}
-        tabIndex={0}
-        style={{ background: COLORS.background, height: "100vh" }}>
-        <Game />
-        <Effects />
-      </Canvas>
+      <div style={{ width: "100vw", height: "100vh" }}>
+        <Canvas
+          ref={screenRef}
+          tabIndex={0}
+          style={{ background: COLORS.background }}>
+          <Game />
+          <Effects />
+        </Canvas>
+      </div>
     </>
   );
 };
