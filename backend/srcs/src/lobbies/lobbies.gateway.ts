@@ -44,7 +44,7 @@ export class LobbiesGateway
         members: true,
       },
     });
-    if (lobby.state == 'GAME') {
+    if (lobby && lobby.state == 'GAME') {
       this._games.set(lobby.id, new Game(lobby));
       this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
     }

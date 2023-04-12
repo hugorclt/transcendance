@@ -133,7 +133,7 @@ export class AuthService {
     });
     let status;
     if (lobby) {
-      if (lobby.state == 'GAME') status = 'GAME';
+      if (lobby.state && lobby.state == 'GAME') status = 'GAME';
       else status = 'LOBBY';
     } else {
       status = 'CONNECTED';

@@ -76,55 +76,55 @@ async function main() {
       },
     },
   });
-  const hugoUpdate = await prisma.user.update({
-    where: {
-      id: hugo.id,
-    },
-    data: {
-      friends: {
-        connect: {
-          id: dylan.id,
-        },
-      },
-    },
-  });
-  const lobby = await prisma.lobby.create({
-    data: {
-      ownerId: dylan.id,
-      nbPlayers: 2,
-      maxDuration: 180,
-      mode: Mode.CLASSIC,
-      map: MapName.CLASSIC,
-      state: LobbyState.FULL,
-      private: true,
-      members: {
-        create: [
-          {
-            team: false,
-            ready: false,
-            user: {
-              connect: { id: dylan.id },
-            },
-          },
-          {
-            team: true,
-            ready: false,
-            user: {
-              connect: { id: hugo.id },
-            },
-          },
-        ],
-      },
-    },
-  });
-  const hugoInLobby = await prisma.user.update({
-    where: { id: hugo.id },
-    data: { status: Status.LOBBY },
-  });
-  const dylanInLobby = await prisma.user.update({
-    where: { id: dylan.id },
-    data: { status: Status.LOBBY },
-  });
+  // const hugoUpdate = await prisma.user.update({
+  //   where: {
+  //     id: hugo.id,
+  //   },
+  //   data: {
+  //     friends: {
+  //       connect: {
+  //         id: dylan.id,
+  //       },
+  //     },
+  //   },
+  // });
+  // const lobby = await prisma.lobby.create({
+  //   data: {
+  //     ownerId: dylan.id,
+  //     nbPlayers: 2,
+  //     maxDuration: 180,
+  //     mode: Mode.CLASSIC,
+  //     map: MapName.CLASSIC,
+  //     state: LobbyState.FULL,
+  //     private: true,
+  //     members: {
+  //       create: [
+  //         {
+  //           team: false,
+  //           ready: false,
+  //           user: {
+  //             connect: { id: dylan.id },
+  //           },
+  //         },
+  //         {
+  //           team: true,
+  //           ready: false,
+  //           user: {
+  //             connect: { id: hugo.id },
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   },
+  // });
+  // const hugoInLobby = await prisma.user.update({
+  //   where: { id: hugo.id },
+  //   data: { status: Status.LOBBY },
+  // });
+  // const dylanInLobby = await prisma.user.update({
+  //   where: { id: dylan.id },
+  //   data: { status: Status.LOBBY },
+  // });
 }
 
 main()

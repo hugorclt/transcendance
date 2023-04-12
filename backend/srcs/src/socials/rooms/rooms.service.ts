@@ -1,4 +1,4 @@
-  import {
+import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
@@ -274,7 +274,7 @@ export class RoomsService {
 
   async banFromRoom(bannerId: string, managerRoomDto: ManagerRoomDto) {
     await this.checkManagerState(bannerId, managerRoomDto);
-    await this.prisma.room.update({
+    const room = await this.prisma.room.update({
       where: {
         id: managerRoomDto.roomId,
       },
@@ -287,14 +287,19 @@ export class RoomsService {
       },
       include: {
         participants: true,
+        banned: true,
       },
     });
     await this.kickFromRoom(bannerId, managerRoomDto);
+    this.socialGateway.emitToUser(managerRoomDto.roomId, 'on-chat-update', {
+      id: managerRoomDto.roomId,
+      banned: room.banned.map((banned) => banned.username),
+    });
   }
 
   async unbanFromRoom(ownerId: string, roomId: string, bannedName: string) {
     if (!(await this.isOwner(ownerId, roomId))) throw new ForbiddenException();
-    await this.prisma.room.update({
+    const room = await this.prisma.room.update({
       where: {
         id: roomId,
       },
@@ -305,6 +310,14 @@ export class RoomsService {
           },
         },
       },
+      include: {
+        banned: true,
+      }
+    });
+
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      id: roomId,
+      banned: room.banned.map((banned) => banned.username),
     });
     return 'success';
   }
@@ -472,10 +485,11 @@ export class RoomsService {
   async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
     if (managerId == managerRoomDto.targetId)
       throw new UnprocessableEntityException();
-    const test = (await this.isOwner(managerId, managerRoomDto.roomId));
-    console.log(test);
-    if (!test)
-      throw new ForbiddenException();
+    const isOwner = await this.isOwner(
+      managerRoomDto.targetId,
+      managerRoomDto.roomId,
+    );
+    if (isOwner) throw new ForbiddenException();
     const kicker = await this.findUserInRoom(managerRoomDto.roomId, {
       userId: managerId,
       role: Role.OWNER || Role.ADMIN,
