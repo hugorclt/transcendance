@@ -4,6 +4,8 @@ import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Ball from "./Components/Ball";
 import { Vector3 } from "three";
+import Walls from "./Components/Walls";
+import Paddles from "./Components/Paddles";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -34,7 +36,7 @@ function Game() {
         <></>
       ) : (
         <>
-          <PerspectiveCamera makeDefault position={[0, 0, 2000]} />
+          <PerspectiveCamera makeDefault position={[0, 0, 30]} />
           <Ball
             radius={gameInfo.ball._hitBox._width / 2}
             startPos={
@@ -45,7 +47,8 @@ function Game() {
               )
             }
           />
-          <Wall>
+          <Walls walls={gameInfo.walls} />
+          <Paddles players={gameInfo.players} />
           <hemisphereLight args={["#ffff", 0.6]} />
         </>
       )}

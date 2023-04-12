@@ -7,12 +7,12 @@ import { EField, EPaddle } from '../utils/config/enums';
 
 export class Game {
   private _id: string;
-  private _players: Map<string, Player>;
+  private _players: Array<Player>;
   private _field: Field;
   private _ball: Ball;
 
   public constructor(lobby: LobbyWithMembersEntity) {
-    this._players = new Map<string, Player>();
+    this._players = new Array<Player>();
     this._id = lobby.id;
     this._ball = new Ball(
       BallConfig.width,
@@ -23,8 +23,7 @@ export class Game {
     );
     this._field = new Field(EField.BASIC);
     lobby.members.forEach((member) => {
-      this._players.set(
-        member.userId,
+      this._players.push(
         new Player(
           member.userId,
           member.team,

@@ -12,7 +12,6 @@ import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filt
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
-import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -27,15 +26,33 @@ export class LobbiesGateway
   io: Namespace;
   private _games: Map<string, Game>;
 
-  afterInit(): void {
+  async afterInit() {
     this._games = new Map<string, Game>();
+    console.log('initialization of 1v1 private with hugo / dylan');
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        members: {
+          some: {
+            user: {
+              username: 'Hugo',
+            },
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+    if (lobby.state == 'GAME') {
+      this._games.set(lobby.id, new Game(lobby));
+      this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
+    }
   }
 
   async handleConnection(client: AuthSocket) {
     await client.join(client.userId);
     const lobbyId = await this.getLobby(client);
     if (lobbyId) {
-      console.log('user ', client.username, ' is in lobby ', lobbyId);
       await client.join(lobbyId);
     }
   }
@@ -45,34 +62,17 @@ export class LobbiesGateway
   }
 
   async readyToStart(lobby: LobbyWithMembersEntity) {
-    //wait 3 seconds before start
-    console.log('ready to start: ', lobby);
     this._games.set(lobby.id, new Game(lobby));
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
   }
 
   @SubscribeMessage('get-game-info')
   async onStartGame(client: AuthSocket) {
-    console.log(
-      'user ',
-      client.username,
-      ' with id: ',
-      client.userId,
-      ' asking for game info',
-    );
     const lobbyId = await this.getLobby(client);
-    console.log(lobbyId);
     const game = this._games.get(lobbyId);
-    console.log(game);
-    //wait 3 second until all player has loaded the game screen in front
-    console.log({
-      fieldWalls: Object.fromEntries(game.field.walls),
-      players: Object.fromEntries(game.players),
-      ball: game.ball,
-    });
     this.io.to(client.userId).emit('game-info', {
-      fieldWalls: Object.fromEntries(game.field.walls),
-      players: Object.fromEntries(game.players),
+      walls: game.field.walls,
+      players: game.players,
       ball: game.ball,
     });
   }

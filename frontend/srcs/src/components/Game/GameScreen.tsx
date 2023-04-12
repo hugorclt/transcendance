@@ -8,6 +8,8 @@ import { OrbitControls } from "@react-three/drei";
 import PlayerPaddle from "./Components/PlayerPaddle";
 import { Vector3 } from "three";
 import Scene from "./Scene";
+import MyEffects from "./Effects";
+import Skybox from "./Components/sceneComponents/Skybox";
 
 const GameScreen = () => {
   const screenRef = useRef<any>();
@@ -46,9 +48,12 @@ const GameScreen = () => {
       <Canvas
         ref={screenRef}
         tabIndex={0}
-        style={{ background: COLORS.background, height: "100vh" }}>
+        style={{ background: COLORS.background, height: "100vh" }}
+        linear
+      >
         <Game />
-        <Effects />
+        <Skybox />
+        <MyEffects />
       </Canvas>
     </>
   );
