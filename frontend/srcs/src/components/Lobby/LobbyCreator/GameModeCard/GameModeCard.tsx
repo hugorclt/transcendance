@@ -15,6 +15,7 @@ import { useLobbyCreatorContext } from "../../../../views/LobbyPage/LobbyCreator
 interface Props {
   mode: string;
   description: string;
+  img: string;
 }
 
 function GameModeCard(props: Props) {
@@ -39,6 +40,7 @@ function GameModeCard(props: Props) {
       onMouseOver={() => setOnHover(true)}
       onMouseOut={() => setOnHover(false)}
     >
+      
       <GameModeCardsUpper>
         <GameModeCardsTitleBox>{props.mode}</GameModeCardsTitleBox>
         <GameModeCardsMain>

@@ -133,7 +133,7 @@ model Item {
 
 model Room {
   id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String        
+  name         String        @unique
   password     String
   avatar       String
   type         Int

@@ -20,10 +20,16 @@ import { COLORS } from "../../../colors";
 import { mediaSize } from "../../../mediaSize";
 
 const dataGameMode = [
-  { name: "Classic", description: "Le Pong originel, berceau du gaming" },
+  {
+    name: "Classic",
+    description: "Le Pong originel, berceau du gaming",
+    img: "",
+  },
+
   {
     name: "Champions",
     description: "Pong comme vous ne l'aviez jamais imagine",
+    img: "",
   },
 ];
 
@@ -83,10 +89,12 @@ function LobbyCreator() {
             <GameModeCard
               mode="Classic"
               description="Le Pong originel, berceau du gaming"
+              img={""}
             />
             <GameModeCard
               mode="Champions"
               description="Pong comme vous ne l'aviez jamais imagine"
+              img={"/planet.jpeg"}
             />
           </GameModeCardsBody>
           <GameModeButtonBody>
@@ -108,8 +116,7 @@ function LobbyCreator() {
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
-            >
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
               <MdKeyboardArrowLeft size={32} color={COLORS.primary} />
             </ButtonNoStyle>
             <GameModeCard
@@ -117,8 +124,7 @@ function LobbyCreator() {
               description={dataGameMode[slider].description}
             />
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
-            >
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
               <MdKeyboardArrowRight size={32} color={COLORS.primary} />
             </ButtonNoStyle>
           </GameModeHero>
