@@ -22,7 +22,6 @@ re 		:
 
 restart	:
 	make stop
-	make rmvol
 	make build
 	make up
 

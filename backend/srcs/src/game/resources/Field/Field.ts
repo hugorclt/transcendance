@@ -5,10 +5,10 @@ import { EField } from '../utils/config/enums';
 import { Wall } from './wall/Wall';
 
 export class Field {
-  private _walls: Map<string, Wall>;
+  private _walls: Array<Wall>;
 
   constructor(fieldType: EField) {
-    this._walls = new Map<string, Wall>();
+    this._walls = new Array<Wall>();
     switch (fieldType) {
       case EField.BASIC:
         this._createBasicWalls();
@@ -16,13 +16,12 @@ export class Field {
     }
   }
 
-  public get walls(): Map<string, Wall> {
+  public get walls(): Array<Wall> {
     return this._walls;
   }
   private _createBasicWalls() {
     //vertical wall left
-    this._walls.set(
-      'VL',
+    this._walls.push(
       new Wall(
         BaseFieldConfig.VerticalWallConfig.width,
         BaseFieldConfig.VerticalWallConfig.height,
@@ -31,8 +30,7 @@ export class Field {
       ),
     );
     //vertical wall right
-    this._walls.set(
-      'VR',
+    this._walls.push(
       new Wall(
         BaseFieldConfig.VerticalWallConfig.width,
         BaseFieldConfig.VerticalWallConfig.height,
@@ -41,8 +39,7 @@ export class Field {
       ),
     );
     //floor
-    this._walls.set(
-      'HB',
+    this._walls.push(
       new Wall(
         BaseFieldConfig.HorizontalWallConfig.width,
         BaseFieldConfig.HorizontalWallConfig.height,
@@ -51,8 +48,7 @@ export class Field {
       ),
     );
     //ceiling
-    this._walls.set(
-      'HT',
+    this._walls.push(
       new Wall(
         BaseFieldConfig.HorizontalWallConfig.width,
         BaseFieldConfig.HorizontalWallConfig.height,
