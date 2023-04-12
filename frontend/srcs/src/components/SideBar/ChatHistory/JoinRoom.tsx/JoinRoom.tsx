@@ -32,7 +32,8 @@ function JoinRoom() {
       .catch((err: AxiosError) => {
         console.log(err);
         if (err.response?.status == 404) setErrMsg("Room doesn't exist");
-        else if (err.response?.status == 403) setErrMsg("Password doesn't match");
+        else if (err.response?.status == 403)
+          setErrMsg("Password doesn't match");
         else if (err.response?.status == 422) setErrMsg("You're already in!");
         else if (err.response?.status == 429) setErrMsg("You're banned :(");
       });
