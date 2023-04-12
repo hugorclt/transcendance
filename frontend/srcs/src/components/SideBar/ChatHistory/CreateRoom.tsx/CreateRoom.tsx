@@ -11,7 +11,7 @@ import { updateArray } from "../../../../services/utils/updateArray";
 import {
   StyledButton,
   StyledInput,
-} from "../../FriendsList/FriendsTopBar/FriendsTopBarStyle";
+} from "../../FriendsList/ManageBar/FriendsTopBarStyle";
 import {
   CreateRoomBox,
   CreateRoomButtonBox,

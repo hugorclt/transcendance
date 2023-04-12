@@ -1,7 +1,7 @@
 import React from "react";
 import { ChatBarContainer, ProfilBoxContainer } from "./SideBar.style";
 import ProfilBox from "./ProfileBox/ProfilBox";
-import FriendsTopBar from "./FriendsList/FriendsTopBar/FriendsTopBar";
+import FriendsTopBar from "./FriendsList/ManageBar/FriendsTopBar";
 import FriendsList from "./FriendsList/FriendsList";
 import FriendNotifications from "./FriendsList/FriendNotifications/FriendsNotifications";
 import ChatHistory from "./ChatHistory/ChatHistory";
