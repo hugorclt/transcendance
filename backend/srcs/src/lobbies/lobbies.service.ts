@@ -449,7 +449,6 @@ export class LobbiesService {
     const notReady = lobbyUpdated.members.find(
       (member) => member.ready == false,
     );
-    console.log('notReady? : ', notReady);
     //TODO ========> ADD OTHER STATES
     if (!notReady) {
       console.log('everybody ready');

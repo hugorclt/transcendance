@@ -29,25 +29,25 @@ export class LobbiesGateway
 
   async afterInit() {
     this._games = new Map<string, Game>();
-    console.log('initialization of 1v1 private with hugo / dylan');
-    const lobby = await this.prisma.lobby.findFirst({
-      where: {
-        members: {
-          some: {
-            user: {
-              username: 'Hugo',
-            },
-          },
-        },
-      },
-      include: {
-        members: true,
-      },
-    });
-    if (lobby && lobby.state == 'GAME') {
-      this._games.set(lobby.id, new Game(lobby));
-      this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
-    }
+    // console.log('initialization of 1v1 private with hugo / dylan');
+    // const lobby = await this.prisma.lobby.findFirst({
+    //   where: {
+    //     members: {
+    //       some: {
+    //         user: {
+    //           username: 'Hugo',
+    //         },
+    //       },
+    //     },
+    //   },
+    //   include: {
+    //     members: true,
+    //   },
+    // });
+    // if (lobby && lobby.state == 'GAME') {
+    //   this._games.set(lobby.id, new Game(lobby));
+    //   this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
+    // }
   }
 
   async handleConnection(client: AuthSocket) {
@@ -95,12 +95,10 @@ export class LobbiesGateway
       x * BaseFieldConfig.HorizontalWallConfig.width,
       y * BaseFieldConfig.VerticalWallConfig.height,
     );
-    this.io
-      .to(lobbyId)
-      .emit('on-move', {
-        x: player.paddle.getPosition().x,
-        y: player.paddle.getPosition().y,
-      });
+    this.io.to(lobbyId).emit('on-move', {
+      x: player.paddle.getPosition().x,
+      y: player.paddle.getPosition().y,
+    });
   }
 
   /* ------------------------------- helper func ------------------------------ */

@@ -1,6 +1,6 @@
 import { IObject } from '../interfaces/IObject';
 import { Vector3 } from '../utils/Vector3';
-import { BaseFieldConfig } from '../utils/config/config';
+import { BaseFieldConfig, ClassicFieldConfig } from '../utils/config/config';
 import { EField } from '../utils/config/enums';
 import { Wall } from './wall/Wall';
 
@@ -10,8 +10,8 @@ export class Field {
   constructor(fieldType: EField) {
     this._walls = new Array<Wall>();
     switch (fieldType) {
-      case EField.BASIC:
-        this._createBasicWalls();
+      case EField.CLASSIC:
+        this._createClassicWalls();
         break;
     }
   }
@@ -19,6 +19,35 @@ export class Field {
   public get walls(): Array<Wall> {
     return this._walls;
   }
+
+  private _createClassicWalls() {
+    this._walls.push(
+      new Wall(
+        ClassicFieldConfig.VerticalWallConfig.width,
+        ClassicFieldConfig.VerticalWallConfig.height,
+        ClassicFieldConfig.VerticalWallConfig.depth,
+        new Vector3(-(ClassicFieldConfig.width / 2), 0, 0),
+      ),
+    );
+    this._walls.push(
+      new Wall(
+        ClassicFieldConfig.VerticalWallConfig.width,
+        ClassicFieldConfig.VerticalWallConfig.height,
+        ClassicFieldConfig.VerticalWallConfig.depth,
+        new Vector3(ClassicFieldConfig.width / 2, 0, 0),
+      ),
+    );
+    this._walls.push(
+      new Wall(
+        ClassicFieldConfig.HorizontalWallConfig.width,
+        ClassicFieldConfig.HorizontalWallConfig.height,
+        ClassicFieldConfig.HorizontalWallConfig.depth,
+        new Vector3(0, -(ClassicFieldConfig.height / 2), 0),
+      ),
+    );
+  }
+
+  //version 3d
   private _createBasicWalls() {
     //vertical wall left
     this._walls.push(

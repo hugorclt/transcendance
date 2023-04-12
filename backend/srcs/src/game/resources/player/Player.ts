@@ -1,7 +1,7 @@
 import { IObject } from '../interfaces/IObject';
 import { BasePaddle } from '../paddle/BasePaddle';
 import { Vector3 } from '../utils/Vector3';
-import { BasePaddleConfig } from '../utils/config/config';
+import { BasePaddleConfig, ClassicPaddleConfig } from '../utils/config/config';
 import { EPaddle } from '../utils/config/enums';
 
 export class Player {
@@ -18,12 +18,12 @@ export class Player {
     this._id = id;
     this._team = team;
     switch (paddleType) {
-      case EPaddle.BASIC:
+      case EPaddle.CLASSIC:
         //CLEANER SOLUTION WITH DEFAULT FALLBACK TO BASE CONFIG
         this._paddle = new BasePaddle(
-          BasePaddleConfig.width,
-          BasePaddleConfig.height,
-          BasePaddleConfig.depth,
+          ClassicPaddleConfig.width,
+          ClassicPaddleConfig.height,
+          ClassicPaddleConfig.depth,
           new Vector3(0, 0, team ? fieldDepth / 2 : -(fieldDepth / 2)),
         );
         break;
@@ -38,7 +38,7 @@ export class Player {
     return this._team;
   }
 
-  public get paddle() : IObject {
+  public get paddle(): IObject {
     return this._paddle;
   }
 }
