@@ -16,6 +16,7 @@ import MainPage from "./views/MainPage/MainPage";
 import LobbyPage from "./views/LobbyPage/LobbyPage";
 import GamePage from "./views/GamePage/GamePage";
 import ProvideSockets from "./services/Auth/ProvideSockets";
+import RequireInGameStatus from "./services/Status/RequireInGameStatus";
 
 function App() {
   return (
@@ -37,9 +38,9 @@ function App() {
                 <Route path="/ranking" element={<RankingPage />} />
               </Route>
             </Route>
-            {/* <Route element={<RequireInGameStatus />}> */}
-            <Route path="/game" element={<GamePage />} />
-            {/* </Route> */}
+            <Route element={<RequireInGameStatus />}>
+              <Route path="/game" element={<GamePage />} />
+            </Route>
           </Route>
         </Route>
       </Route>
