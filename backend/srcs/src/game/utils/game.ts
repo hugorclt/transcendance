@@ -30,7 +30,7 @@ export class Game {
   startBallMovement() {
     console.log("start-ball-movement");
     const direction = Math.random() > 0.5 ? -1 : 1;
-    this.ball.setVelocity({ x: 0, z: direction * 0.2 }); // this is a possibility 
+    this.ball.setVelocity({ x: 0, z: direction * 0.1 }); // this is a possibility 
     this.ball.setStopped(false);
   }
 
@@ -110,8 +110,7 @@ export class Game {
     ballPos.x += this.ball.getVelocity().x;
     ballPos.z += this.ball.getVelocity().z;
 
-    // ballPos.y = this.calculateParabola(ballPos.z, 20);
-    ballPos.y = this.calculateSineWave(ballPos.z, 1, 3, 64);
+    ballPos.y = this.calculateSineWave(ballPos.z, 10, 2, 64);
 
 
     this.ball.setPositionX(ballPos.x);
