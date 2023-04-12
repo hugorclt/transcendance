@@ -19,13 +19,13 @@ export const BaseFieldConfig = {
   height: 9,
   depth: 35,
   VerticalWallConfig: {
-    width: 0.1,
+    width: 1,
     height: 9,
     depth: 35,
   },
   HorizontalWallConfig: {
     width: 16,
-    height: 0.1,
+    height: 1,
     depth: 35,
   },
 };
@@ -50,7 +50,7 @@ export const ClassicFieldConfig = {
   height: 1,
   depth: 35,
   VerticalWallConfig: {
-    width: 0.1,
+    width: 1,
     height: 1,
     depth: 35,
   },

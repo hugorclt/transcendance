@@ -1,11 +1,19 @@
-import React, { Suspense, useContext, useEffect, useState } from "react";
-import { PerspectiveCamera } from "@react-three/drei";
+import React, {
+  Suspense,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { PerspectiveCamera, OrthographicCamera } from "@react-three/drei";
 import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Ball from "./Components/Ball";
 import { Vector3 } from "three";
+import { Mesh } from "three";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
+import { degToRad } from "three/src/math/MathUtils";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -36,7 +44,22 @@ function Game() {
         <></>
       ) : (
         <>
-          <PerspectiveCamera makeDefault position={[0, 0, 30]} fov={90} />
+          <OrthographicCamera
+            makeDefault
+            zoom={1}
+            top={20}
+            bottom={-20}
+            left={20}
+            right={-20}
+            near={1}
+            far={2000}
+            position={[0, 30, 0]}
+          />
+          {/* <PerspectiveCamera
+            makeDefault
+            position={[0, 30, 0]}
+            fov={90}
+          /> */}
           <Ball
             radius={gameInfo.ball._hitBox._width / 2}
             startPos={

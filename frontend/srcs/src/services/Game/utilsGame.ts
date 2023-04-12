@@ -1,5 +1,4 @@
 import { BackSide, MeshBasicMaterial, TextureLoader } from "three";
-import up from "../../assets/scene/planet.jpeg";
 
 export function createPathStrings(filename: string) {
   const basePath =
@@ -18,18 +17,18 @@ export function createPathStrings(filename: string) {
   return pathStings;
 }
 
-export function createMaterialArray(filename: string) {
-  // const skyboxImagepaths = createPathStrings(filename);
-  const skyboxImagepaths = [up];
+// export function createMaterialArray(filename: string) {
+//   // const skyboxImagepaths = createPathStrings(filename);
+//   // const skyboxImagepaths = [up];
 
-  const materialArray = skyboxImagepaths.map((image) => {
-    let texture = new TextureLoader().load(image);
+//   // const materialArray = skyboxImagepaths.map((image) => {
+//   //   let texture = new TextureLoader().load(image);
 
-    return new MeshBasicMaterial({ map: texture, side: BackSide });
-  });
+//   //   return new MeshBasicMaterial({ map: texture, side: BackSide });
+//   // });
 
-  return materialArray;
-}
+//   return materialArray;
+// }
 
 export function degreeToRad(degrees: number): number {
   return degrees * (Math.PI / 180);

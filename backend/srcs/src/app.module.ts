@@ -14,7 +14,6 @@ import { MessagesModule } from './socials/rooms/messages/messages.module';
 import { ItemsModule } from './items/items.module';
 import { InvitationsModule } from './invitations/invitations.module';
 import { ConfigModule } from '@nestjs/config';
-import { GameModule } from './game/game.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,7 +31,6 @@ import { GameModule } from './game/game.module';
     LobbiesModule,
     ItemsModule,
     InvitationsModule,
-    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],

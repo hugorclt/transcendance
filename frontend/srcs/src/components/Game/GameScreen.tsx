@@ -49,9 +49,10 @@ const GameScreen = () => {
           ref={screenRef}
           tabIndex={0}
           style={{ background: COLORS.background }}
-          linear>
+          linear
+        >
           <Game />
-          <Skybox />
+          {/* <Skybox /> */}
           <MyEffects />
         </Canvas>
       </div>

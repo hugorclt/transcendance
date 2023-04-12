@@ -25,7 +25,7 @@ function Walls(props) {
             />
             <meshToonMaterial
               color={COLORS.green}
-              emissive="purple"
+              emissive="green"
               emissiveIntensity={10}
               opacity={0.3}
               transparent
