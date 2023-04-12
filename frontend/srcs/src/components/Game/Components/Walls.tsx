@@ -24,11 +24,11 @@ function Walls(props) {
               ]}
             />
             <meshToonMaterial
-              color={COLORS.green}
-              emissive="green"
-              emissiveIntensity={10}
-              opacity={0.3}
-              transparent
+              color={COLORS.white}
+              emissive="white"
+              emissiveIntensity={1}
+              opacity={1}
+              // transparent
             />
           </mesh>
         );

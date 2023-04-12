@@ -29,6 +29,7 @@ export class LobbiesGateway
 
   async afterInit() {
     this._games = new Map<string, Game>();
+    /* ------------------------------ testing code ------------------------------ */
     console.log('initialization of 1v1 private with hugo / dylan');
     const lobby = await this.prisma.lobby.findFirst({
       where: {
@@ -48,6 +49,7 @@ export class LobbiesGateway
       this._games.set(lobby.id, new Game(lobby));
       this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
     }
+    /* ----------------------------------- ... ---------------------------------- */
   }
 
   async handleConnection(client: AuthSocket) {
