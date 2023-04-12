@@ -36,7 +36,7 @@ function Game() {
         <></>
       ) : (
         <>
-          <PerspectiveCamera makeDefault position={[0, 0, 30]} />
+          <PerspectiveCamera makeDefault position={[0, 0, 30]} fov={90} />
           <Ball
             radius={gameInfo.ball._hitBox._width / 2}
             startPos={
