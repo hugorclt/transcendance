@@ -5,7 +5,6 @@ import Game from "./Game";
 import { Effects, Stars } from "@react-three/drei";
 import BlueFlame from "./effects/BlueFlame";
 import { OrbitControls } from "@react-three/drei";
-import PlayerPaddle from "./Components/PlayerPaddle";
 import { Vector3 } from "three";
 import Scene from "./Scene";
 import MyEffects from "./Effects";
@@ -45,16 +44,15 @@ const GameScreen = () => {
 
   return (
     <>
-      <div style={{ width: "100vw", height: "100vh" }}>
-        <Canvas
-          ref={screenRef}
-          tabIndex={0}
-          style={{ background: COLORS.background }}>
-          <Game />
-          <Skybox />
-          <Effects />
-        </Canvas>
-      </div>
+      <Canvas
+        ref={screenRef}
+        tabIndex={0}
+        style={{ background: COLORS.background }}
+        linear>
+        <Game />
+        <Skybox />
+        <MyEffects />
+      </Canvas>
     </>
   );
 };
