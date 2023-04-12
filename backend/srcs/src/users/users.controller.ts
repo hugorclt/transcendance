@@ -145,11 +145,17 @@ export class UsersController {
 
   @Post('update-username')
   async updateUsername(@Request() req) {
-    return await this.usersService.updateUsername(req.user.sub, req.body.username);
+    return await this.usersService.updateUsername(
+      req.user.sub,
+      req.body.username,
+    );
   }
 
   @Post('update-password')
   async updatePassword(@Request() req) {
-    return await this.usersService.updatePassword(req.user.sub, req.body.password);
+    return await this.usersService.updatePassword(
+      req.user.sub,
+      req.body.password,
+    );
   }
 }

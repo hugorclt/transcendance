@@ -41,6 +41,11 @@ function FriendsTopBar() {
           <input
             type="text"
             placeholder="Invite user"
+            autoFocus={true}
+            onBlur={() => {
+              setOpenInvite(false);
+              setUsername("");
+            }}
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => {
               if (e.key == "Enter") handleSubmit();
@@ -58,7 +63,14 @@ function FriendsTopBar() {
           <input
             type="text"
             placeholder="Search Friends"
-            onChange={(e) => setSearchFriends(e.target.value)}></input>
+            autoFocus={true}
+            onBlur={() => {
+              setSearchFriends("");
+              setOpenFilter(false);
+            }}
+            onChange={(e) => {
+              setSearchFriends(e.target.value);
+            }}></input>
           <AiOutlineClose
             size={24}
             color={COLORS.secondary}
