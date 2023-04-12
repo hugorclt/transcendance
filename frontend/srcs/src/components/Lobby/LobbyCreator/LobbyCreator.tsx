@@ -94,7 +94,7 @@ function LobbyCreator() {
             <GameModeCard
               mode="Champions"
               description="Pong comme vous ne l'aviez jamais imagine"
-              img={"/planet.jpeg"}
+              img={"../../../../public/planet.jpeg"}
             />
           </GameModeCardsBody>
           <GameModeButtonBody>
@@ -122,6 +122,7 @@ function LobbyCreator() {
             <GameModeCard
               mode={dataGameMode[slider].name}
               description={dataGameMode[slider].description}
+              img={""}
             />
             <ButtonNoStyle
               onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
