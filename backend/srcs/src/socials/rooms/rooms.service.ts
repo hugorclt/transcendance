@@ -312,7 +312,7 @@ export class RoomsService {
       },
       include: {
         banned: true,
-      }
+      },
     });
 
     this.socialGateway.emitToUser(roomId, 'on-chat-update', {
