@@ -94,6 +94,10 @@ export class Game {
     return y;
   }
 
+  /*======= y-move function =======*/
+  
+  
+
   calculateSineWave(z: number, amplitude: number, periods: number, range: number, phase: number = 0): number {
     const frequency = (periods * 2 * Math.PI) / range;
     if (periods  == 0.5)
@@ -102,7 +106,9 @@ export class Game {
     return y;
   }
 
-
+  /*======= ball move function to move in the ball in the proccess movement =======*/
+  
+  
 
   updateBallPosition() {
     const ballPos = this.ball.getPosition();
@@ -167,16 +173,10 @@ export class Game {
     const newVelocityX = oldVelocityX + positionDifference;
     const newVelocityZ = this.ball.getVelocity().z * -1;
 
-    // Calculate the initial velocity magnitude
     const initialVelocityMagnitude = Math.sqrt(Math.pow(oldVelocityX, 2) + Math.pow(oldVelocityZ, 2));
-
-    // Calculate the new velocity magnitude
     const newVelocityMagnitude = Math.sqrt(Math.pow(newVelocityX, 2) + Math.pow(newVelocityZ, 2));
-
-    // Calculate the scaling factor to maintain the overall speed
     const scalingFactor = initialVelocityMagnitude / newVelocityMagnitude;
 
-    // Adjust the x and z velocities to maintain the overall speed
     this.ball.setVelocityX(newVelocityX * scalingFactor);
     this.ball.setVelocityZ(newVelocityZ * scalingFactor);
     this.ball.setSpecialBall(false);
@@ -229,9 +229,9 @@ export class Game {
     const BALL_X = 0;
     const BALL_Y = 10;
     const BALL_Z = 0;
-    const FIELD_WIDTH = 32; //this.field.getWidth();
-    const FIELD_LENGTH = 64; //this.field.getLength();
-    const BALL_RADIUS = 0.5; //this.ball.getRadius();
+    const FIELD_WIDTH = 32;
+    const FIELD_LENGTH = 64;
+    const BALL_RADIUS = 0.5;
     const PADDLE_WIDTH = 5;
     const PADDLE_LENGTH = 2;
 
