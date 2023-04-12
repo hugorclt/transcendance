@@ -1,6 +1,10 @@
 import { useAtom } from "jotai";
 import React from "react";
-import { lobbyAtom, userAtom } from "../../../../../services/store";
+import {
+  lobbyAtom,
+  lobbyDefaultValue,
+  userAtom,
+} from "../../../../../services/store";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import RoundIconButton from "../../../../common/Button/IconButton/RoundIconButton";
@@ -20,9 +24,7 @@ function LeaveLobbyButton() {
         lobbyId: lobby.id,
       })
       .then((response: AxiosResponse) => {
-        //should set lobbyAtom to default / undefined
-        //TODO
-        console.log("success leaving lobby");
+        setLobby(lobbyDefaultValue);
       })
       .catch((error: AxiosError) => {
         console.log(JSON.stringify(error?.response?.data));

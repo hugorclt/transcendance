@@ -50,16 +50,6 @@ function LobbyCreator() {
         mode: selectedMode.toLocaleUpperCase(),
       })
       .then((response: AxiosResponse) => {
-        console.log(JSON.stringify(response.data));
-        // setLobby({
-        //   id: response.data.id,
-        //   ownerId: response.data.ownerId,
-        //   nbPlayers: +response.data.nbPlayers,
-        //   mode: response.data.mode,
-        //   state: response.data.state,
-        //   members: response.data.members,
-        //   private: response.data.private,
-        // });
         setLobby((...prev) => ({
           ...prev,
           ...response.data,

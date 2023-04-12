@@ -23,7 +23,7 @@ export const userPreferencesAtom = atom<TUserPreferences>({
   visibility: "",
 });
 
-export const lobbyAtom = atom<TLobby>({
+export const lobbyDefaultValue = {
   id: "",
   ownerId: "",
   nbPlayers: 0,
@@ -31,7 +31,9 @@ export const lobbyAtom = atom<TLobby>({
   members: [],
   state: "",
   private: false,
-});
+};
+
+export const lobbyAtom = atom<TLobby>(lobbyDefaultValue);
 
 export const friendAtom = atom<TFriend[]>([]);
 
