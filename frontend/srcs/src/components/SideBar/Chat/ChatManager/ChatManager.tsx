@@ -1,5 +1,5 @@
 import React from "react";
-import { ModalBox } from "../../FriendsList/ManageBar/FriendsTopBarStyle";
+import { ModalBox } from "../../FriendsList/FriendsTopBar/FriendsTopBarStyle";
 import { TChatProps } from "../ChatType";
 import ChatSettings from "./ChatSettings";
 import Unban from "./Unban";

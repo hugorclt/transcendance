@@ -6,7 +6,7 @@ import { conversationAtom } from "../../../../services/store";
 import {
   StyledButton,
   StyledInput,
-} from "../../FriendsList/ManageBar/FriendsTopBarStyle";
+} from "../../FriendsList/FriendsTopBar/FriendsTopBarStyle";
 import {
   CreateRoomBox,
   CreateRoomButtonBox,
