@@ -28,7 +28,6 @@ export class InvitationsController {
   constructor(
     private readonly invitationsService: InvitationsService,
     private readonly socialsGateway: SocialsGateway,
-    private readonly lobbiesGateway: LobbiesGateway,
   ) {}
 
   @Post()
@@ -41,15 +40,14 @@ export class InvitationsController {
       createInvitationDto,
       req.user,
     );
-    this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
-    if (invitation.type == 'LOBBY') {
-      //should send pending invitation to players inside lobby
-      // this.lobbiesGateway.emitToRoom(
-      //   invitation.lobbyId,
-      //   'pending-invitation',
-      //   invitation,
-      // );
-    }
+    // if (invitation.type == 'LOBBY') {
+    //should send pending invitation to players inside lobby
+    // this.lobbiesGateway.emitToRoom(
+    //   invitation.lobbyId,
+    //   'pending-invitation',
+    //   invitation,
+    // );
+    // }
     return invitation;
   }
 
