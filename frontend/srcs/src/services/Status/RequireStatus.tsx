@@ -4,9 +4,10 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { SocketContext } from "../Auth/SocketContext";
 import { useAtom } from "jotai";
-import { userAtom } from "../store";
+import { lobbyAtom, userAtom } from "../store";
 
 function RequireStatus() {
+  const [lobby, setLobby] = useAtom(lobbyAtom);
   const [user, setUser] = useAtom(userAtom);
   const socket = useContext(SocketContext);
   const location = useLocation();
@@ -41,7 +42,8 @@ function RequireStatus() {
     };
   }, [socket]);
 
-  return user.status == "GAME" ? (
+  //si lobby.state = GAME => redirect to game
+  return lobby?.state == "GAME" ? (
     <Navigate to="/game" state={{ from: location }} replace />
   ) : (
     <Outlet />
