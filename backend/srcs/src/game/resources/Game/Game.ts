@@ -8,11 +8,13 @@ import { EField, EPaddle } from '../utils/config/enums';
 export class Game {
   private _id: string;
   private _players: Array<Player>;
+  private _spectators: Array<string>;
   private _field: Field;
   private _ball: Ball;
 
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
+    this._spectators = new Array<string>();
     this._id = lobby.id;
     this._ball = new Ball(
       BallConfig.width,
