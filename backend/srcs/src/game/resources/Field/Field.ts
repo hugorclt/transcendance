@@ -42,7 +42,7 @@ export class Field {
         ClassicFieldConfig.HorizontalWallConfig.width,
         ClassicFieldConfig.HorizontalWallConfig.height,
         ClassicFieldConfig.HorizontalWallConfig.depth,
-        new Vector3(0, -(ClassicFieldConfig.height / 2), 0),
+        new Vector3(0, -ClassicFieldConfig.height, 0),
       ),
     );
   }
