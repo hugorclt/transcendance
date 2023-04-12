@@ -29,4 +29,12 @@ export class Player {
         break;
     }
   }
+
+  public get id(): string {
+    return this._id;
+  }
+
+  public get team(): boolean {
+    return this._team;
+  }
 }

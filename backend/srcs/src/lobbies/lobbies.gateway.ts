@@ -77,6 +77,20 @@ export class LobbiesGateway
     });
   }
 
+  @SubscribeMessage('mouse-move')
+  async mouseMove(client: AuthSocket, { x, y }) {
+    const lobbyId = Array.from(this.io.adapter.sids.get(client.id)).find(
+      (id) => {
+        if (id != client.id && id != client.userId) {
+          return id;
+        }
+      },
+    );
+    const game = this._games.get(lobbyId);
+    const player = game.players.find((player) => player.id == client.userId);
+    if (!player) return;
+  }
+
   /* ------------------------------- helper func ------------------------------ */
   async getLobby(client: AuthSocket): Promise<string> {
     const lobby = await this.prisma.lobby.findFirst({
