@@ -37,4 +37,8 @@ export class Player {
   public get team(): boolean {
     return this._team;
   }
+
+  public get paddle() : IObject {
+    return this._paddle;
+  }
 }

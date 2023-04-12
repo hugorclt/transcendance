@@ -13,6 +13,7 @@ import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
+import { BaseFieldConfig } from 'src/game/resources/utils/config/config';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -89,6 +90,17 @@ export class LobbiesGateway
     const game = this._games.get(lobbyId);
     const player = game.players.find((player) => player.id == client.userId);
     if (!player) return;
+
+    player.paddle.move(
+      x * BaseFieldConfig.HorizontalWallConfig.width,
+      y * BaseFieldConfig.VerticalWallConfig.height,
+    );
+    this.io
+      .to(lobbyId)
+      .emit('on-move', {
+        x: player.paddle.getPosition().x,
+        y: player.paddle.getPosition().y,
+      });
   }
 
   /* ------------------------------- helper func ------------------------------ */
