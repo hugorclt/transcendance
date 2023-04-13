@@ -6,6 +6,7 @@ function useRefreshToken() {
   const [user, setUser] = useAtom(userAtom);
 
   const refresh = async () => {
+    console.log("Refreshing token");
     const response = await axios.get("/auth/refresh");
 
     setUser((prev) => ({
