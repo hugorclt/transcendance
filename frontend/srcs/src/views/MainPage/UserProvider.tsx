@@ -8,6 +8,7 @@ import { SocketContext } from "../../services/Auth/SocketContext";
 
 function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useAtom(userAtom);
+  const [isLoaded, setIsLoaded] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +22,7 @@ function UserProvider({ children }: { children: ReactNode }) {
           ...prev,
           ...res.data,
         }));
+        setIsLoaded(true);
       })
       .catch((res: AxiosError) =>
         navigate("/login", { state: { from: location }, replace: true })
@@ -28,13 +30,7 @@ function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    console.log("user atom has been updated with values: ", user);
-  }, [user]);
-
-  useEffect(() => {
     socket?.on("on-self-status-update", (newStatus) => {
-      console.log("self status update");
-      console.log("user atom on status update: ", user);
       setUser((prev) => ({ ...prev, status: newStatus }));
     });
 
@@ -43,7 +39,7 @@ function UserProvider({ children }: { children: ReactNode }) {
     };
   }, [socket]);
 
-  return <>{children}</>;
+  return <>{isLoaded ? children : <h1>Loading...</h1>}</>;
 }
 
 export default UserProvider;

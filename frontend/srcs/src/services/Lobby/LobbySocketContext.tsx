@@ -31,68 +31,11 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function initSocket() {
-      console.log("init socket lobby");
       const s: any = await initializeSocket(axiosPrivate, user?.accessToken);
       setSocket(s);
     }
     initSocket();
   }, []);
-
-  useEffect(() => {
-    socket?.on("user-joined-lobby", (userJoining) => {
-      console.log("user-joined-lobby", userJoining);
-      setLobby((prev) => ({
-        ...prev,
-        members: updateArray(prev.members, {
-          id: userJoining.memberId,
-          userId: userJoining.userId,
-          team: userJoining.team,
-          ready: userJoining.ready,
-          user: {
-            username: userJoining.username,
-          },
-        }),
-      }));
-    });
-    socket?.on("user-left-lobby", (userLeaving) => {
-      console.log("user-left-lobby", userLeaving);
-      console.log("on user leaving lobby, user atom= ", user);
-      console.log("userLeaving id: ", userLeaving.userId, " my id: ", user.id);
-      if (user.id == userLeaving.userId) {
-        console.log("i got kicked");
-        setLobby(lobbyDefaultValue);
-      } else {
-        setLobby((prev) => ({
-          ...prev,
-          members: prev.members.filter(
-            (member: TLobbyMember) => member.userId !== userLeaving.userId
-          ),
-        }));
-      }
-    });
-    socket?.on("on-member-update", (member) => {
-      console.log("on-member-update", member);
-      setLobby((prev) => ({
-        ...prev,
-        members: updateArray(prev.members, member),
-      }));
-    });
-    socket?.on("on-lobby-update", (lobby) => {
-      console.log("lobby updated: ", lobby);
-      setLobby(lobby);
-    });
-    socket?.on("redirect-to-game", () => {
-      console.log("redirect-to-game");
-      navigate("/game");
-    });
-    return () => {
-      socket?.off("user-joined-lobby");
-      socket?.off("user-left-lobby");
-      socket?.off("on-member-update");
-      socket?.off("on-lobby-update");
-      socket?.off("redirect-to-game");
-    };
-  }, [socket]);
 
   return (
     <LobbySocketContext.Provider value={socket}>
