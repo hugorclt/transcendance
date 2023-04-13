@@ -38,6 +38,8 @@ function FriendNotifications() {
           nbPlayers: +response.data.nbPlayers,
           mode: response.data.mode,
           members: response.data.members,
+          state: response.data.state,
+          private: response.data.private,
         });
       })
       .catch((error: AxiosError) => {
