@@ -8,6 +8,7 @@ import {
 import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
 import { EField, EPaddle } from '../utils/config/enums';
+import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 
 export class Game {
   private _id: string;
@@ -44,7 +45,25 @@ export class Game {
 
   /* -------------------------------- main loop ------------------------------- */
 
-  startGame() {}
+  start() {
+    //fix first timestamp
+    //init ball velocity
+  }
+
+  detectCollisions() {}
+
+  generateFrame(timer?: number): GameFrameEntity {
+    //{
+    //get new timestamp
+    //calculate delta time
+    //reset timestamp
+    //execute game loop based on delta time
+    //}
+    return {
+      players: this.players,
+      ball: this.ball,
+    };
+  }
 
   /* --------------------------------- getter --------------------------------- */
   public get players() {

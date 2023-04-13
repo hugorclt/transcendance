@@ -86,6 +86,20 @@ export class LobbiesGateway
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
   }
 
+  @SubscribeMessage('ready-to-play')
+  async onReadyToPlay(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.ready = true;
+    if (playerInfo.game.players.find((player) => !player.ready)) return;
+    //EVERYBODY READY TO PLAY : START GAME LOOP
+    playerInfo.game.start();
+    //LOOP
+    setInterval(() => {
+      const frame = playerInfo.game.generateFrame();
+      this.io.to(playerInfo.lobbyId).emit('frame', frame);
+    }, 1000 / 60);
+  }
+
   @SubscribeMessage('get-game-info')
   async onStartGame(client: AuthSocket) {
     const lobbyId = await this.getLobby(client);
@@ -121,6 +135,7 @@ export class LobbiesGateway
       player: playerInfo.player,
     });
   }
+
   @SubscribeMessage('right-move')
   async onRightMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);

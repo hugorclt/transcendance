@@ -24,6 +24,7 @@ function Game() {
       console.log("gameInfoData :", data);
       setGameInfo(data);
       setIsLoading(false);
+      socket?.emit("ready-to-play");
     });
     return () => {
       socket?.off("game-info");
