@@ -19,7 +19,7 @@ function LobbyProvider({ children }: { children: ReactNode }) {
     axiosPrivate
       .get("lobbies/current-lobby")
       .then((res: AxiosResponse) => {
-        setLobby(res.data);
+        setLobby((prev) => ({ ...prev, ...res.data }));
       })
       .catch((err: AxiosError) => {
         console.log("Error while fetching lobby");
@@ -61,7 +61,7 @@ function LobbyProvider({ children }: { children: ReactNode }) {
       }));
     });
     socket?.on("on-lobby-update", (lobby) => {
-      setLobby(lobby);
+      setLobby((prev) => ({ ...prev, ...lobby }));
     });
     socket?.on("redirect-to-game", () => {
       navigate("/game");

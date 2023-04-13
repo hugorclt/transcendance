@@ -27,6 +27,22 @@ export class LobbiesGateway
   io: Namespace;
   private _games: Map<string, Game>;
 
+  //EVENTS
+  //  ==> paddle move player 1
+  //  ==> super coup active
+  //    => modification des datas de la game
+
+  //GAME LOOP
+  //  parcourir chaque game
+  //  => parcourir tous les elements de la game
+  //     => pour chaque element : detection de collision avec la balle
+  //
+  //   apres la detection des collision
+  //    ==> applique les fonctions de collision sur la balle
+  //    ==> for each player => send 'player-update'
+  //    ==> for ball => update 'ball-update'
+  //    ==> for elements => update 'element-update'
+
   async afterInit() {
     this._games = new Map<string, Game>();
     /* ------------------------------ testing code ------------------------------ */
