@@ -265,6 +265,7 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
       userId: userId,
     });
+    await this.lobbiesGateway.removeUserFromLobby(lobbyId, userId);
     return await this.updateLobbyState(lobbyId, null);
   }
 

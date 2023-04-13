@@ -117,18 +117,25 @@ export class LobbiesGateway
     return lobby?.id;
   }
 
+  async removeUserFromLobby(lobbyId: string, userId: string) {
+    const socketId = (await this.io.adapter.sockets(new Set([userId])))
+      .values()
+      .next().value;
+    if (!socketId) return;
+    const socket = this.io.sockets.get(socketId);
+    await socket.leave(lobbyId);
+  }
+
   async joinUserToLobby(userId: string, lobbyId: string) {
     const socketId = (await this.io.adapter.sockets(new Set([userId])))
       .values()
       .next().value;
     if (!socketId) return;
-    console.log('joining user with id: ', userId, ' to lobby: ', lobbyId);
     const socket = this.io.sockets.get(socketId);
     await socket.join(lobbyId);
   }
 
   emitToLobby(lobbyId: string, eventName: string, eventData: any) {
-    console.log('emitting to lobby: ', lobbyId);
     this.io.to(lobbyId).emit(eventName, eventData);
   }
 }
