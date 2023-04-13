@@ -12,7 +12,6 @@ export abstract class IObject {
     position: Vector3,
   ) {
     this._initialPosition = position;
-    //check for deep copy ok?
     this._hitBox = new HitBox(width, height, depth, position);
   }
 
@@ -46,10 +45,31 @@ export abstract class IObject {
 
   public resetPosition(position: Vector3) {
     this._hitBox.position = this._initialPosition;
-    //check for deep copy ok?
   }
   public move(x: number, y: number) {
     this._hitBox.updatePosition(x, y, this._hitBox.position.z);
+  }
+
+  public moveX(incrX: number) {
+    this._hitBox.updatePosition(
+      this._hitBox.position.x + incrX,
+      this._hitBox.position.y,
+      this._hitBox.position.z,
+    );
+  }
+  public moveY(incrY: number) {
+    this._hitBox.updatePosition(
+      this._hitBox.position.x,
+      this._hitBox.position.y + incrY,
+      this._hitBox.position.z,
+    );
+  }
+  public moveZ(incrZ: number) {
+    this._hitBox.updatePosition(
+      this._hitBox.position.x,
+      this._hitBox.position.y,
+      this._hitBox.position.z + incrZ,
+    );
   }
 
   protected abstract collide?(): void;

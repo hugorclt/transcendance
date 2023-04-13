@@ -9,6 +9,7 @@ function Paddles(props) {
       {props.players.map((player) => {
         return (
           <Paddle
+            id={player._id}
             width={player._paddle._hitBox._width}
             height={player._paddle._hitBox._height}
             depth={player._paddle._hitBox._depth}

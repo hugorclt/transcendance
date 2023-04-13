@@ -1,11 +1,12 @@
 import { IObject } from '../interfaces/IObject';
 import { BasePaddle } from '../paddle/BasePaddle';
+import { IPaddle } from '../paddle/IPaddle';
 import { Vector3 } from '../utils/Vector3';
 import { BasePaddleConfig, ClassicPaddleConfig } from '../utils/config/config';
 import { EPaddle } from '../utils/config/enums';
 
 export class Player {
-  private _paddle: IObject;
+  private _paddle: IPaddle;
   private _id: string;
   private _team: boolean;
 
@@ -38,7 +39,7 @@ export class Player {
     return this._team;
   }
 
-  public get paddle(): IObject {
+  public get paddle(): IPaddle {
     return this._paddle;
   }
 }

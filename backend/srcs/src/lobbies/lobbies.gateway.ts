@@ -14,6 +14,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { BaseFieldConfig } from 'src/game/resources/utils/config/config';
+import { LobbyEventEntity } from './entities/lobby-event.entity';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -96,8 +97,7 @@ export class LobbiesGateway
     });
   }
 
-  @SubscribeMessage('mouse-move')
-  async mouseMove(client: AuthSocket, { x, y }) {
+  getPlayerInfoFromClient(client: AuthSocket): LobbyEventEntity {
     const lobbyId = Array.from(this.io.adapter.sids.get(client.id)).find(
       (id) => {
         if (id != client.id && id != client.userId) {
@@ -105,18 +105,43 @@ export class LobbiesGateway
         }
       },
     );
+    if (!lobbyId) return;
     const game = this._games.get(lobbyId);
     const player = game.players.find((player) => player.id == client.userId);
     if (!player) return;
+    return { lobbyId: lobbyId, game: game, player: player };
+  }
 
-    player.paddle.move(
-      x * BaseFieldConfig.HorizontalWallConfig.width,
-      y * BaseFieldConfig.VerticalWallConfig.height,
-    );
-    this.io.to(lobbyId).emit('on-move', {
-      x: player.paddle.getPosition().x,
-      y: player.paddle.getPosition().y,
+  @SubscribeMessage('left-move')
+  async onLeftMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    console.log('left-move');
+    playerInfo.player.paddle.moveLeft();
+    this.io.to(playerInfo.lobbyId).emit('player-update', {
+      player: playerInfo.player,
     });
+  }
+
+  @SubscribeMessage('mouse-move')
+  async mouseMove(client: AuthSocket, { x, y }) {
+    // const lobbyId = Array.from(this.io.adapter.sids.get(client.id)).find(
+    //   (id) => {
+    //     if (id != client.id && id != client.userId) {
+    //       return id;
+    //     }
+    //   },
+    // );
+    // const game = this._games.get(lobbyId);
+    // const player = game.players.find((player) => player.id == client.userId);
+    // if (!player) return;
+    // player.paddle.move(
+    //   x * BaseFieldConfig.HorizontalWallConfig.width,
+    //   y * BaseFieldConfig.VerticalWallConfig.height,
+    // );
+    // this.io.to(lobbyId).emit('on-move', {
+    //   x: player.paddle.getPosition().x,
+    //   y: player.paddle.getPosition().y,
+    // });
   }
 
   /* ------------------------------- helper func ------------------------------ */
