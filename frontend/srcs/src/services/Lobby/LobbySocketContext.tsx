@@ -56,6 +56,7 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
     });
     socket?.on("user-left-lobby", (userLeaving) => {
       console.log("user-left-lobby", userLeaving);
+      console.log("on user leaving lobby, user atom= ", user);
       console.log("userLeaving id: ", userLeaving.userId, " my id: ", user.id);
       if (user.id == userLeaving.userId) {
         console.log("i got kicked");
