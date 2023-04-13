@@ -37,32 +37,34 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ type: ReturnUserEntity })
-  create(@Body() createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
-    return this.usersService.create(createUserDto);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<ReturnUserEntity> {
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
-  findAll(): Promise<ReturnUserEntity[]> {
-    return this.usersService.findAll();
+  async findAll(): Promise<ReturnUserEntity[]> {
+    return await this.usersService.findAll();
   }
 
   @Get('/friends')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
-  getUserFriends(@Request() req): Promise<ReturnUserEntity[]> {
-    return this.usersService.getUserFriends(req.user.sub);
+  async getUserFriends(@Request() req): Promise<ReturnUserEntity[]> {
+    return await this.usersService.getUserFriends(req.user.sub);
   }
 
   @Get('connected')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
-  findConnected(): Promise<ReturnUserEntity[]> {
-    return this.usersService.findConnected();
+  async findConnected(): Promise<ReturnUserEntity[]> {
+    return await this.usersService.findConnected();
   }
 
   @Get('me')
   @ApiOkResponse({ type: ReturnUserEntity })
-  findInfo(@Request() req): Promise<ReturnUserEntity> {
-    return this.usersService.findOne(req.user.sub);
+  async findInfo(@Request() req): Promise<ReturnUserEntity> {
+    return await this.usersService.findOne(req.user.sub);
   }
 
   @Get('status')
@@ -94,23 +96,23 @@ export class UsersController {
 
   @Get(':id')
   @ApiOkResponse({ type: ReturnUserEntity })
-  findOne(@Param('id') id: string): Promise<ReturnUserEntity> {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ReturnUserEntity> {
+    return await this.usersService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOkResponse({ type: ReturnUserEntity })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<ReturnUserEntity> {
-    return this.usersService.update(id, updateUserDto);
+    return await this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: ReturnUserEntity })
-  remove(@Param('id') id: string): Promise<ReturnUserEntity> {
-    return this.usersService.remove(id);
+  async remove(@Param('id') id: string): Promise<ReturnUserEntity> {
+    return await this.usersService.remove(id);
   }
 
   @Post('/friends/add')
