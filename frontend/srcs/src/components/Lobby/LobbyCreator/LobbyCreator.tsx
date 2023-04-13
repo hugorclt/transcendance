@@ -12,7 +12,7 @@ import { useAtom } from "jotai";
 import MediaQuery from "react-responsive";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { ButtonNoStyle } from "./LobbyCreator.style";
-import { lobbyAtom, userAtom } from "../../../services/store";
+import { lobbyAtom } from "../../../services/store";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useLobbyCreatorContext } from "../../../views/LobbyPage/LobbyCreatorProvider";
 import HeptaButton from "../../common/Button/HeptaButton/HeptaButton";
@@ -46,7 +46,6 @@ function LobbyCreator() {
     setSelectedMode,
   } = useLobbyCreatorContext();
   const [slider, setSlider] = useState(0);
-  const [user, setUser] = useAtom(userAtom);
 
   const createLobby = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -64,7 +63,6 @@ function LobbyCreator() {
         setSelectedMode("");
         setOnModeSelected(false);
         setPlayers(0);
-        setUser((prev) => ({ ...prev, status: "LOBBY" }));
       })
       .catch((error: AxiosError) => {
         if (error.response?.data) {
@@ -116,7 +114,8 @@ function LobbyCreator() {
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
+            >
               <MdKeyboardArrowLeft size={32} color={COLORS.primary} />
             </ButtonNoStyle>
             <GameModeCard
@@ -125,7 +124,8 @@ function LobbyCreator() {
               img={""}
             />
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
+            >
               <MdKeyboardArrowRight size={32} color={COLORS.primary} />
             </ButtonNoStyle>
           </GameModeHero>

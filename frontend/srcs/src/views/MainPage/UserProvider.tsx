@@ -35,7 +35,13 @@ function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    console.log("user atom has been updated with values: ", user);
+  }, [user]);
+
+  useEffect(() => {
     socket?.on("on-self-status-update", (newStatus) => {
+      console.log("self status update");
+      console.log("user atom on status update: ", user);
       setUser((prev) => ({ ...prev, status: newStatus }));
     });
 

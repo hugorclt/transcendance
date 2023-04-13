@@ -41,7 +41,7 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     socket?.on("user-joined-lobby", (userJoining) => {
       console.log("user-joined-lobby", userJoining);
-      setLobby((prev?) => ({
+      setLobby((prev) => ({
         ...prev,
         members: updateArray(prev.members, {
           id: userJoining.memberId,
@@ -56,13 +56,12 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
     });
     socket?.on("user-left-lobby", (userLeaving) => {
       console.log("user-left-lobby", userLeaving);
-      console.log("user atom: ", user);
       console.log("userLeaving id: ", userLeaving.userId, " my id: ", user.id);
       if (user.id == userLeaving.userId) {
         console.log("i got kicked");
         setLobby(lobbyDefaultValue);
       } else {
-        setLobby((prev?) => ({
+        setLobby((prev) => ({
           ...prev,
           members: prev.members.filter(
             (member: TLobbyMember) => member.userId !== userLeaving.userId
@@ -72,7 +71,7 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
     });
     socket?.on("on-member-update", (member) => {
       console.log("on-member-update", member);
-      setLobby((prev?) => ({
+      setLobby((prev) => ({
         ...prev,
         members: updateArray(prev.members, member),
       }));
