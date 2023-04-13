@@ -25,9 +25,7 @@ function FriendsTopBar() {
     setOpenInvite(false);
     axiosPrivate
       .post("/invitations", { type: "FRIEND", username: username })
-      .then((response: AxiosResponse) => {
-        console.log("succesfully sent friend request");
-      })
+      .then((response: AxiosResponse) => {})
       .catch((error: AxiosError) => {
         console.log("error: ", JSON.stringify(error.message));
       });
@@ -49,7 +47,8 @@ function FriendsTopBar() {
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => {
               if (e.key == "Enter") handleSubmit();
-            }}></input>
+            }}
+          ></input>
           <AiOutlineClose
             size={24}
             color={COLORS.secondary}
@@ -70,7 +69,8 @@ function FriendsTopBar() {
             }}
             onChange={(e) => {
               setSearchFriends(e.target.value);
-            }}></input>
+            }}
+          ></input>
           <AiOutlineClose
             size={24}
             color={COLORS.secondary}

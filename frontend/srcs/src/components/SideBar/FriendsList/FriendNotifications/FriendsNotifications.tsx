@@ -31,16 +31,16 @@ function FriendNotifications() {
     axiosPrivate
       .post("/lobbies/join", { lobbyId: lobbyId, userId: userId })
       .then((response: AxiosResponse) => {
-        console.log("success joining lobby: ", JSON.stringify(response.data));
-        setLobby({
-          id: response.data.id,
-          ownerId: response.data.ownerId,
-          nbPlayers: +response.data.nbPlayers,
-          mode: response.data.mode,
-          members: response.data.members,
-          state: response.data.state,
-          private: response.data.private,
-        });
+        // setLobby({
+        //   id: response.data.id,
+        //   ownerId: response.data.ownerId,
+        //   nbPlayers: +response.data.nbPlayers,
+        //   mode: response.data.mode,
+        //   members: response.data.members,
+        //   state: response.data.state,
+        //   private: response.data.private,
+        // });
+        setLobby((prev) => ({ ...prev, ...response.data }));
       })
       .catch((error: AxiosError) => {
         console.log("error joining lobby: ", JSON.stringify(error.cause));

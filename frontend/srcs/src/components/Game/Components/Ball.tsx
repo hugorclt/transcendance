@@ -24,8 +24,6 @@ const Ball = (props: TBallProps) => {
 
   useEffect(() => {
     socket?.on("ball", (data) => {
-      // console.log("useEffectBall");
-      // console.log(data);
       ballRef.current.position.x = data.x;
       ballRef.current.position.y = data.y;
       ballRef.current.position.z = data.z;
@@ -34,8 +32,6 @@ const Ball = (props: TBallProps) => {
       socket?.off("ball");
     };
   }, [socket]);
-
-
 
   return (
     <Trail

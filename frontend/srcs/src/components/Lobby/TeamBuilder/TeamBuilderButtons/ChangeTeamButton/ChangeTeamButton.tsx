@@ -29,9 +29,7 @@ function ChangeTeamButton() {
     e.preventDefault();
     axiosPrivate
       .get(`http://localhost:3000/lobbies/${lobby.id}/changeTeam`)
-      .then((response: AxiosResponse) => {
-        console.log("success changing team: ", JSON.stringify(response.data));
-      })
+      .then((response: AxiosResponse) => {})
       .catch((error: AxiosError) => {
         console.log(JSON.stringify(error?.response?.data));
       });

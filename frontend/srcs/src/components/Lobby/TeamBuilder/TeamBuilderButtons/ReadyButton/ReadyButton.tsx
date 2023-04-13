@@ -15,9 +15,7 @@ function ReadyButton() {
     e.preventDefault();
     axiosPrivate
       .get(`lobbies/${lobby.id}/changeReady`)
-      .then((response: AxiosResponse) => {
-        console.log("changed ready status: ", JSON.stringify(response.data));
-      })
+      .then((response: AxiosResponse) => {})
       .catch((error: AxiosError) => {
         console.log(
           "error changing ready status: ",

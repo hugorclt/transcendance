@@ -25,12 +25,7 @@ function PrivacyChanger() {
     if (privacy != (lobby.private ? "PRIVATE" : "MATCHMAKING")) {
       axiosPrivate
         .get(`lobbies/${lobby.id}/changePrivacy`)
-        .then((response: AxiosResponse) => {
-          console.log(
-            "changed privacy successfully, ",
-            JSON.stringify(response.data)
-          );
-        })
+        .then((response: AxiosResponse) => {})
         .catch((error: AxiosError) => {
           console.log(
             "error changing privacy: ",

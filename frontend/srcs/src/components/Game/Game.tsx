@@ -10,10 +10,8 @@ import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Ball from "./Components/Ball";
 import { Vector3 } from "three";
-import { Mesh } from "three";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
-import { degToRad } from "three/src/math/MathUtils";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -23,8 +21,6 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
-      console.log("game info received");
-      console.log(data);
       setGameInfo((prev) => ({ ...prev, ...data }));
       setIsLoading(false);
     });
@@ -34,7 +30,6 @@ function Game() {
   }, [socket]);
 
   useEffect(() => {
-    console.log("asking for game info...");
     socket?.emit("get-game-info");
   }, []);
 

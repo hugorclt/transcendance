@@ -323,7 +323,6 @@ export class UsersService {
         avatar: buffer.toString('base64'),
       },
     });
-    console.log(user.avatar);
     this.socialsGateway.emitToList(
       await this.getUserFriends(user.id),
       'on-friend-update',
@@ -370,7 +369,6 @@ export class UsersService {
   }
 
   async updatePassword(userId: string, newPassword: string) {
-    console.log(newPassword.length);
     if (newPassword.length == 0) throw new BadRequestException();
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(newPassword, salt);

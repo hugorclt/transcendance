@@ -37,9 +37,7 @@ function InviteFriendsButton() {
     });
     axiosPrivate
       .post("/invitations/createMany", invitations)
-      .then((res: AxiosResponse) => {
-        console.log("invitations created");
-      })
+      .then((res: AxiosResponse) => {})
       .catch((error: AxiosError) => {
         console.log("error creating invitations");
       });
