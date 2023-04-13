@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ItemsCards from "./ItemsCard/ItemsCards";
 import {
   CardsContainer,
@@ -9,299 +9,27 @@ import {
 } from "./ItemsListStyle";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../mediaSize";
-// import greenp from "../../../assets/images/paddle/green.png";
-// import bluep from "../../../assets/images/paddle/bluep.gif";
+import {TItemsProps} from './ItemsCard/ItemsCardType'
 import { nanoid } from "nanoid";
 import SliderMenu from "../../common/SliderMenu/SliderMenu";
-// import yellowp from "../../../assets/images/paddle/yellow.png";
-// import purplep from "../../../assets/images/paddle/purple.png";
-
-const data = [
-  {
-    name: "YELLOW-PADDLE",
-    desc: "Gotta go fast",
-    price: "1500",
-    type: "PADDLE",
-    owned: false,
-    image: "yellowp",
-  },
-  {
-    name: "BLUE-PADDLE",
-    desc: "Let's twist",
-    price: "1500",
-    type: "PADDLE",
-    owned: false,
-    image: "bluep",
-  },
-  {
-    name: "GREEN-PADDLE",
-    desc: "idkt",
-    price: "1500",
-    type: "PADDLE",
-    owned: false,
-    image: "greenp",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-];
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
 
 function ItemsList() {
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
+  const axiosPrivate = useAxiosPrivate();
+  const [errMsg, setErrMsg] = useState("");
+  const [data, setData] = useState<TItemsProps[]>([]);
+
+  useEffect(() => {
+    axiosPrivate.get("items").then((res: AxiosResponse) => {
+      console.log(res.data);
+      setData(res.data)
+    }).catch((err: AxiosError) => {
+      setErrMsg("Error while retrieving shop information, please refresh!")
+    })
+  }, [])
 
   return (
     <>
@@ -351,10 +79,13 @@ function ItemsList() {
               desc={item.desc}
               price={item.price}
               image={item.image}
+              type={item.type}
+              owned={item.owned}
             />
           );
         })}
       </CardsContainer>
+      <p style={{color: "red"}}>{errMsg}</p>
     </>
   );
 }

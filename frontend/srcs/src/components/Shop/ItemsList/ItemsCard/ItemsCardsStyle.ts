@@ -7,7 +7,19 @@ export const ItemsCardsContainer = styled.div`
   border-radius: 8px;
   box-sizing: border-box;
   position: relative;
+  border: 1px solid ${COLORS.border};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
+  button {
+    display: none;
+    background-color: ${COLORS.secondary};
+    color: ${COLORS.primary};
+    padding: 8px;
+    border: 1px solid ${COLORS.border};
+    border-radius: 8px;
+  }
   .top-text {
     display: flex;
     justify-content: end;
@@ -19,17 +31,17 @@ export const ItemsCardsContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    height: 90%;
     color: ${COLORS.white};
     margin: 8px;
   }
 
-  img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-    z-index: -1;
+  &:hover button {
+    display: block;
+    filter: none;
   }
 `;
+
+export const ItemsCardsMiddle = styled.div`
+  display: flex;
+  justify-content: center;
+`

@@ -42,8 +42,11 @@ export const ShopTopBarSelect = styled.select`
 export const CardsContainer = styled.div`
   width:100%;
   height:100%;
+  margin: 8px;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(304px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(304px, 304px));
+  /* grid-template-columns:  auto-fit */
   gap: 32px;
+  grid-auto-flow: dense;
 `;

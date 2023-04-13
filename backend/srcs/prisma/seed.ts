@@ -1,4 +1,5 @@
 import {
+  ItemType,
   LobbyState,
   MapName,
   Mode,
@@ -7,6 +8,8 @@ import {
   VisibilityMode,
 } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { open } from 'fs';
+import { item } from './items';
 
 const prisma = new PrismaClient();
 
@@ -116,6 +119,15 @@ async function main() {
         ],
       },
     },
+  });
+
+
+  await prisma.item.create({
+    data: item[0]
+  });
+
+  await prisma.item.create({
+    data: item[1]
   });
 }
 

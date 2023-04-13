@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Item } from "@prisma/client";
+import { Item, ItemType } from "@prisma/client";
 
 export class ItemEntity implements Item {
     @ApiProperty()
@@ -13,4 +13,7 @@ export class ItemEntity implements Item {
 
     @ApiProperty()
     image: string;
+
+    @ApiProperty()
+    type: ItemType;
 }

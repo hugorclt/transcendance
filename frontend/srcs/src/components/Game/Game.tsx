@@ -67,7 +67,6 @@ function Game() {
           />
           <Walls walls={gameInfo.walls} />
           <Paddles players={gameInfo.players} />
-          <hemisphereLight args={["#ffff", 0.6]} />
         </>
       )}
     </Suspense>

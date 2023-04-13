@@ -86,12 +86,12 @@ function LobbyCreator() {
           <GameModeCardsBody>
             <GameModeCard
               mode="Classic"
-              description="Le Pong originel, berceau du gaming"
+              description="Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s."
               img={""}
             />
             <GameModeCard
               mode="Champions"
-              description="Pong comme vous ne l'aviez jamais imagine"
+              description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay"
               img={"../../../../public/planet.jpeg"}
             />
           </GameModeCardsBody>
@@ -114,8 +114,7 @@ function LobbyCreator() {
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
-            >
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
               <MdKeyboardArrowLeft size={32} color={COLORS.primary} />
             </ButtonNoStyle>
             <GameModeCard
@@ -124,8 +123,7 @@ function LobbyCreator() {
               img={""}
             />
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
-            >
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
               <MdKeyboardArrowRight size={32} color={COLORS.primary} />
             </ButtonNoStyle>
           </GameModeHero>

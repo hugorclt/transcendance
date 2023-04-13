@@ -126,8 +126,9 @@ model Match {
 model Item {
   id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name   String
-  price  Int
   image  String
+  price  Int
+  type   ItemType
   owners User[] @relation("itemOwner")
 }
 
@@ -184,4 +185,10 @@ enum Role {
   BASIC
   ADMIN
   OWNER
+}
+
+enum ItemType {
+  PADDLES
+  TRAILS
+  GOALS
 }

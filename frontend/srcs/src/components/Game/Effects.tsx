@@ -10,7 +10,8 @@ export function MyEffects() {
       </EffectComposer>
       <OrbitControls />
       <SoftShadows />
-      <Stats />
+      <hemisphereLight args={["#ffff", 0.6]} />
+      {/* <Stats /> */}
     </>
   );
 }
