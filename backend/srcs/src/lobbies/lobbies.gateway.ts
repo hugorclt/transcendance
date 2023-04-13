@@ -121,6 +121,15 @@ export class LobbiesGateway
       player: playerInfo.player,
     });
   }
+  @SubscribeMessage('right-move')
+  async onRightMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    console.log('right-move');
+    playerInfo.player.paddle.moveRight();
+    this.io.to(playerInfo.lobbyId).emit('player-update', {
+      player: playerInfo.player,
+    });
+  }
 
   @SubscribeMessage('mouse-move')
   async mouseMove(client: AuthSocket, { x, y }) {

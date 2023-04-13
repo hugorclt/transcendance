@@ -19,16 +19,11 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
   const keyMap = useKeyboard();
 
   useFrame(({ mouse }) => {
-    // socket?.emit("mouse-move", { x: mouse.x, y: mouse.y });
     keyMap["KeyA"] && socket?.emit("left-move");
     keyMap["KeyD"] && socket?.emit("right-move");
   });
 
   useEffect(() => {
-    // socket?.on("on-move", (data) => {
-    //   playerRef.current.position.x = data.x;
-    //   playerRef.current.position.y = data.y;
-    // });
     socket?.on("player-update", (data) => {
       console.log(data);
       if (data.player._id == id) {
@@ -49,10 +44,10 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
       <mesh ref={playerRef} position={position}>
         <boxGeometry args={[width, height, depth]} />
         <meshToonMaterial
-          color={COLORS.white}
-          emissive="white"
+          color={COLORS.secondary}
+          emissive="red"
           emissiveIntensity={10}
-          opacity={0.3}
+          opacity={1}
           transparent
         />
       </mesh>

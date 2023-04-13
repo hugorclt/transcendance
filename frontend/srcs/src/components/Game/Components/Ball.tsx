@@ -23,13 +23,15 @@ const Ball = (props: TBallProps) => {
   const socket = useContext(GameSocket);
 
   useEffect(() => {
-    socket?.on("ball", (data) => {
-      ballRef.current.position.x = data.x;
-      ballRef.current.position.y = data.y;
-      ballRef.current.position.z = data.z;
+    socket?.on("ball-update", (data) => {
+      console.log(data);
+      ballRef.current.position.x = data.ball._hitBox._position._x;
+      ballRef.current.position.y = data.ball._hitBox._position._y;
+      ballRef.current.position.z = data.ball._hitBox._position._z;
     });
+
     return () => {
-      socket?.off("ball");
+      socket?.off("ball-update");
     };
   }, [socket]);
 
