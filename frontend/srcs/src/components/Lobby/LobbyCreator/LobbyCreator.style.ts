@@ -8,6 +8,7 @@ export const GameModeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const ButtonNoStyle = styled.button`
@@ -18,7 +19,7 @@ export const ButtonNoStyle = styled.button`
 export const GameModeCardsBody = styled.div`
   display: flex;
   justify-content: space-around;
-  height: 80%;
+  height: 100%;
   width: 100%;
   align-items: center;
 `;
@@ -28,9 +29,9 @@ export const GameModeButtonBody = styled.div`
   flex-direction: column;
   width: 100%;
   height: 15%;
+  margin-top: 10%;
   justify-content: center;
   align-items: center;
-  position: absolute;
 
   @media (min-width: ${mediaSize.mobile}) {
     top: 80vh;

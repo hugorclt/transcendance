@@ -15,10 +15,12 @@ import { useLobbyCreatorContext } from "../../../../views/LobbyPage/LobbyCreator
 interface Props {
   mode: string;
   description: string;
+  img: string;
 }
 
 function GameModeCard(props: Props) {
   const [onHover, setOnHover] = useState(false);
+
   const { setOnModeSelected, setSelectedMode, setPlayers } =
     useLobbyCreatorContext();
   const handle1v1Click = (e: React.SyntheticEvent) => {
@@ -38,9 +40,9 @@ function GameModeCard(props: Props) {
     <GameModeCardsContainer
       onMouseOver={() => setOnHover(true)}
       onMouseOut={() => setOnHover(false)}
-    >
+      style={{backgroundImage: `url(${props.img})`}}>
       <GameModeCardsUpper>
-        <GameModeCardsTitleBox>{props.mode}</GameModeCardsTitleBox>
+        <p>{props.mode}</p>
         <GameModeCardsMain>
           <GameModeCardsButton onClick={handle1v1Click}>
             1 vs 1
@@ -51,8 +53,8 @@ function GameModeCard(props: Props) {
         </GameModeCardsMain>
       </GameModeCardsUpper>
       <GameModeCardsBottom>
-        <GameModeCardsGameTitle>{props.mode}</GameModeCardsGameTitle>
-        <GameModeCardsText>{props.description}</GameModeCardsText>
+        <h3>{props.mode}</h3>
+        <p>{props.description}</p>
       </GameModeCardsBottom>
     </GameModeCardsContainer>
   );
