@@ -37,8 +37,8 @@ export const ClassicBallConfig = {
   width: 0.5,
   height: 1,
   depth: 0.5,
-  position: new Vector3(0, 0, 0),
-  speed: new Vector3(0, 0, 1),
+  position: new Vector3(0, 0.5, 0),
+  speed: new Vector3(1, 0, 4),
 };
 export const ClassicPaddleConfig = {
   width: 2,

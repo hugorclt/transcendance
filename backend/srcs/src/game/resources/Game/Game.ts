@@ -63,7 +63,7 @@ export class Game {
     //fix first timestamp
     this._lastTimestamp = Date.now();
     //init ball velocity
-    this._ball.speed = new Vector3(0, 0, 1);
+    this._ball.speed = new Vector3(1, 0, 4);
   }
 
   processMovements(deltaTime: number) {
@@ -73,7 +73,7 @@ export class Game {
   detectAndApplyCollisions() {
     this._objects.forEach((object) => {
       if (this._ball.hitBox.intersect(object.hitBox)) {
-        // console.log(`hit collision with object ${index}`);
+        object.collide(this._ball);
         console.log(`Object class: ${object.constructor.name}`);
         console.log(`Object position: ${JSON.stringify(object.getPosition())}`);
       }

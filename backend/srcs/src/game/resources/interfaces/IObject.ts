@@ -1,3 +1,4 @@
+import { Ball } from '../Ball';
 import { HitBox } from '../utils/HitBox';
 import { Vector3 } from '../utils/Vector3';
 
@@ -75,5 +76,5 @@ export abstract class IObject {
     );
   }
 
-  protected abstract collide?(): void;
+  public abstract collide?(ball: Ball): void;
 }
