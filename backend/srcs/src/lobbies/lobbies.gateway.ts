@@ -128,21 +128,37 @@ export class LobbiesGateway
   @SubscribeMessage('left-move')
   async onLeftMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    console.log('left-move');
     playerInfo.player.paddle.moveLeft();
-    this.io.to(playerInfo.lobbyId).emit('player-update', {
-      player: playerInfo.player,
-    });
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
   }
 
   @SubscribeMessage('right-move')
   async onRightMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    console.log('right-move');
     playerInfo.player.paddle.moveRight();
-    this.io.to(playerInfo.lobbyId).emit('player-update', {
-      player: playerInfo.player,
-    });
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
+  }
+
+  @SubscribeMessage('up-move')
+  async onUpMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.paddle.moveUp();
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
+  }
+
+  @SubscribeMessage('down-move')
+  async ondownMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.paddle.moveDown();
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
   }
 
   @SubscribeMessage('mouse-move')

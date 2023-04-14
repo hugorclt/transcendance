@@ -41,7 +41,7 @@ function Game() {
         <></>
       ) : (
         <>
-          <OrthographicCamera
+          {/* <OrthographicCamera
             makeDefault
             zoom={1}
             top={20}
@@ -51,12 +51,8 @@ function Game() {
             near={1}
             far={2000}
             position={[0, 30, 0]}
-          />
-          {/* <PerspectiveCamera
-            makeDefault
-            position={[0, 30, 0]}
-            fov={90}
           /> */}
+          <PerspectiveCamera makeDefault position={[0, 30, 0]} fov={90} />
           <Ball
             radius={gameInfo.ball._hitBox._width / 2}
             startPos={

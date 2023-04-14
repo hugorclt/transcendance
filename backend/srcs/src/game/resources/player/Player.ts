@@ -1,8 +1,13 @@
 import { IObject } from '../interfaces/IObject';
 import { BasePaddle } from '../paddle/BasePaddle';
+import { ChampionsPaddle } from '../paddle/ChampionsPaddle';
 import { IPaddle } from '../paddle/IPaddle';
 import { Vector3 } from '../utils/Vector3';
-import { BasePaddleConfig, ClassicPaddleConfig } from '../utils/config/config';
+import {
+  BasePaddleConfig,
+  ClassicPaddleConfig,
+  ThreeDPaddleConfig,
+} from '../utils/config/config';
 import { EPaddle } from '../utils/config/enums';
 
 export class Player {
@@ -27,6 +32,14 @@ export class Player {
           ClassicPaddleConfig.width,
           ClassicPaddleConfig.height,
           ClassicPaddleConfig.depth,
+          new Vector3(0, 0, team ? fieldDepth / 2 : -(fieldDepth / 2)),
+        );
+        break;
+      case EPaddle.CHAMPIONS:
+        this._paddle = new ChampionsPaddle(
+          ThreeDPaddleConfig.width,
+          ThreeDPaddleConfig.height,
+          ThreeDPaddleConfig.depth,
           new Vector3(0, 0, team ? fieldDepth / 2 : -(fieldDepth / 2)),
         );
         break;

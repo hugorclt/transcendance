@@ -21,6 +21,8 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
   useFrame(({ mouse }) => {
     keyMap["KeyA"] && socket?.emit("left-move");
     keyMap["KeyD"] && socket?.emit("right-move");
+    keyMap["KeyW"] && socket?.emit("up-move");
+    keyMap["KeyS"] && socket?.emit("down-move");
   });
 
   useEffect(() => {

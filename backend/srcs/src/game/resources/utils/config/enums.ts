@@ -1,4 +1,5 @@
 export enum EPaddle {
+  CHAMPIONS,
   CLASSIC,
   BASIC,
   RED,
@@ -7,5 +8,6 @@ export enum EPaddle {
 
 export enum EField {
   CLASSIC,
+  CHAMPIONS,
   BASIC,
 }

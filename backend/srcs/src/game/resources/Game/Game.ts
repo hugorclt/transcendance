@@ -4,6 +4,7 @@ import {
   BallConfig,
   BaseFieldConfig,
   ClassicBallConfig,
+  ThreeDBallConfig,
 } from '../utils/config/config';
 import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
@@ -48,6 +49,41 @@ export class Game {
       this._field.walls.forEach((wall) => {
         this._objects.push(wall);
       });
+      this._field.goals.forEach((goal) => {
+        this._objects.push(goal);
+      });
+      this._field.objects.forEach((object) => {
+        this._objects.push(object);
+      });
+      this._players.forEach((player) => {
+        this._objects.push(player.paddle);
+      });
+    }
+    if (lobby.mode == 'CHAMPIONS') {
+      this._ball = new Ball(
+        ThreeDBallConfig.width,
+        ThreeDBallConfig.height,
+        ThreeDBallConfig.depth,
+        ThreeDBallConfig.position,
+        ThreeDBallConfig.speed,
+      );
+      this._field = new Field(EField.CHAMPIONS);
+      lobby.members.forEach((member) => {
+        this._players.push(
+          new Player(
+            member.userId,
+            member.team,
+            EPaddle.CHAMPIONS,
+            BaseFieldConfig.depth,
+          ),
+        );
+      });
+      this._field.walls.forEach((wall) => {
+        this._objects.push(wall);
+      });
+      this._field.goals.forEach((goal) => {
+        this._objects.push(goal);
+      });
       this._field.objects.forEach((object) => {
         this._objects.push(object);
       });
@@ -63,7 +99,7 @@ export class Game {
     //fix first timestamp
     this._lastTimestamp = Date.now();
     //init ball velocity
-    this._ball.speed = new Vector3(1, 0, 4);
+    // this._ball.speed = new Vector3(1, 0, 4);
   }
 
   processMovements(deltaTime: number) {
@@ -80,11 +116,15 @@ export class Game {
     });
   }
 
+  detectGoal() {}
+
   gameLoop(deltaTime: number) {
     //update every moving elements based on delta time
     this.processMovements(deltaTime);
     //detect and apply collisions
     this.detectAndApplyCollisions();
+    //detect goal
+    this.detectGoal();
   }
 
   generateFrame(): GameFrameEntity {
