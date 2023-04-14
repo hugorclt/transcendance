@@ -6,9 +6,10 @@ import Paddle from "./Paddle/Paddle";
 function Paddles(props) {
   return (
     <>
-      {props.players.map((player) => {
+      {props.players.map((player: any, index: any) => {
         return (
           <Paddle
+            key={index}
             id={player._id}
             width={player._paddle._hitBox._width}
             height={player._paddle._hitBox._height}

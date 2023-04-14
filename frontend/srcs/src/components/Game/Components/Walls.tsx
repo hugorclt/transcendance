@@ -5,9 +5,10 @@ import { Vector3 } from "three";
 function Walls(props) {
   return (
     <>
-      {props.walls.map((wall) => {
+      {props.walls.map((wall: any, index: any) => {
         return (
           <mesh
+            key={index}
             position={
               new Vector3(
                 wall._initialPosition._x,
