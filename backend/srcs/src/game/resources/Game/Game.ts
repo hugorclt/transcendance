@@ -48,6 +48,9 @@ export class Game {
       this._field.walls.forEach((wall) => {
         this._objects.push(wall);
       });
+      this._field.goals.forEach((goal) => {
+        this._objects.push(goal);
+      });
       this._field.objects.forEach((object) => {
         this._objects.push(object);
       });
@@ -80,11 +83,15 @@ export class Game {
     });
   }
 
+  detectGoal() {}
+
   gameLoop(deltaTime: number) {
     //update every moving elements based on delta time
     this.processMovements(deltaTime);
     //detect and apply collisions
     this.detectAndApplyCollisions();
+    //detect goal
+    this.detectGoal();
   }
 
   generateFrame(): GameFrameEntity {

@@ -20,6 +20,11 @@ export abstract class IObject {
   public get hitBox() {
     return this._hitBox;
   }
+
+  public get initialPosition(): Vector3 {
+    return this._initialPosition;
+  }
+
   public getWidth(): number {
     return this._hitBox.width;
   }
@@ -47,8 +52,12 @@ export abstract class IObject {
     this._hitBox.depth = depth;
   }
 
-  public resetPosition(position: Vector3) {
-    this._hitBox.position = this._initialPosition;
+  public resetPosition() {
+    this._hitBox.position = new Vector3(
+      this._initialPosition.x,
+      this._initialPosition.y,
+      this._initialPosition.z,
+    );
   }
   public move(x: number, y: number) {
     this._hitBox.updatePosition(x, y, this._hitBox.position.z);

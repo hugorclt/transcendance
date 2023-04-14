@@ -2,20 +2,24 @@ import { IObject } from '../interfaces/IObject';
 import { Vector3 } from '../utils/Vector3';
 import { BaseFieldConfig, ClassicFieldConfig } from '../utils/config/config';
 import { EField } from '../utils/config/enums';
-import { Wall } from './wall/Wall';
+import { Goal } from './Goal/Goal';
+import { Wall } from './Wall/Wall';
 
 export class Field {
   private _walls: Array<Wall>;
+  private _goals: Array<Goal>;
   private _objects: Array<IObject>;
 
   constructor(fieldType: EField) {
     this._walls = new Array<Wall>();
     this._objects = new Array<IObject>();
+    this._goals = new Array<Goal>();
     switch (fieldType) {
       case EField.CLASSIC:
         this._createClassicWalls();
         break;
     }
+    this._createGoals();
   }
 
   public get walls(): Array<Wall> {
@@ -23,6 +27,36 @@ export class Field {
   }
   public get objects(): Array<IObject> {
     return this._objects;
+  }
+  public get goals(): Array<Goal> {
+    return this._goals;
+  }
+
+  private _createGoals() {
+    this._goals.push(
+      new Goal(
+        ClassicFieldConfig.GoalConfig.width,
+        ClassicFieldConfig.GoalConfig.height,
+        ClassicFieldConfig.GoalConfig.depth,
+        new Vector3(
+          0,
+          0,
+          ClassicFieldConfig.depth / 2 + ClassicFieldConfig.GoalConfig.depth,
+        ),
+      ),
+    );
+    this._goals.push(
+      new Goal(
+        ClassicFieldConfig.GoalConfig.width,
+        ClassicFieldConfig.GoalConfig.height,
+        ClassicFieldConfig.GoalConfig.depth,
+        new Vector3(
+          0,
+          0,
+          -ClassicFieldConfig.depth / 2 - ClassicFieldConfig.GoalConfig.depth,
+        ),
+      ),
+    );
   }
 
   private _createClassicWalls() {

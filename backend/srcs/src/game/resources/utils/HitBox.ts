@@ -23,7 +23,7 @@ export class HitBox {
     this._width = width;
     this._height = height;
     this._depth = depth;
-    this._position = position;
+    this._position = new Vector3(position.x, position.y, position.z);
     this._updateLimits();
   }
 

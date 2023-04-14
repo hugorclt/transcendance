@@ -45,10 +45,16 @@ export const ClassicPaddleConfig = {
   height: 1,
   depth: 0.1,
 };
+
 export const ClassicFieldConfig = {
   width: 16,
   height: 1,
   depth: 35,
+  GoalConfig: {
+    width: 16,
+    height: 1,
+    depth: 1,
+  },
   VerticalWallConfig: {
     width: 1,
     height: 1,
