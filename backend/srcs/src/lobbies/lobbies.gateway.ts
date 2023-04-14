@@ -93,7 +93,6 @@ export class LobbiesGateway
     if (playerInfo.game.players.find((player) => !player.ready)) return;
     //EVERYBODY READY TO PLAY : START GAME LOOP
     playerInfo.game.start();
-    //LOOP
     setInterval(() => {
       const frame = playerInfo.game.generateFrame();
       this.io.to(playerInfo.lobbyId).emit('frame', frame);

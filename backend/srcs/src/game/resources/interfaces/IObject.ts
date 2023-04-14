@@ -2,8 +2,8 @@ import { HitBox } from '../utils/HitBox';
 import { Vector3 } from '../utils/Vector3';
 
 export abstract class IObject {
-  private _initialPosition: Vector3;
-  private _hitBox: HitBox;
+  protected _initialPosition: Vector3;
+  protected _hitBox: HitBox;
 
   public constructor(
     width: number,

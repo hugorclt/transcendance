@@ -9,6 +9,7 @@ import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
 import { EField, EPaddle } from '../utils/config/enums';
 import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
+import { Vector3 } from '../utils/Vector3';
 
 export class Game {
   private _id: string;
@@ -16,6 +17,7 @@ export class Game {
   private _spectators: Array<string>;
   private _field: Field;
   private _ball: Ball;
+  private _lastTimestamp: number = 0;
 
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
@@ -47,17 +49,32 @@ export class Game {
 
   start() {
     //fix first timestamp
+    this._lastTimestamp = Date.now();
     //init ball velocity
+    this._ball.speed = new Vector3(0, 0, 1);
   }
 
-  detectCollisions() {}
+  processMovements(deltaTime: number) {
+    this._ball.update(deltaTime);
+  }
 
-  generateFrame(timer?: number): GameFrameEntity {
-    //{
-    //get new timestamp
-    //calculate delta time
-    //reset timestamp
+  detectAndApplyCollisions() {}
+
+  gameLoop(deltaTime: number) {
+    //update every moving elements based on delta time
+    this.processMovements(deltaTime);
+    //detect and apply collisions
+    this.detectAndApplyCollisions();
+  }
+
+  generateFrame(): GameFrameEntity {
+    //calculate delta time im milliseconds
+    const deltaTime = (Date.now() - this._lastTimestamp) / 1000;
+    console.log('time passed since last loop: ', deltaTime);
     //execute game loop based on delta time
+    this.gameLoop(deltaTime);
+    //get new timestamp
+    this._lastTimestamp = Date.now();
     //}
     return {
       players: this.players,

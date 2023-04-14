@@ -10,8 +10,8 @@ import {
 } from "react";
 import { Mesh, Vector2, Vector3 } from "three";
 import { useForwardRaycast } from "../../../hooks/useForwardRaycast";
-import { GameSocket } from "../../../services/Game/SocketContext";
 import BlueFlame from "../effects/BlueFlame";
+import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 
 interface TBallProps {
   radius: number;
@@ -20,18 +20,17 @@ interface TBallProps {
 
 const Ball = (props: TBallProps) => {
   const ballRef = useRef<Mesh>(null!);
-  const socket = useContext(GameSocket);
+  const socket = useContext(LobbySocketContext);
 
   useEffect(() => {
-    socket?.on("ball-update", (data) => {
-      console.log(data);
+    socket?.on("frame", (data) => {
       ballRef.current.position.x = data.ball._hitBox._position._x;
       ballRef.current.position.y = data.ball._hitBox._position._y;
       ballRef.current.position.z = data.ball._hitBox._position._z;
     });
 
     return () => {
-      socket?.off("ball-update");
+      socket?.off("frame");
     };
   }, [socket]);
 

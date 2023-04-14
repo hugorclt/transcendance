@@ -24,18 +24,18 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
   });
 
   useEffect(() => {
-    socket?.on("player-update", (data) => {
-      console.log(data);
-      if (data.player._id == id) {
-        playerRef.current.position.x = data.player._paddle._hitBox._position._x;
-        playerRef.current.position.y = data.player._paddle._hitBox._position._y;
-        playerRef.current.position.z = data.player._paddle._hitBox._position._z;
-      }
+    socket?.on("frame", (data) => {
+      data.players.forEach((player) => {
+        if (player._id == id) {
+          playerRef.current.position.x = player._paddle._hitBox._position._x;
+          playerRef.current.position.y = player._paddle._hitBox._position._y;
+          playerRef.current.position.z = player._paddle._hitBox._position._z;
+        }
+      });
     });
 
     return () => {
-      socket?.off("on-move");
-      socket?.off("player-update");
+      socket?.off("frame");
     };
   }, [socket]);
 

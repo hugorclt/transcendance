@@ -30,6 +30,15 @@ export class Ball extends IObject {
     this._speed = this._initialSpeed;
   }
 
+  public update(deltaTime: number) {
+    //if we assume speed is in m/s unit
+    const position = this.getPosition();
+    position.x += this._speed.x * deltaTime;
+    position.y += this._speed.y * deltaTime;
+    position.z += this._speed.z * deltaTime;
+    this.setPosition(position);
+  }
+
   public collide() {
     baseCollide();
   }
