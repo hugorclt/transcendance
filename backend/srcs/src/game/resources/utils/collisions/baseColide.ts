@@ -16,6 +16,13 @@ export function baseCollide(ball: HitBox, object: HitBox) {
 
   //2 - the higher collision area should be the side of the object on which we collide
   if (areaXY > areaXZ && areaXY > areaYZ) {
-  }
-  //3 - invert ball velocity on the normal axis of this area
+     // Collision on XY plane
+     // revert z velocity
+    } else if (areaXZ > areaXY && areaXZ > areaYZ) {
+      // Collision on XZ plane
+      // revert y velocity 
+    } else {
+      // Collision on YZ plane
+      // revert x velocity
+    }
 }
