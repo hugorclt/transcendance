@@ -73,8 +73,9 @@ export class Game {
   detectAndApplyCollisions() {
     this._objects.forEach((object) => {
       if (this._ball.hitBox.intersect(object.hitBox)) {
-        //apply collision
-        console.log('hit collision');
+        // console.log(`hit collision with object ${index}`);
+        console.log(`Object class: ${object.constructor.name}`);
+        console.log(`Object position: ${JSON.stringify(object.getPosition())}`);
       }
     });
   }

@@ -10,7 +10,7 @@ export const BallConfig = {
   width: 0.5,
   height: 0.5,
   depth: 0.5,
-  position: new Vector3(0, 0, 0),
+  position: new Vector3(0, 5, 0),
   speed: new Vector3(0, 0, 1),
 };
 
