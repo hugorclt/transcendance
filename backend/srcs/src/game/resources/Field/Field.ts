@@ -6,9 +6,11 @@ import { Wall } from './wall/Wall';
 
 export class Field {
   private _walls: Array<Wall>;
+  private _objects: Array<IObject>;
 
   constructor(fieldType: EField) {
     this._walls = new Array<Wall>();
+    this._objects = new Array<IObject>();
     switch (fieldType) {
       case EField.CLASSIC:
         this._createClassicWalls();
@@ -18,6 +20,9 @@ export class Field {
 
   public get walls(): Array<Wall> {
     return this._walls;
+  }
+  public get objects(): Array<IObject> {
+    return this._objects;
   }
 
   private _createClassicWalls() {

@@ -10,6 +10,7 @@ import { Field } from '../Field/Field';
 import { EField, EPaddle } from '../utils/config/enums';
 import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 import { Vector3 } from '../utils/Vector3';
+import { IObject } from '../interfaces/IObject';
 
 export class Game {
   private _id: string;
@@ -18,10 +19,12 @@ export class Game {
   private _field: Field;
   private _ball: Ball;
   private _lastTimestamp: number = 0;
+  private _objects: Array<IObject>;
 
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
     this._spectators = new Array<string>();
+    this._objects = new Array<IObject>();
     this._id = lobby.id;
     if (lobby.mode == 'CLASSIC') {
       this._ball = new Ball(
@@ -42,6 +45,15 @@ export class Game {
           ),
         );
       });
+      this._field.walls.forEach((wall) => {
+        this._objects.push(wall);
+      });
+      this._field.objects.forEach((object) => {
+        this._objects.push(object);
+      });
+      this._players.forEach((player) => {
+        this._objects.push(player.paddle);
+      });
     }
   }
 
@@ -58,7 +70,14 @@ export class Game {
     this._ball.update(deltaTime);
   }
 
-  detectAndApplyCollisions() {}
+  detectAndApplyCollisions() {
+    this._objects.forEach((object) => {
+      if (this._ball.hitBox.intersect(object.hitBox)) {
+        //apply collision
+        console.log('hit collision');
+      }
+    });
+  }
 
   gameLoop(deltaTime: number) {
     //update every moving elements based on delta time
@@ -68,14 +87,9 @@ export class Game {
   }
 
   generateFrame(): GameFrameEntity {
-    //calculate delta time im milliseconds
     const deltaTime = (Date.now() - this._lastTimestamp) / 1000;
-    console.log('time passed since last loop: ', deltaTime);
-    //execute game loop based on delta time
     this.gameLoop(deltaTime);
-    //get new timestamp
     this._lastTimestamp = Date.now();
-    //}
     return {
       players: this.players,
       ball: this.ball,

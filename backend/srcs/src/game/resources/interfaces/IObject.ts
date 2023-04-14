@@ -16,6 +16,9 @@ export abstract class IObject {
   }
 
   /* --------------------------------- getters -------------------------------- */
+  public get hitBox() {
+    return this._hitBox;
+  }
   public getWidth(): number {
     return this._hitBox.width;
   }

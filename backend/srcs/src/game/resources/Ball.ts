@@ -40,6 +40,6 @@ export class Ball extends IObject {
   }
 
   public collide() {
-    baseCollide();
+    // baseCollide();
   }
 }
