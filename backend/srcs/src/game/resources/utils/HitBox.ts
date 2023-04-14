@@ -40,7 +40,24 @@ export class HitBox {
   public get position(): Vector3 {
     return this._position;
   }
-
+  public get minX(): number {
+    return this._minX;
+  }
+  public get maxX(): number {
+    return this._maxX;
+  }
+  public get minY(): number {
+    return this._minY;
+  }
+  public get maxY(): number {
+    return this._maxY;
+  }
+  public get minZ(): number {
+    return this._minZ;
+  }
+  public get maxZ(): number {
+    return this._maxZ;
+  }
   /* --------------------------------- Setters -------------------------------- */
   public set width(value: number) {
     this._width = value;
