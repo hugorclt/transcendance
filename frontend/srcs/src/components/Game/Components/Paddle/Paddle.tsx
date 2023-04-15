@@ -1,10 +1,21 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Mesh, Vector3 } from "three";
 import { COLORS } from "../../../../colors";
 import { LobbySocketContext } from "../../../../services/Lobby/LobbySocketContext";
 import { useFrame } from "@react-three/fiber";
 import useKeyboard from "../../../../hooks/useKeyboard";
+import { PerspectiveCamera } from "@react-three/drei";
 
+//just for fun function getRandomColor() {
+  function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+  
 type TPaddleProps = {
   id: string;
   width: number;
@@ -13,10 +24,12 @@ type TPaddleProps = {
   position: Vector3;
 };
 
-function Paddle({ id, width, height, depth, position }: TPaddleProps) {
+function Paddle({ id, width, height, depth, position}: TPaddleProps) {
   const socket = useContext(LobbySocketContext);
   const playerRef = useRef<Mesh>(null!);
   const keyMap = useKeyboard();
+  const [isActive, setIsActive] = useState(false);
+  let color : string = "";
 
   useFrame(({ mouse }) => {
     keyMap["KeyA"] && socket?.emit("left-move");
@@ -27,8 +40,11 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
+
       data.players.forEach((player) => {
         if (player._id == id) {
+          setIsActive(true);
+          color = getRandomColor();
           playerRef.current.position.x = player._paddle._hitBox._position._x;
           playerRef.current.position.y = player._paddle._hitBox._position._y;
           playerRef.current.position.z = player._paddle._hitBox._position._z;
@@ -47,11 +63,18 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
         <boxGeometry args={[width, height, depth]} />
         <meshToonMaterial
           color={COLORS.secondary}
-          emissive="red"
+          emissive={color}
           emissiveIntensity={10}
           opacity={1}
           transparent
         />
+        {isActive && (
+          <PerspectiveCamera
+            makeDefault={true}
+            position={position}
+            fov={90}
+          />
+        )}
       </mesh>
     </>
   );

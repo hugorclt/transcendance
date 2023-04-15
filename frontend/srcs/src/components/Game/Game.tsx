@@ -19,6 +19,7 @@ function Game() {
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(true);
 
+
   useEffect(() => {
     socket?.on("game-info", (data) => {
       console.log("gameInfoData :", data);
@@ -52,7 +53,7 @@ function Game() {
             far={2000}
             position={[0, 30, 0]}
           /> */}
-          <PerspectiveCamera makeDefault position={[0, 30, 0]} fov={90} />
+          {/* <PerspectiveCamera makeDefault position={[0, 30, 0]} fov={90} /> */}
           <Ball
             radius={gameInfo.ball._hitBox._width / 2}
             startPos={

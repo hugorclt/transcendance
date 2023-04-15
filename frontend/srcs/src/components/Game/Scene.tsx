@@ -21,12 +21,12 @@ function Scene() {
       </EffectComposer>
       <hemisphereLight args={["#ffff", 0.6]} />
       {/* <OrbitControls /> */}
-      <PerspectiveCamera
+      {/* <PerspectiveCamera
         ref={ref}
         makeDefault
         fov={100}
         position={[0, 5, 15]}
-      />
+      /> */}
       <PaddleScene width={7} length={3} startPos={new Vector3(0, 0, 0)} />
       <SoftShadows />
     </>
