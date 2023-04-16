@@ -45,3 +45,9 @@ export const ItemsCardsMiddle = styled.div`
   display: flex;
   justify-content: center;
 `
+
+export const ModalConfirmContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`

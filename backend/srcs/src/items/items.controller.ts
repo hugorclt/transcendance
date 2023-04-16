@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -25,5 +26,10 @@ export class ItemsController {
   @ApiOkResponse({ type: ItemEntity, isArray: true })
   findAll() {
     return this.itemsService.findAll();
+  }
+
+  @Post("/buy")
+  buyItem(@Request() req) {
+    return this.itemsService.buyItem(req.user.sub, req.body.name);
   }
 }
