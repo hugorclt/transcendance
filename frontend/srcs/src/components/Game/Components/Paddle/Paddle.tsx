@@ -22,14 +22,15 @@ type TPaddleProps = {
   height: number;
   depth: number;
   position: Vector3;
+  currentUserId: string;
 };
 
-function Paddle({ id, width, height, depth, position}: TPaddleProps) {
+function Paddle({ id, width, height, depth, position, currentUserId}: TPaddleProps) {
   const socket = useContext(LobbySocketContext);
   const playerRef = useRef<Mesh>(null!);
   const keyMap = useKeyboard();
   const [isActive, setIsActive] = useState(false);
-  let color : string = "";
+  // const [color, setColor] = useState(getRandomColor());
 
   useFrame(({ mouse }) => {
     keyMap["KeyA"] && socket?.emit("left-move");
@@ -41,10 +42,14 @@ function Paddle({ id, width, height, depth, position}: TPaddleProps) {
   useEffect(() => {
     socket?.on("frame", (data) => {
 
+    if (currentUserId === id)
+      setIsActive(true);
+
+
       data.players.forEach((player) => {
+
         if (player._id == id) {
-          setIsActive(true);
-          color = getRandomColor();
+          // setColor(getRandomColor());
           playerRef.current.position.x = player._paddle._hitBox._position._x;
           playerRef.current.position.y = player._paddle._hitBox._position._y;
           playerRef.current.position.z = player._paddle._hitBox._position._z;
@@ -63,7 +68,7 @@ function Paddle({ id, width, height, depth, position}: TPaddleProps) {
         <boxGeometry args={[width, height, depth]} />
         <meshToonMaterial
           color={COLORS.secondary}
-          emissive={color}
+          emissive={"red"}
           emissiveIntensity={10}
           opacity={1}
           transparent
@@ -76,6 +81,7 @@ function Paddle({ id, width, height, depth, position}: TPaddleProps) {
           />
         )}
       </mesh>
+
     </>
   );
 }

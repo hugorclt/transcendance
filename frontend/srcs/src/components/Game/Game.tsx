@@ -18,14 +18,15 @@ function Game() {
   const [gameInfo, setGameInfo] = useState<any>({});
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(true);
-
+  const [currentUserId, setCurrentUserId] = useState("");
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
-      console.log("gameInfoData :", data);
+      // console.log("gameInfoData :", data);
       setGameInfo(data);
       setIsLoading(false);
       socket?.emit("ready-to-play");
+      // console.log("gameInfoData :", data);
     });
     return () => {
       socket?.off("game-info");
@@ -65,7 +66,7 @@ function Game() {
             }
           />
           <Walls walls={gameInfo.walls} />
-          <Paddles players={gameInfo.players} />
+          <Paddles players={gameInfo.players} currentUserId={gameInfo.userId} />
           <hemisphereLight args={["#ffff", 0.6]} />
         </>
       )}

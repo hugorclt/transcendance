@@ -3,10 +3,10 @@ import { Vector3 } from "three";
 import { COLORS } from "../../../colors";
 import Paddle from "./Paddle/Paddle";
 
-function Paddles(props) {
+function Paddles({players, currentUserId}) {
   return (
     <>
-      {props.players.map((player: any, index: any) => {
+      {players.map((player: any, index: any) => {
         return (
           <Paddle
             key={index}
@@ -21,6 +21,7 @@ function Paddles(props) {
                 player._paddle._initialPosition._z
               )
             }
+            currentUserId={currentUserId}
           />
         );
       })}
