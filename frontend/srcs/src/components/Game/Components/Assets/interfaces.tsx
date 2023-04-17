@@ -5,7 +5,7 @@ interface Vector3 {
 }
 
 
-interface Object3D {
+export interface Object3D {
     texture: string;
     type: string;
     width: number;
@@ -14,13 +14,14 @@ interface Object3D {
     position: Vector3;
 }
 
-interface Wall extends Object3D {}
-interface Floor extends Object3D {}
-interface Ball extends Object3D {
+export interface Wall extends Object3D {}
+export interface Floor extends Object3D {}
+export interface Ball extends Object3D {
+    radius: number;
     velocity: Vector3;
 }
-interface Goal extends Object3D {}
-interface Paddle extends Object3D {}
+export interface Goal extends Object3D {}
+export interface Paddle extends Object3D {}
 
 export interface GameData {
     name: string;
