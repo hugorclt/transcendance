@@ -67,11 +67,12 @@ const GameScreen = () => {
           ref={screenRef}
           tabIndex={0}
           style={{ background: COLORS.background }}
-          linear>
-          {/* <Game /> */}
+          linear
+        >
+          <Game />
           {/* <Skybox /> */}
           <MyEffects />
-          <PaddleScene width={10} length={3} />
+          {/* <PaddleScene width={10} length={3} /> */}
         </Canvas>
       </div>
     </>

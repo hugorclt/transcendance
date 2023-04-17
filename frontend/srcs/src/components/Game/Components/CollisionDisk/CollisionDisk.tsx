@@ -13,26 +13,29 @@ function CollisionDisk({ gameInfo }: TPropsCollisionDisk) {
 
   useEffect(() => {
     socket?.on("collision", (data) => {
-      console.log("colission received");
-      meshRef.current.position.x = data.position.x;
-      meshRef.current.position.y = data.position.y;
-      meshRef.current.position.z = data.position.z;
-      meshRef.current.scale.x = 1;
-      meshRef.current.scale.y = 1;
-      meshRef.current.scale.z = 1;
+      console.log("colission received", data);
+      meshRef.current.position.x = data.position._x;
+      meshRef.current.position.y = data.position._y;
+      meshRef.current.position.z = data.position._z;
+      console.log(meshRef.current.geometry);
+      meshRef.current.geometry;
+      // meshRef.current.scale.y = 1;
+      // meshRef.current.scale.z = 1;
       const id = setInterval(() => {
         console.log("colission animation loop");
 
-        meshRef.current.scale.x += 0.1;
-        meshRef.current.scale.y += 0.1;
-        meshRef.current.scale.z += 0.1;
+        // meshRef.current.scale.x += 0.1;
+        // meshRef.current.scale.y += 0.1;
+        // meshRef.current.scale.z += 0.1;
+        // meshRef.current.geometry.parameters.radius += 0.1;
         matRef.current.opacity -= 0.1;
       }, 100);
 
       setTimeout(() => {
         console.log("colission animation end");
         clearInterval(id);
-      }, 3000);
+        // meshRef.current.geometry.parameters.radius = ;
+      }, 1000);
     });
     return () => {
       socket?.off("collision");
@@ -42,7 +45,12 @@ function CollisionDisk({ gameInfo }: TPropsCollisionDisk) {
   return (
     <mesh ref={meshRef}>
       <circleGeometry args={[0]} />
-      <meshToonMaterial ref={matRef} opacity={1} transparent={true} />
+      <meshToonMaterial
+        color={"red"}
+        ref={matRef}
+        opacity={1}
+        transparent={true}
+      />
     </mesh>
   );
 }

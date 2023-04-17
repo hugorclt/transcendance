@@ -29,6 +29,7 @@ export class Game {
     this._spectators = new Array<string>();
     this._objects = new Array<IObject>();
     this._movingObjects = new Array<IObject>();
+    this._collisions = new Array<TCollision>();
     this._id = lobby.id;
     if (lobby.mode == 'CLASSIC') {
       this._ball = new Ball(
@@ -122,6 +123,7 @@ export class Game {
   detectGoal() {}
 
   gameLoop(deltaTime: number) {
+    this._collisions.length = 0;
     //update every moving elements based on delta time
     this.processMovements(deltaTime);
     //detect and apply collisions

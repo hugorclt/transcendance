@@ -1,6 +1,8 @@
 import { IObject } from './interfaces/IObject';
+import { TCollision } from './types';
 import { Vector3 } from './utils/Vector3';
 import { baseCollide } from './utils/collisions/baseColide';
+import { EType } from './utils/config/enums';
 
 export class Ball extends IObject {
   private _speed: Vector3;
@@ -64,5 +66,11 @@ export class Ball extends IObject {
     this.setPosition(position);
   }
 
-  public collide(ball: Ball) {}
+  public collide(ball: Ball): TCollision {
+    return {
+      position: this.getPosition(),
+      direction: new Vector3(0, 0, 0),
+      type: EType.WALL,
+    };
+  }
 }
