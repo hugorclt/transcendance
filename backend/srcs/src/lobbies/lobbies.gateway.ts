@@ -13,7 +13,6 @@ import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
-import { BaseFieldConfig } from 'src/game/resources/utils/config/config';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -81,9 +80,7 @@ export class LobbiesGateway
       const frame = playerInfo.game.generateFrame();
       this.io.to(playerInfo.lobbyId).emit('frame', frame);
       if (frame.collisions?.length > 0) {
-        frame.collisions.forEach((collision) => {
-          this.io.to(playerInfo.lobbyId).emit('collision', collision);
-        });
+        this.io.to(playerInfo.lobbyId).emit('collisions', frame.collisions);
       }
     }, 1000 / 60);
   }
