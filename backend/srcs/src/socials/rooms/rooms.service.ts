@@ -19,6 +19,7 @@ import { ReturnMessageEntity } from './messages/entities/return-message-entity';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { generateBase64Image } from 'prisma/items';
 
 @Injectable()
 export class RoomsService {
@@ -54,7 +55,7 @@ export class RoomsService {
       data: {
         name: createRoomDto.name,
         password: hash,
-        avatar: '', //owner.avatar,
+        avatar: generateBase64Image("../../../asset/defaultImage/group-chat.png"), //owner.avatar,
         isPrivate: createRoomDto.isPrivate,
         isDm: createRoomDto.isDm,
         type: 0,
