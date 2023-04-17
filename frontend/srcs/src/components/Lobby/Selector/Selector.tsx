@@ -3,17 +3,19 @@ import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 import Timer from "./Timer/Timer";
 import {
   MapSelectorContainer,
-  PaddleContainer,
-  PaddleDivFlex,
   PaddleSelectorContainer,
+  SelectItemContainer,
   SelectorContainer,
   TimerContainer,
 } from "./Selector.style";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import PaddleSelectorCards from "./PaddleSelectorCards/PaddleSelectorCards";
+import MapSelectorCards from "./MapSelectorCards/MapSelectorCards";
+import { useAtom } from "jotai";
+import { lobbyAtom } from "../../../services/store";
 
-const map = [
+const maps = [
   {
     img: "",
     name: "map1",
@@ -35,6 +37,8 @@ const map = [
 function Selector() {
   const axiosPrivate = useAxiosPrivate();
   const [paddles, setPaddle] = useState<{ name: string; image: string }[]>([]);
+  const [paddleSelected, setPaddleSelected] = useState("");
+  const [lobby] = useAtom(lobbyAtom);
 
   useEffect(() => {
     axiosPrivate
@@ -44,28 +48,41 @@ function Selector() {
       })
       .catch((err: AxiosError) => {});
   }, []);
+
+  const handleClick = (e: any, paddleName: string) => {
+    setPaddleSelected(paddleName);
+    axiosPrivate.post("/lobby/paddle-selected", {lobbyId: lobby.id ,name: paddleName});
+  }
   return (
     <>
       <SelectorContainer>
         <MapSelectorContainer>
           <h3>CHOOSE A MAP</h3>
+          <SelectItemContainer>
+            {maps.map((map) => {
+              return <MapSelectorCards name={map.name} img={map.img} />;
+            })}
+          </SelectItemContainer>
         </MapSelectorContainer>
         <PaddleSelectorContainer>
           <h3>CHOOSE YOUR PADDLE</h3>
-            <PaddleContainer>
-              {paddles.length == 0 ? (
-                <h4>You don't have any Paddle</h4>
-              ) : (
-                paddles.map((paddle) => {
-                  return (
+          <SelectItemContainer>
+            {paddles.length == 0 ? (
+              <h4>You don't have any Paddle</h4>
+            ) : (
+              paddles.map((paddle) => {
+                return (
+                  <div onClick={(e) => handleClick(e, paddle.name)}>
                     <PaddleSelectorCards
                       img={paddle.image}
                       name={paddle.name}
+                      isSelected={paddle.name == paddleSelected ? true: false}
                     />
-                  );
-                })
-              )}
-            </PaddleContainer>
+                  </div>
+                );
+              })
+            )}
+          </SelectItemContainer>
         </PaddleSelectorContainer>
         <TimerContainer>
           <Timer />

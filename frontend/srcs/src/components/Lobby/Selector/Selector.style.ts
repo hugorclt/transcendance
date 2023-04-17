@@ -3,6 +3,7 @@ import { screenSize } from "../../../mediaSize";
 
 export const SelectorContainer = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -18,7 +19,7 @@ export const PaddleSelectorContainer = styled.div`
   flex-direction: column;
 `;
 
-export const PaddleContainer = styled.div`
+export const SelectItemContainer = styled.div`
   display: flex;
   overflow: auto;
   

@@ -14,7 +14,7 @@ function Timer() {
       socket?.off("time-to-choose");
     }
   }, [socket]);
-  return <p>{seconds}</p>;
+  return <h3>{seconds}</h3>;
 }
 
 export default Timer;

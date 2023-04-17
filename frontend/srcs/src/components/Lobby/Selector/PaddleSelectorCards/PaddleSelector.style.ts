@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { COLORS } from "../../../../colors";
 
-export const PaddleCardsContainer = styled.div`
+export const SelectorCardsContainer = styled.div`
   width: 304px;
   height: 304px;
   margin: 8px;
@@ -9,5 +9,4 @@ export const PaddleCardsContainer = styled.div`
   border: 1px solid ${COLORS.border};
   flex-shrink: 0;
   box-sizing: border-box;
-  
 `;

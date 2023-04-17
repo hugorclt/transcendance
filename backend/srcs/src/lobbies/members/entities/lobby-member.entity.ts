@@ -1,4 +1,4 @@
-import { LobbyMember } from '@prisma/client';
+import { LobbyMember, PaddleType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LobbyMemberEntity implements LobbyMember {
@@ -16,4 +16,7 @@ export class LobbyMemberEntity implements LobbyMember {
 
   @ApiProperty()
   lobbyId: string;
+
+  @ApiProperty()
+  paddleType: PaddleType;
 }

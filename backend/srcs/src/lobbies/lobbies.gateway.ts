@@ -71,16 +71,17 @@ export class LobbiesGateway
   }
 
   async readySelection(lobby: LobbyWithMembersEntity) {
-    this.emitToLobby(lobby.id, 'on-lobby-update', {state: LobbyState.SELECTION});
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    this.emitToLobby(lobby.id, 'on-lobby-update', {
+      state: LobbyState.SELECTION,
+    });
     var seconds = 15;
     const interval = setInterval(() => {
-      this.emitToLobby(lobby.id, "time-to-choose", seconds--);
-    }, 1000)
+      this.emitToLobby(lobby.id, 'time-to-choose', seconds--);
+    }, 1000);
 
-    setTimeout(() => {
-      clearInterval(interval);
-      //launch game redirect to start
-    }, 15000)
+    await delay(17000);
+    clearInterval(interval);
   }
 
   @SubscribeMessage('ready-to-play')

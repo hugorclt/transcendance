@@ -90,15 +90,27 @@ enum LobbyState {
   GAME
 }
 
-model LobbyMember {
-  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  team    Boolean @default(false)
-  ready   Boolean @default(false)
-  userId  String  @db.Uuid
-  lobbyId String  @db.Uuid
-  user    User    @relation(fields: [userId], references: [id])
-  lobby   Lobby   @relation(fields: [lobbyId], references: [id])
+enum PaddleType {
+  WHITE
+  RED
+  BLUE
+  ORANGE
+  PURPLE
+  GREEN
 }
+
+model LobbyMember {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  team       Boolean     @default(false)
+  ready      Boolean     @default(false)
+  paddleType PaddleType  @default(WHITE)
+  vote       MapName?
+  userId     String      @db.Uuid
+  lobbyId    String      @db.Uuid
+  user       User        @relation(fields: [userId], references: [id])
+  lobby      Lobby       @relation(fields: [lobbyId], references: [id])
+}
+
 
 enum MapName {
   CLASSIC
@@ -125,12 +137,12 @@ model Match {
 
 //================== SHOP =======================
 model Item {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name   String
   image  String
   price  Int
   type   ItemType
-  owners User[] @relation("itemOwner")
+  owners User[]   @relation("itemOwner")
 }
 
 model Room {

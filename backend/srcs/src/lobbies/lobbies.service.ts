@@ -14,7 +14,7 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
-import { LobbyState } from '@prisma/client';
+import { LobbyState, PaddleType } from '@prisma/client';
 
 @Injectable()
 export class LobbiesService {
@@ -453,12 +453,59 @@ export class LobbiesService {
     //TODO ========> ADD OTHER STATES
     if (!notReady) {
       console.log('everybody ready');
-      const lobbyWithMembers = await this.updateLobbyState(
+      var lobbyWithMembers = await this.updateLobbyState(
         lobby.id,
         LobbyState.SELECTION,
       );
       this.lobbiesGateway.readySelection(lobbyWithMembers);
+      // lobbyWithMembers = await this.updateLobbyState(
+      //   lobby.id,
+      //   LobbyState.GAME,
+      // );
+      // this.lobbiesGateway.readyToStart(lobbyWithMembers);
     }
+  }
+
+  async paddleSelected(userId: string, lobbyId: string, paddleName: string) {
+    var paddleType;
+    switch (paddleName) {
+      case 'Red Paddle':
+        paddleType = PaddleType.RED;
+        break;
+
+      case 'Blue Paddle':
+        paddleType = PaddleType.BLUE;
+        break;
+
+      case 'Orange Paddle':
+        paddleType = PaddleType.ORANGE;
+        break;
+
+      case 'Purple Paddle':
+        paddleType = PaddleType.PURPLE;
+        break;
+
+      case 'Green Paddle':
+        paddleType = PaddleType.GREEN;
+        break;
+    }
+    return await this.prisma.lobby.update({
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        members: {
+          updateMany: {
+            where: {
+              userId: userId,
+            },
+            data: {
+              paddleType: paddleType,
+            },
+          },
+        },
+      },
+    });
   }
 
   //========================== LOBBY INFOS ===============================
