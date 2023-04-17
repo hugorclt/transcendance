@@ -12,6 +12,7 @@ import Ball from "./Components/Ball";
 import { Vector3 } from "three";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
+import CollisionDisk from "./Components/CollisionDisk/CollisionDisk";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -65,6 +66,7 @@ function Game() {
           />
           <Walls walls={gameInfo.walls} />
           <Paddles players={gameInfo.players} />
+          <CollisionDisk gameInfo={gameInfo}/>
         </>
       )}
     </Suspense>
