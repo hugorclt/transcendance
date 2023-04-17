@@ -44,10 +44,27 @@ export const ItemsCardsContainer = styled.div`
 export const ItemsCardsMiddle = styled.div`
   display: flex;
   justify-content: center;
-`
+`;
 
 export const ModalConfirmContainer = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  button {
+    background-color: ${COLORS.secondary};
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: none;
+    color: ${COLORS.primary};
+    margin: 8px;
+    width: 50px;
+
+  }
+`;
+
+export const CardsContainerCenter = styled.div`
+  display: flex;
+  justify-content: center;
 `

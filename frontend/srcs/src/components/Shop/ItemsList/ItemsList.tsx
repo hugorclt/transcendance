@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ItemsCards from "./ItemsCard/ItemsCards";
 import {
   CardsContainer,
+  GridContainer,
   ShopTopBarContainer,
   ShopTopBarFilter,
   ShopTopBarSelect,
@@ -9,7 +10,7 @@ import {
 } from "./ItemsListStyle";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../mediaSize";
-import {TItemsProps} from './ItemsCard/ItemsCardType'
+import { TItemsProps } from "./ItemsCard/ItemsCardType";
 import { nanoid } from "nanoid";
 import SliderMenu from "../../common/SliderMenu/SliderMenu";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
@@ -23,13 +24,15 @@ function ItemsList() {
   const [data, setData] = useState<TItemsProps[]>([]);
 
   useEffect(() => {
-    axiosPrivate.get("items").then((res: AxiosResponse) => {
-      console.log(res.data);
-      setData(res.data)
-    }).catch((err: AxiosError) => {
-      setErrMsg("Error while retrieving shop information, please refresh!")
-    })
-  }, [])
+    axiosPrivate
+      .get("items")
+      .then((res: AxiosResponse) => {
+        setData(res.data);
+      })
+      .catch((err: AxiosError) => {
+        setErrMsg("Error while retrieving shop information, please refresh!");
+      });
+  }, []);
 
   return (
     <>
@@ -62,30 +65,29 @@ function ItemsList() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </ShopTopBarContainer>
-      <CardsContainer>
-        {data.flatMap((item) => {
-          if (filter != "ALL") {
-            if (item.type != filter) return;
-          }
-          const matches = item.name
-            .toLocaleUpperCase()
-            .includes(search.toLocaleUpperCase());
-          if (!matches) return;
+        <CardsContainer>
+          {data.flatMap((item) => {
+            if (filter != "ALL") {
+              if (item.type != filter) return;
+            }
+            const matches = item.name
+              .toLocaleUpperCase()
+              .includes(search.toLocaleUpperCase());
+            if (!matches) return;
 
-          return (
-            <ItemsCards
-              key={nanoid()}
-              name={item.name}
-              desc={item.desc}
-              price={item.price}
-              image={item.image}
-              type={item.type}
-              owned={item.owned}
-            />
-          );
-        })}
-      </CardsContainer>
-      <p style={{color: "red"}}>{errMsg}</p>
+            return (
+              <ItemsCards
+                key={nanoid()}
+                name={item.name}
+                desc={item.desc}
+                price={item.price}
+                image={item.image}
+                type={item.type}
+              />
+            );
+          })}
+        </CardsContainer>
+      <p style={{ color: "red" }}>{errMsg}</p>
     </>
   );
 }

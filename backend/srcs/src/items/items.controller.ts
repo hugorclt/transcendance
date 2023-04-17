@@ -32,4 +32,14 @@ export class ItemsController {
   buyItem(@Request() req) {
     return this.itemsService.buyItem(req.user.sub, req.body.name);
   }
+
+  @Get("/user-items")
+  getUserItem(@Request() req) {
+    return this.itemsService.getUserItem(req.user.id);
+  }
+
+  @Post("has-item")
+  hasItem(@Request() req) {
+    return this.itemsService.hasItem(req.user.sub, req.body.name);
+  }
 }

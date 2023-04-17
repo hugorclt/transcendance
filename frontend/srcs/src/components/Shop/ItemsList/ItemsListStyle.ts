@@ -45,8 +45,8 @@ export const CardsContainer = styled.div`
   margin: 8px;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(304px, 304px));
-  /* grid-template-columns:  auto-fit */
+  grid-template-columns: repeat(auto-fit, minmax(304px, max-content));
+  justify-content: center;
   gap: 32px;
   grid-auto-flow: dense;
 `;

@@ -4,5 +4,4 @@ export type TItemsProps = {
     price: string,
     image: string,
     type: string,
-    owned: boolean,
 }

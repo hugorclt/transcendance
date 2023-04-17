@@ -121,13 +121,10 @@ async function main() {
     },
   });
 
-
-  await prisma.item.create({
-    data: item[0]
-  });
-
-  await prisma.item.create({
-    data: item[1]
+  item.map(async (item) => {
+    await prisma.item.create({
+      data: item,
+    });
   });
 }
 
