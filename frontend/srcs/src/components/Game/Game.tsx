@@ -13,9 +13,12 @@ import { Vector3 } from "three";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
 import CollisionDisk from "./Components/CollisionDisk/CollisionDisk";
+import { GameData, parseGameData } from "./Components/Assets/interfaces";
+
 
 function Game() {
   const socket = useContext(LobbySocketContext);
+  const GameData = parse
   const [gameInfo, setGameInfo] = useState<any>({});
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(true);
@@ -23,11 +26,10 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
-      // console.log("gameInfoData :", data);
+      const GameData = parseGameData
       setGameInfo(data);
       setIsLoading(false);
       socket?.emit("ready-to-play");
-      // console.log("gameInfoData :", data);
     });
     return () => {
       socket?.off("game-info");
@@ -44,18 +46,6 @@ function Game() {
         <></>
       ) : (
         <>
-          {/* <OrthographicCamera
-            makeDefault
-            zoom={1}
-            top={20}
-            bottom={-20}
-            left={20}
-            right={-20}
-            near={1}
-            far={2000}
-            position={[0, 30, 0]}
-          /> */}
-          {/* <PerspectiveCamera makeDefault position={[0, 30, 0]} fov={90} /> */}
           <Ball
             radius={gameInfo.ball._hitBox._width / 2}
             startPos={

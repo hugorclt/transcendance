@@ -1,0 +1,91 @@
+{
+    "name": "CLASSIC",
+    "mode": "CLASSIC",
+    "width": 16,
+    "height": 1,
+    "depth": 35,
+    "walls": [
+      {
+        "texture": "BASE64",
+        "type": "BOX",
+        "width": 1,
+        "height": 1,
+        "depth": 35,
+        "position": {
+          "x": -17.5,
+          "y": 0,
+          "z": 0
+        }
+      },
+      {
+        "texture": "BASE64",
+        "type": "BOX",
+        "width": 1,
+        "height": 1,
+        "depth": 35,
+        "position": {
+          "x": 17.5,
+          "y": 0,
+          "z": 0
+        }
+      }
+    ],
+    "floor": {
+      "texture": "BASE64",
+      "type": "BOX",
+      "width": 16,
+      "height": 1,
+      "depth": 35,
+      "position": {
+        "x": 0,
+        "y": -1,
+        "z": 0
+      }
+    },
+    "ball": {
+      "texture": "BASE64",
+      "type": "BOX",
+      "width": 0.5,
+      "height": 0.5,
+      "depth": 0.5,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "goals": [
+      {
+        "texture": "BASE64",
+        "type": "BOX",
+        "width": 16,
+        "height": 1,
+        "depth": 1,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    ],
+    "paddles": [
+      {
+        "texture": "BASE64",
+        "type": "BOX",
+        "width": 2,
+        "height": 1,
+        "depth": 0.5,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    ]
+  }
+  
