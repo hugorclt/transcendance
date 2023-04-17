@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import ItemsCards from "./ItemsCard/ItemsCards";
 import {
   CardsContainer,
-  GridContainer,
   ShopTopBarContainer,
-  ShopTopBarFilter,
   ShopTopBarSelect,
   SliderShopContainer,
 } from "./ItemsListStyle";
