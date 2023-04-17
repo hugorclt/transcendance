@@ -18,7 +18,6 @@ export class Ball extends IObject {
     type?: EType,
   ) {
     super({width: width, height: height, depth: depth, position: position, texture: texture, type: type})
-    // super(width, height, depth, position, texture, type);
     this._initialSpeed = speed;
     this._speed = speed;
   }

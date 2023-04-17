@@ -18,22 +18,12 @@ export class Field {
   }
 
   private _init_walls(config: any) {
-    console.log('creating walls: ', config.walls);
     config.walls.forEach((wall) => {
-      this._walls.push(
-        new Wall(wall)
-        // new Wall(
-        //   wall.width,
-        //   wall.height,
-        //   wall.depth,
-        //   new Vector3(wall.position.x, wall.position.y, wall.position.z),
-        // ),
-      );
+      this._walls.push(new Wall(wall));
     });
   }
 
   private _init_objects(config: any) {
-    console.log('creating objects: ', config.objects);
     config.objects?.forEach((object) => {
       console.log("creating object: ", object);
     })
@@ -41,25 +31,9 @@ export class Field {
 
   private _init_goals(config: any) {
     this._goals.push(
-      // new Goal(
-      //   config.goals.width,
-      //   config.goals.height,
-      //   config.goals.depth,
-      //   new Vector3(0, 0, config.depth / 2 + config.goals.depth),
-      //   config.goals.texture,
-      //   config.goals.type
-      // ),
       new Goal({...config.goals, position: new Vector3(0, 0, config.depth / 2 + config.goals.depth)})
     );
     this._goals.push(
-      // new Goal(
-      //   config.goals.width,
-      //   config.goals.height,
-      //   config.goals.depth,
-      //   new Vector3(0, 0, -config.depth / 2 - config.goals.depth),
-      //   config.goals.texture,
-      //   config.goals.type
-      // ),
       new Goal({...config.goals, position: new Vector3(0, 0, -config.depth / 2 - config.goals.depth)})
     );
   }
@@ -73,71 +47,4 @@ export class Field {
   public get goals(): Array<Goal> {
     return this._goals;
   }
-
-  // private _createClassicWalls() {
-  //   this._walls.push(
-  //     new Wall(
-  //       ClassicFieldConfig.VerticalWallConfig.width,
-  //       ClassicFieldConfig.VerticalWallConfig.height,
-  //       ClassicFieldConfig.VerticalWallConfig.depth,
-  //       new Vector3(-(ClassicFieldConfig.width / 2), 0, 0),
-  //     ),
-  //   );
-  //   this._walls.push(
-  //     new Wall(
-  //       ClassicFieldConfig.VerticalWallConfig.width,
-  //       ClassicFieldConfig.VerticalWallConfig.height,
-  //       ClassicFieldConfig.VerticalWallConfig.depth,
-  //       new Vector3(ClassicFieldConfig.width / 2, 0, 0),
-  //     ),
-  //   );
-  //   this._walls.push(
-  //     new Wall(
-  //       ClassicFieldConfig.HorizontalWallConfig.width,
-  //       ClassicFieldConfig.HorizontalWallConfig.height,
-  //       ClassicFieldConfig.HorizontalWallConfig.depth,
-  //       new Vector3(0, -ClassicFieldConfig.height, 0),
-  //     ),
-  //   );
-  // }
-
-  // //version 3d
-  // private _createChampionsWalls() {
-  //   //vertical wall left
-  //   this._walls.push(
-  //     new Wall(
-  //       ThreeDFieldConfig.VerticalWallConfig.width,
-  //       ThreeDFieldConfig.VerticalWallConfig.height,
-  //       ThreeDFieldConfig.VerticalWallConfig.depth,
-  //       new Vector3(-(ThreeDFieldConfig.width / 2), 0, 0),
-  //     ),
-  //   );
-  //   //vertical wall right
-  //   this._walls.push(
-  //     new Wall(
-  //       ThreeDFieldConfig.VerticalWallConfig.width,
-  //       ThreeDFieldConfig.VerticalWallConfig.height,
-  //       ThreeDFieldConfig.VerticalWallConfig.depth,
-  //       new Vector3(ThreeDFieldConfig.width / 2, 0, 0),
-  //     ),
-  //   );
-  //   //floor
-  //   this._walls.push(
-  //     new Wall(
-  //       ThreeDFieldConfig.HorizontalWallConfig.width,
-  //       ThreeDFieldConfig.HorizontalWallConfig.height,
-  //       ThreeDFieldConfig.HorizontalWallConfig.depth,
-  //       new Vector3(0, -(ThreeDFieldConfig.height / 2), 0),
-  //     ),
-  //   );
-  //   //ceiling
-  //   this._walls.push(
-  //     new Wall(
-  //       ThreeDFieldConfig.HorizontalWallConfig.width,
-  //       ThreeDFieldConfig.HorizontalWallConfig.height,
-  //       ThreeDFieldConfig.HorizontalWallConfig.depth,
-  //       new Vector3(0, ThreeDFieldConfig.height / 2, 0),
-  //     ),
-  //   );
-  // }
 }

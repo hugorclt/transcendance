@@ -50,12 +50,6 @@ export class Game {
     lobby.members.forEach((member) => {
       this._players.push(
         new Player(member.userId, member.team, EPaddle.BASIC, config)
-        // new Player(
-        //   member.userId,
-        //   member.team,
-        //   EPaddle.CLASSIC,
-        //   BaseFieldConfig.depth,
-        // ),
       );
     });
     this._players.forEach((player) => {
@@ -106,11 +100,8 @@ export class Game {
 
   gameLoop(deltaTime: number) {
     this._collisions.length = 0;
-    //update every moving elements based on delta time
     this.processMovements(deltaTime);
-    //detect and apply collisions
     this.detectAndApplyCollisions();
-    //detect goal
     this.detectGoal();
   }
 
