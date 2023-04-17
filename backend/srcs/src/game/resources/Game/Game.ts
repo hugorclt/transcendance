@@ -10,8 +10,8 @@ import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
 import { EField, EPaddle } from '../utils/config/enums';
 import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
-import { Vector3 } from '../utils/Vector3';
 import { IObject } from '../interfaces/IObject';
+import { TCollision } from '../types';
 
 export class Game {
   private _id: string;
@@ -22,6 +22,7 @@ export class Game {
   private _lastTimestamp: number = 0;
   private _objects: Array<IObject>;
   private _movingObjects: Array<IObject>;
+  private _collisions: Array<TCollision>;
 
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
@@ -111,7 +112,7 @@ export class Game {
   detectAndApplyCollisions() {
     this._objects.forEach((object) => {
       if (this._ball.hitBox.intersect(object.hitBox)) {
-        object.collide(this._ball);
+        this._collisions.push(object.collide(this._ball));
         console.log(`Object class: ${object.constructor.name}`);
         console.log(`Object position: ${JSON.stringify(object.getPosition())}`);
       }
@@ -134,8 +135,10 @@ export class Game {
     this.gameLoop(deltaTime);
     this._lastTimestamp = Date.now();
     return {
+      timestamp: this._lastTimestamp,
       players: this.players,
       ball: this.ball,
+      collisions: this.collisions,
     };
   }
 
@@ -148,6 +151,9 @@ export class Game {
   }
   public get ball() {
     return this._ball;
+  }
+  public get collisions() {
+    return this._collisions;
   }
 
   /* ---------------------------- helper functions ---------------------------- */

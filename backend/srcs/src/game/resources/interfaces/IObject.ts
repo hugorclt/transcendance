@@ -1,4 +1,5 @@
 import { Ball } from '../Ball';
+import { TCollision } from '../types';
 import { HitBox } from '../utils/HitBox';
 import { Vector3 } from '../utils/Vector3';
 
@@ -85,5 +86,5 @@ export abstract class IObject {
     );
   }
 
-  public abstract collide?(ball: Ball): void;
+  public abstract collide?(ball: Ball): TCollision;
 }

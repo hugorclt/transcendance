@@ -1,14 +1,14 @@
 {
-  "name": "CLASSIC",
-  "mode": "CLASSIC",
+  "name": "SPACE",
+  "mode": "CHAMPIONS",
   "width": 16,
-  "height": 1,
+  "height": 9,
   "depth": 35,
   "walls": [
     {
       "style": "BASE64",
       "width": 1,
-      "height": 1,
+      "height": 9,
       "depth": 35,
       "position": {
         "x": -17.5,
@@ -19,7 +19,7 @@
     {
       "style": "BASE64",
       "width": 1,
-      "height": 1,
+      "height": 9,
       "depth": 35,
       "position": {
         "x": 17.5,
@@ -35,7 +35,18 @@
     "depth": 35,
     "position": {
       "x": 0,
-      "y": -1,
+      "y": -4.5,
+      "z": 0
+    }
+  },
+  "ceiling": {
+    "style": "BASE64",
+    "width": 16,
+    "height": 1,
+    "depth": 35,
+    "position": {
+      "x": 0,
+      "y": 4.5,
       "z": 0
     }
   },
@@ -91,9 +102,9 @@
   ],
   "ball": {
     "style": "BASE64",
-    "width": 1,
-    "height": 1,
-    "depth": 1,
+    "width": 0.5,
+    "height": 0.5,
+    "depth": 0.5,
     "position": {
       "x": 0,
       "y": 0,
@@ -104,5 +115,16 @@
       "y": 0,
       "z": 0
     }
+  },
+  "goals": {
+    "style": "BASE64",
+    "width": 16,
+    "height": 9,
+    "depth": 1
+  },
+  "paddle": {
+    "width": 2,
+    "height": 2,
+    "depth": 0.2
   }
 }

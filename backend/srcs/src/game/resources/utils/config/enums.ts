@@ -11,3 +11,18 @@ export enum EField {
   CHAMPIONS,
   BASIC,
 }
+
+export enum EMap {
+  CLASSIC,
+  SPACE,
+}
+
+export enum EType {
+  BOOST,
+  SLOW,
+  BREAKABLE_BRICK,
+  UNBREAKABLE_BRICK,
+  WALL,
+  GOAL,
+  PADDLE,
+}
