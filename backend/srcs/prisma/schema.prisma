@@ -102,6 +102,7 @@ model LobbyMember {
 
 enum MapName {
   CLASSIC
+  SPACE
 }
 
 enum Mode {
