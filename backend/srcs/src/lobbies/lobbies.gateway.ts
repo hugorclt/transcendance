@@ -14,6 +14,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { BaseFieldConfig } from 'src/game/resources/utils/config/config';
+import { LobbyEventEntity } from './entities/lobby-event.entity';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -26,6 +27,22 @@ export class LobbiesGateway
   @WebSocketServer()
   io: Namespace;
   private _games: Map<string, Game>;
+
+  //EVENTS
+  //  ==> paddle move player 1
+  //  ==> super coup active
+  //    => modification des datas de la game
+
+  //GAME LOOP
+  //  parcourir chaque game
+  //  => parcourir tous les elements de la game
+  //     => pour chaque element : detection de collision avec la balle
+  //
+  //   apres la detection des collision
+  //    ==> applique les fonctions de collision sur la balle
+  //    ==> for each player => send 'player-update'
+  //    ==> for ball => update 'ball-update'
+  //    ==> for elements => update 'element-update'
 
   async afterInit() {
     this._games = new Map<string, Game>();
@@ -69,6 +86,19 @@ export class LobbiesGateway
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
   }
 
+  @SubscribeMessage('ready-to-play')
+  async onReadyToPlay(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.ready = true;
+    if (playerInfo.game.players.find((player) => !player.ready)) return;
+    //EVERYBODY READY TO PLAY : START GAME LOOP
+    playerInfo.game.start();
+    setInterval(() => {
+      const frame = playerInfo.game.generateFrame();
+      this.io.to(playerInfo.lobbyId).emit('frame', frame);
+    }, 1000 / 60);
+  }
+
   @SubscribeMessage('get-game-info')
   async onStartGame(client: AuthSocket) {
     const lobbyId = await this.getLobby(client);
@@ -80,8 +110,7 @@ export class LobbiesGateway
     });
   }
 
-  @SubscribeMessage('mouse-move')
-  async mouseMove(client: AuthSocket, { x, y }) {
+  getPlayerInfoFromClient(client: AuthSocket): LobbyEventEntity {
     const lobbyId = Array.from(this.io.adapter.sids.get(client.id)).find(
       (id) => {
         if (id != client.id && id != client.userId) {
@@ -89,18 +118,69 @@ export class LobbiesGateway
         }
       },
     );
+    if (!lobbyId) return;
     const game = this._games.get(lobbyId);
     const player = game.players.find((player) => player.id == client.userId);
     if (!player) return;
+    return { lobbyId: lobbyId, game: game, player: player };
+  }
 
-    player.paddle.move(
-      x * BaseFieldConfig.HorizontalWallConfig.width,
-      y * BaseFieldConfig.VerticalWallConfig.height,
-    );
-    this.io.to(lobbyId).emit('on-move', {
-      x: player.paddle.getPosition().x,
-      y: player.paddle.getPosition().y,
-    });
+  @SubscribeMessage('left-move')
+  async onLeftMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.paddle.moveLeft();
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
+  }
+
+  @SubscribeMessage('right-move')
+  async onRightMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.paddle.moveRight();
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
+  }
+
+  @SubscribeMessage('up-move')
+  async onUpMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.paddle.moveUp();
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
+  }
+
+  @SubscribeMessage('down-move')
+  async ondownMove(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.paddle.moveDown();
+    // this.io.to(playerInfo.lobbyId).emit('player-update', {
+    //   player: playerInfo.player,
+    // });
+  }
+
+  @SubscribeMessage('mouse-move')
+  async mouseMove(client: AuthSocket, { x, y }) {
+    // const lobbyId = Array.from(this.io.adapter.sids.get(client.id)).find(
+    //   (id) => {
+    //     if (id != client.id && id != client.userId) {
+    //       return id;
+    //     }
+    //   },
+    // );
+    // const game = this._games.get(lobbyId);
+    // const player = game.players.find((player) => player.id == client.userId);
+    // if (!player) return;
+    // player.paddle.move(
+    //   x * BaseFieldConfig.HorizontalWallConfig.width,
+    //   y * BaseFieldConfig.VerticalWallConfig.height,
+    // );
+    // this.io.to(lobbyId).emit('on-move', {
+    //   x: player.paddle.getPosition().x,
+    //   y: player.paddle.getPosition().y,
+    // });
   }
 
   /* ------------------------------- helper func ------------------------------ */

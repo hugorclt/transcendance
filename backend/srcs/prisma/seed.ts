@@ -96,7 +96,7 @@ async function main() {
       ownerId: dylan.id,
       nbPlayers: 2,
       maxDuration: 180,
-      mode: Mode.CLASSIC,
+      mode: Mode.CHAMPIONS,
       map: MapName.CLASSIC,
       state: LobbyState.FULL,
       private: true,
