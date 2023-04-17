@@ -72,7 +72,7 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
           transparent
         />
         {isActive && (
-          <PerspectiveCamera makeDefault={true} position={position} fov={90} />
+          <PerspectiveCamera makeDefault={true} position={position} fov={100} />
         )}
       </mesh>
     </>
