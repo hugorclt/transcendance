@@ -455,9 +455,9 @@ export class LobbiesService {
       console.log('everybody ready');
       const lobbyWithMembers = await this.updateLobbyState(
         lobby.id,
-        LobbyState.GAME,
+        LobbyState.SELECTION,
       );
-      this.lobbiesGateway.readyToStart(lobbyWithMembers);
+      this.lobbiesGateway.readySelection(lobbyWithMembers);
     }
   }
 
