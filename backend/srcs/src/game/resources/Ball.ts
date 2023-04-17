@@ -7,8 +7,12 @@ import { EType } from './utils/config/enums';
 export class Ball extends IObject {
   private _speed: Vector3;
   private _initialSpeed: Vector3;
+  private texture: string;
+  private type: string;
 
   public constructor(
+    texture: string,
+    type: string,
     width: number,
     height: number,
     depth: number,
@@ -18,6 +22,8 @@ export class Ball extends IObject {
     super(width, height, depth, position);
     this._initialSpeed = speed;
     this._speed = speed;
+    this.texture = texture;
+    this.type = type;
     console.log('Ball init with position: ', this._hitBox.position);
   }
 

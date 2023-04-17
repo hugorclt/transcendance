@@ -14,20 +14,52 @@ export class Field {
   private _goals: Array<Goal>;
   private _objects: Array<IObject>;
 
-  constructor(fieldType: EField) {
+  public constructor(config: any) {
     this._walls = new Array<Wall>();
     this._objects = new Array<IObject>();
     this._goals = new Array<Goal>();
-    switch (fieldType) {
-      case EField.CLASSIC:
-        this._createClassicWalls();
-        this._createClassicGoals();
-        break;
-      case EField.CHAMPIONS:
-        this._createChampionsWalls();
-        this._createThreeDGoals();
-        break;
-    }
+    this._init_goals(config);
+    this._init_walls(config);
+    this._init_objects(config);
+  }
+
+  private _init_walls(config: any) {
+    //go through all walls and create them
+    console.log('creating walls: ', config.walls);
+    config.walls.forEach((wall) => {
+      this._walls.push(
+        new Wall(
+          wall.width,
+          wall.height,
+          wall.depth,
+          new Vector3(wall.position.x, wall.position.y, wall.position.z),
+        ),
+      );
+    });
+  }
+
+  private _init_objects(config: any) {
+    //conditionnally init objects depending on presence or not
+    console.log('creating objects: ', config.objects);
+  }
+
+  private _init_goals(config: any) {
+    this._goals.push(
+      new Goal(
+        config.goals.width,
+        config.goals.height,
+        config.goals.depth,
+        new Vector3(0, 0, config.depth / 2 + config.goals.depth),
+      ),
+    );
+    this._goals.push(
+      new Goal(
+        config.goals.width,
+        config.goals.height,
+        config.goals.depth,
+        new Vector3(0, 0, -config.depth / 2 - config.goals.depth),
+      ),
+    );
   }
 
   public get walls(): Array<Wall> {
@@ -38,59 +70,6 @@ export class Field {
   }
   public get goals(): Array<Goal> {
     return this._goals;
-  }
-
-  private _createThreeDGoals() {
-    this._goals.push(
-      new Goal(
-        ThreeDFieldConfig.GoalConfig.width,
-        ThreeDFieldConfig.GoalConfig.height,
-        ThreeDFieldConfig.GoalConfig.depth,
-        new Vector3(
-          0,
-          0,
-          ThreeDFieldConfig.depth / 2 + ThreeDFieldConfig.GoalConfig.depth,
-        ),
-      ),
-    );
-    this._goals.push(
-      new Goal(
-        ThreeDFieldConfig.GoalConfig.width,
-        ThreeDFieldConfig.GoalConfig.height,
-        ThreeDFieldConfig.GoalConfig.depth,
-        new Vector3(
-          0,
-          0,
-          -ThreeDFieldConfig.depth / 2 - ThreeDFieldConfig.GoalConfig.depth,
-        ),
-      ),
-    );
-  }
-  private _createClassicGoals() {
-    this._goals.push(
-      new Goal(
-        ClassicFieldConfig.GoalConfig.width,
-        ClassicFieldConfig.GoalConfig.height,
-        ClassicFieldConfig.GoalConfig.depth,
-        new Vector3(
-          0,
-          0,
-          ClassicFieldConfig.depth / 2 + ClassicFieldConfig.GoalConfig.depth,
-        ),
-      ),
-    );
-    this._goals.push(
-      new Goal(
-        ClassicFieldConfig.GoalConfig.width,
-        ClassicFieldConfig.GoalConfig.height,
-        ClassicFieldConfig.GoalConfig.depth,
-        new Vector3(
-          0,
-          0,
-          -ClassicFieldConfig.depth / 2 - ClassicFieldConfig.GoalConfig.depth,
-        ),
-      ),
-    );
   }
 
   private _createClassicWalls() {
