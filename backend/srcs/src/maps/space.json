@@ -1,0 +1,108 @@
+{
+  "name": "CLASSIC",
+  "mode": "CLASSIC",
+  "width": 16,
+  "height": 1,
+  "depth": 35,
+  "walls": [
+    {
+      "style": "BASE64",
+      "width": 1,
+      "height": 1,
+      "depth": 35,
+      "position": {
+        "x": -17.5,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "style": "BASE64",
+      "width": 1,
+      "height": 1,
+      "depth": 35,
+      "position": {
+        "x": 17.5,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ],
+  "floor": {
+    "style": "BASE64",
+    "width": 16,
+    "height": 1,
+    "depth": 35,
+    "position": {
+      "x": 0,
+      "y": -1,
+      "z": 0
+    }
+  },
+  "objects": [
+    {
+      "type": "SLOW",
+      "style": "BASE64",
+      "width": 1.5,
+      "height": 1,
+      "depth": 1,
+      "position": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "type": "BOOST",
+      "style": "BASE64",
+      "width": 1.5,
+      "height": 1,
+      "depth": 1,
+      "position": {
+        "x": 0,
+        "y": -1.5,
+        "z": 0
+      }
+    },
+    {
+      "type": "BREAKABLE_BRICK",
+      "style": "BASE64",
+      "width": 1.5,
+      "height": 1,
+      "depth": 1,
+      "position": {
+        "x": 0,
+        "y": 1.5,
+        "z": 0
+      }
+    },
+    {
+      "type": "UNBREAKABLE_BRICK",
+      "style": "BASE64",
+      "width": 1.5,
+      "height": 1,
+      "depth": 1,
+      "position": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ],
+  "ball": {
+    "style": "BASE64",
+    "width": 1,
+    "height": 1,
+    "depth": 1,
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "velocity": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  }
+}

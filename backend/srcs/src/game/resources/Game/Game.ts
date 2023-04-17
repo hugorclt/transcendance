@@ -21,11 +21,13 @@ export class Game {
   private _ball: Ball;
   private _lastTimestamp: number = 0;
   private _objects: Array<IObject>;
+  private _movingObjects: Array<IObject>;
 
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
     this._spectators = new Array<string>();
     this._objects = new Array<IObject>();
+    this._movingObjects = new Array<IObject>();
     this._id = lobby.id;
     if (lobby.mode == 'CLASSIC') {
       this._ball = new Ball(
