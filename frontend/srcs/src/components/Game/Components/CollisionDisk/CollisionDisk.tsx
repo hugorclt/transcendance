@@ -13,6 +13,7 @@ function CollisionDisk({ gameInfo }: TPropsCollisionDisk) {
 
   useEffect(() => {
     socket?.on("collision", (data) => {
+      console.log("colission received")
       meshRef.current.position.x = data.x;
       meshRef.current.position.y = data.y;
       meshRef.current.position.z = data.z;
@@ -20,6 +21,8 @@ function CollisionDisk({ gameInfo }: TPropsCollisionDisk) {
       meshRef.current.scale.y = 1;
       meshRef.current.scale.z = 1;
       const id = setInterval(() => {
+        console.log("colission animation loop")
+
         meshRef.current.scale.x += 0.1;
         meshRef.current.scale.y += 0.1;
         meshRef.current.scale.z += 0.1;
@@ -27,6 +30,7 @@ function CollisionDisk({ gameInfo }: TPropsCollisionDisk) {
       }, 100);
 
       setTimeout(() => {
+        console.log("colission animation end")
         clearInterval(id);
       }, 3000);
     });
