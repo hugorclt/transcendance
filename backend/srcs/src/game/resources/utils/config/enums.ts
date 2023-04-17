@@ -18,6 +18,8 @@ export enum EMap {
 }
 
 export enum EType {
+  BOX,
+  SPHERE,
   BOOST,
   SLOW,
   BREAKABLE_BRICK,

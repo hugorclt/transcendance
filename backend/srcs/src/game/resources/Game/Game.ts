@@ -1,20 +1,13 @@
 import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
 import { Ball } from '../Ball';
-import {
-  BallConfig,
-  BaseFieldConfig,
-  ClassicBallConfig,
-  ThreeDBallConfig,
-} from '../utils/config/config';
 import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
-import { EField, EPaddle } from '../utils/config/enums';
+import { EPaddle } from '../utils/config/enums';
 import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
-import * as classicJson from '../../../maps/classic.json';
-import * as spaceJson from '../../../maps/space.json';
-import { Vector3 } from '../utils/Vector3';
+import { classic } from '../utils/config/maps';
+import { space } from '../utils/config/maps';
 
 export class Game {
   private _id: string;
@@ -30,13 +23,13 @@ export class Game {
   private _init_ball(config: any) {
     const ball = config.ball;
     this._ball = new Ball(
-      ball.texture,
-      ball.type,
       ball.width,
       ball.height,
       ball.depth,
-      new Vector3(ball.position.x, ball.position.y, ball.position.z),
-      new Vector3(ball.velocity.x, ball.velocity.y, ball.velocity.z),
+      ball.position,
+      ball.velocity,
+      ball.texture,
+      ball.type,
     );
   }
 
@@ -56,12 +49,13 @@ export class Game {
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     lobby.members.forEach((member) => {
       this._players.push(
-        new Player(
-          member.userId,
-          member.team,
-          EPaddle.CLASSIC,
-          BaseFieldConfig.depth,
-        ),
+        new Player(member.userId, member.team, EPaddle.BASIC, config)
+        // new Player(
+        //   member.userId,
+        //   member.team,
+        //   EPaddle.CLASSIC,
+        //   BaseFieldConfig.depth,
+        // ),
       );
     });
     this._players.forEach((player) => {
@@ -78,11 +72,10 @@ export class Game {
     this._id = lobby.id;
 
     var config;
-    console.log('CLASSIC: ', classicJson);
     if (lobby.mode == 'CLASSIC') {
-      config = classicJson;
+      config = classic;
     } else if (lobby.mode == 'CHAMPIONS') {
-      config = spaceJson;
+      config = space;
     }
     this._init_ball(config);
     this._init_field(config);

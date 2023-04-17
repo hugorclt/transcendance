@@ -7,24 +7,20 @@ import { EType } from './utils/config/enums';
 export class Ball extends IObject {
   private _speed: Vector3;
   private _initialSpeed: Vector3;
-  private texture: string;
-  private type: string;
 
   public constructor(
-    texture: string,
-    type: string,
     width: number,
     height: number,
     depth: number,
     position: Vector3,
     speed: Vector3,
+    texture?: string,
+    type?: EType,
   ) {
-    super(width, height, depth, position);
+    super({width: width, height: height, depth: depth, position: position, texture: texture, type: type})
+    // super(width, height, depth, position, texture, type);
     this._initialSpeed = speed;
     this._speed = speed;
-    this.texture = texture;
-    this.type = type;
-    console.log('Ball init with position: ', this._hitBox.position);
   }
 
   public set speed(value: Vector3) {
@@ -64,7 +60,6 @@ export class Ball extends IObject {
   }
 
   public update(deltaTime: number) {
-    //if we assume speed is in m/s unit
     const position = this.getPosition();
     position.x += this._speed.x * deltaTime;
     position.y += this._speed.y * deltaTime;
