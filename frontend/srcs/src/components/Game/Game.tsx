@@ -23,7 +23,7 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
-      // console.log("gameInfoData :", data);
+      console.log("gameInfoData :", data);
       setGameInfo(data);
       setIsLoading(false);
       socket?.emit("ready-to-play");

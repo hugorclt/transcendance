@@ -29,6 +29,8 @@ export class Player {
           ),
         });
         break;
+      case EPaddle.BASIC:
+      //TODO declarer les cases pour chaque et creer les classes pour chaque.
     }
   }
 

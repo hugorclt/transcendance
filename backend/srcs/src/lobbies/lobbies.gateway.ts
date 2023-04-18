@@ -104,10 +104,10 @@ export class LobbiesGateway
   async onStartGame(client: AuthSocket) {
     const lobbyId = await this.getLobby(client);
     const game = this._games.get(lobbyId);
-    const userId = client.userId;
     this.io.to(client.userId).emit('game-info', {
-      userId: userId,
       walls: game.field.walls,
+      objects: game.field.objects,
+      goals: game.field.goals,
       players: game.players,
       ball: game.ball,
     });
