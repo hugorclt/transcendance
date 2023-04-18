@@ -14,7 +14,7 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
-import { LobbyState, PaddleType } from '@prisma/client';
+import { EPaddle, LobbyState } from '@prisma/client';
 
 @Injectable()
 export class LobbiesService {
@@ -470,23 +470,23 @@ export class LobbiesService {
     var paddleType;
     switch (paddleName) {
       case 'Red Paddle':
-        paddleType = PaddleType.RED;
+        paddleType = EPaddle.RED;
         break;
 
       case 'Blue Paddle':
-        paddleType = PaddleType.BLUE;
+        paddleType = EPaddle.BLUE;
         break;
 
       case 'Orange Paddle':
-        paddleType = PaddleType.ORANGE;
+        paddleType = EPaddle.ORANGE;
         break;
 
       case 'Purple Paddle':
-        paddleType = PaddleType.PURPLE;
+        paddleType = EPaddle.PURPLE;
         break;
 
       case 'Green Paddle':
-        paddleType = PaddleType.GREEN;
+        paddleType = EPaddle.GREEN;
         break;
     }
     return await this.prisma.lobby.update({

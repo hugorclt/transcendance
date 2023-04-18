@@ -72,9 +72,9 @@ model Lobby {
   ownerId     String        @unique @db.Uuid
   nbPlayers   Int           @default(2)
   maxDuration Int           @default(180)
-  mode        Mode          @default(CLASSIC)
+  mode        EMode         @default(CLASSIC)
   private     Boolean       @default(false)
-  map         MapName       @default(CLASSIC)
+  map         EMap          @default(CLASSIC)
   invitations Invitation[]
   owner       User          @relation("lobbyOwner", fields: [ownerId], references: [id])
   members     LobbyMember[]
@@ -90,38 +90,18 @@ enum LobbyState {
   GAME
 }
 
-enum PaddleType {
-  WHITE
-  RED
-  BLUE
-  ORANGE
-  PURPLE
-  GREEN
-}
-
 model LobbyMember {
-  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  team       Boolean     @default(false)
-  ready      Boolean     @default(false)
-  paddleType PaddleType  @default(WHITE)
-  vote       MapName?
-  userId     String      @db.Uuid
-  lobbyId    String      @db.Uuid
-  user       User        @relation(fields: [userId], references: [id])
-  lobby      Lobby       @relation(fields: [lobbyId], references: [id])
+  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  team       Boolean @default(false)
+  ready      Boolean @default(false)
+  paddleType EPaddle @default(CLASSIC)
+  vote       EMap?
+  userId     String  @db.Uuid
+  lobbyId    String  @db.Uuid
+  user       User    @relation(fields: [userId], references: [id])
+  lobby      Lobby   @relation(fields: [lobbyId], references: [id])
 }
 
-
-enum MapName {
-  CLASSIC
-  SPACE
-}
-
-enum Mode {
-  CLASSIC
-  CHAMPIONS
-  GRAVITY
-}
 
 model Match {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -204,4 +184,24 @@ enum ItemType {
   PADDLES
   TRAILS
   GOALS
+}
+
+enum EMap {
+  CLASSIC
+  SPACE
+}
+
+enum EMode {
+  CLASSIC
+  CHAMPIONS
+}
+
+enum EPaddle {
+  CLASSIC
+  BASIC
+  RED
+  BLUE
+  ORANGE
+  PURPLE
+  GREEN
 }

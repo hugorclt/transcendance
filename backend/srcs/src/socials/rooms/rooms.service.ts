@@ -19,7 +19,7 @@ import { ReturnMessageEntity } from './messages/entities/return-message-entity';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { defaultAvatar, generateBase64Image } from 'src/utils';
+import { defaultAvatar } from 'src/utils/base64';
 // import logo from ''
 
 @Injectable()

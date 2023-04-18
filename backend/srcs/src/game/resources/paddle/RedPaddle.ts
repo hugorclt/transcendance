@@ -1,7 +1,7 @@
+import { EType } from 'shared/enum';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
 import { Vector3 } from '../utils/Vector3';
-import { EType } from '../utils/config/enums';
 
 export class RedPaddle extends IObject {
   public collide(): TCollision {

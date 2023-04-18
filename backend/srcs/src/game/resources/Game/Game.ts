@@ -2,12 +2,12 @@ import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
 import { Ball } from '../Ball';
 import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
-import { EPaddle } from '../utils/config/enums';
 import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
 import { classic } from '../utils/config/maps';
 import { space } from '../utils/config/maps';
+import { EPaddle } from '@prisma/client';
 
 export class Game {
   private _id: string;
@@ -49,7 +49,9 @@ export class Game {
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     lobby.members.forEach((member) => {
       this._players.push(
-        new Player(member.userId, member.team, EPaddle.BASIC, config)
+        new Player(member.userId, member.team, EPaddle.BASIC, config),
+        //TODO
+        //should take paddle choice by user
       );
     });
     this._players.forEach((player) => {

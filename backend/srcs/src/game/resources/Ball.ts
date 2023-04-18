@@ -1,8 +1,7 @@
+import { EType } from 'shared/enum';
 import { IObject } from './interfaces/IObject';
 import { TCollision } from './types';
 import { Vector3 } from './utils/Vector3';
-import { baseCollide } from './utils/collisions/baseColide';
-import { EType } from './utils/config/enums';
 
 export class Ball extends IObject {
   private _speed: Vector3;
@@ -17,7 +16,14 @@ export class Ball extends IObject {
     texture?: string,
     type?: EType,
   ) {
-    super({width: width, height: height, depth: depth, position: position, texture: texture, type: type})
+    super({
+      width: width,
+      height: height,
+      depth: depth,
+      position: position,
+      texture: texture,
+      type: type,
+    });
     this._initialSpeed = speed;
     this._speed = speed;
   }

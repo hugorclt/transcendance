@@ -1,4 +1,4 @@
-import { LobbyState, MapName, Mode, PrismaClient } from '@prisma/client';
+import { EMap, EMode, LobbyState, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { item } from './seedHelper';
 
@@ -87,8 +87,8 @@ async function main() {
       ownerId: dylan.id,
       nbPlayers: 2,
       maxDuration: 180,
-      mode: Mode.CHAMPIONS,
-      map: MapName.CLASSIC,
+      mode: EMode.CHAMPIONS,
+      map: EMap.CLASSIC,
       state: LobbyState.FULL,
       private: true,
       members: {

@@ -1,8 +1,8 @@
+import { EType } from 'shared/enum';
 import { Ball } from '../Ball';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
 import { baseCollide } from '../utils/collisions/baseColide';
-import { EType } from '../utils/config/enums';
 
 export abstract class IPaddle extends IObject {
   public collide(ball: Ball): TCollision {

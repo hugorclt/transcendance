@@ -26,7 +26,7 @@ import { addFriendDto } from './dto/add-friend.dto';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { RoomsService } from 'src/socials/rooms/rooms.service';
 import { ParticipantService } from 'src/socials/rooms/participant/participant.service';
-import { defaultAvatar, generateBase64Image } from 'src/utils';
+import { defaultAvatar } from 'src/utils/base64';
 
 @Injectable()
 export class UsersService {
