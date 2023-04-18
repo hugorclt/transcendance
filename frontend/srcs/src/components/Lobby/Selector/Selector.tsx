@@ -39,6 +39,8 @@ function Selector() {
   const [paddles, setPaddle] = useState<{ name: string; image: string }[]>([]);
   const [paddleSelected, setPaddleSelected] = useState("");
   const [lobby] = useAtom(lobbyAtom);
+  const socket = useContext(LobbySocketContext);
+  const [vote, setVote] = useState(new Map());
 
   useEffect(() => {
     axiosPrivate
@@ -47,12 +49,32 @@ function Selector() {
         setPaddle(res.data);
       })
       .catch((err: AxiosError) => {});
+
+    axiosPrivate
+      .get("/lobbies/map")
+      .then((res: AxiosResponse) => {})
+      .catch((err: AxiosError) => {});
   }, []);
 
   const handleClick = (e: any, paddleName: string) => {
     setPaddleSelected(paddleName);
-    axiosPrivate.post("/lobbies/paddle-selected", {lobbyId: lobby.id ,name: paddleName});
-  }
+    axiosPrivate.post("/lobbies/paddle-selected", {
+      lobbyId: lobby.id,
+      name: paddleName,
+    });
+  };
+
+  const handleVote = () => {
+    axiosPrivate.post("/lobbies/vote", { lobbyId: lobby.id });
+  };
+
+  useEffect(() => {
+    socket?.on("on-vote", (vote) => {});
+    return () => {
+      socket?.off("on-vote");
+    };
+  }, [socket]);
+
   return (
     <>
       <SelectorContainer>
@@ -76,7 +98,7 @@ function Selector() {
                     <PaddleSelectorCards
                       img={paddle.image}
                       name={paddle.name}
-                      isSelected={paddle.name == paddleSelected ? true: false}
+                      isSelected={paddle.name == paddleSelected ? true : false}
                     />
                   </div>
                 );
