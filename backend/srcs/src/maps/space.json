@@ -1,5 +1,6 @@
 {
   "name": "SPACE",
+  "miniature": "BASE64",
   "mode": "CHAMPIONS",
   "width": 16,
   "height": 9,
@@ -12,7 +13,7 @@
       "height": 9,
       "depth": 35,
       "position": {
-        "x": -17.5,
+        "x": -8,
         "y": 0,
         "z": 0
       }
@@ -24,36 +25,36 @@
       "height": 9,
       "depth": 35,
       "position": {
-        "x": 17.5,
+        "x": 8,
         "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "texture": "BASE64",
+      "type": "BOX",
+      "width": 16,
+      "height": 1,
+      "depth": 35,
+      "position": {
+        "x": 0,
+        "y": -4.5,
+        "z": 0
+      }
+    },
+    {
+      "texture": "BASE64",
+      "type": "BOX",
+      "width": 16,
+      "height": 1,
+      "depth": 35,
+      "position": {
+        "x": 0,
+        "y": 4.5,
         "z": 0
       }
     }
   ],
-  "floor": {
-    "texture": "BASE64",
-    "type": "BOX",
-    "width": 16,
-    "height": 1,
-    "depth": 35,
-    "position": {
-      "x": 0,
-      "y": -4.5,
-      "z": 0
-    }
-  },
-  "ceiling": {
-    "texture": "BASE64",
-    "type": "BOX",
-    "width": 16,
-    "height": 1,
-    "depth": 35,
-    "position": {
-      "x": 0,
-      "y": 4.5,
-      "z": 0
-    }
-  },
   "objects": [
     {
       "type": "SLOW",

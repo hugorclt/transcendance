@@ -1,13 +1,7 @@
-import { IObject } from '../interfaces/IObject';
 import { BasePaddle } from '../paddle/BasePaddle';
 import { ChampionsPaddle } from '../paddle/ChampionsPaddle';
 import { IPaddle } from '../paddle/IPaddle';
 import { Vector3 } from '../utils/Vector3';
-import {
-  BasePaddleConfig,
-  ClassicPaddleConfig,
-  ThreeDPaddleConfig,
-} from '../utils/config/config';
 import { EPaddle } from '../utils/config/enums';
 
 export class Player {
@@ -20,28 +14,17 @@ export class Player {
     id: string,
     team: boolean,
     paddleType: EPaddle,
-    fieldDepth: number,
+    config: any
   ) {
     this._id = id;
     this._team = team;
     this._ready = false;
     switch (paddleType) {
-      case EPaddle.CLASSIC:
-        //CLEANER SOLUTION WITH DEFAULT FALLBACK TO BASE CONFIG
-        this._paddle = new BasePaddle(
-          ClassicPaddleConfig.width,
-          ClassicPaddleConfig.height,
-          ClassicPaddleConfig.depth,
-          new Vector3(0, 0, team ? fieldDepth / 2 : -(fieldDepth / 2)),
-        );
+      case EPaddle.BASIC:
+        this._paddle = new BasePaddle({...config.paddle, position: new Vector3(0, 0, team ? config.depth / 2 : -(config.depth / 2))});      
         break;
       case EPaddle.CHAMPIONS:
-        this._paddle = new ChampionsPaddle(
-          ThreeDPaddleConfig.width,
-          ThreeDPaddleConfig.height,
-          ThreeDPaddleConfig.depth,
-          new Vector3(0, 0, team ? fieldDepth / 2 : -(fieldDepth / 2)),
-        );
+        this._paddle = new ChampionsPaddle({...config.paddle, position: new Vector3(0, 0, team ? config.depth / 2 : -(config.depth / 2))});      
         break;
     }
   }

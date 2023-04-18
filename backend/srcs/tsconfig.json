@@ -17,9 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
     //recommanded by prisma
     "strict": true,
     "lib": ["esnext"],
-    "esModuleInterop": true,
+    "esModuleInterop": true
   }
 }
