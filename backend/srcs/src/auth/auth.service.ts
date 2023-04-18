@@ -15,7 +15,6 @@ import { catchError, lastValueFrom, map, throwError } from 'rxjs';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Api42TokenEntity } from './entities/api42-token.entity';
 import { LobbiesService } from 'src/lobbies/lobbies.service';
-import { generateBase64Image } from 'prisma/items';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],

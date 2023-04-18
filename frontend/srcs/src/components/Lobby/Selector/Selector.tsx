@@ -51,7 +51,7 @@ function Selector() {
 
   const handleClick = (e: any, paddleName: string) => {
     setPaddleSelected(paddleName);
-    axiosPrivate.post("/lobby/paddle-selected", {lobbyId: lobby.id ,name: paddleName});
+    axiosPrivate.post("/lobbies/paddle-selected", {lobbyId: lobby.id ,name: paddleName});
   }
   return (
     <>

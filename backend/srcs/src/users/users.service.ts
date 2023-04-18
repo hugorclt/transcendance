@@ -26,7 +26,7 @@ import { addFriendDto } from './dto/add-friend.dto';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { RoomsService } from 'src/socials/rooms/rooms.service';
 import { ParticipantService } from 'src/socials/rooms/participant/participant.service';
-import { generateBase64Image } from 'prisma/items';
+import { defaultAvatar, generateBase64Image } from 'src/utils';
 
 @Injectable()
 export class UsersService {
@@ -43,7 +43,7 @@ export class UsersService {
         username: createUserDto.username,
         email: createUserDto.email,
         password: createUserDto.password,
-        avatar: generateBase64Image("../../asset/defaultImage/avatar.png"),
+        avatar: defaultAvatar.avatar,
         preferences: {
           create: { visibility: 'VISIBLE' },
         },
