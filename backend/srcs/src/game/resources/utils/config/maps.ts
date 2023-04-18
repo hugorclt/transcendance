@@ -1,5 +1,5 @@
 import { EType } from 'src/game/resources/utils/config/enums';
-import { generateBase64Image } from '../../../../../prisma/items';
+import { generateBase64Image } from '../../../../../prisma/seedHelper';
 import { Vector3 } from 'src/game/resources/utils/Vector3';
 
 export const space = {
@@ -103,7 +103,7 @@ export const space = {
 export const classic = {
   name: 'CLASSIC',
   mode: 'CLASSIC',
-  
+
   miniature: generateBase64Image('/app/asset/paddle/red-paddle.gif'),
   width: 16,
   height: 9,
@@ -155,4 +155,4 @@ export const classic = {
     height: 1,
     depth: 0.5,
   },
-}
+};
