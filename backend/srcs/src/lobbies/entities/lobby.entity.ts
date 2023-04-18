@@ -1,6 +1,5 @@
-import { Lobby, LobbyMember, LobbyState } from '@prisma/client';
+import { EMap, EMode, Lobby, LobbyMember, LobbyState } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { Mode, MapName } from '@prisma/client';
 
 export class LobbyEntity implements Lobby {
   @ApiProperty()
@@ -15,14 +14,14 @@ export class LobbyEntity implements Lobby {
   @ApiProperty({ default: 180 })
   maxDuration: number = 180;
 
-  @ApiProperty({ default: Mode.CLASSIC })
-  mode: Mode = Mode.CLASSIC;
+  @ApiProperty({ default: EMode.CLASSIC })
+  mode: EMode = EMode.CLASSIC;
 
   @ApiProperty({ default: false })
   private: boolean = false;
 
-  @ApiProperty({ default: MapName.CLASSIC })
-  map: MapName = MapName.CLASSIC;
+  @ApiProperty({ default: EMap.CLASSIC })
+  map: EMap = EMap.CLASSIC;
 
   @ApiProperty()
   state: LobbyState;

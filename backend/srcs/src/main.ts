@@ -12,7 +12,6 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets(join(__dirname, '..', 'static'));
 
   app.use(cookieParser());
   app.enableCors({
@@ -37,6 +36,12 @@ async function bootstrap() {
   //===== Exception handling for prisma error code return =====
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+
+  //===== Static assets directory =======
+  // app.useStaticAssets(join(__dirname, '..', 'assets'), {
+  //   index: false,
+  //   prefix: '/assets',
+  // });
 
   //===== Hot Reload Module =====
   if (module.hot) {

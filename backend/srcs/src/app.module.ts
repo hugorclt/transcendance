@@ -14,12 +14,18 @@ import { MessagesModule } from './socials/rooms/messages/messages.module';
 import { ItemsModule } from './items/items.module';
 import { InvitationsModule } from './invitations/invitations.module';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     JwtModule.register({ secret: process.env['AT_SECRET'] }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'assets'),
+    }),
     AuthModule,
     PrismaModule,
     UsersModule,

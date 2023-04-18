@@ -14,7 +14,7 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
-import { LobbyState } from '@prisma/client';
+import { EPaddle, LobbyState } from '@prisma/client';
 
 @Injectable()
 export class LobbiesService {
@@ -453,12 +453,59 @@ export class LobbiesService {
     //TODO ========> ADD OTHER STATES
     if (!notReady) {
       console.log('everybody ready');
-      const lobbyWithMembers = await this.updateLobbyState(
+      var lobbyWithMembers = await this.updateLobbyState(
         lobby.id,
-        LobbyState.GAME,
+        LobbyState.SELECTION,
       );
-      this.lobbiesGateway.readyToStart(lobbyWithMembers);
+      this.lobbiesGateway.readySelection(lobbyWithMembers);
+      // lobbyWithMembers = await this.updateLobbyState(
+      //   lobby.id,
+      //   LobbyState.GAME,
+      // );
+      // this.lobbiesGateway.readyToStart(lobbyWithMembers);
     }
+  }
+
+  async paddleSelected(userId: string, lobbyId: string, paddleName: string) {
+    var paddleType;
+    switch (paddleName) {
+      case 'Red Paddle':
+        paddleType = EPaddle.RED;
+        break;
+
+      case 'Blue Paddle':
+        paddleType = EPaddle.BLUE;
+        break;
+
+      case 'Orange Paddle':
+        paddleType = EPaddle.ORANGE;
+        break;
+
+      case 'Purple Paddle':
+        paddleType = EPaddle.PURPLE;
+        break;
+
+      case 'Green Paddle':
+        paddleType = EPaddle.GREEN;
+        break;
+    }
+    return await this.prisma.lobby.update({
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        members: {
+          updateMany: {
+            where: {
+              userId: userId,
+            },
+            data: {
+              paddleType: paddleType,
+            },
+          },
+        },
+      },
+    });
   }
 
   //========================== LOBBY INFOS ===============================

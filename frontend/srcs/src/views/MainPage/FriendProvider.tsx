@@ -24,6 +24,7 @@ function FriendProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    console.log("subscribe to friends event");
     socket?.on("on-friend-remove", (friendRemoved) => {
       setFriendList((prev: TFriend[]) =>
         prev.filter((friend: TFriend) => friend.username !== friendRemoved)

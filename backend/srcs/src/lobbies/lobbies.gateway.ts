@@ -14,6 +14,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
+import { LobbyState } from '@prisma/client';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -67,6 +68,20 @@ export class LobbiesGateway
   async readyToStart(lobby: LobbyWithMembersEntity) {
     this._games.set(lobby.id, new Game(lobby));
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
+  }
+
+  async readySelection(lobby: LobbyWithMembersEntity) {
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    this.emitToLobby(lobby.id, 'on-lobby-update', {
+      state: LobbyState.SELECTION,
+    });
+    var seconds = 15;
+    const interval = setInterval(() => {
+      this.emitToLobby(lobby.id, 'time-to-choose', seconds--);
+    }, 1000);
+
+    await delay(17000);
+    clearInterval(interval);
   }
 
   @SubscribeMessage('ready-to-play')

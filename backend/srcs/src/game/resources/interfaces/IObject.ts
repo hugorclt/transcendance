@@ -1,20 +1,34 @@
+import { EType } from 'shared/enum';
 import { Ball } from '../Ball';
 import { TCollision } from '../types';
 import { HitBox } from '../utils/HitBox';
 import { Vector3 } from '../utils/Vector3';
 
+export type CreateObjectDto = {
+  width: number;
+  height: number;
+  depth: number;
+  position: Vector3;
+  texture?: string;
+  type?: EType;
+};
+
 export abstract class IObject {
+  protected texture: string = '';
+  protected type: EType = EType.BOX;
   protected _initialPosition: Vector3;
   protected _hitBox: HitBox;
 
-  public constructor(
-    width: number,
-    height: number,
-    depth: number,
-    position: Vector3,
-  ) {
-    this._initialPosition = position;
-    this._hitBox = new HitBox(width, height, depth, position);
+  public constructor(data: CreateObjectDto) {
+    this._initialPosition = data.position;
+    this._hitBox = new HitBox(
+      data.width,
+      data.height,
+      data.depth,
+      data.position,
+    );
+    if (data.texture) this.texture = data.texture;
+    if (data.type) this.type = data.type;
   }
 
   /* --------------------------------- getters -------------------------------- */

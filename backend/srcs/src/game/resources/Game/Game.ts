@@ -1,17 +1,13 @@
 import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
 import { Ball } from '../Ball';
-import {
-  BallConfig,
-  BaseFieldConfig,
-  ClassicBallConfig,
-  ThreeDBallConfig,
-} from '../utils/config/config';
 import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
-import { EField, EPaddle } from '../utils/config/enums';
 import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
+import { classic } from '../utils/config/maps';
+import { space } from '../utils/config/maps';
+import { EPaddle } from '@prisma/client';
 
 export class Game {
   private _id: string;
@@ -24,6 +20,45 @@ export class Game {
   private _movingObjects: Array<IObject>;
   private _collisions: Array<TCollision>;
 
+  private _init_ball(config: any) {
+    const ball = config.ball;
+    this._ball = new Ball(
+      ball.width,
+      ball.height,
+      ball.depth,
+      ball.position,
+      ball.velocity,
+      ball.texture,
+      ball.type,
+    );
+  }
+
+  private _init_field(config: any) {
+    this._field = new Field(config);
+    this._field.walls.forEach((wall) => {
+      this._objects.push(wall);
+    });
+    this._field.goals.forEach((goal) => {
+      this._objects.push(goal);
+    });
+    this._field.objects.forEach((object) => {
+      this._objects.push(object);
+    });
+  }
+
+  private _init_players(config: any, lobby: LobbyWithMembersEntity) {
+    lobby.members.forEach((member) => {
+      this._players.push(
+        new Player(member.userId, member.team, EPaddle.BASIC, config),
+        //TODO
+        //should take paddle choice by user
+      );
+    });
+    this._players.forEach((player) => {
+      this._objects.push(player.paddle);
+    });
+  }
+
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
     this._spectators = new Array<string>();
@@ -31,79 +66,22 @@ export class Game {
     this._movingObjects = new Array<IObject>();
     this._collisions = new Array<TCollision>();
     this._id = lobby.id;
+
+    var config;
     if (lobby.mode == 'CLASSIC') {
-      this._ball = new Ball(
-        ClassicBallConfig.width,
-        ClassicBallConfig.height,
-        ClassicBallConfig.depth,
-        ClassicBallConfig.position,
-        ClassicBallConfig.speed,
-      );
-      this._field = new Field(EField.CLASSIC);
-      lobby.members.forEach((member) => {
-        this._players.push(
-          new Player(
-            member.userId,
-            member.team,
-            EPaddle.CLASSIC,
-            BaseFieldConfig.depth,
-          ),
-        );
-      });
-      this._field.walls.forEach((wall) => {
-        this._objects.push(wall);
-      });
-      this._field.goals.forEach((goal) => {
-        this._objects.push(goal);
-      });
-      this._field.objects.forEach((object) => {
-        this._objects.push(object);
-      });
-      this._players.forEach((player) => {
-        this._objects.push(player.paddle);
-      });
+      config = classic;
+    } else if (lobby.mode == 'CHAMPIONS') {
+      config = space;
     }
-    if (lobby.mode == 'CHAMPIONS') {
-      this._ball = new Ball(
-        ThreeDBallConfig.width,
-        ThreeDBallConfig.height,
-        ThreeDBallConfig.depth,
-        ThreeDBallConfig.position,
-        ThreeDBallConfig.speed,
-      );
-      this._field = new Field(EField.CHAMPIONS);
-      lobby.members.forEach((member) => {
-        this._players.push(
-          new Player(
-            member.userId,
-            member.team,
-            EPaddle.CHAMPIONS,
-            BaseFieldConfig.depth,
-          ),
-        );
-      });
-      this._field.walls.forEach((wall) => {
-        this._objects.push(wall);
-      });
-      this._field.goals.forEach((goal) => {
-        this._objects.push(goal);
-      });
-      this._field.objects.forEach((object) => {
-        this._objects.push(object);
-      });
-      this._players.forEach((player) => {
-        this._objects.push(player.paddle);
-      });
-    }
+    this._init_ball(config);
+    this._init_field(config);
+    this._init_players(config, lobby);
   }
 
   /* -------------------------------- main loop ------------------------------- */
 
   start() {
-    //fix first timestamp
     this._lastTimestamp = Date.now();
-    //init ball velocity
-    // this._ball.speed = new Vector3(1, 0, 4);
   }
 
   processMovements(deltaTime: number) {
@@ -124,11 +102,8 @@ export class Game {
 
   gameLoop(deltaTime: number) {
     this._collisions.length = 0;
-    //update every moving elements based on delta time
     this.processMovements(deltaTime);
-    //detect and apply collisions
     this.detectAndApplyCollisions();
-    //detect goal
     this.detectGoal();
   }
 

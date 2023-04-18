@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -76,10 +80,8 @@ export class ItemsService {
     });
   }
 
-  async hasItem(userId: string, itemName: string) : Promise<ItemEntity> {
-    console.log(userId, itemName);
+  async hasItem(userId: string, itemName: string): Promise<ItemEntity> {
     const item = await this.findItemByName(userId, itemName);
-    console.log(item);
     if (item) return item;
     throw new NotFoundException();
   }

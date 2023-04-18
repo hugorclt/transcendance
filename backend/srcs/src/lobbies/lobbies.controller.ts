@@ -147,4 +147,9 @@ export class LobbiesController {
   async remove(@Param('id') id: string): Promise<LobbyEntity> {
     return await this.lobbiesService.delete(id);
   }
+
+  @Post("paddle-selected")
+  async paddleSelected(@Request() req) {
+    return await this.lobbiesService.paddleSelected(req.user.sub, req.body.lobbyId, req.body.name);
+  }
 }

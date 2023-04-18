@@ -1,8 +1,7 @@
+import { EType } from 'shared/enum';
 import { IObject } from './interfaces/IObject';
 import { TCollision } from './types';
 import { Vector3 } from './utils/Vector3';
-import { baseCollide } from './utils/collisions/baseColide';
-import { EType } from './utils/config/enums';
 
 export class Ball extends IObject {
   private _speed: Vector3;
@@ -14,11 +13,19 @@ export class Ball extends IObject {
     depth: number,
     position: Vector3,
     speed: Vector3,
+    texture?: string,
+    type?: EType,
   ) {
-    super(width, height, depth, position);
+    super({
+      width: width,
+      height: height,
+      depth: depth,
+      position: position,
+      texture: texture,
+      type: type,
+    });
     this._initialSpeed = speed;
     this._speed = speed;
-    console.log('Ball init with position: ', this._hitBox.position);
   }
 
   public set speed(value: Vector3) {
@@ -58,7 +65,6 @@ export class Ball extends IObject {
   }
 
   public update(deltaTime: number) {
-    //if we assume speed is in m/s unit
     const position = this.getPosition();
     position.x += this._speed.x * deltaTime;
     position.y += this._speed.y * deltaTime;
