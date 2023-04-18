@@ -49,7 +49,7 @@ export class Game {
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     lobby.members.forEach((member) => {
       this._players.push(
-        new Player(member.userId, member.team, EPaddle.BASIC, config),
+        new Player(member.userId, member.team, member.paddleType, config),
         //TODO
         //should take paddle choice by user
       );
