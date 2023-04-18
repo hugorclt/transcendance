@@ -18,20 +18,20 @@ export interface Object3D {
   };
 }
 
-export interface Player {
+export interface IPlayer {
   id: string;
-  team: string;
+  team: boolean;
   paddle: Object3D;
 }
 
-export interface Field {
+export interface IField {
   walls: Object3D[];
   objects: Object3D[];
   goals: Object3D[];
 }
 
 export interface IGameInfo {
-  field: Field;
+  field: IField;
   ball: Object3D;
-  players: Player[];
+  players: IPlayer[];
 }

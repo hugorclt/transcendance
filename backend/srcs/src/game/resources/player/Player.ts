@@ -2,6 +2,7 @@ import { EPaddle } from '@prisma/client';
 import { BasePaddle } from '../paddle/BasePaddle';
 import { IPaddle } from '../paddle/IPaddle';
 import { Vector3 } from '../utils/Vector3';
+import { IPlayer } from 'shared/gameInterfaces';
 
 export class Player {
   private _paddle: IPaddle;
@@ -50,5 +51,13 @@ export class Player {
 
   public get paddle(): IPaddle {
     return this._paddle;
+  }
+
+  public exportPlayerInfo() : IPlayer {
+    return ({
+      id: this._id,
+      team: this._team,
+      paddle: this._paddle.exportInfo()
+    })
   }
 }

@@ -3,6 +3,7 @@ import { Ball } from '../Ball';
 import { TCollision } from '../types';
 import { HitBox } from '../utils/HitBox';
 import { Vector3 } from '../utils/Vector3';
+import { Object3D } from 'shared/gameInterfaces';
 
 export type CreateObjectDto = {
   width: number;
@@ -98,6 +99,21 @@ export abstract class IObject {
       this._hitBox.position.y,
       this._hitBox.position.z + incrZ,
     );
+  }
+
+  public exportInfo(): Object3D {
+    return({
+      type: this.type,
+      texture: this.texture,
+      width: this.getWidth(),
+      height: this.getHeight(),
+      depth: this.getDepth(),
+      position: {
+        x: this._hitBox.position.x,
+        y: this._hitBox.position.y,
+        z: this._hitBox.position.z,
+      },
+    })
   }
 
   public abstract collide?(ball: Ball): TCollision;

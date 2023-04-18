@@ -8,6 +8,7 @@ import { TCollision } from '../types';
 import { classic } from '../utils/config/maps';
 import { space } from '../utils/config/maps';
 import { EPaddle } from '@prisma/client';
+import { IGameInfo } from 'shared/gameInterfaces';
 
 export class Game {
   private _id: string;
@@ -99,6 +100,13 @@ export class Game {
   }
 
   detectGoal() {}
+
+  exportGameInfo() : IGameInfo {
+    const field = this._field.exportFieldInfo();
+    const ball = this._ball.exportInfo();
+    const players = this._players.map((player) => player.exportPlayerInfo());
+    return ({field: field, ball: ball, players: players})
+  }
 
   gameLoop(deltaTime: number) {
     this._collisions.length = 0;
