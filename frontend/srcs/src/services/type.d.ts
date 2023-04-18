@@ -1,3 +1,5 @@
+import { EItem } from "../shared/enum";
+
 export interface TUser {
   id: string;
   username: string;
@@ -61,4 +63,12 @@ export interface TParticipant {
 
 export interface TSelectedPage {
   selectedPage: number;
+}
+
+export interface TItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  type: EItem;
 }

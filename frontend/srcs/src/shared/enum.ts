@@ -30,8 +30,8 @@ export enum EType {
   PADDLE,
 }
 
-// export enum EItem {
-//   PADDLE,
-//   TRAIL,
-//   GOAL,
-// }
+export enum EItem {
+  PADDLE,
+  TRAIL,
+  GOAL,
+}

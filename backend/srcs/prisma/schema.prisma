@@ -102,7 +102,6 @@ model LobbyMember {
   lobby      Lobby   @relation(fields: [lobbyId], references: [id])
 }
 
-
 model Match {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   date        DateTime @default(now())
@@ -121,7 +120,7 @@ model Item {
   name   String
   image  String
   price  Int
-  type   ItemType
+  type   EItem
   owners User[]   @relation("itemOwner")
 }
 
@@ -180,10 +179,10 @@ enum Role {
   OWNER
 }
 
-enum ItemType {
-  PADDLES
-  TRAILS
-  GOALS
+enum EItem {
+  PADDLE
+  TRAIL
+  GOAL
 }
 
 enum EMap {

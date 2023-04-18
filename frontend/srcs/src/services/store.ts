@@ -2,6 +2,7 @@ import { atom } from "jotai";
 import {
   TConversation,
   TFriend,
+  TItem,
   TLobby,
   TUser,
   TUserPreferences,
