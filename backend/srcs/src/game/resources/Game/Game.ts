@@ -5,8 +5,7 @@ import { Field } from '../Field/Field';
 import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
-import { classic } from '../utils/config/maps';
-import { space } from '../utils/config/maps';
+import { maps } from '../utils/config/maps';
 import { EPaddle } from '@prisma/client';
 
 export class Game {
@@ -69,9 +68,9 @@ export class Game {
 
     var config;
     if (lobby.mode == 'CLASSIC') {
-      config = classic;
+      config = maps[0];
     } else if (lobby.mode == 'CHAMPIONS') {
-      config = space;
+      config = maps[1];
     }
     this._init_ball(config);
     this._init_field(config);

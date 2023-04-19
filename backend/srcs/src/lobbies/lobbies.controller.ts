@@ -25,7 +25,16 @@ import { KickLobbyMemberDto } from './members/dto/kick-lobby-member.dto';
 @ApiTags('lobbies')
 export class LobbiesController {
   constructor(private readonly lobbiesService: LobbiesService) {}
+  @Get('map')
+  async getMap(@Request() req) {
+    return await this.lobbiesService.getMap();
+  }
 
+  @Post('get-votes')
+  async getVotes(@Request() req) {
+    return await this.lobbiesService.getVotes(req.body.lobbyId);
+  }
+  
   @Post()
   @ApiCreatedResponse({ type: LobbyWithMembersEntity })
   async create(
@@ -35,18 +44,18 @@ export class LobbiesController {
     const lobby = await this.lobbiesService.create(
       req.user.sub,
       createLobbyDto,
-    );
-    if (lobby) {
-      return lobby;
-    }
+      );
+      if (lobby) {
+        return lobby;
+      }
   }
-
+    
   @Get()
   @ApiOkResponse({ type: LobbyEntity, isArray: true })
   async findAll(): Promise<LobbyEntity[]> {
     return await this.lobbiesService.findAll();
   }
-
+    
   @Get('current-lobby')
   @ApiOkResponse({ type: LobbyWithMembersEntity })
   async findLobbyForUser(@Request() req: any): Promise<LobbyWithMembersEntity> {
@@ -152,4 +161,10 @@ export class LobbiesController {
   async paddleSelected(@Request() req) {
     return await this.lobbiesService.paddleSelected(req.user.sub, req.body.lobbyId, req.body.name);
   }
+
+  @Post('vote')
+  async voteMap(@Request() req) {
+    return await this.lobbiesService.voteMap(req.user.sub, req.body.lobbyId, req.body.mapName);
+  }
+
 }

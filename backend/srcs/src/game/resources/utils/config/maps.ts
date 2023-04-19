@@ -2,7 +2,7 @@ import { EType } from 'shared/enum';
 import { Vector3 } from 'src/game/resources/utils/Vector3';
 import { generateBase64Image } from 'src/utils/base64';
 
-export const space = {
+export const maps = [{
   name: 'SPACE',
   mode: 'CHAMPIONS',
   miniature: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
@@ -98,9 +98,7 @@ export const space = {
     height: 2,
     depth: 0.2,
   },
-};
-
-export const classic = {
+}, {
   name: 'CLASSIC',
   mode: 'CLASSIC',
 
@@ -155,4 +153,4 @@ export const classic = {
     height: 1,
     depth: 0.5,
   },
-};
+}]

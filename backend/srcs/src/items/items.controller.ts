@@ -35,7 +35,7 @@ export class ItemsController {
 
   @Get("/user-items")
   getUserItem(@Request() req) {
-    return this.itemsService.getUserItem(req.user.id);
+    return this.itemsService.getUserItem(req.user.sub);
   }
 
   @Post("has-item")
