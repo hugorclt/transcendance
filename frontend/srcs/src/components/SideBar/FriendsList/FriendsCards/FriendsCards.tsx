@@ -55,7 +55,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
             <FriendsCardsStatusRound
               style={{ backgroundColor: convertStatusColor(friend.status) }}
             />
-            {friend.username.toLocaleUpperCase()}
+            {friend?.username.length > 8 ? friend?.username.substring(0, 8).concat("..."): friend?.username.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>
             {friend.status.toLocaleUpperCase()}

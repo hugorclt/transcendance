@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -21,33 +22,24 @@ import { AccessAuthGard } from 'src/auth/utils/guards';
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
-  @Post()
-  @ApiCreatedResponse({ type: ItemEntity })
-  create(@Body() createItemDto: CreateItemDto) {
-    return this.itemsService.create(createItemDto);
-  }
-
   @Get()
   @ApiOkResponse({ type: ItemEntity, isArray: true })
   findAll() {
     return this.itemsService.findAll();
   }
 
-  @Get(':id')
-  @ApiOkResponse({ type: ItemEntity })
-  findOne(@Param('id') id: string) {
-    return this.itemsService.findOne(id);
+  @Post("/buy")
+  buyItem(@Request() req) {
+    return this.itemsService.buyItem(req.user.sub, req.body.name);
   }
 
-  @Patch(':id')
-  @ApiOkResponse({ type: ItemEntity })
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemsService.update(id, updateItemDto);
+  @Get("/user-items")
+  getUserItem(@Request() req) {
+    return this.itemsService.getUserItem(req.user.sub);
   }
 
-  @Delete(':id')
-  @ApiOkResponse({ type: ItemEntity })
-  remove(@Param('id') id: string) {
-    return this.itemsService.remove(id);
+  @Post("has-item")
+  hasItem(@Request() req) {
+    return this.itemsService.hasItem(req.user.sub, req.body.name);
   }
 }

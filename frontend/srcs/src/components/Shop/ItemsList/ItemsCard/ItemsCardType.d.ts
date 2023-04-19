@@ -3,4 +3,5 @@ export type TItemsProps = {
     desc: string,
     price: string,
     image: string,
+    type: string,
 }

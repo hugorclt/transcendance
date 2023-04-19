@@ -1,3 +1,5 @@
+import { EItem } from "../shared/enum";
+
 export interface TUser {
   id: string;
   username: string;
@@ -52,6 +54,7 @@ export interface TConversation {
 
 export interface TParticipant {
   id: string;
+  avatar: string;
   name: string;
   role: string;
   status: string;
@@ -68,4 +71,12 @@ export interface TStat {
   lvl: number;
   nbGame: number;
   nbWin: number;
+}
+
+export interface TItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  type: EItem;
 }

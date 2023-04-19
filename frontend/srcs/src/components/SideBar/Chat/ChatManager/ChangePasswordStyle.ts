@@ -4,21 +4,17 @@ import { COLORS } from "../../../../colors";
 export const ChangePasswordContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  width: 50%;
+  padding: 16px;
 
-  h3 {
+  h4 {
     color: ${COLORS.primary};
   }
 
   div {
-    background-color: ${COLORS.border};
-    margin:4px;
-    border-radius: 5px;
-    padding: 4px;
-
   }
 
-  h4 {
+  p {
     color: ${COLORS.border};
 
     &:hover {
@@ -29,17 +25,60 @@ export const ChangePasswordContainer = styled.div`
   input {
     background-color: ${COLORS.border};
     margin: 4px;
-    border:none;
+    border: none;
     border-radius: 5px;
-    padding: 4px;
-    color: ${COLORS.primary}
+    padding: 8px;
+    color: ${COLORS.primary};
+    width: 100%;
+    box-sizing: border-box;
   }
 
   button {
     background-color: ${COLORS.secondary};
-    padding: 4px;
+    padding: 8px;
     color: ${COLORS.primary};
-    border:none;
-    border-radius:5px;
+    border: none;
+    border-radius: 5px;
+    margin: 4px;
+    width: 100%;
+    margin-bottom: 16px;
+
   }
+`;
+
+export const InputButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  form {
+    width: 100%;
+  }
+`
+export const ChangeImageContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+  }
+
+  input {
+    width: 100%;
+  }
+`;
+
+export const PasswordContainer = styled.div`
+  background-color: ${COLORS.border};
+  margin: 4px;
+  border-radius: 5px;
+  padding: 4px;
+  margin-bottom: 16px;
+  width:100%;
+  box-sizing: border-box;
 `;

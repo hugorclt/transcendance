@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,32 +10,41 @@ import {
   InvitationEntity,
   InvitationExtendedEntity,
 } from './entities/invitation.entity';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class InvitationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private socialsGateway: SocialsGateway,
+  ) {}
 
   async create(
     createInvitationDto: CreateInvitationDto,
     sender: any,
   ): Promise<InvitationExtendedEntity> {
+    var invitation;
     if (createInvitationDto.type == 'FRIEND') {
-      return await this.createFriendInvitation(createInvitationDto, sender);
+      if (createInvitationDto.username == sender.username)
+        throw new UnprocessableEntityException();
+      invitation = await this.createFriendInvitation(
+        createInvitationDto,
+        sender,
+      );
     } else if (createInvitationDto.type == 'LOBBY') {
-      return await this.createLobbyInvitation(createInvitationDto);
+      invitation = await this.createLobbyInvitation(createInvitationDto);
     }
+    this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
+    return invitation;
   }
 
   async createLobbyInvitation(
     createInvitationDto: CreateInvitationDto,
   ): Promise<InvitationExtendedEntity> {
-    console.log('creating lobby invitation...');
-    //check lobby exists
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: createInvitationDto.lobbyId },
     });
     //check lobby can be joined (game not started, lobby not full, sender is lobby owner)
-    console.log('should check whether lobby is joinable');
     //TODO
     const invitation = await this.prisma.invitation.create({
       data: {
@@ -67,13 +80,11 @@ export class InvitationsService {
     invitationDtoList: CreateInvitationDto[],
     senderId: string,
   ): Promise<InvitationEntity[]> {
-    console.log('creating ', invitationDtoList.length, ' invitations');
     const invitations = await Promise.all(
       invitationDtoList.map(async (invitation) => {
         return await this.create(invitation, senderId);
       }),
     );
-    console.log('success creating invitations');
     return invitations;
   }
 

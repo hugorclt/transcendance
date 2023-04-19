@@ -1,288 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ItemsCards from "./ItemsCard/ItemsCards";
 import {
   CardsContainer,
   ShopTopBarContainer,
-  ShopTopBarFilter,
   ShopTopBarSelect,
+  SliderShopContainer,
 } from "./ItemsListStyle";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../mediaSize";
-// import greenp from "../../../assets/images/paddle/green.png";
-// import bluep from "../../../assets/images/paddle/bluep.gif";
+import { TItemsProps } from "./ItemsCard/ItemsCardType";
 import { nanoid } from "nanoid";
 import SliderMenu from "../../common/SliderMenu/SliderMenu";
-// import yellowp from "../../../assets/images/paddle/yellow.png";
-// import purplep from "../../../assets/images/paddle/purple.png";
-
-const data = [
-  {
-    name: "YELLOW-PADDLE",
-    desc: "Gotta go fast",
-    price: "1500",
-    type: "PADDLE",
-    owned: false,
-    image: "yellowp",
-  },
-  {
-    name: "BLUE-PADDLE",
-    desc: "Let's twist",
-    price: "1500",
-    type: "PADDLE",
-    owned: false,
-    image: "bluep",
-  },
-  {
-    name: "GREEN-PADDLE",
-    desc: "idkt",
-    price: "1500",
-    type: "PADDLE",
-    owned: false,
-    image: "greenp",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },  {
-    name: "PURPLE-PADDLE",
-    desc: "yo le rap",
-    price: "1500",
-    type: "PADDLE",
-    owned: true,
-    image: "purplep",
-  },
-];
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
 
 function ItemsList() {
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
+  const axiosPrivate = useAxiosPrivate();
+  const [errMsg, setErrMsg] = useState("");
+  const [data, setData] = useState<TItemsProps[]>([]);
+
+  useEffect(() => {
+    axiosPrivate
+      .get("items")
+      .then((res: AxiosResponse) => {
+        setData(res.data);
+      })
+      .catch((err: AxiosError) => {
+        setErrMsg("Error while retrieving shop information, please refresh!");
+      });
+  }, []);
 
   return (
     <>
       <ShopTopBarContainer>
         <MediaQuery minWidth={mediaSize.tablet + 1}>
-          <SliderMenu items={["ALL", "PADDLE", "TRAILS", "GOAL"]} setState={setFilter} state={filter} flex={"flex-start"}/>
+          <SliderShopContainer>
+            <SliderMenu
+              items={["ALL", "PADDLE", "TRAILS", "GOAL"]}
+              setState={setFilter}
+              state={filter}
+              flex={"flex-start"}
+            />
+          </SliderShopContainer>
         </MediaQuery>
 
         <MediaQuery maxWidth={mediaSize.tablet}>
@@ -302,27 +63,29 @@ function ItemsList() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </ShopTopBarContainer>
-      <CardsContainer>
-        {data.flatMap((item) => {
-          if (filter != "ALL") {
-            if (item.type != filter) return;
-          }
-          const matches = item.name
-            .toLocaleUpperCase()
-            .includes(search.toLocaleUpperCase());
-          if (!matches) return;
+        <CardsContainer>
+          {data.flatMap((item) => {
+            if (filter != "ALL") {
+              if (item.type != filter) return;
+            }
+            const matches = item.name
+              .toLocaleUpperCase()
+              .includes(search.toLocaleUpperCase());
+            if (!matches) return;
 
-          return (
-            <ItemsCards
-              key={nanoid()}
-              name={item.name}
-              desc={item.desc}
-              price={item.price}
-              image={item.image}
-            />
-          );
-        })}
-      </CardsContainer>
+            return (
+              <ItemsCards
+                key={nanoid()}
+                name={item.name}
+                desc={item.desc}
+                price={item.price}
+                image={item.image}
+                type={item.type}
+              />
+            );
+          })}
+        </CardsContainer>
+      <p style={{ color: "red" }}>{errMsg}</p>
     </>
   );
 }

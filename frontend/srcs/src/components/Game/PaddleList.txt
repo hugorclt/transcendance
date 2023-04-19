@@ -1,2 +1,0 @@
-Red=#f69090 emissiveIntensity=3.5 emissive="red"
-

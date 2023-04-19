@@ -15,14 +15,19 @@ import { ItemsModule } from './items/items.module';
 import { InvitationsModule } from './invitations/invitations.module';
 import { ConfigModule } from '@nestjs/config';
 import { MatchesModule } from './matches/matches.module';
-import { GameModule } from './game/game.module';
 import { StatsModule } from './stats/stats.module';
+import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     JwtModule.register({ secret: process.env['AT_SECRET'] }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'assets'),
+    }),
     AuthModule,
     PrismaModule,
     UsersModule,
@@ -35,7 +40,6 @@ import { StatsModule } from './stats/stats.module';
     ItemsModule,
     InvitationsModule,
     MatchesModule,
-    GameModule,
     StatsModule,
   ],
   controllers: [AppController],

@@ -18,17 +18,26 @@ import {
 function JoinRoom() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const axiosPrivate = useAxiosPrivate()
+  const axiosPrivate = useAxiosPrivate();
   const [conv, setConv] = useAtom(conversationAtom);
+  const [errMsg, setErrMsg] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    axiosPrivate.post("/rooms/join", {name: name, password: password}).then((res: AxiosResponse) => {
-      setConv((prev) => [res.data, ...prev]);
-    }).catch((err: AxiosError) => {
-      console.log("error while joining the room");
-    })
-  }
+    axiosPrivate
+      .post("/rooms/join", { name: name, password: password })
+      .then((res: AxiosResponse) => {
+        setConv((prev) => [res.data, ...prev]);
+      })
+      .catch((err: AxiosError) => {
+        console.log(err);
+        if (err.response?.status == 404) setErrMsg("Room doesn't exist");
+        else if (err.response?.status == 403)
+          setErrMsg("Password doesn't match");
+        else if (err.response?.status == 422) setErrMsg("You're already in!");
+        else if (err.response?.status == 429) setErrMsg("You're banned :(");
+      });
+  };
 
   return (
     <CreateRoomBox>
@@ -51,6 +60,7 @@ function JoinRoom() {
           <StyledButton type="submit" value="Join room" />
         </CreateRoomButtonBox>
       </CreateRoomForm>
+      {errMsg.length != 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
     </CreateRoomBox>
   );
 }

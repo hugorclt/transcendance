@@ -72,9 +72,9 @@ model Lobby {
   ownerId     String        @unique @db.Uuid
   nbPlayers   Int           @default(2)
   maxDuration Int           @default(180)
-  mode        Mode          @default(CLASSIC)
+  mode        EMode         @default(CLASSIC)
   private     Boolean       @default(false)
-  map         MapName       @default(CLASSIC)
+  map         EMap          @default(CLASSIC)
   invitations Invitation[]
   owner       User          @relation("lobbyOwner", fields: [ownerId], references: [id])
   members     LobbyMember[]
@@ -91,23 +91,15 @@ enum LobbyState {
 }
 
 model LobbyMember {
-  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  team    Boolean @default(false)
-  ready   Boolean @default(false)
-  userId  String  @db.Uuid
-  lobbyId String  @db.Uuid
-  user    User    @relation(fields: [userId], references: [id])
-  lobby   Lobby   @relation(fields: [lobbyId], references: [id])
-}
-
-enum MapName {
-  CLASSIC
-}
-
-enum Mode {
-  CLASSIC
-  CHAMPIONS
-  GRAVITY
+  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  team       Boolean @default(false)
+  ready      Boolean @default(false)
+  paddleType EPaddle @default(CLASSIC)
+  vote       EMap?
+  userId     String  @db.Uuid
+  lobbyId    String  @db.Uuid
+  user       User    @relation(fields: [userId], references: [id])
+  lobby      Lobby   @relation(fields: [lobbyId], references: [id])
 }
 
 model Match {
@@ -132,11 +124,12 @@ model Stat {
 
 //================== SHOP =======================
 model Item {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name   String
-  price  Int
   image  String
-  owners User[] @relation("itemOwner")
+  price  Int
+  type   EItem
+  owners User[]   @relation("itemOwner")
 }
 
 model Room {
@@ -192,4 +185,30 @@ enum Role {
   BASIC
   ADMIN
   OWNER
+}
+
+enum EItem {
+  PADDLE
+  TRAIL
+  GOAL
+}
+
+enum EMap {
+  CLASSIC
+  SPACE
+}
+
+enum EMode {
+  CLASSIC
+  CHAMPIONS
+}
+
+enum EPaddle {
+  CLASSIC
+  BASIC
+  RED
+  BLUE
+  ORANGE
+  PURPLE
+  GREEN
 }

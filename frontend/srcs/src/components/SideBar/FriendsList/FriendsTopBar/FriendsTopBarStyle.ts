@@ -23,6 +23,9 @@ export const ModalTitle = styled.h4`
 `;
 
 export const ModalBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: ${COLORS.background};
   padding: 8px;
   border-radius: 5px;

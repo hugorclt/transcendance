@@ -3,12 +3,19 @@ import { COLORS } from "../../../../colors";
 import { mediaSize } from "../../../../mediaSize";
 
 export const GameModeCardsContainer = styled.div`
-  background-color: ${COLORS.grey};
   border-radius: 5px;
   border: 1px solid ${COLORS.border};
   border-radius: 8px;
-
+  position: relative;
+  height: 100%;
+  width: 30%;
+  top: 20%;
+  margin: 24px;
   transition: all 0.7s cubic-bezier(0.45, 0, 0.55, 1) 0.1s;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 
   @media (min-width: ${mediaSize.mobile}) {
     height: 50vh;
@@ -24,14 +31,15 @@ export const GameModeCardsContainer = styled.div`
 export const GameModeCardsUpper = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${COLORS.grey};
+  align-items: space-between;
+  /* background-color: ${COLORS.grey}; */
   width: 100%;
-  height: 75%;
+  height: 50%;
 `;
 
-export const GameModeCardsTitleBox = styled.div`
+export const GameModeCardsTitleBox = styled.p`
   display: flex;
-  height: 15%;
+  /* height: 15%; */
   justify-content: center;
   align-items: center;
   padding-bottom: 16px;
@@ -46,23 +54,34 @@ export const GameModeCardsMain = styled.div`
 
 export const GameModeCardsButton = styled.button`
   margin: 16px;
-  padding: 6px;
-  border-radius: 5px;
-  display: none;
-  transition: all;
-  transition-duration: 0.2s;
-  ${GameModeCardsContainer}:hover & {
-    display: block;
-    transition-delay: 0.8s;
-  }
+  padding: 8px;
+  border-radius: 8px;
+  background-color: ${COLORS.secondary};
+  border: 1px solid ${COLORS.border};
+  color: ${COLORS.primary};
+  font-weight: bold;
 `;
 
 export const GameModeCardsBottom = styled.div`
   width: 100%;
+  height: 30%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  padding: 16px;
+
+  h3 {
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-weight: bold;
+  }
 `;
 
 export const GameModeCardsGameTitle = styled.h1`
-  background-color: ${COLORS.grey};
+  /* background-color: ${COLORS.grey}; */
 `;
 
 export const GameModeCardsText = styled.p`

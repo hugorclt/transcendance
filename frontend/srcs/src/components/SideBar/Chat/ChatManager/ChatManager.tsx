@@ -1,14 +1,14 @@
 import React from "react";
 import { ModalBox } from "../../FriendsList/FriendsTopBar/FriendsTopBarStyle";
 import { TChatProps } from "../ChatType";
-import ChangePassword from "./ChangePassword";
+import ChatSettings from "./ChatSettings";
 import Unban from "./Unban";
 
-function ChatManager({chat} : TChatProps) {
+function ChatManager({ chat }: TChatProps) {
   return (
-    <ModalBox style={{ display: "flex" }}>
-      <ChangePassword />
-      <Unban chat={chat}/>
+    <ModalBox style={{ display: "flex", height: "100%" }}>
+      <ChatSettings chat={chat} />
+      <Unban chat={chat} />
     </ModalBox>
   );
 }

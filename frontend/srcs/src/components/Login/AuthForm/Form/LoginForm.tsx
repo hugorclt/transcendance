@@ -78,7 +78,6 @@ function LoginForm() {
           username: username,
           accessToken: accessToken,
         }));
-        console.log("user ", username, " logged in: ", accessToken);
         setUsername("");
         setPassword("");
         navigate(from, { replace: true });

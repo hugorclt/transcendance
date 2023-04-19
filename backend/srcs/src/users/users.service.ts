@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import {
   CreateUserDto,
@@ -25,6 +26,7 @@ import { addFriendDto } from './dto/add-friend.dto';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { RoomsService } from 'src/socials/rooms/rooms.service';
 import { ParticipantService } from 'src/socials/rooms/participant/participant.service';
+import { defaultAvatar } from 'src/utils/base64';
 
 @Injectable()
 export class UsersService {
@@ -41,6 +43,7 @@ export class UsersService {
         username: createUserDto.username,
         email: createUserDto.email,
         password: createUserDto.password,
+        avatar: defaultAvatar.avatar,
         preferences: {
           create: { visibility: 'VISIBLE' },
         },
@@ -325,7 +328,6 @@ export class UsersService {
         avatar: buffer.toString('base64'),
       },
     });
-    console.log(user.avatar);
     this.socialsGateway.emitToList(
       await this.getUserFriends(user.id),
       'on-friend-update',
@@ -372,7 +374,6 @@ export class UsersService {
   }
 
   async updatePassword(userId: string, newPassword: string) {
-    console.log(newPassword.length);
     if (newPassword.length == 0) throw new BadRequestException();
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(newPassword, salt);

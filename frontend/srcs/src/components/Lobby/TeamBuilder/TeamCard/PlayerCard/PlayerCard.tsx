@@ -31,9 +31,7 @@ function PlayerCard({ team, member }: PlayerCardProps) {
         lobbyId: lobby.id,
         playerId: member.userId,
       })
-      .then((response: AxiosResponse) => {
-        console.log("Success kicking user");
-      })
+      .then((response: AxiosResponse) => {})
       .catch((error: AxiosError) => {
         console.log(
           "error kicking player: ",

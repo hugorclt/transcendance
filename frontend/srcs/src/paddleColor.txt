@@ -1,0 +1,5 @@
+red: color: #f69090 emissive: "red" emissiveIntensity: 4
+orange: color: #ff6a00 emissive: "#d9750b" emissiveIntensity: 4
+purple: color: #f1c5ff emissive: "#bd0af4" emissiveIntensity: 4
+green: color: #21f40a emissive: "#21f40a" emissiveIntensity: 4
+blue: color: #0aaaf4 emissive: #0aaaf4 emissiveIntensity: 4

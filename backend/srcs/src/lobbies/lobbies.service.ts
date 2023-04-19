@@ -14,7 +14,8 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
-import { LobbyState } from '@prisma/client';
+import { EMap, EPaddle, LobbyState } from '@prisma/client';
+import { maps } from 'src/game/resources/utils/config/maps';
 
 @Injectable()
 export class LobbiesService {
@@ -214,7 +215,10 @@ export class LobbiesService {
   }
 
   /* ---------------- Update Lobby State (Backend Originated) ---------------- */
-  async updateLobbyState(lobbyId: string, state: string): Promise<LobbyEntity> {
+  async updateLobbyState(
+    lobbyId: string,
+    state: LobbyState,
+  ): Promise<LobbyWithMembersEntity> {
     const lobby = await this.findLobbyWithMembers(lobbyId);
     if (!state) {
       if (
@@ -225,18 +229,21 @@ export class LobbiesService {
           return await this.prisma.lobby.update({
             where: { id: lobby.id },
             data: { state: LobbyState.FULL },
+            include: { members: true },
           });
         }
       } else if (lobby.state == LobbyState.FULL) {
         return await this.prisma.lobby.update({
           where: { id: lobby.id },
           data: { state: LobbyState.JOINABLE },
+          include: { members: true },
         });
       }
     } else {
       return await this.prisma.lobby.update({
         where: { id: lobby.id },
         data: { state: state as LobbyState },
+        include: { members: true },
       });
     }
     return lobby;
@@ -259,6 +266,7 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(updateLobby.id, 'user-left-lobby', {
       userId: userId,
     });
+    await this.lobbiesGateway.removeUserFromLobby(lobbyId, userId);
     return await this.updateLobbyState(lobbyId, null);
   }
 
@@ -405,17 +413,158 @@ export class LobbiesService {
     return lobby;
   }
 
-  async changeReady(
-    lobbyId: string,
-    userId: string,
-  ): Promise<LobbyMemberEntity> {
+  async changeReady(lobbyId: string, userId: string): Promise<void> {
     const lobby = await this.findLobbyWithMembers(lobbyId);
-    const member = lobby.members.find((member) => member.userId == userId);
-    const updateMember = await this.lobbyMembersService.update(member.id, {
-      ready: !member.ready,
+    let member = lobby.members.find((member) => member.userId == userId);
+    let lobbyUpdated = await this.prisma.lobby.update({
+      where: {
+        id: lobby.id,
+      },
+      data: {
+        members: {
+          update: {
+            where: {
+              id: member.id,
+            },
+            data: {
+              ready: !member.ready,
+            },
+          },
+        },
+      },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
     });
-    this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', updateMember);
-    return updateMember;
+    member = lobbyUpdated.members.find((member) => member.userId == userId);
+    this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
+    //check if game should move to next stage
+    const notReady = lobbyUpdated.members.find(
+      (member) => member.ready == false,
+    );
+    //TODO ========> ADD OTHER STATES
+    if (!notReady) {
+      console.log('everybody ready');
+      // var lobbyWithMembers = await this.updateLobbyState(
+      //   lobby.id,
+      //   LobbyState.SELECTION,
+      // );
+      // this.lobbiesGateway.readySelection(lobbyWithMembers);
+      var lobbyWithMembers = await this.updateLobbyState(
+        lobby.id,
+        LobbyState.GAME,
+      );
+      this.lobbiesGateway.readyToStart(lobbyWithMembers);
+    }
+  }
+
+  async paddleSelected(userId: string, lobbyId: string, paddleName: string) {
+    var paddleType;
+    switch (paddleName) {
+      case 'Red Paddle':
+        paddleType = EPaddle.RED;
+        break;
+
+      case 'Blue Paddle':
+        paddleType = EPaddle.BLUE;
+        break;
+
+      case 'Orange Paddle':
+        paddleType = EPaddle.ORANGE;
+        break;
+
+      case 'Purple Paddle':
+        paddleType = EPaddle.PURPLE;
+        break;
+
+      case 'Green Paddle':
+        paddleType = EPaddle.GREEN;
+        break;
+    }
+    if (!paddleType) throw new NotFoundException();
+
+    return await this.prisma.lobby.update({
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        members: {
+          updateMany: {
+            where: {
+              userId: userId,
+            },
+            data: {
+              paddleType: paddleType,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getMap() {
+    return maps.map((map) => {
+      return {name: map.name, img: map.miniature};
+    })
+  }
+
+  async voteMap(userId: string, lobbyId: string, mapName: string) {
+    var map;
+    switch(mapName) {
+      case "CLASSIC":
+        map = EMap.CLASSIC;
+        break ;
+      case "SPACE":
+        map = EMap.SPACE;
+        break ;
+    }
+
+    if (!map) throw new NotFoundException();
+
+    const votes = await this.prisma.lobby.update({
+      include: {
+        members: true,
+      },
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        members: {
+          updateMany: {
+            where: {
+              userId: userId,
+            },
+            data: {
+              vote: map,
+            }
+          }
+        }
+      }
+    })
+    const vote = votes.members.map((member) => member.vote)
+    await this.lobbiesGateway.emitToLobby(lobbyId, "on-vote", vote)
+    return vote;
+  }
+
+  async getVotes(lobbyId: string) {
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        id: lobbyId,
+      },
+      include: {
+        members: true,
+      }
+    })
+    return lobby.members.map((member) => member.vote)
   }
 
   //========================== LOBBY INFOS ===============================

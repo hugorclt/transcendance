@@ -33,9 +33,10 @@ import { useAtom } from "jotai";
 import { conversationAtom, userAtom } from "../../../services/store";
 import { displayName } from "../../../services/Chat/displayName";
 import Popup from "reactjs-popup";
-import {IoIosSettings} from 'react-icons/io'
+import { IoIosSettings } from "react-icons/io";
 // import { ModalBox } from "../../Lobby/TeamBuilder/InviteFriendsButton/InviteFriendsButtonStyle";
 import ChatManager from "./ChatManager/ChatManager";
+import { getImageBase64 } from "../../../services/utils/getImageBase64";
 
 function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
@@ -140,13 +141,21 @@ function Chat({ chat }: TChatProps) {
     );
   };
 
+  const isOwner = () => {
+    const owner = chat.participants.find(
+      (participant) => participant.id == user.id
+    );
+    if (owner.role == "OWNER") return true;
+    return false;
+  };
+
   return (
     <ChatBody>
       {openManager && <LeftSideChat chat={chat} />}
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
-            <ChatIcon src="" />
+            <ChatIcon src={getImageBase64(chat.avatar)} />
             <ChatTitle>{displayName(chat, user)}</ChatTitle>
             {!chat.isDm && (
               <FaUserFriends
@@ -156,20 +165,22 @@ function Chat({ chat }: TChatProps) {
               />
             )}
           </ChatMiddle>
-          <div style={{display:"flex"}}>
-            <Popup
-              trigger={
-                <div>
-                  <IoIosSettings
-                    size={22}
-                    style={{ color: COLORS.secondary }}
-                  />
-                </div>
-              }
-              modal
-              nested>
-                <ChatManager chat={chat}  />
+          <div style={{ display: "flex" }}>
+            {isOwner() && (
+              <Popup
+                trigger={
+                  <div>
+                    <IoIosSettings
+                      size={22}
+                      style={{ color: COLORS.secondary }}
+                    />
+                  </div>
+                }
+                modal
+                nested>
+                <ChatManager chat={chat} />
               </Popup>
+            )}
             <AiOutlineClose
               onClick={() => {
                 setChat((prev) =>

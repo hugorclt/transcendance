@@ -44,7 +44,7 @@ function ProfilBox() {
     <ProfilBoxLink>
       <ProfilBoxLeft>
         <ProfilBoxName>
-          {user?.username.toLocaleUpperCase()}
+          {user?.username.length > 8 ? user?.username.substring(0, 8).concat("..."): user?.username.toLocaleUpperCase()}
           <ProfileBoxStatus
             style={{
               backgroundColor: convertStatusColor(user.status),

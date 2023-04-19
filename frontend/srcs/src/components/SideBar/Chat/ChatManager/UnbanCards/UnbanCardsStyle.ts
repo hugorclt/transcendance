@@ -5,6 +5,6 @@ export const UnbanCardsContainer = styled.div`
     display:flex;
     justify-content: space-between;
     align-items: center;
-    padding:4px;
+    padding:16px;
     color: ${COLORS.primary}
 `

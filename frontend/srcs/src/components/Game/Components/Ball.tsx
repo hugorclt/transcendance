@@ -10,8 +10,8 @@ import {
 } from "react";
 import { Mesh, Vector2, Vector3 } from "three";
 import { useForwardRaycast } from "../../../hooks/useForwardRaycast";
-import { GameSocket } from "../../../services/Game/SocketContext";
 import BlueFlame from "../effects/BlueFlame";
+import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 
 interface TBallProps {
   radius: number;
@@ -20,28 +20,25 @@ interface TBallProps {
 
 const Ball = (props: TBallProps) => {
   const ballRef = useRef<Mesh>(null!);
-  const socket = useContext(GameSocket);
+  const socket = useContext(LobbySocketContext);
 
   useEffect(() => {
-    socket?.on("ball", (data) => {
-      // console.log("useEffectBall");
-      // console.log(data);
-      ballRef.current.position.x = data.x;
-      ballRef.current.position.y = data.y;
-      ballRef.current.position.z = data.z;
+    socket?.on("frame", (data) => {
+      ballRef.current.position.x = data.ball._hitBox._position._x;
+      ballRef.current.position.y = data.ball._hitBox._position._y;
+      ballRef.current.position.z = data.ball._hitBox._position._z;
     });
+
     return () => {
-      socket?.off("ball");
+      socket?.off("frame");
     };
   }, [socket]);
 
-
-
   return (
     <Trail
-      width={2} // Width of the line
+      width={0.3} // Width of the line
       color={"skyblue"} // Color of the line
-      length={3} // Length of the line
+      length={1} // Length of the line
       decay={1} // How fast the line fades away
       local={false} // Wether to use the target's world or local positions
       stride={0} // Min distance between previous and current point
@@ -52,8 +49,8 @@ const Ball = (props: TBallProps) => {
       <mesh ref={ballRef} position={props.startPos}>
         <sphereGeometry args={[props.radius, 32, 32]} />
         <meshToonMaterial
-          emissive="red"
-          emissiveIntensity={3}
+          emissive="blue"
+          emissiveIntensity={10}
           toneMapped={false}
         />
         {/* <BlueFlame/> */}

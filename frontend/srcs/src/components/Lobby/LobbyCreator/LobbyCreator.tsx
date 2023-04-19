@@ -12,7 +12,7 @@ import { useAtom } from "jotai";
 import MediaQuery from "react-responsive";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { ButtonNoStyle } from "./LobbyCreator.style";
-import { lobbyAtom, userAtom } from "../../../services/store";
+import { lobbyAtom } from "../../../services/store";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useLobbyCreatorContext } from "../../../views/LobbyPage/LobbyCreatorProvider";
 import HeptaButton from "../../common/Button/HeptaButton/HeptaButton";
@@ -20,10 +20,16 @@ import { COLORS } from "../../../colors";
 import { mediaSize } from "../../../mediaSize";
 
 const dataGameMode = [
-  { name: "Classic", description: "Le Pong originel, berceau du gaming" },
+  {
+    name: "Classic",
+    description: "Le Pong originel, berceau du gaming",
+    img: "",
+  },
+
   {
     name: "Champions",
     description: "Pong comme vous ne l'aviez jamais imagine",
+    img: "",
   },
 ];
 
@@ -40,7 +46,6 @@ function LobbyCreator() {
     setSelectedMode,
   } = useLobbyCreatorContext();
   const [slider, setSlider] = useState(0);
-  const [user, setUser] = useAtom(userAtom);
 
   const createLobby = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -50,19 +55,14 @@ function LobbyCreator() {
         mode: selectedMode.toLocaleUpperCase(),
       })
       .then((response: AxiosResponse) => {
-        console.log(JSON.stringify(response.data));
-        setLobby({
-          id: response.data.id,
-          ownerId: response.data.ownerId,
+        setLobby((...prev) => ({
+          ...prev,
+          ...response.data,
           nbPlayers: +response.data.nbPlayers,
-          mode: response.data.mode,
-          state: response.data.state,
-          members: response.data.members,
-        });
+        }));
         setSelectedMode("");
         setOnModeSelected(false);
         setPlayers(0);
-        setUser((prev) => ({ ...prev, status: "LOBBY" }));
       })
       .catch((error: AxiosError) => {
         if (error.response?.data) {
@@ -86,11 +86,13 @@ function LobbyCreator() {
           <GameModeCardsBody>
             <GameModeCard
               mode="Classic"
-              description="Le Pong originel, berceau du gaming"
+              description="Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s."
+              img={""}
             />
             <GameModeCard
               mode="Champions"
-              description="Pong comme vous ne l'aviez jamais imagine"
+              description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay"
+              img={"../../../../public/planet.jpeg"}
             />
           </GameModeCardsBody>
           <GameModeButtonBody>
@@ -112,17 +114,16 @@ function LobbyCreator() {
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
-            >
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
               <MdKeyboardArrowLeft size={32} color={COLORS.primary} />
             </ButtonNoStyle>
             <GameModeCard
               mode={dataGameMode[slider].name}
               description={dataGameMode[slider].description}
+              img={""}
             />
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
-            >
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
               <MdKeyboardArrowRight size={32} color={COLORS.primary} />
             </ButtonNoStyle>
           </GameModeHero>

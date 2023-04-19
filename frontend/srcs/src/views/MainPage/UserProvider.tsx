@@ -1,9 +1,10 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { userAtom } from "../../services/store";
+import { SocketContext } from "../../services/Auth/SocketContext";
 
 function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useAtom(userAtom);
@@ -11,21 +12,16 @@ function UserProvider({ children }: { children: ReactNode }) {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     console.log("user provider");
     axiosPrivate
       .get("/users/me")
       .then((res: AxiosResponse) => {
-        console.log("id: ", res.data.id);
         setUser((prev) => ({
           ...prev,
-          id: res.data.id,
-          username: res.data.username,
-          status: res.data.status,
-          avatar: res.data.avatar,
-          exp: res.data.exp,
-          balance: res.data.balance,
+          ...res.data,
         }));
         setIsLoaded(true);
       })
@@ -33,7 +29,18 @@ function UserProvider({ children }: { children: ReactNode }) {
         navigate("/login", { state: { from: location }, replace: true })
       );
   }, []);
-  return <>{isLoaded ? children : <></>}</>;
+
+  useEffect(() => {
+    socket?.on("on-self-status-update", (newStatus) => {
+      setUser((prev) => ({ ...prev, status: newStatus }));
+    });
+
+    return () => {
+      socket?.off("on-self-status-update");
+    };
+  }, [socket]);
+
+  return <>{isLoaded ? children : <h1>Loading...</h1>}</>;
 }
 
 export default UserProvider;

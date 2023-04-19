@@ -33,7 +33,6 @@ const renderGeneral = () => {
           },
         })
         .then((res: AxiosResponse) => {
-          console.log(res.data);
           setPhoto(getImageBase64(res.data.avatar));
         })
         .catch((err: AxiosError) => {

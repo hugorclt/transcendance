@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import React, { FormEvent, useState } from "react";
-import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import Popup from "reactjs-popup";
 import { COLORS } from "../../../../../colors";
 import { friendAtom, lobbyAtom } from "../../../../../services/store";
@@ -13,6 +12,8 @@ import {
 } from "./InviteFriendsButtonStyle";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
+import RoundIconButton from "../../../../common/Button/IconButton/RoundIconButton";
+import AddFriendIcon from "../../../../../assets/icons/AddFriendIcon";
 
 function InviteFriendsButton() {
   const [open, setOpen] = useState(false);
@@ -36,9 +37,7 @@ function InviteFriendsButton() {
     });
     axiosPrivate
       .post("/invitations/createMany", invitations)
-      .then((res: AxiosResponse) => {
-        console.log("invitations created");
-      })
+      .then((res: AxiosResponse) => {})
       .catch((error: AxiosError) => {
         console.log("error creating invitations");
       });
@@ -49,10 +48,10 @@ function InviteFriendsButton() {
       <Popup
         trigger={
           <div>
-            <AiOutlineUsergroupAdd
+            <RoundIconButton
               onClick={() => setOpen(true)}
               size={22}
-              style={{ color: COLORS.secondary }}
+              Icon={AddFriendIcon}
             />
           </div>
         }
