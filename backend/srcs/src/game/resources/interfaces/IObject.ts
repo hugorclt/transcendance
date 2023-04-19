@@ -116,5 +116,19 @@ export abstract class IObject {
     })
   }
 
+  public exportFrame() : Object3D {
+    return({
+      type: this.type,
+      width: this.getWidth(),
+      height: this.getHeight(),
+      depth: this.getDepth(),
+      position: {
+        x: this._hitBox.position.x,
+        y: this._hitBox.position.y,
+        z: this._hitBox.position.z,
+      },
+    })
+  }
+
   public abstract collide?(ball: Ball): TCollision;
 }

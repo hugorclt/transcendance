@@ -1,3 +1,4 @@
+import { TCollision } from 'src/game/resources/types';
 import { EType } from './enum';
 
 export interface Object3D {
@@ -34,4 +35,11 @@ export interface IGameInfo {
   field: IField;
   ball: Object3D;
   players: IPlayer[];
+}
+
+export interface IFrame {
+  timestamp: number;
+  players: IPlayer[];
+  ball: Object3D;
+  collisions: TCollision[]; //A CHANGER
 }

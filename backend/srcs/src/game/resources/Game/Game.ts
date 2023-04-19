@@ -2,13 +2,11 @@ import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
 import { Ball } from '../Ball';
 import { Player } from '../player/Player';
 import { Field } from '../Field/Field';
-import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
 import { classic } from '../utils/config/maps';
 import { space } from '../utils/config/maps';
-import { EPaddle } from '@prisma/client';
-import { IGameInfo } from 'shared/gameInterfaces';
+import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 
 export class Game {
   private _id: string;
@@ -115,14 +113,14 @@ export class Game {
     this.detectGoal();
   }
 
-  generateFrame(): GameFrameEntity {
+  generateFrame(): IFrame {
     const deltaTime = (Date.now() - this._lastTimestamp) / 1000;
     this.gameLoop(deltaTime);
     this._lastTimestamp = Date.now();
     return {
       timestamp: this._lastTimestamp,
-      players: this.players,
-      ball: this.ball,
+      players: this._players.map((player) => player.exportPlayerInfo()),
+      ball: this._ball.exportFrame(),
       collisions: this.collisions,
     };
   }

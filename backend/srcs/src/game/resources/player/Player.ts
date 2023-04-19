@@ -60,4 +60,12 @@ export class Player {
       paddle: this._paddle.exportInfo()
     })
   }
+
+  public exportPlayerFrame() : IPlayer{
+    return ({
+      id: this._id,
+      team: this._team,
+      paddle: this._paddle.exportFrame(),
+    })
+  }
 }
