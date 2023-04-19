@@ -15,6 +15,7 @@ import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
 import { LobbyState } from '@prisma/client';
+import { Queue } from './utils/Queue';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -27,9 +28,18 @@ export class LobbiesGateway
   @WebSocketServer()
   io: Namespace;
   private _games: Map<string, Game>;
+  private _soloClassicQ: Queue<Game>;
+  private _duoClassicQ: Queue<Game>;
+  private _soloChampionsQ: Queue<Game>;
+  private _duoChampionsQ: Queue<Game>;
 
   async afterInit() {
     this._games = new Map<string, Game>();
+    this._soloClassicQ = new Queue<Game>();
+    this._duoClassicQ = new Queue<Game>();
+    this._soloChampionsQ = new Queue<Game>();
+    this._duoChampionsQ = new Queue<Game>();
+
     /* ------------------------------ testing code ------------------------------ */
     console.log('initialization of 1v1 private with hugo / dylan');
     const lobby = await this.prisma.lobby.findFirst({
