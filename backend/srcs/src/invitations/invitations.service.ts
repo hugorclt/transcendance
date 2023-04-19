@@ -11,6 +11,7 @@ import {
   InvitationExtendedEntity,
 } from './entities/invitation.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
+import { InvitationType } from '@prisma/client';
 
 @Injectable()
 export class InvitationsService {
@@ -51,6 +52,7 @@ export class InvitationsService {
         type: createInvitationDto.type,
         userId: createInvitationDto.userId,
         lobbyId: lobby.id,
+        isRead: false,
       },
     });
     return { ...invitation, userFromUsername: null };
@@ -68,6 +70,7 @@ export class InvitationsService {
         type: createInvitationDto.type,
         userId: receiver.id,
         userFromId: sender.sub,
+        isRead: false,
       },
     });
     return {
@@ -86,6 +89,23 @@ export class InvitationsService {
       }),
     );
     return invitations;
+  }
+
+  async findForUser(userId: string) {
+    return await this.prisma.invitation.findMany({
+      where: {
+        userId: userId,
+      }
+    })
+  }
+
+  async createDesc(invitation: InvitationEntity) {
+    switch(invitation.type) {
+      case InvitationType.FRIEND:
+        return "has sent you a friend request";
+      case InvitationType.LOBBY:
+        return "has invited you in a game";
+    }
   }
 
   async findAll(): Promise<InvitationEntity[]> {

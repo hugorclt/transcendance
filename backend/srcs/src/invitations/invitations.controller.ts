@@ -94,8 +94,10 @@ export class InvitationsController {
 
   @Get()
   @ApiOkResponse({ type: InvitationEntity, isArray: true })
-  async findAll(): Promise<InvitationEntity[]> {
-    return await this.invitationsService.findAll();
+  async findAll(
+    @Request() req,
+  ): Promise<InvitationEntity[]> {
+    return await this.invitationsService.findForUser(req.user.sub);
   }
 
   @Get(':id')

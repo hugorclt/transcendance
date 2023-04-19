@@ -53,6 +53,7 @@ enum VisibilityMode {
 model Invitation {
   id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   type       InvitationType
+  isRead     Boolean
   userId     String         @db.Uuid
   userFromId String?        @db.Uuid
   lobbyId    String?        @db.Uuid

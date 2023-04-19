@@ -12,6 +12,7 @@ import Popup from "reactjs-popup";
 import Settings from "../../Settings/Settings";
 import { ButtonNoStyle } from "../../Lobby/LobbyCreator/LobbyCreator.style";
 import { PopUpBox } from "../FriendsList/FriendsCards/FriendsCardsStyle";
+import NotificationsPanel from "./Notifications/Notifications";
 
 function BottomBar() {
   const navigate = useNavigate();
@@ -48,7 +49,15 @@ function BottomBar() {
 
   return (
     <BottomBarContainer>
-      <MdNotificationsNone size={26} style={{ color: COLORS.secondary }} />
+      <Popup
+        position="left bottom"
+        trigger={
+          <ButtonNoStyle>
+            <MdNotificationsNone size={26} style={{ color: COLORS.secondary }} />
+          </ButtonNoStyle>
+        }>
+          <NotificationsPanel />
+      </Popup>
       <Popup
         modal
         trigger={
@@ -58,7 +67,6 @@ function BottomBar() {
         }>
           <Settings />
       </Popup>
-
       <MdLogout
         onClick={logout}
         size={26}
