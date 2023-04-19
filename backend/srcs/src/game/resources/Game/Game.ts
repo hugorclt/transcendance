@@ -49,8 +49,6 @@ export class Game {
     lobby.members.forEach((member) => {
       this._players.push(
         new Player(member.userId, member.team, member.paddleType, config),
-        //TODO
-        //should take paddle choice by user
       );
     });
     this._players.forEach((player) => {
