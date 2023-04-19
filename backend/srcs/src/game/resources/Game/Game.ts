@@ -4,9 +4,8 @@ import { Player } from '../Player/Player';
 import { Field } from '../Field/Field';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
-import { classic } from '../utils/config/maps';
-import { space } from '../utils/config/maps';
 import { IFrame, IGameInfo } from 'shared/gameInterfaces';
+import { maps } from '../utils/config/maps';
 
 export class Game {
   private _id: string;
@@ -66,9 +65,9 @@ export class Game {
 
     var config;
     if (lobby.mode == 'CLASSIC') {
-      config = classic;
+      config = maps[0];
     } else if (lobby.mode == 'CHAMPIONS') {
-      config = space;
+      config = maps[1];
     }
     this._init_ball(config);
     this._init_field(config);
@@ -97,11 +96,11 @@ export class Game {
 
   detectGoal() {}
 
-  exportGameInfo() : IGameInfo {
+  exportGameInfo(): IGameInfo {
     const field = this._field.exportFieldInfo();
     const ball = this._ball.exportInfo();
     const players = this._players.map((player) => player.exportPlayerInfo());
-    return ({field: field, ball: ball, players: players})
+    return { field: field, ball: ball, players: players };
   }
 
   gameLoop(deltaTime: number) {

@@ -8,6 +8,7 @@ import { UpdateItemDto } from './dto/update-item.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LobbiesGateway } from 'src/lobbies/lobbies.gateway';
 import { ItemEntity } from './entities/item.entity';
+import { EItem } from '@prisma/client';
 
 @Injectable()
 export class ItemsService {
@@ -76,6 +77,7 @@ export class ItemsService {
             id: userId,
           },
         },
+        type: EItem.PADDLE
       },
     });
   }

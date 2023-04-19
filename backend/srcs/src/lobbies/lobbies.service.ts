@@ -14,7 +14,8 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
-import { EPaddle, LobbyState } from '@prisma/client';
+import { EMap, EPaddle, LobbyState } from '@prisma/client';
+import { maps } from 'src/game/resources/utils/config/maps';
 
 @Injectable()
 export class LobbiesService {
@@ -489,6 +490,8 @@ export class LobbiesService {
         paddleType = EPaddle.GREEN;
         break;
     }
+    if (!paddleType) throw new NotFoundException();
+
     return await this.prisma.lobby.update({
       where: {
         id: lobbyId,
@@ -506,6 +509,62 @@ export class LobbiesService {
         },
       },
     });
+  }
+
+  async getMap() {
+    return maps.map((map) => {
+      return {name: map.name, img: map.miniature};
+    })
+  }
+
+  async voteMap(userId: string, lobbyId: string, mapName: string) {
+    var map;
+    switch(mapName) {
+      case "CLASSIC":
+        map = EMap.CLASSIC;
+        break ;
+      case "SPACE":
+        map = EMap.SPACE;
+        break ;
+    }
+
+    if (!map) throw new NotFoundException();
+
+    const votes = await this.prisma.lobby.update({
+      include: {
+        members: true,
+      },
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        members: {
+          updateMany: {
+            where: {
+              userId: userId,
+            },
+            data: {
+              vote: map,
+            }
+          }
+        }
+      }
+    })
+    const vote = votes.members.map((member) => member.vote)
+    await this.lobbiesGateway.emitToLobby(lobbyId, "on-vote", vote)
+    return vote;
+  }
+
+  async getVotes(lobbyId: string) {
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        id: lobbyId,
+      },
+      include: {
+        members: true,
+      }
+    })
+    return lobby.members.map((member) => member.vote)
   }
 
   //========================== LOBBY INFOS ===============================

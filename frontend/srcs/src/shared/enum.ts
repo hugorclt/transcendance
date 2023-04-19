@@ -1,22 +1,22 @@
-// export enum EPaddle {
-//   CLASSIC,
-//   BASIC,
-//   RED,
-//   BLUE,
-//   ORANGE,
-//   PURPLE,
-//   GREEN,
-// }
+export enum EPaddle {
+  CLASSIC,
+  BASIC,
+  RED,
+  BLUE,
+  ORANGE,
+  PURPLE,
+  GREEN,
+}
 
-// export enum EMap {
-//   CLASSIC,
-//   SPACE,
-// }
+export enum EMap {
+  CLASSIC,
+  SPACE,
+}
 
-// export enum EMode {
-//   CLASSIC,
-//   CHAMPIONS,
-// }
+export enum EMode {
+  CLASSIC,
+  CHAMPIONS,
+}
 
 export enum EType {
   BOX,

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { COLORS } from "../../../../colors";
+import { COLORS } from "../../../../../colors";
 
 export const SelectorCardsContainer = styled.div`
   width: 304px;
