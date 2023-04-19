@@ -4,6 +4,7 @@ import {
   TFriend,
   TItem,
   TLobby,
+  TNotif,
   TUser,
   TUserPreferences,
 } from "./type";
@@ -41,3 +42,5 @@ export const friendAtom = atom<TFriend[]>([]);
 export const conversationAtom = atom<TConversation[]>([]);
 
 export const selectedPageAtom = atom<string>("/");
+
+export const notifAtom = atom<TNotif[]>([])

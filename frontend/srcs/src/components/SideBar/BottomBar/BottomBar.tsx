@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { BottomBarContainer } from "./BottomBarStyle";
-import { MdNotificationsNone, MdSettings, MdLogout } from "react-icons/md";
+import { MdNotificationsNone, MdSettings, MdLogout, MdNotificationsActive } from "react-icons/md";
 import { COLORS } from "../../../colors";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../../services/Auth/SocketContext";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { userAtom } from "../../../services/store";
+import { notifAtom, userAtom } from "../../../services/store";
 import Popup from "reactjs-popup";
 import Settings from "../../Settings/Settings";
 import { ButtonNoStyle } from "../../Lobby/LobbyCreator/LobbyCreator.style";
@@ -19,6 +19,7 @@ function BottomBar() {
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
   const axios = useAxiosPrivate();
+  const [notifs, setNotif] = useAtom(notifAtom);
   const socket = useContext(SocketContext);
   const [user, setUser] = useAtom(userAtom);
 
@@ -47,13 +48,23 @@ function BottomBar() {
       });
   }
 
+  const notifIsRead = () => {
+    const isRead = notifs.find((notif) => notif.isRead == true)
+    if (isRead) return true;
+    return false;
+  }
+
   return (
     <BottomBarContainer>
       <Popup
         position="left bottom"
         trigger={
           <ButtonNoStyle>
-            <MdNotificationsNone size={26} style={{ color: COLORS.secondary }} />
+            {notifIsRead() == false ?
+              <MdNotificationsActive className="buzzing" size={26} style={{ color: COLORS.secondary }} />
+              :
+              <MdNotificationsNone size={26} style={{ color: COLORS.secondary }} />
+            }
           </ButtonNoStyle>
         }>
           <NotificationsPanel />

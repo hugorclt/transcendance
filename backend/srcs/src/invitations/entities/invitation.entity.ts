@@ -6,6 +6,9 @@ export class InvitationEntity implements Invitation {
   id: string;
 
   @ApiProperty()
+  isRead: boolean;
+
+  @ApiProperty()
   type: InvitationType;
 
   @ApiProperty()

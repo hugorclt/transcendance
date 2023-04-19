@@ -72,3 +72,14 @@ export interface TItem {
   image: string;
   type: EItem;
 }
+
+export interface TNotif {
+  id: string;
+  username: string;
+  desc: string;
+  isRead: boolean;
+  type: EInvitationType;
+  lobbyId: string;
+  userId: string;
+  userFromId: string;
+}

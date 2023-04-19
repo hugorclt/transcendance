@@ -18,8 +18,6 @@ import {
   InvitationEntity,
   InvitationExtendedEntity,
 } from './entities/invitation.entity';
-import { SocialsGateway } from 'src/socials/socials.gateway';
-import { LobbiesGateway } from 'src/lobbies/lobbies.gateway';
 
 @Controller('invitations')
 @UseGuards(AccessAuthGard)
@@ -27,8 +25,13 @@ import { LobbiesGateway } from 'src/lobbies/lobbies.gateway';
 export class InvitationsController {
   constructor(
     private readonly invitationsService: InvitationsService,
-    private readonly socialsGateway: SocialsGateway,
   ) {}
+
+  @Get('notif-checked')
+  async notifChecked(@Request() req) {
+    console.log("cc", req.user);
+    return await this.notifChecked(req.user.sub);
+  }
 
   @Post()
   @ApiCreatedResponse({ type: InvitationEntity })
@@ -61,17 +64,17 @@ export class InvitationsController {
       invitationDtoList,
       req.user.sub,
     );
-    invitations.map((invit) => {
-      this.socialsGateway.emitToUser(invit.userId, 'invitation', invit);
-      if (invit.type == 'LOBBY') {
-        //should send pending invitation to players inside lobby
-        // this.lobbiesGateway.emitToRoom(
-        //   invitation.lobbyId,
-        //   'pending-invitation',
-        //   invitation,
-        // );
-      }
-    });
+    // invitations.map((invit) => {
+    //   this.socialsGateway.emitToUser(invit.userId, 'invitation', invit);
+    //   if (invit.type == 'LOBBY') {
+    //     //should send pending invitation to players inside lobby
+    //     // this.lobbiesGateway.emitToRoom(
+    //     //   invitation.lobbyId,
+    //     //   'pending-invitation',
+    //     //   invitation,
+    //     // );
+    //   }
+    // });
     return invitations;
   }
 
@@ -96,7 +99,7 @@ export class InvitationsController {
   @ApiOkResponse({ type: InvitationEntity, isArray: true })
   async findAll(
     @Request() req,
-  ): Promise<InvitationEntity[]> {
+  ) {
     return await this.invitationsService.findForUser(req.user.sub);
   }
 

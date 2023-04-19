@@ -3,33 +3,32 @@ import React, { ReactNode, useContext, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../services/Auth/SocketContext";
 import { updateArray } from "../../services/utils/updateArray";
-import { conversationAtom } from "../../services/store";
+import { conversationAtom, notifAtom } from "../../services/store";
 
-function ChatProvider({ children }: { children: ReactNode }) {
-  const [chat, setChat] = useAtom(conversationAtom);
+function NotificationsProvider({ children }: { children: ReactNode }) {
+  const [notif, setNotif] = useAtom(notifAtom);
   const axiosPrivate = useAxiosPrivate();
   const socket = useContext(SocketContext);
 
   /* ------------------------------ first render ------------------------------ */
   useEffect(() => {
-    axiosPrivate.get("/invitations").then((res) => {})
+    axiosPrivate.get("/invitations").then((res) => {
+      console.log(res.data)
+      setNotif(res.data)
+    })
   }, []);
 
   /* ------------------------------ socket render ----------------------------- */
   useEffect(() => {
-    socket?.on("on-chat-update", (newChat) => {
-    });
-
-    socket?.on("on-chat-delete", (chatToDel) => {
+    socket?.on("on-notifs-update", (newChat) => {
     });
 
     return () => {
-      socket?.off("on-chat-update");
-      socket?.off("on-chat-delete");
+      socket?.off("on-notifs-update");
     };
   }, [socket]);
 
   return <>{children}</>;
 }
 
-export default ChatProvider;
+export default NotificationsProvider;

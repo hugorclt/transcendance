@@ -92,14 +92,44 @@ export class InvitationsService {
   }
 
   async findForUser(userId: string) {
-    return await this.prisma.invitation.findMany({
+    const notifs = await this.prisma.invitation.findMany({
       where: {
         userId: userId,
+      },
+      include: {
+        userFrom: true
       }
+    })
+
+    return notifs.map((notif) => {
+      return {username: notif.userFrom.username, desc: this.createDesc(notif), userFromId: notif.userFromId, lobbyId: notif.lobbyId, userId: notif.userId, id: notif.id}
     })
   }
 
-  async createDesc(invitation: InvitationEntity) {
+  async notifChecked(userId: string) {
+    await this.prisma.invitation.updateMany({
+      where: {
+        userId: userId,
+      },
+      data: {
+        isRead: true,
+      },
+    })
+
+    const notifs = await this.prisma.invitation.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        userFrom: true
+      }
+    })
+    return notifs.map((notif) => {
+      return {user: notif.userFrom.username, desc: this.createDesc(notif), type: notif.type, isRead: notif.isRead}
+    })
+  }
+
+  createDesc(invitation: InvitationEntity) {
     switch(invitation.type) {
       case InvitationType.FRIEND:
         return "has sent you a friend request";

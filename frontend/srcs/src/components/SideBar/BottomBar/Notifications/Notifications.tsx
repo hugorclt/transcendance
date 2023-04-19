@@ -1,50 +1,30 @@
+import { useAtom } from 'jotai'
 import React, { useEffect } from 'react'
 import { COLORS } from '../../../../colors'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
+import { notifAtom } from '../../../../services/store'
 import { PopUpBox } from '../../FriendsList/FriendsCards/FriendsCardsStyle'
 import { NotifButtonContainer, NotifContainer, NotificationsContainer } from './Notifications.style'
-
-const notifs = [
-    {
-        user: "hugo",
-        desc: "sent you a friend request",
-        type: "friends",
-    },
-    {
-        user: "hugo",
-        desc: "sent you an invitation to play champions",
-        type: "party",
-    },
-    {
-        user: "dominique",
-        desc: "sent you an invitation to play classic",
-        type: "party",
-    },
-    {
-        user: "dominique",
-        desc: "sent you an invitation to play classic",
-        type: "party",
-    },
-    {
-        user: "dominique",
-        desc: "sent you an invitation to play classic",
-        type: "party",
-    },
-]
+import {nanoid} from 'nanoid';
+import { AxiosResponse } from 'axios'
+import NotificationCards from './NotificationsCards/NotificationCards'
 
 function NotificationsPanel() {
+    const [notifs, setNotif] = useAtom(notifAtom);
+    const axiosPrivate = useAxiosPrivate();
+
+    useEffect(() => {
+        // axiosPrivate.get("/invitations/notif-checked").then((res: AxiosResponse) => {
+            // setNotif(res.data);
+        // })
+    }, [])
+
   return (
     <PopUpBox>
         <NotificationsContainer>
             {notifs.map((notif) => {
                 return (
-                    <NotifContainer>
-                        <p><strong>{notif.user}</strong> {notif.desc}</p>
-                        <NotifButtonContainer>
-                            <button style={{color: COLORS.green}}>Accept</button>
-                            <button style={{color: COLORS.secondary}}>Decline</button>
-                        </NotifButtonContainer>
-                    </NotifContainer>
+                    <NotificationCards key={nanoid()} {...notif}/>
                 )
             })}
         </NotificationsContainer>
