@@ -1,4 +1,4 @@
-import { Ball } from '../../Ball';
+import { Ball } from '../../Ball/Ball';
 import { HitBox } from '../HitBox';
 import { Vector3 } from '../Vector3';
 

@@ -1,12 +1,11 @@
 import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
-import { Ball } from '../Ball';
-import { Player } from '../player/Player';
+import { Ball } from '../Ball/Ball';
+import { Player } from '../Player/Player';
 import { Field } from '../Field/Field';
-import { GameFrameEntity } from 'src/game/entities/game-frame.entity';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
+import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 import { maps } from '../utils/config/maps';
-import { EPaddle } from '@prisma/client';
 
 export class Game {
   private _id: string;
@@ -48,9 +47,7 @@ export class Game {
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     lobby.members.forEach((member) => {
       this._players.push(
-        new Player(member.userId, member.team, EPaddle.BASIC, config),
-        //TODO
-        //should take paddle choice by user
+        new Player(member.userId, member.team, member.paddleType, config),
       );
     });
     this._players.forEach((player) => {
@@ -99,6 +96,13 @@ export class Game {
 
   detectGoal() {}
 
+  exportGameInfo(): IGameInfo {
+    const field = this._field.exportFieldInfo();
+    const ball = this._ball.exportInfo();
+    const players = this._players.map((player) => player.exportPlayerInfo());
+    return { field: field, ball: ball, players: players };
+  }
+
   gameLoop(deltaTime: number) {
     this._collisions.length = 0;
     this.processMovements(deltaTime);
@@ -106,14 +110,14 @@ export class Game {
     this.detectGoal();
   }
 
-  generateFrame(): GameFrameEntity {
+  generateFrame(): IFrame {
     const deltaTime = (Date.now() - this._lastTimestamp) / 1000;
     this.gameLoop(deltaTime);
     this._lastTimestamp = Date.now();
     return {
       timestamp: this._lastTimestamp,
-      players: this.players,
-      ball: this.ball,
+      players: this._players.map((player) => player.exportPlayerInfo()),
+      ball: this._ball.exportFrame(),
       collisions: this.collisions,
     };
   }

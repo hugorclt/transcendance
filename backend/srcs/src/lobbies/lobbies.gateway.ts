@@ -89,7 +89,6 @@ export class LobbiesGateway
     const playerInfo = this.getPlayerInfoFromClient(client);
     playerInfo.player.ready = true;
     if (playerInfo.game.players.find((player) => !player.ready)) return;
-    //EVERYBODY READY TO PLAY : START GAME LOOP
     playerInfo.game.start();
     setInterval(() => {
       const frame = playerInfo.game.generateFrame();
@@ -104,13 +103,7 @@ export class LobbiesGateway
   async onStartGame(client: AuthSocket) {
     const lobbyId = await this.getLobby(client);
     const game = this._games.get(lobbyId);
-    const userId = client.userId;
-    this.io.to(client.userId).emit('game-info', {
-      userId: userId,
-      walls: game.field.walls,
-      players: game.players,
-      ball: game.ball,
-    });
+    this.io.to(client.userId).emit('game-info', game.exportGameInfo());
   }
 
   getPlayerInfoFromClient(client: AuthSocket): LobbyEventEntity {

@@ -1,7 +1,8 @@
 import { EType } from 'shared/enum';
-import { IObject } from './interfaces/IObject';
-import { TCollision } from './types';
-import { Vector3 } from './utils/Vector3';
+import { IObject } from '../interfaces/IObject';
+import { TCollision } from '../types';
+import { Vector3 } from '../utils/Vector3';
+import { Object3D } from 'shared/gameInterfaces';
 
 export class Ball extends IObject {
   private _speed: Vector3;
@@ -78,5 +79,44 @@ export class Ball extends IObject {
       direction: new Vector3(0, 0, 0),
       type: EType.WALL,
     };
+  }
+
+  public exportInfo(): Object3D {
+    return({
+      type: this.type,
+      texture: this.texture,
+      width: this.getWidth(),
+      height: this.getHeight(),
+      depth: this.getDepth(),
+      position: {
+        x: this._hitBox.position.x,
+        y: this._hitBox.position.y,
+        z: this._hitBox.position.z,
+      },
+      velocity: {
+        x: this.speedX,
+        y: this.speedY,
+        z: this.speedZ
+      }
+    })
+  }
+
+  public exportFrame(): Object3D {
+    return({
+      type: this.type,
+      width: this.getWidth(),
+      height: this.getHeight(),
+      depth: this.getDepth(),
+      position: {
+        x: this._hitBox.position.x,
+        y: this._hitBox.position.y,
+        z: this._hitBox.position.z,
+      },
+      velocity: {
+        x: this.speedX,
+        y: this.speedY,
+        z: this.speedZ
+      }
+    })
   }
 }
