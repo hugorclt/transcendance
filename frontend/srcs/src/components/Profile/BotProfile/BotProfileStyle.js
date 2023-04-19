@@ -10,3 +10,13 @@ export const BotProfileContainer = styled.div`
   background-color: #292929;
   color: white;
 `;
+
+export const FirstCardContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 20%;
+  align-items: center;
+  justify-content: center;
+  background-color: #292929;
+`;
