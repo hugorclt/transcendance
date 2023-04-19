@@ -1,7 +1,7 @@
 import { EType } from 'shared/enum';
-import { IObject } from './interfaces/IObject';
-import { TCollision } from './types';
-import { Vector3 } from './utils/Vector3';
+import { IObject } from '../interfaces/IObject';
+import { TCollision } from '../types';
+import { Vector3 } from '../utils/Vector3';
 import { Object3D } from 'shared/gameInterfaces';
 
 export class Ball extends IObject {

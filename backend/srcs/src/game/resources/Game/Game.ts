@@ -1,6 +1,6 @@
 import { LobbyWithMembersEntity } from 'src/lobbies/entities/lobby.entity';
-import { Ball } from '../Ball';
-import { Player } from '../player/Player';
+import { Ball } from '../Ball/Ball';
+import { Player } from '../Player/Player';
 import { Field } from '../Field/Field';
 import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';

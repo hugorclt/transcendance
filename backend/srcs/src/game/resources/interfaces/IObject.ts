@@ -1,5 +1,5 @@
 import { EType } from 'shared/enum';
-import { Ball } from '../Ball';
+import { Ball } from '../Ball/Ball';
 import { TCollision } from '../types';
 import { HitBox } from '../utils/HitBox';
 import { Vector3 } from '../utils/Vector3';

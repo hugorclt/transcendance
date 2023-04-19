@@ -1,5 +1,5 @@
 import { EType } from 'shared/enum';
-import { Ball } from '../../Ball';
+import { Ball } from '../../Ball/Ball';
 import { IObject } from '../../interfaces/IObject';
 import { TCollision } from '../../types';
 import { goalCollide } from '../../utils/collisions/goalCollide';

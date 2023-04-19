@@ -27,14 +27,14 @@ export enum EType {
   UNBREAKABLE_BRICK,
   WALL,
   GOAL,
-  PADDLE,
-  CLASSIC_PADDLE,
-  BASIC_PADDLE,
-  RED_PADDLE,
-  BLUE_PADDLE,
-  ORANGE_PADDLE,
-  PURPLE_PADDLE,
-  GREEN_PADDLE,
+  PADDLE,//ok (IPADDLE) ==> should not be triggered
+  CLASSIC_PADDLE,//ok
+  BASIC_PADDLE,//ok
+  RED_PADDLE,//ok
+  BLUE_PADDLE,//ok
+  ORANGE_PADDLE,//ok
+  PURPLE_PADDLE,//ok
+  GREEN_PADDLE,//ok
 }
 
 // export enum EItem {
