@@ -1,5 +1,7 @@
 export type MatchHistoryProps = {
     result: string,
-    stats: string[],
-    color: string,
+    score: string[],
+    ally: string[],
+    ennemy: string[],
+    mode: string,
 }

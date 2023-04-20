@@ -1,20 +1,19 @@
-import { InfoDivContainer, MatchHistoryContainer1 } from "./MatchHistoryCardStyle";
+import { ResultContainer,
+    TeamContainer,
+    MatchHistoryContainer1 } from "./MatchHistoryCardStyle";
 
 export function FirstCard() {
     return (
         <MatchHistoryContainer1>
-            <InfoDivContainer>
+            <ResultContainer>
             <h5>RESULT</h5>
-            </InfoDivContainer>
-            <InfoDivContainer>
-            <h5>SCORED GOALS</h5>
-            </InfoDivContainer>
-            <InfoDivContainer>
-            <h5>CONCEDED GOALS</h5>
-            </InfoDivContainer>
-            <InfoDivContainer>
-            <h5>BONUS</h5>
-            </InfoDivContainer>
+            </ResultContainer>
+            <TeamContainer>
+            <h5>ALLY TEAM</h5>
+            </TeamContainer>
+            <TeamContainer>
+            <h5>ENNEMY TEAM</h5>
+            </TeamContainer>
         </MatchHistoryContainer1>
     );
 }
