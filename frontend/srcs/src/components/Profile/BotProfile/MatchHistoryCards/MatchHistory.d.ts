@@ -5,3 +5,13 @@ export type MatchHistoryProps = {
     ennemy: string[],
     mode: string,
 }
+
+export type AllyTeamProps = {
+    score: string[],
+    ally: string[],
+}
+
+export type EnnemyTeamProps = {
+    score: string[],
+    ennemy: string[],
+}

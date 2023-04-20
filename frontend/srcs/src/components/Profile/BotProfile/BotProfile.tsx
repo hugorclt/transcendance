@@ -41,7 +41,6 @@ export function BotProfile() {
             ally={data[3].ally}
             ennemy={data[3].ennemy}
             mode={data[3].mode}/>
-            
         </BotProfileContainer>
     )
 }

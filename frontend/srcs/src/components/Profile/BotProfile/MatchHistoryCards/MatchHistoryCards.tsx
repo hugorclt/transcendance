@@ -1,6 +1,7 @@
 import React from "react";
 import { COLORS } from "../../../../colors";
 import { AllyTeam } from "./AllyTeam/AllyTeam";
+import { EnnemyTeam } from "./EnnemyTeam/EnnemyTeam";
 import { MatchHistoryProps } from "./MatchHistory";
 import { MatchHistoryContainer2 } from "./MatchHistoryCardStyle";
 import { AllyInfoContainer,
@@ -23,7 +24,12 @@ export function MatchHistoryCards({result, score, ally, ennemy, mode}: MatchHist
             />
         </AllyInfoContainer>
         <EnnemyInfoContainer>
-            <h5>{score[1]}</h5>
+            <EnnemyTeam
+            result={result}
+            score={score}
+            ally={ally}
+            ennemy={ennemy}
+            mode={mode}/>
         </EnnemyInfoContainer>
         </MatchHistoryContainer2>
     );

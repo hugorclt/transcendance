@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const AllyTeamContainer = styled.div`
+export const EnnemyTeamContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -8,23 +8,23 @@ export const AllyTeamContainer = styled.div`
     background: black;
 `;
 
-export const AllyScoreContainer = styled.div`
+export const EnnemyScoreContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 20%;
     height: 100%;
-    background: #55b9dd;
+    background: #ff9999;
     align-items: center;
     justify-content: center;
 `;
 
-export const AllyListContainer = styled.div`
+export const EnnemyListContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 80%;
     height: 100%;
-    background: #2596be;
-    align-items: right;
+    background: #DB504F;
+    align-items: left;
     padding: 20px;
     border: 2px solid;
     border-color:white;
