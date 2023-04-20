@@ -26,19 +26,41 @@ export class LobbiesGateway
   constructor(private readonly prisma: PrismaService) {}
 
   @WebSocketServer()
-  io: Namespace;
+  public io: Namespace;
   private _games: Map<string, Game>;
-  private _soloClassicQ: Queue<Game>;
-  private _duoClassicQ: Queue<Game>;
-  private _soloChampionsQ: Queue<Game>;
-  private _duoChampionsQ: Queue<Game>;
+  private _soloClassicQ: Queue<LobbyWithMembersEntity>;
+  private _duoClassicQ: Queue<LobbyWithMembersEntity>;
+  private _soloChampionsQ: Queue<LobbyWithMembersEntity>;
+  private _duoChampionsQ: Queue<LobbyWithMembersEntity>;
+
+  matchmaking(lobby: LobbyWithMembersEntity): LobbyWithMembersEntity {
+    var queue;
+    if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
+      //soloQ champions
+      queue = this._soloChampionsQ;
+    } else if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 4) {
+      //duoQ champions
+      queue = this._duoChampionsQ;
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 2) {
+      //soloQ Classic
+      queue = this._soloClassicQ;
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 4) {
+      //duo Q classic
+      queue = this._duoClassicQ;
+    }
+    if (queue.size() === 0) {
+      queue.enqueue(lobby);
+    } else return queue.dequeue();
+  }
+
+  async mergeLobbyRooms(newLobby: LobbyWithMembersEntity, oldLobbyId: string) {}
 
   async afterInit() {
     this._games = new Map<string, Game>();
-    this._soloClassicQ = new Queue<Game>();
-    this._duoClassicQ = new Queue<Game>();
-    this._soloChampionsQ = new Queue<Game>();
-    this._duoChampionsQ = new Queue<Game>();
+    this._soloClassicQ = new Queue<LobbyWithMembersEntity>();
+    this._duoClassicQ = new Queue<LobbyWithMembersEntity>();
+    this._soloChampionsQ = new Queue<LobbyWithMembersEntity>();
+    this._duoChampionsQ = new Queue<LobbyWithMembersEntity>();
 
     /* ------------------------------ testing code ------------------------------ */
     console.log('initialization of 1v1 private with hugo / dylan');
