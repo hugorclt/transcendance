@@ -32,6 +32,9 @@ export class LobbiesService {
     createLobbyDto: CreateLobbyDto,
   ): Promise<LobbyWithMembersEntity> {
     const user = await this.canUserJoinLobbies(ownerId);
+    var state;
+    if (createLobbyDto.nbPlayers == 2) state = LobbyState.FULL;
+    else state = LobbyState.JOINABLE;
     const lobby = await this.prisma.lobby.create({
       data: {
         ownerId: ownerId,
@@ -39,7 +42,7 @@ export class LobbiesService {
         maxDuration: createLobbyDto.maxDuration,
         mode: createLobbyDto.mode,
         map: createLobbyDto.map,
-        state: LobbyState.JOINABLE,
+        state: state,
         members: {
           create: {
             team: false,
@@ -427,8 +430,9 @@ export class LobbiesService {
   async mergeLobbies(
     lobby1: LobbyWithMembersEntity,
     lobby2: LobbyWithMembersEntity,
-  ): LobbyWithMembersEntity {
+  ): Promise<LobbyWithMembersEntity> {
     //update lobby members
+    console.log('merging lobby 1 and lobby 2');
     const updatedMembers = await this.prisma.lobbyMember.updateMany({
       where: {
         id: {
@@ -441,8 +445,16 @@ export class LobbiesService {
       },
     });
     //delete lobby2
-
+    const deleteLobby = await this.prisma.lobby.delete({
+      where: {
+        id: lobby2.id,
+      },
+    });
+    console.log('lobby2 has been deleted');
     //return updated lobby1
+    const mergedLobby = await this.findLobbyWithMembers(lobby1.id);
+    console.log('lobby has been merged: ', mergedLobby);
+    return mergedLobby;
   }
 
   async changeReady(lobbyId: string, userId: string): Promise<void> {
@@ -479,6 +491,7 @@ export class LobbiesService {
     });
     member = lobbyUpdated.members.find((member) => member.userId == userId);
     this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
+    this.startGame(lobbyId, lobby.ownerId);
   }
 
   async startGame(lobbbyId: string, userId: string) {
