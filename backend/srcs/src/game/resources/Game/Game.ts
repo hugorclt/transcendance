@@ -116,7 +116,7 @@ export class Game {
     this._lastTimestamp = Date.now();
     return {
       timestamp: this._lastTimestamp,
-      players: this._players.map((player) => player.exportPlayerInfo()),
+      players: this._players.map((player) => player.exportPlayerFrame()),
       ball: this._ball.exportFrame(),
       collisions: this.collisions,
     };
