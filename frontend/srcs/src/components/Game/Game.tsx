@@ -14,6 +14,7 @@ import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
 import CollisionDisk from "./Components/CollisionDisk/CollisionDisk";
 import GameInfoCard from "../Lobby/TeamBuilder/GameInfoCard/GameInfoCard";
+import Skybox from "./Components/sceneComponents/Skybox";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -55,6 +56,7 @@ function Game() {
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
         </>
       )}
+      <Skybox/>
     </Suspense>
   );
 }

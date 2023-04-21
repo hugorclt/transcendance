@@ -51,25 +51,17 @@ function Paddle(props: PlayerProps) {
     return () => {
       socket?.off("frame");
     };
-  }, [socket, playerRef]);
+  }, [socket]);
 
   return (
     <>
-      <mesh ref={playerRef} position={ new Vector3(props.paddle.position.x, props.paddle.position.y, props.paddle.position.z)}>
-        <boxGeometry args={[props.paddle.width, props.paddle.height, props.paddle.depth]} />
-        <meshToonMaterial
-          color={COLORS.secondary}
-          emissive={"red"}
-          emissiveIntensity={10}
-          opacity={1}
-          transparent
-        />
-        {isActive && (
-          <PerspectiveCamera makeDefault={true} position={new Vector3(props.paddle.position.x, props.paddle.position.y, props.paddle.position.z)} fov={100} />
-        )}
-      </mesh>
+      {createMeshComponent(props.paddle, playerRef, isActive)}
     </>
   );
 }
 
 export default Paddle;
+
+
+
+

@@ -5,9 +5,11 @@ import { Mesh } from "three";
 import { EType } from "../../../../shared/enum";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Trail } from "@react-three/drei";
+import { GridCustom } from "./custom/GridCustom";
+import { Euler } from "three";
 
 const PADDLE_COLORS = {
-  [EType.PADDLE]: { color: "#fffff", emissive: "white", emissiveIntensity: 4 },
+  [EType.CLASSIC_PADDLE]: { color: "#fffff", emissive: "white", emissiveIntensity: 4 },
   [EType.RED_PADDLE]: {
     color: "#f69090",
     emissive: "red",
@@ -46,11 +48,12 @@ export function createMeshComponent(
     object.position.z
   );
 
-  console.log(object.type)
+  console.log(object.type);
 
   switch (object.type) {
     /*================================ PADDLE ==============================*/
 
+    case EType.CLASSIC_PADDLE:
     case EType.PADDLE:
     case EType.RED_PADDLE:
     case EType.ORANGE_PADDLE:
@@ -66,8 +69,8 @@ export function createMeshComponent(
             color={colorConfig.color}
             emissive={colorConfig.emissive}
             emissiveIntensity={colorConfig.emissiveIntensity}
-            opacity={1}
-            transparent
+            opacity={0.7}
+            transparent={true}
           />
           {isActive && (
             <PerspectiveCamera
@@ -83,31 +86,33 @@ export function createMeshComponent(
 
     case EType.SPHERE:
       return (
-          <mesh ref={ref} position={position} args={[]}>
-            <sphereGeometry
-              args={[object.width, 32, 32]}
-            />
-            <meshToonMaterial
-              emissive="blue"
-              emissiveIntensity={10}
-              toneMapped={false}
-            />
-          </mesh>
+        <mesh ref={ref} position={position} args={[]}>
+          <sphereGeometry args={[object.width, 32, 32]} />
+          <meshToonMaterial
+            emissive="blue"
+            emissiveIntensity={10}
+            toneMapped={false}
+          />
+        </mesh>
       );
 
     /*================================ WALL ==============================*/
 
-    case EType.WALL:
+    case EType.GRID:
+      const rotation = object.width === 1 ? new Euler(0, 0, Math.PI / 2) : new Euler(0, 0, 0);
+      const gridWidth = rotation.z === 0 ? object.width : object.height;
+      const gridLength = object.depth;
       return (
         <mesh position={position}>
-          <Grid args={[object.width, object.height, object.depth]} />
+          <GridCustom gridWidth={gridWidth} gridLength={gridLength} rotation={rotation} />
         </mesh>
       );
+    
 
     case EType.BOX:
       return (
         <mesh position={position}>
-          <boxGeometry args={[object.width, object.height, object.depth]} />
+          <boxGeometry args={[object.height, object.width]} />
         </mesh>
       );
 

@@ -12,7 +12,7 @@ export const maps = [{
   walls: [
     {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.BOX,
+      type: EType.GRID,
       width: 1,
       height: 9,
       depth: 35,
@@ -20,7 +20,7 @@ export const maps = [{
     },
     {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.BOX,
+      type: EType.GRID,
       width: 1,
       height: 9,
       depth: 35,
@@ -28,7 +28,7 @@ export const maps = [{
     },
     {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.BOX,
+      type: EType.GRID,
       width: 16,
       height: 1,
       depth: 35,
@@ -36,7 +36,7 @@ export const maps = [{
     },
     {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.BOX,
+      type: EType.GRID,
       width: 16,
       height: 1,
       depth: 35,
@@ -84,7 +84,7 @@ export const maps = [{
     height: 0.5,
     depth: 0.5,
     position: new Vector3(0, 0, 0),
-    velocity: new Vector3(0, 0, 3),
+    velocity: new Vector3(1, 1, 3),
   },
   goals: {
     texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
@@ -96,7 +96,7 @@ export const maps = [{
   paddle: {
     width: 2,
     height: 2,
-    depth: 1,
+    depth: 0.2,
   },
 }, {
   name: 'CLASSIC',
