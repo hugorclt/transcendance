@@ -87,7 +87,7 @@ async function main() {
       ownerId: dylan.id,
       nbPlayers: 2,
       maxDuration: 180,
-      mode: EMode.CHAMPIONS,
+      mode: EMode.CLASSIC,
       map: EMap.CLASSIC,
       state: LobbyState.FULL,
       private: true,
