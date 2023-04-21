@@ -104,15 +104,15 @@ export class LobbiesGateway
 
   async readySelection(lobby: LobbyWithMembersEntity) {
     const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-    this.emitToLobby(lobby.id, 'on-lobby-update', {
-      state: LobbyState.SELECTION,
-    });
     var seconds = 15;
     const interval = setInterval(() => {
       this.emitToLobby(lobby.id, 'time-to-choose', seconds--);
     }, 1000);
 
     await delay(17000);
+    // this.emitToLobby(lobby.id, 'on-lobby-update', {
+    //   state: LobbyState.GAME,
+    // });
     clearInterval(interval);
   }
 

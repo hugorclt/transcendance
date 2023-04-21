@@ -528,7 +528,9 @@ export class LobbiesService {
         lobby.id,
         LobbyState.SELECTION,
       );
-      this.lobbiesGateway.readySelection(lobbyWithMembers);
+      await this.lobbiesGateway.readySelection(lobbyWithMembers);
+      lobbyWithMembers = await this.updateLobbyState(lobby.id, LobbyState.GAME);
+      this.lobbiesGateway.readyToStart(lobbyWithMembers);
     } else {
       var lobbyWithMembers = await this.updateLobbyState(
         lobby.id,
