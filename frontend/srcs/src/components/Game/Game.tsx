@@ -13,6 +13,7 @@ import { Vector3 } from "three";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
 import CollisionDisk from "./Components/CollisionDisk/CollisionDisk";
+import GameInfoCard from "../Lobby/TeamBuilder/GameInfoCard/GameInfoCard";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -23,16 +24,19 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
-      console.log("gameInfoData :", data);
       setGameInfo(data);
       setIsLoading(false);
       socket?.emit("ready-to-play");
-      // console.log("gameInfoData :", data);
     });
     return () => {
       socket?.off("game-info");
     };
   }, [socket]);
+
+  useEffect(() => {
+    console.log("gamedata :", gameInfo.ball);
+
+  }, [gameInfo]);
 
   useEffect(() => {
     socket?.emit("get-game-info");
@@ -44,32 +48,11 @@ function Game() {
         <></>
       ) : (
         <>
-          {/* <OrthographicCamera
-            makeDefault
-            zoom={1}
-            top={20}
-            bottom={-20}
-            left={20}
-            right={-20}
-            near={1}
-            far={2000}
-            position={[0, 30, 0]}
-          /> */}
-          {/* <PerspectiveCamera makeDefault position={[0, 30, 0]} fov={90} /> */}
-          <Ball
-            radius={gameInfo.ball._hitBox._width / 2}
-            startPos={
-              new Vector3(
-                gameInfo.ball._initialPosition._x,
-                gameInfo.ball._initialPosition._y,
-                gameInfo.ball._initialPosition._z
-              )
-            }
-          />
-          <Walls walls={gameInfo.walls} />
+          <Ball ball={gameInfo.ball}/>
+          <Walls walls={gameInfo.field.walls} />
           <Paddles players={gameInfo.players} />
-          <CollisionDisk gameInfo={gameInfo} />
-          <hemisphereLight args={["#ffff", 0.6]} />
+          {/* <CollisionDisk gameInfo={gameInfo} /> */}
+          {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
         </>
       )}
     </Suspense>

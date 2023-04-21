@@ -1,37 +1,23 @@
 import React from "react";
-import { COLORS } from "../../../colors";
-import { Vector3 } from "three";
+import { Mesh, Vector3 } from "three";
+import { Object3D } from "./Assets/interfaces";
+import { createMeshComponent } from "./Assets/meshGenerator";
 
-function Walls(props) {
+type WallsProps = {
+  walls: Object3D[];
+};
+
+function Walls({ walls }: WallsProps) {
   return (
     <>
-      {props.walls.map((wall: any, index: any) => {
+      {walls.map((wall, index) => {
+        const ref = React.createRef<Mesh>();
+        const meshComponent = createMeshComponent(wall, ref, false);
+
         return (
-          <mesh
-            key={index}
-            position={
-              new Vector3(
-                wall._initialPosition._x,
-                wall._initialPosition._y,
-                wall._initialPosition._z
-              )
-            }
-          >
-            <boxGeometry
-              args={[
-                wall._hitBox._width,
-                wall._hitBox._height,
-                wall._hitBox._depth,
-              ]}
-            />
-            <meshToonMaterial
-              color={COLORS.white}
-              emissive="white"
-              emissiveIntensity={1}
-              opacity={1}
-              // transparent
-            />
-          </mesh>
+          <React.Fragment key={index}>
+            {meshComponent}
+          </React.Fragment>
         );
       })}
     </>
