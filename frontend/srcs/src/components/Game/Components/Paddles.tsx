@@ -5,10 +5,7 @@ import Paddle from "./Paddle/Paddle";
 
 function Paddles({ players }) {
   console.log("players", players);
-  
-  if (!players || players.length === 0) {
-    return null; // Do not render anything if players data is not available
-  }
+
 
   return (
     <>

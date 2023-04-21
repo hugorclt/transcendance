@@ -9,6 +9,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "../../../../services/store";
 import { IPlayer, Object3D } from "../Assets/interfaces";
 import { createMeshComponent } from "../Assets/meshGenerator";
+import { useLayoutEffect } from "react";
 
 type PlayerProps = {
   id: string;
@@ -23,9 +24,6 @@ function Paddle(props: PlayerProps) {
   const [isActive, setIsActive] = useState(false);
   const [user, setUser] = useAtom(userAtom);
 
-
-  console.log(props.paddle);
-
   useFrame(({ mouse }) => {
     keyMap["KeyA"] && socket?.emit("left-move");
     keyMap["KeyD"] && socket?.emit("right-move");
@@ -35,10 +33,12 @@ function Paddle(props: PlayerProps) {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-      // console.log(data);
-      console.log("playerref", playerRef.current);
+
+      console.log("paddle.props", props.paddle);
+      console.log('playerRef changed:', playerRef.current);
+
+
       if (user.id === props.id) setIsActive(true);
-      
       data.players.forEach((player) => {
         if (player.id === props.id) {
           playerRef.current.position.x = player.paddle.position.x;
@@ -55,7 +55,19 @@ function Paddle(props: PlayerProps) {
 
   return (
     <>
-      {createMeshComponent(props.paddle, playerRef, isActive)}
+      <mesh ref={playerRef} position={ new Vector3(props.paddle.position.x, props.paddle.position.y, props.paddle.position.z)}>
+        <boxGeometry args={[props.paddle.width, props.paddle.height, props.paddle.depth]} />
+        <meshToonMaterial
+          color={COLORS.secondary}
+          emissive={"red"}
+          emissiveIntensity={10}
+          opacity={1}
+          transparent
+        />
+        {isActive && (
+          <PerspectiveCamera makeDefault={true} position={new Vector3(props.paddle.position.x, props.paddle.position.y, props.paddle.position.z)} fov={100} />
+        )}
+      </mesh>
     </>
   );
 }
