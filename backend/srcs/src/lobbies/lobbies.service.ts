@@ -46,7 +46,7 @@ export class LobbiesService {
         members: {
           create: {
             team: false,
-            ready: false,
+            ready: true,
             user: {
               connect: { id: ownerId },
             },
@@ -457,7 +457,7 @@ export class LobbiesService {
     return mergedLobby;
   }
 
-  async changeReady(lobbyId: string, userId: string): Promise<void> {
+  async changeReady(lobbyId: string, userId: string) {
     const lobby = await this.findLobbyWithMembers(lobbyId);
     let member = lobby.members.find((member) => member.userId == userId);
     let lobbyUpdated = await this.prisma.lobby.update({
@@ -491,7 +491,6 @@ export class LobbiesService {
     });
     member = lobbyUpdated.members.find((member) => member.userId == userId);
     this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
-    this.startGame(lobbyId, lobby.ownerId);
   }
 
   async startGame(lobbbyId: string, userId: string) {

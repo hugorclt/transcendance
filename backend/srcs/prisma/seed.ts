@@ -95,7 +95,7 @@ async function main() {
         create: [
           {
             team: false,
-            ready: false,
+            ready: true,
             user: {
               connect: { id: dylan.id },
             },

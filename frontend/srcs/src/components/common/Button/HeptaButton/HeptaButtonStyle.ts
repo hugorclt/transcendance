@@ -8,4 +8,8 @@ export const HeptaButtonContainer = styled.div`
     -webkit-filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.7));
     filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.7));
   }
+
+  &.disabled {
+    pointer-events: none;
+  }
 `;
