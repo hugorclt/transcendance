@@ -1,15 +1,15 @@
 import { Vector3 } from "three";
 import { Object3D } from "./interfaces";
 import { Grid } from "@react-three/drei";
-import { COLORS } from "../../../../colors";
 import { Mesh } from "three";
+import { EType } from "../../../../shared/enum";
 
 const PADDLE_COLORS = {
-  red: { color: "#f69090", emissive: "red", emissiveIntensity: 4 },
-  orange: { color: "#ff6a00", emissive: "#d9750b", emissiveIntensity: 4 },
-  purple: { color: "#f1c5ff", emissive: "#bd0af4", emissiveIntensity: 4 },
-  green: { color: "#21f40a", emissive: "#21f40a", emissiveIntensity: 4 },
-  blue: { color: "#0aaaf4", emissive: "#0aaaf4", emissiveIntensity: 4 },
+  [EType.RED_PADDLE]: { color: "#f69090", emissive: "red", emissiveIntensity: 4 },
+  [EType.ORANGE_PADDLE]: { color: "#ff6a00", emissive: "#d9750b", emissiveIntensity: 4 },
+  [EType.PURPLE_PADDLE]: { color: "#f1c5ff", emissive: "#bd0af4", emissiveIntensity: 4 },
+  [EType.GREEN_PADDLE]: { color: "#21f40a", emissive: "#21f40a", emissiveIntensity: 4 },
+  [EType.BLUE_PADDLE]: { color: "#0aaaf4", emissive: "#0aaaf4", emissiveIntensity: 4 },
 };
 
 function createMeshComponent(
@@ -23,13 +23,16 @@ function createMeshComponent(
   );
 
   switch (object.type) {
-    case "BOX-PADDLE-RED":
-    case "BOX-PADDLE-ORANGE":
-    case "BOX-PADDLE-PURPLE":
-    case "BOX-PADDLE-GREEN":
-    case "BOX-PADDLE-BLUE":
-      const colorKey = object.type.split("-")[2].toLowerCase();
-      const colorConfig = PADDLE_COLORS[colorKey];
+
+    /*================================ PADDLE ==============================*/
+    
+    
+    case EType.RED_PADDLE:
+    case EType.ORANGE_PADDLE:
+    case EType.PURPLE_PADDLE:
+    case EType.GREEN_PADDLE:
+    case EType.BLUE_PADDLE:
+      const colorConfig = PADDLE_COLORS[object.type];
 
       return (
         <mesh ref={ref} position={position}>
@@ -43,18 +46,30 @@ function createMeshComponent(
           />
         </mesh>
       );
-    case "SPHERE":
+
+    /*================================ BALL ==============================*/
+    
+    
+    case EType.SPHERE:
       return (
         <mesh ref={ref} position={position}>
           <sphereGeometry args={[object.width, object.height, object.depth]} />
         </mesh>
       );
-    case "GRID":
+
+    /*================================ WALL ==============================*/
+    
+    
+    case EType.WALL:
       return (
         <mesh position={position}>
           <Grid args={[object.width, object.height, object.depth]} />
         </mesh>
       );
+
+    /*================================ END ==============================*/
+    
+    
     default:
       return null;
   }
