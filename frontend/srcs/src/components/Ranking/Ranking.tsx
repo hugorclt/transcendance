@@ -35,12 +35,10 @@ function Ranking() {
     return [+user.stats[indexOf]];
   };
 
-  const renderRow = (selected) => {
+  const renderRow = () => {
     if (asc == true)
       data.sort((a, b) => (getCategory(a) < getCategory(b) ? 1 : -1));
-    else
-      data.sort((a, b) => (getCategory(a) > getCategory(b) ? 1 : -1));
-
+    else data.sort((a, b) => (getCategory(a) > getCategory(b) ? 1 : -1));
 
     return data.map((user, index) => {
       var color;
@@ -74,7 +72,13 @@ function Ranking() {
           </TableData>
           {stats.map((stat) => {
             return (
-              <TableData onClick={() => {setAsc(!asc); setSelect(stat)}} key={nanoid()}>
+              <TableData
+                onClick={() => {
+                  setAsc(!asc);
+                  setSelect(stat);
+                }}
+                key={nanoid()}
+              >
                 <h4>{stat}</h4>
                 {stat == select ? (
                   asc == true ? (
@@ -95,7 +99,8 @@ function Ranking() {
           <TableData>
             <ShopTopBarSelect
               value={select}
-              onChange={(e) => setSelect(e.target.value)}>
+              onChange={(e) => setSelect(e.target.value)}
+            >
               {stats.map((stat) => {
                 return <option key={nanoid()}>{stat}</option>;
               })}
@@ -103,7 +108,7 @@ function Ranking() {
           </TableData>
         </TableRow>
       </MediaQuery>
-      <RankingBody>{renderRow(select)}</RankingBody>
+      <RankingBody>{renderRow()}</RankingBody>
     </RankingTable>
   );
 }

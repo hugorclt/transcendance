@@ -20,6 +20,9 @@ export const IdContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  &:hover {
+    font-size: 20px;
+  }
 `;
 
 export const LvlBoxContainer = styled.div`
@@ -31,6 +34,9 @@ export const LvlBoxContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  &:hover {
+    font-size: 20px;
+  }
 `;
 
 export const NbGameContainer = styled.div`
@@ -42,6 +48,9 @@ export const NbGameContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  &:hover {
+    font-size: 20px;
+  }
 `;
 
 export const NbWinContainer = styled.div`
@@ -53,4 +62,7 @@ export const NbWinContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  &:hover {
+    font-size: 20px;
+  }
 `;

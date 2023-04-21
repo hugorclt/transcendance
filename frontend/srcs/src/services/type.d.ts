@@ -80,3 +80,11 @@ export interface TItem {
   image: string;
   type: EItem;
 }
+
+export interface TMatch {
+  id: string;
+  winnerScore: number;
+  winners: TUser[];
+  loserScore: number;
+  losers: TUser[];
+}
