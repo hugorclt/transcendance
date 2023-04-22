@@ -1,7 +1,7 @@
-import { MatchHistoryProps } from "../MatchHistory";
+import { AllyTeamProps, MatchHistoryProps } from "../MatchHistory";
 
-export function AllyList({result, score, ally, ennemy, mode}: MatchHistoryProps) {
+export function AllyList({allyScore, ally}: AllyTeamProps) {
     return (
-        <div>{ally.map((el) => (<div>{el}</div>))}</div>
+        <div>{ally.map((el) => (<div>{el.username}</div>))}</div>
     );
 }

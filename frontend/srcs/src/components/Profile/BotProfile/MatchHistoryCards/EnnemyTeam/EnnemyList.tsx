@@ -1,7 +1,7 @@
-import { MatchHistoryProps } from "../MatchHistory";
+import { EnnemyTeamProps, MatchHistoryProps } from "../MatchHistory";
 
-export function EnnemyList({result, score, ally, ennemy, mode}: MatchHistoryProps) {
+export function EnnemyList({ennemyScore, ennemy}: EnnemyTeamProps) {
     return (
-        <div>{ennemy.map((el) => (<div>{el}</div>))}</div>
+        <div>{ennemy.map((el) => (<div>{el.username}</div>))}</div>
     );
 }

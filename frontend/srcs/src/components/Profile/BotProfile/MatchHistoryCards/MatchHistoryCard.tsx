@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { COLORS } from "../../../../colors";
 import { AllyTeam } from "./AllyTeam/AllyTeam";
 import { EnnemyTeam } from "./EnnemyTeam/EnnemyTeam";
 import { MatchHistoryProps } from "./MatchHistory";
@@ -9,15 +7,12 @@ import {
   EnnemyInfoContainer,
   ResultContainer,
 } from "./MatchHistoryCardStyle";
-import { TMatch } from "../../../../services/type";
-import { axiosPrivate } from "../../../../services/axios";
-import { userAtom } from "../../../../services/store";
-import { useAtom } from "jotai";
 
 export function MatchHistoryCard({
   result,
-  score,
+  allyScore,
   ally,
+  ennemyScore,
   ennemy,
   mode,
 }: MatchHistoryProps) {
@@ -28,20 +23,14 @@ export function MatchHistoryCard({
       </ResultContainer>
       <AllyInfoContainer>
         <AllyTeam
-          result={result}
-          score={score}
+          allyScore={allyScore}
           ally={ally}
-          ennemy={ennemy}
-          mode={mode}
         />
       </AllyInfoContainer>
       <EnnemyInfoContainer>
         <EnnemyTeam
-          result={result}
-          score={score}
-          ally={ally}
+          ennemyScore={ennemyScore}
           ennemy={ennemy}
-          mode={mode}
         />
       </EnnemyInfoContainer>
     </MatchHistoryContainer2>

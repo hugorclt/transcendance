@@ -1,17 +1,20 @@
+import { TUser } from "../../../../services/type"
+
 export type MatchHistoryProps = {
     result: string,
-    score: string[],
-    ally: string[],
-    ennemy: string[],
+    allyScore: number,
+    ally: TUser[],
+    ennemyScore: number,
+    ennemy: TUser[],
     mode: string,
 }
 
 export type AllyTeamProps = {
-    score: string[],
-    ally: string[],
+    allyScore: number,
+    ally: TUser[],
 }
 
 export type EnnemyTeamProps = {
-    score: string[],
-    ennemy: string[],
+    ennemyScore: number,
+    ennemy: TUser[],
 }

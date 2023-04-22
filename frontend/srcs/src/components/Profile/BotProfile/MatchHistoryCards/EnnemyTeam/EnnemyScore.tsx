@@ -1,7 +1,7 @@
-import { MatchHistoryProps } from "../MatchHistory";
+import { EnnemyTeamProps, MatchHistoryProps } from "../MatchHistory";
 
-export function EnnemyScore({result, score, ally, ennemy, mode}: MatchHistoryProps) {
+export function EnnemyScore({ennemyScore, ennemy}: EnnemyTeamProps) {
     return (
-        <h4>{score[1]}</h4>
+        <h4>{ennemyScore}</h4>
     );
 }
