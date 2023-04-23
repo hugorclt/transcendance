@@ -1,6 +1,8 @@
 import { EType } from 'shared/enum';
 import { Vector3 } from 'src/game/resources/utils/Vector3';
 import { generateBase64Image } from 'src/utils/base64';
+import * as path from 'path';
+
 
 export const maps = [{
   name: 'SPACE',
@@ -11,32 +13,32 @@ export const maps = [{
   depth: 35,
   walls: [
     {
-      texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.GRID,
+      texture: generateBase64Image('/app/assets/paddle/brick.jpg'),
+      type: EType.BOX,
       width: 1,
       height: 9,
       depth: 35,
       position: new Vector3(-8, 0, 0),
     },
     {
-      texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.GRID,
+      texture: generateBase64Image('/app/assets/paddle/brick.jpg'),
+      type: EType.BOX,
       width: 1,
       height: 9,
       depth: 35,
       position: new Vector3(8, 0, 0),
     },
     {
-      texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.GRID,
+      texture: generateBase64Image('/app/assets/paddle/brick.jpg'),
+      type: EType.BOX,
       width: 16,
       height: 1,
       depth: 35,
       position: new Vector3(0, -4.5, 0),
     },
     {
-      texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
-      type: EType.GRID,
+      texture: generateBase64Image('/app/assets/paddle/brick.jpg'),
+      type: EType.BOX,
       width: 16,
       height: 1,
       depth: 35,

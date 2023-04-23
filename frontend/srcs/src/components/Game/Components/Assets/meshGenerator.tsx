@@ -6,10 +6,16 @@ import { EType } from "../../../../shared/enum";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Trail } from "@react-three/drei";
 import { GridCustom } from "./custom/GridCustom";
-import { Euler } from "three";
+import { Euler, TextureLoader } from "three";
+
 
 const PADDLE_COLORS = {
-  [EType.CLASSIC_PADDLE]: { color: "#fffff", emissive: "white", emissiveIntensity: 4 },
+  [EType.CLASSIC_PADDLE]: {
+    color: "#fffff",
+    emissive: "white",
+    emissiveIntensity: 4,
+  },
+
   [EType.RED_PADDLE]: {
     color: "#f69090",
     emissive: "red",
@@ -47,6 +53,14 @@ export function createMeshComponent(
     object.position.y,
     object.position.z
   );
+
+  const textureLoader = new TextureLoader();
+  const materialProps: any = {};
+
+  if (object.texture) {
+    const texture = textureLoader.load(object.texture);
+    materialProps.map = texture;
+  }
 
   console.log(object.type);
 
@@ -99,23 +113,30 @@ export function createMeshComponent(
     /*================================ WALL ==============================*/
 
     case EType.GRID:
-      const rotation = object.width === 1 ? new Euler(0, 0, Math.PI / 2) : new Euler(0, 0, 0);
+      const rotation =
+        object.width === 1 ? new Euler(0, 0, Math.PI / 2) : new Euler(0, 0, 0);
       const gridWidth = rotation.z === 0 ? object.width : object.height;
       const gridLength = object.depth;
       return (
         <mesh position={position}>
-          <GridCustom gridWidth={gridWidth} gridLength={gridLength} rotation={rotation} />
+          <GridCustom
+            gridWidth={gridWidth}
+            gridLength={gridLength}
+            rotation={rotation}
+          />
         </mesh>
       );
-    
 
     case EType.BOX:
+      if (object.texture) {
+        materialProps.color = 'white';
+      }
       return (
         <mesh position={position}>
-          <boxGeometry args={[object.height, object.width]} />
+          <boxGeometry args={[object.width, object.height, object.depth]} />
+          <meshStandardMaterial {...materialProps} />
         </mesh>
       );
-
     /*================================ END ==============================*/
 
     default:
