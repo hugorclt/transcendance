@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Texture, Vector3 } from "three";
 import { Object3D } from "./interfaces";
 import { Grid } from "@react-three/drei";
 import { Mesh } from "three";
@@ -6,7 +6,7 @@ import { EType } from "../../../../shared/enum";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Trail } from "@react-three/drei";
 import { GridCustom } from "./custom/GridCustom";
-import { Euler } from "three";
+import { Euler, RepeatWrapping } from "three";
 import { useTexture } from "@react-three/drei";
 
 const PADDLE_COLORS = {
@@ -55,9 +55,18 @@ export function createMeshComponent(
   );
 
   const materialProps: any = {};
+  let texture: Texture;
 
   if (object.texture) {
-    const texture = useTexture(object.texture);
+    texture = useTexture(object.texture);
+    texture.wrapS = RepeatWrapping;
+    texture.wrapT = RepeatWrapping;
+  
+    const squareSize = Math.max(texture.image.width, texture.image.height) / 64;
+    const repeatX = (object.width / squareSize);
+    const repeatY = (object.depth / squareSize);
+  
+    texture.repeat.set(repeatX, repeatY);
     materialProps.map = texture;
   }
 
@@ -112,8 +121,6 @@ export function createMeshComponent(
           <meshStandardMaterial {...materialProps} />
         </mesh>
       );
-    
-    
 
     /*================================ WALL ==============================*/
 

@@ -110,7 +110,7 @@ export const maps = [{
   depth: 35,
   walls: [
     {
-      texture: '/brick2.jpg',
+      texture: '/brick.jpg',
       type: EType.BOX,
       width: 1,
       height: 1,
@@ -118,7 +118,7 @@ export const maps = [{
       position: new Vector3(-8, 0, 0),
     },
     {
-      texture: '/brick2.jpg',
+      texture: '/brick.jpg',
       type: EType.BOX,
       width: 1,
       height: 1,
@@ -126,7 +126,7 @@ export const maps = [{
       position: new Vector3(8, 0, 0),
     },
     {
-      texture: '/brick2.jpg',
+      texture: '/brick.jpg',
       type: EType.BOX,
       width: 16,
       height: 1,
@@ -135,7 +135,7 @@ export const maps = [{
     },
   ],
   ball: {
-    texture: 'watermelon.jpg',
+    texture: null,
     type: EType.SPHERE,
     width: 0.5,
     height: 0.5,
