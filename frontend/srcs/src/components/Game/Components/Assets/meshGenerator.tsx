@@ -6,7 +6,8 @@ import { EType } from "../../../../shared/enum";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Trail } from "@react-three/drei";
 import { GridCustom } from "./custom/GridCustom";
-import { Euler, TextureLoader } from "three";
+import { Euler } from "three";
+import { useTexture } from "@react-three/drei";
 
 const PADDLE_COLORS = {
   [EType.CLASSIC_PADDLE]: {
@@ -53,11 +54,10 @@ export function createMeshComponent(
     object.position.z
   );
 
-  const textureLoader = new TextureLoader();
   const materialProps: any = {};
 
   if (object.texture) {
-    const texture = textureLoader.load(object.texture);
+    const texture = useTexture(object.texture);
     materialProps.map = texture;
   }
 
@@ -98,16 +98,22 @@ export function createMeshComponent(
     /*================================ BALL ==============================*/
 
     case EType.SPHERE:
+      if (!object.texture) {
+        materialProps.emissive = "blue";
+        materialProps.emissiveIntensity = 10;
+        materialProps.toneMapped = false;
+      } else {
+        materialProps.roughness = 0.5;
+        materialProps.metalness = 0.5;
+      }
       return (
         <mesh ref={ref} position={position} args={[]}>
           <sphereGeometry args={[object.width, 32, 32]} />
-          <meshToonMaterial
-            emissive="blue"
-            emissiveIntensity={10}
-            toneMapped={false}
-          />
+          <meshStandardMaterial {...materialProps} />
         </mesh>
       );
+    
+    
 
     /*================================ WALL ==============================*/
 
@@ -127,7 +133,7 @@ export function createMeshComponent(
       );
 
     case EType.BOX:
-      if (object.texture) {
+      if (!object.texture) {
         materialProps.color = "white";
       }
       return (

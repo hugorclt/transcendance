@@ -67,6 +67,8 @@ const GameScreen = () => {
           style={{ background: COLORS.background }}
           linear
         >
+          {/* <directionalLight position={[10, 10, 0]} intensity={0.8} /> */}
+
           <Game />
           {/* <Skybox /> */}
           <MyEffects />
