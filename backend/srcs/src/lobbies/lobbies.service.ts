@@ -212,7 +212,6 @@ export class LobbiesService {
       team: team,
       ready: false,
     });
-    //return updated lobby with potential new state
     await this.updateLobbyState(updateLobby.id, null);
     return await this.findLobbyWithMembers(updateLobby.id);
   }
@@ -510,6 +509,7 @@ export class LobbiesService {
       throw new MethodNotAllowedException(
         'Cannot start game, players are not ready',
       );
+    /* ------------------------------- matchmaking ------------------------------ */
     if (lobby.private === false) {
       const lobbyMatch = this.lobbiesGateway.matchmaking(lobby);
       if (!lobbyMatch) {

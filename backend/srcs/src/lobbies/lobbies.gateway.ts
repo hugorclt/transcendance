@@ -53,7 +53,23 @@ export class LobbiesGateway
     } else return queue.dequeue();
   }
 
-  async mergeLobbyRooms(newLobby: LobbyWithMembersEntity, oldLobbyId: string) {}
+  async mergeLobbyRooms(newLobby: LobbyWithMembersEntity, oldLobbyId: string) {
+    //get all members of the oldLobbyId and make them join the newLobby
+    console.log(
+      'merging lobbies: ',
+      newLobby.id,
+      ' from old lobby: ',
+      oldLobbyId,
+      '==>',
+      this.io.adapter.rooms,
+    );
+    this.io.adapter.rooms.get(oldLobbyId).forEach(async (clientId) => {
+      const client = this.io.sockets.get(clientId);
+      await client.join(newLobby.id);
+      await client.leave(oldLobbyId);
+    });
+    console.log('lobbies merged ==>', this.io.adapter.rooms);
+  }
 
   async afterInit() {
     this._games = new Map<string, Game>();
