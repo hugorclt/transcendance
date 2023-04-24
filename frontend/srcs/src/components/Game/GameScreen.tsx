@@ -72,7 +72,6 @@ const GameScreen = () => {
           <Game />
           {/* <Skybox /> */}
           <MyEffects />
-          {/* <PaddleScene width={10} length={3} /> */}
         </Canvas>
       </div>
     </>

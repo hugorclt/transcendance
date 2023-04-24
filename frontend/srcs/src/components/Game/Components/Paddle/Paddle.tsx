@@ -7,32 +7,22 @@ import useKeyboard from "../../../../hooks/useKeyboard";
 import { PerspectiveCamera } from "@react-three/drei";
 import { useAtom } from "jotai";
 import { userAtom } from "../../../../services/store";
+import { IPlayer, Object3D } from "../Assets/interfaces";
+import { createMeshComponent } from "../Assets/meshGenerator";
+import { useLayoutEffect } from "react";
 
-//just for fun function getRandomColor() {
-function getRandomColor() {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+type PlayerProps = {
+  id: string;
+  team: boolean;
+  paddle: Object3D;
 }
 
-type TPaddleProps = {
-  id: string;
-  width: number;
-  height: number;
-  depth: number;
-  position: Vector3;
-};
-
-function Paddle({ id, width, height, depth, position }: TPaddleProps) {
+function Paddle(props: PlayerProps) {
   const socket = useContext(LobbySocketContext);
   const playerRef = useRef<Mesh>(null!);
   const keyMap = useKeyboard();
   const [isActive, setIsActive] = useState(false);
   const [user, setUser] = useAtom(userAtom);
-  // const [color, setColor] = useState(getRandomColor());
 
   useFrame(({ mouse }) => {
     keyMap["KeyA"] && socket?.emit("left-move");
@@ -43,14 +33,17 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-      if (user.id === id) setIsActive(true);
 
+      console.log("paddle.props", props.paddle);
+      console.log('playerRef changed:', playerRef.current);
+
+
+      if (user.id === props.id) setIsActive(true);
       data.players.forEach((player) => {
-        if (player._id == id) {
-          // setColor(getRandomColor());
-          playerRef.current.position.x = player._paddle._hitBox._position._x;
-          playerRef.current.position.y = player._paddle._hitBox._position._y;
-          playerRef.current.position.z = player._paddle._hitBox._position._z;
+        if (player.id === props.id) {
+          playerRef.current.position.x = player.paddle.position.x;
+          playerRef.current.position.y = player.paddle.position.y;
+          playerRef.current.position.z = player.paddle.position.z;
         }
       });
     });
@@ -62,21 +55,13 @@ function Paddle({ id, width, height, depth, position }: TPaddleProps) {
 
   return (
     <>
-      <mesh ref={playerRef} position={position}>
-        <boxGeometry args={[width, height, depth]} />
-        <meshToonMaterial
-          color={COLORS.secondary}
-          emissive={"red"}
-          emissiveIntensity={10}
-          opacity={1}
-          transparent
-        />
-        {isActive && (
-          <PerspectiveCamera makeDefault={true} position={position} fov={100} />
-        )}
-      </mesh>
+      {createMeshComponent(props.paddle, playerRef, isActive)}
     </>
   );
 }
 
 export default Paddle;
+
+
+
+

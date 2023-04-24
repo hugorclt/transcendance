@@ -12,21 +12,24 @@ import { Mesh, Vector2, Vector3 } from "three";
 import { useForwardRaycast } from "../../../hooks/useForwardRaycast";
 import BlueFlame from "../effects/BlueFlame";
 import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
+import { Object3D } from "./Assets/interfaces";
+import { createMeshComponent } from "./Assets/meshGenerator";
 
-interface TBallProps {
-  radius: number;
-  startPos: Vector3;
+type BallProps = {
+  ball : Object3D;
 }
 
-const Ball = (props: TBallProps) => {
+const Ball = (props: BallProps) => {
   const ballRef = useRef<Mesh>(null!);
   const socket = useContext(LobbySocketContext);
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-      ballRef.current.position.x = data.ball._hitBox._position._x;
-      ballRef.current.position.y = data.ball._hitBox._position._y;
-      ballRef.current.position.z = data.ball._hitBox._position._z;
+
+      console.log("ballref", ballRef);
+      ballRef.current.position.x = data.ball.position.x;
+      ballRef.current.position.y = data.ball.position.y;
+      ballRef.current.position.z = data.ball.position.z;
     });
 
     return () => {
@@ -35,27 +38,9 @@ const Ball = (props: TBallProps) => {
   }, [socket]);
 
   return (
-    <Trail
-      width={0.3} // Width of the line
-      color={"skyblue"} // Color of the line
-      length={1} // Length of the line
-      decay={1} // How fast the line fades away
-      local={false} // Wether to use the target's world or local positions
-      stride={0} // Min distance between previous and current point
-      interval={1} // Number of frames to wait before next calculation
-      target={undefined} // Optional target. This object will produce the trail.
-      attenuation={(width) => width} // A function to define the width in each point along it.
-    >
-      <mesh ref={ballRef} position={props.startPos}>
-        <sphereGeometry args={[props.radius, 32, 32]} />
-        <meshToonMaterial
-          emissive="blue"
-          emissiveIntensity={10}
-          toneMapped={false}
-        />
-        {/* <BlueFlame/> */}
-      </mesh>
-    </Trail>
+    <>
+      {createMeshComponent(props.ball, ballRef, false)}
+    </>
   );
 };
 
