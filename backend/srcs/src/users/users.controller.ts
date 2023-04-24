@@ -46,30 +46,35 @@ export class UsersController {
   @Get()
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findAll(): Promise<ReturnUserEntity[]> {
+    console.log('a');
     return await this.usersService.findAll();
   }
 
   @Get('/friends')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async getUserFriends(@Request() req): Promise<ReturnUserEntity[]> {
+    console.log('a2');
     return await this.usersService.getUserFriends(req.user.sub);
   }
 
   @Get('connected')
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findConnected(): Promise<ReturnUserEntity[]> {
+    console.log('b');
     return await this.usersService.findConnected();
   }
 
   @Get('me')
   @ApiOkResponse({ type: ReturnUserEntity })
   async findInfo(@Request() req): Promise<ReturnUserEntity> {
+    console.log('c');
     return await this.usersService.findOne(req.user.sub);
   }
 
   @Get('status')
   @ApiOkResponse({ type: ReturnUserEntity })
   async findStatus(@Request() req): Promise<ReturnUserEntity> {
+    console.log('d');
     const user = await this.usersService.findOne(req.user.sub);
     return user;
   }
@@ -88,15 +93,24 @@ export class UsersController {
   @Get('me/preferences')
   @ApiOkResponse({ type: UserPreferencesEntity })
   async getUserPreferences(@Request() req): Promise<UserPreferencesEntity> {
+    console.log('e');
     const preferences = await this.usersService.getUserPreferences(
       req.user.sub,
     );
     return preferences;
   }
 
+  @Get('user/:username')
+  @ApiOkResponse({ type: ReturnUserEntity})
+  async getUserByUsername(@Param('username') username: string): Promise<ReturnUserEntity> {
+    console.log("ICI");
+    return await this.usersService.findOneByUser(username);
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: ReturnUserEntity })
   async findOne(@Param('id') id: string): Promise<ReturnUserEntity> {
+    console.log("LA");
     return await this.usersService.findOne(id);
   }
 

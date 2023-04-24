@@ -32,7 +32,6 @@ export function StatBox({ username }) {
   else actual = username;
 
   useEffect(() => {
-    console.log(username);
     axiosPrivate
       .get(`stats/user/${user.id}`)
       .then((response: AxiosResponse) => {

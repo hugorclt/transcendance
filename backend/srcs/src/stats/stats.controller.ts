@@ -44,14 +44,12 @@ export class StatsController {
   @Get('user/:id')
   @ApiOkResponse({ type: StatEntity })
   async findOneByUserId(@Param('id') id: string): Promise<StatEntity> {
-    console.log('ici');
     return this.statsService.findOneByUserId(id);
   }
 
   @Get(':id')
   @ApiOkResponse({ type: StatEntity })
   async findOne(@Param('id') id: string): Promise<StatEntity> {
-    console.log('laba');
     return this.statsService.findOne(id);
   }
 
