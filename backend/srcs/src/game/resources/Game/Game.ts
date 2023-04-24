@@ -64,12 +64,11 @@ export class Game {
     this._id = lobby.id;
 
     console.log('creating game: ', lobby);
-    var config;
-    if (lobby.mode == 'CHAMPIONS') {
-      config = maps[0];
-    } else if (lobby.mode == 'CLASSIC') {
-      config = maps[1];
-    }
+
+    const config = maps.find((map) => 
+      map.name == lobby.map);
+
+    console.log("detected config: ", config.name);
     this._init_ball(config);
     this._init_field(config);
     this._init_players(config, lobby);

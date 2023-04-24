@@ -430,7 +430,6 @@ export class LobbiesService {
     lobby1: LobbyWithMembersEntity,
     lobby2: LobbyWithMembersEntity,
   ): Promise<LobbyWithMembersEntity> {
-    //update lobby members
     const updatedMembers = await this.prisma.lobbyMember.updateMany({
       where: {
         id: {
@@ -442,13 +441,11 @@ export class LobbiesService {
         team: true,
       },
     });
-    //delete lobby2
     const deleteLobby = await this.prisma.lobby.delete({
       where: {
         id: lobby2.id,
       },
     });
-    //return updated lobby1
     const mergedLobby = await this.findLobbyWithMembers(lobby1.id);
     return mergedLobby;
   }
@@ -563,8 +560,10 @@ export class LobbiesService {
       case 'Green Paddle':
         paddleType = EPaddle.GREEN;
         break;
+
+      default:
+        paddleType = EPaddle.BASIC;
     }
-    if (!paddleType) throw new NotFoundException();
 
     return await this.prisma.lobby.update({
       where: {
