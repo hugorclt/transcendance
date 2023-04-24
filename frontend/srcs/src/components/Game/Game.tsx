@@ -25,6 +25,7 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
+      console.log("received game info", data);
       setGameInfo(data);
       setIsLoading(false);
       socket?.emit("ready-to-play");
@@ -35,8 +36,7 @@ function Game() {
   }, [socket]);
 
   useEffect(() => {
-    console.log("gamedata :", gameInfo.ball);
-
+    // console.log("gamedata :", gameInfo.ball);
   }, [gameInfo]);
 
   useEffect(() => {
@@ -49,14 +49,14 @@ function Game() {
         <></>
       ) : (
         <>
-          <Ball ball={gameInfo.ball}/>
+          <Ball ball={gameInfo.ball} />
           <Walls walls={gameInfo.field.walls} />
           <Paddles players={gameInfo.players} />
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
         </>
       )}
-      <Skybox/>
+      <Skybox />
     </Suspense>
   );
 }

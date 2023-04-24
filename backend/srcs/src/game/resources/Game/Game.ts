@@ -64,9 +64,9 @@ export class Game {
     this._id = lobby.id;
 
     var config;
-    if (lobby.mode == 'CLASSIC') {
+    if (lobby.mode == 'CHAMPIONS') {
       config = maps[0];
-    } else if (lobby.mode == 'CHAMPIONS') {
+    } else if (lobby.mode == 'CLASSIC') {
       config = maps[1];
     }
     this._init_ball(config);

@@ -16,8 +16,8 @@ import { Object3D } from "./Assets/interfaces";
 import { createMeshComponent } from "./Assets/meshGenerator";
 
 type BallProps = {
-  ball : Object3D;
-}
+  ball: Object3D;
+};
 
 const Ball = (props: BallProps) => {
   const ballRef = useRef<Mesh>(null!);
@@ -25,8 +25,7 @@ const Ball = (props: BallProps) => {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-
-      console.log("ballref", ballRef);
+      // console.log("ballref", ballRef);
       ballRef.current.position.x = data.ball.position.x;
       ballRef.current.position.y = data.ball.position.y;
       ballRef.current.position.z = data.ball.position.z;
@@ -37,11 +36,7 @@ const Ball = (props: BallProps) => {
     };
   }, [socket]);
 
-  return (
-    <>
-      {createMeshComponent(props.ball, ballRef, false)}
-    </>
-  );
+  return <>{createMeshComponent(props.ball, ballRef, false)}</>;
 };
 
 export default Ball;

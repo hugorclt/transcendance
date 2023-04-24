@@ -15,7 +15,7 @@ type PlayerProps = {
   id: string;
   team: boolean;
   paddle: Object3D;
-}
+};
 
 function Paddle(props: PlayerProps) {
   const socket = useContext(LobbySocketContext);
@@ -33,10 +33,8 @@ function Paddle(props: PlayerProps) {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-
-      console.log("paddle.props", props.paddle);
-      console.log('playerRef changed:', playerRef.current);
-
+      // console.log("paddle.props", props.paddle);
+      // console.log('playerRef changed:', playerRef.current);
 
       if (user.id === props.id) setIsActive(true);
       data.players.forEach((player) => {
@@ -53,15 +51,7 @@ function Paddle(props: PlayerProps) {
     };
   }, [socket]);
 
-  return (
-    <>
-      {createMeshComponent(props.paddle, playerRef, isActive)}
-    </>
-  );
+  return <>{createMeshComponent(props.paddle, playerRef, isActive)}</>;
 }
 
 export default Paddle;
-
-
-
-

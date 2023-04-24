@@ -35,6 +35,7 @@ export class LobbiesGateway
 
   matchmaking(lobby: LobbyWithMembersEntity): LobbyWithMembersEntity {
     var queue;
+    console.log('matchmaking lobby: ', lobby);
     if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
       //soloQ champions
       queue = this._soloChampionsQ;
@@ -54,21 +55,11 @@ export class LobbiesGateway
   }
 
   async mergeLobbyRooms(newLobby: LobbyWithMembersEntity, oldLobbyId: string) {
-    //get all members of the oldLobbyId and make them join the newLobby
-    console.log(
-      'merging lobbies: ',
-      newLobby.id,
-      ' from old lobby: ',
-      oldLobbyId,
-      '==>',
-      this.io.adapter.rooms,
-    );
     this.io.adapter.rooms.get(oldLobbyId).forEach(async (clientId) => {
       const client = this.io.sockets.get(clientId);
       await client.join(newLobby.id);
       await client.leave(oldLobbyId);
     });
-    console.log('lobbies merged ==>', this.io.adapter.rooms);
   }
 
   async afterInit() {
@@ -126,9 +117,6 @@ export class LobbiesGateway
     }, 1000);
 
     await delay(17000);
-    // this.emitToLobby(lobby.id, 'on-lobby-update', {
-    //   state: LobbyState.GAME,
-    // });
     clearInterval(interval);
   }
 
