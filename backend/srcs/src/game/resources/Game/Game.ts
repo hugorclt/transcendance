@@ -63,6 +63,7 @@ export class Game {
     this._collisions = new Array<TCollision>();
     this._id = lobby.id;
 
+    console.log('creating game: ', lobby);
     var config;
     if (lobby.mode == 'CHAMPIONS') {
       config = maps[0];

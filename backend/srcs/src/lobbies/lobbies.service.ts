@@ -540,6 +540,10 @@ export class LobbiesService {
   async paddleSelected(userId: string, lobbyId: string, paddleName: string) {
     var paddleType;
     switch (paddleName) {
+      case 'Base Paddle':
+        paddleType = EPaddle.BASIC;
+        break;
+
       case 'Red Paddle':
         paddleType = EPaddle.RED;
         break;
@@ -589,6 +593,8 @@ export class LobbiesService {
 
   async voteMap(userId: string, lobbyId: string, mapName: string) {
     var map;
+
+    //TODO ===> HARDCODED
     switch (mapName) {
       case 'CLASSIC':
         map = EMap.CLASSIC;

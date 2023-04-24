@@ -12,7 +12,7 @@ import { useAtom } from "jotai";
 
 function PaddleSelector() {
   const [paddles, setPaddle] = useState<{ name: string; image: string }[]>([]);
-  const [paddleSelected, setPaddleSelected] = useState("");
+  const [paddleSelected, setPaddleSelected] = useState("Base Paddle");
   const axiosPrivate = useAxiosPrivate();
   const [lobby] = useAtom(lobbyAtom);
 
@@ -23,6 +23,11 @@ function PaddleSelector() {
         setPaddle(res.data);
       })
       .catch((err: AxiosError) => {});
+
+    axiosPrivate.post("/lobbies/paddle-selected", {
+      lobbyId: lobby.id,
+      name: "Base Paddle",
+    });
   }, []);
 
   const handleClick = (e: any, paddleName: string) => {

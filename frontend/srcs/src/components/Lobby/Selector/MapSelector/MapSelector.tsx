@@ -46,7 +46,7 @@ function MapSelector() {
       .catch((err: AxiosError) => {});
 
     axiosPrivate
-      .post("/lobbies/get-votes", { lobbyId: lobby.id })
+      .post("/lobbies/votesget-votes", { lobbyId: lobby.id })
       .then((res: AxiosResponse) => {
         console.log(res.data);
         computeVote(res.data);
