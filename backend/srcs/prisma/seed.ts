@@ -5,6 +5,20 @@ import { item } from './seedHelper';
 const prisma = new PrismaClient();
 
 async function main() {
+  await Promise.all(
+    item.map(async (item) => {
+      await prisma.item.create({
+        data: item,
+      });
+    }),
+  );
+
+  const basePaddle = await prisma.item.findFirst({
+    where: {
+      name: 'Base Paddle',
+    },
+  });
+
   await prisma.user.deleteMany({
     where: {},
   });
@@ -25,6 +39,14 @@ async function main() {
           visibility: 'VISIBLE',
         },
       },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
+        },
+      },
     },
   });
   const ryad = await prisma.user.create({
@@ -35,6 +57,14 @@ async function main() {
       preferences: {
         create: {
           visibility: 'VISIBLE',
+        },
+      },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
         },
       },
     },
@@ -49,6 +79,14 @@ async function main() {
       preferences: {
         create: {
           visibility: 'VISIBLE',
+        },
+      },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
         },
       },
     },
@@ -66,6 +104,14 @@ async function main() {
       friends: {
         connect: {
           id: hugo.id,
+        },
+      },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
         },
       },
     },
@@ -110,12 +156,6 @@ async function main() {
         ],
       },
     },
-  });
-
-  item.map(async (item) => {
-    await prisma.item.create({
-      data: item,
-    });
   });
 
   const match1 = await prisma.match.create({

@@ -50,6 +50,17 @@ export class UsersService {
         stat: {
           create: {},
         },
+        items: {
+          connect: {
+            id: (
+              await this.prisma.item.findFirst({
+                where: {
+                  name: 'Base Paddle',
+                },
+              })
+            ).id,
+          },
+        },
       },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
@@ -67,6 +78,20 @@ export class UsersService {
         preferences: {
           create: { visibility: 'VISIBLE' },
         },
+        stat: {
+          create: {},
+        },
+        items: {
+          connect: {
+            id: (
+              await this.prisma.item.findFirst({
+                where: {
+                  name: 'Base Paddle',
+                },
+              })
+            ).id,
+          },
+        },
       },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);
@@ -81,6 +106,20 @@ export class UsersService {
         type: create42UserDto.type,
         preferences: {
           create: { visibility: 'VISIBLE' },
+        },
+        stat: {
+          create: {},
+        },
+        items: {
+          connect: {
+            id: (
+              await this.prisma.item.findFirst({
+                where: {
+                  name: 'Base Paddle',
+                },
+              })
+            ).id,
+          },
         },
       },
     });
