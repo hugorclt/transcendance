@@ -117,7 +117,51 @@ async function main() {
       data: item,
     });
   });
+
+  const match1 = await prisma.match.create({
+    data: {
+      duration: new Date(),
+      winnerScore: 10,
+      loserScore: 5,
+      winners: {
+        connect: { id: dylan.id },
+      },
+      losers: {
+        connect: { id: hugo.id },
+      },
+    },
+  });
+
+  const match2 = await prisma.match.create({
+    data: {
+      duration: new Date(),
+      winnerScore: 12,
+      loserScore: 7,
+      winners: {
+        connect: { id: ryad.id },
+      },
+      losers: {
+        connect: { id: dominique.id },
+      },
+    },
+  });
+
+  const match3 = await prisma.match.create({
+    data: {
+      duration: new Date(),
+      winnerScore: 10,
+      loserScore: 5,
+      winners: {
+        connect: { id: dylan.id },
+      },
+      losers: {
+        connect: { id: ryad.id },
+      },
+    },
+  });
 }
+
+
 
 main()
   .catch((e) => console.error(e))

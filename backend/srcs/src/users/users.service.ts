@@ -47,6 +47,9 @@ export class UsersService {
         preferences: {
           create: { visibility: 'VISIBLE' },
         },
+        stat: {
+          create: {},
+        },
       },
     });
     return exclude(user, ['password', 'type', 'refreshToken']);

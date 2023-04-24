@@ -534,9 +534,14 @@ export class LobbiesService {
     } else {
       var lobbyWithMembers = await this.updateLobbyState(
         lobby.id,
-        LobbyState.GAME,
+        LobbyState.SELECTION,
       );
-      this.lobbiesGateway.readyToStart(lobbyWithMembers);
+      this.lobbiesGateway.readySelection(lobbyWithMembers);
+      // var lobbyWithMembers = await this.updateLobbyState(
+      //   lobby.id,
+      //   LobbyState.GAME,
+      // );
+      // this.lobbiesGateway.readyToStart(lobbyWithMembers);
     }
   }
 
