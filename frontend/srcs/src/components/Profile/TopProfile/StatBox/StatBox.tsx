@@ -16,7 +16,7 @@ import { IoLogoGameControllerB } from "react-icons/io";
 import { FaCrown } from "react-icons/fa";
 import { COLORS } from "../../../../colors.js";
 
-export function StatBox() {
+export function StatBox({ username }) {
   const [user, setUser] = useAtom(userAtom);
   const axiosPrivate = useAxiosPrivate();
   const [stats, setStats] = useState<TStat>({
@@ -27,13 +27,16 @@ export function StatBox() {
     nbWin: 0,
   });
 
+  let actual: string;
+  if (user.username == username) actual = user.username;
+  else actual = username;
+
   useEffect(() => {
-    console.log("Getting user stats: ", user.id);
+    console.log(username);
     axiosPrivate
       .get(`stats/user/${user.id}`)
       .then((response: AxiosResponse) => {
         setStats(response.data);
-        console.log("RESPONSE = ", response.data);
       })
       .catch((error: AxiosError) => {
         console.log(error.message);

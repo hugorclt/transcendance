@@ -1,13 +1,12 @@
 import React from "react";
 import { ProfileLayoutContainer } from "./ProfileLayoutStyle.js";
 import { Profile } from "../../components/Profile/Profile";
-import { ProfileContainer } from "../../components/Profile/ProfileStyle.js";
+import { nanoid } from "nanoid";
 
-export function ProfileLayout() {
-
-    return (
-	<ProfileLayoutContainer>
-			<Profile/>
-	</ProfileLayoutContainer>
-    );
+export function ProfileLayout({ username }) {
+  return (
+    <ProfileLayoutContainer>
+      <Profile username={username} />
+    </ProfileLayoutContainer>
+  );
 }
