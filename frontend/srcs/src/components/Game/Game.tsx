@@ -25,7 +25,6 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
-      console.log("received game info", data);
       setGameInfo(data);
       setIsLoading(false);
       socket?.emit("ready-to-play");

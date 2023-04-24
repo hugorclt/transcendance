@@ -26,24 +26,30 @@ export class Field {
 
   private _init_objects(config: any) {
     config.objects?.forEach((object) => {
-      console.log("creating object: ", object);
-    })
+      console.log('creating object');
+    });
   }
 
   private _init_goals(config: any) {
     this._goals.push(
-      new Goal({...config.goals, position: new Vector3(0, 0, config.depth / 2 + config.goals.depth)})
+      new Goal({
+        ...config.goals,
+        position: new Vector3(0, 0, config.depth / 2 + config.goals.depth),
+      }),
     );
     this._goals.push(
-      new Goal({...config.goals, position: new Vector3(0, 0, -config.depth / 2 - config.goals.depth)})
+      new Goal({
+        ...config.goals,
+        position: new Vector3(0, 0, -config.depth / 2 - config.goals.depth),
+      }),
     );
   }
 
-  public exportFieldInfo() : IField{
+  public exportFieldInfo(): IField {
     const walls = this._walls.map((wall) => wall.exportInfo());
     const objects = this._objects.map((object) => object.exportInfo());
     const goals = this._goals.map((goal) => goal.exportInfo());
-    return ({walls: walls, objects: objects, goals: goals}); 
+    return { walls: walls, objects: objects, goals: goals };
   }
 
   public get walls(): Array<Wall> {

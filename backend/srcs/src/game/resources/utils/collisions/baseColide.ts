@@ -30,7 +30,6 @@ export function baseCollide(ball: Ball, object: HitBox) {
     }
     // revert z velocity
     ball.speedZ = -ball.speedZ;
-    console.log('Collision on XY plane, revert Z velocity: ', ball.speed);
     return {
       position: ball.getPosition(),
       direction: new Vector3(0, 0, ball.speedZ > 0 ? 1 : -1),
@@ -45,7 +44,6 @@ export function baseCollide(ball: Ball, object: HitBox) {
     }
     // revert y velocity
     ball.speedY = -ball.speedY;
-    console.log('Collision on XZ plane, revert Y velocity', ball.speed);
     return {
       position: ball.getPosition(),
       direction: new Vector3(0, ball.speedY > 0 ? 1 : -1, 0),
@@ -60,7 +58,6 @@ export function baseCollide(ball: Ball, object: HitBox) {
     }
     // revert x velocity
     ball.speedX = -ball.speedX;
-    console.log('Collision on YZ plane, revert X velocity', ball.speed);
     return {
       position: ball.getPosition(),
       direction: new Vector3(ball.speedX > 0 ? 1 : -1, 0, 0),

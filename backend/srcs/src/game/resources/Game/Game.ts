@@ -88,8 +88,6 @@ export class Game {
     this._objects.forEach((object) => {
       if (this._ball.hitBox.intersect(object.hitBox)) {
         this._collisions.push(object.collide(this._ball));
-        console.log(`Object class: ${object.constructor.name}`);
-        console.log(`Object position: ${JSON.stringify(object.getPosition())}`);
       }
     });
   }

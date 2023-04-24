@@ -120,7 +120,6 @@ export class LobbiesController {
     @Param('id') id: string,
     @Request() req: any,
   ): Promise<LobbyMemberEntity> {
-    console.log('changing team for user: ', req.user.sub, ' in lobby: ', id);
     return await this.lobbiesService.changeTeam(id, req.user.sub);
   }
 

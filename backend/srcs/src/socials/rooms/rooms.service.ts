@@ -364,7 +364,6 @@ export class RoomsService {
     if (updatePasswordDto.password != updatePasswordDto.confirm)
       throw new BadRequestException();
     const salt = await bcrypt.genSalt();
-    console.log(salt, updatePasswordDto.password);
     const hash = await bcrypt.hash(updatePasswordDto.password, salt);
     const room = await this.prisma.room.update({
       where: {

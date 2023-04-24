@@ -32,7 +32,6 @@ export class SocialsGateway
   public io: Namespace;
 
   afterInit() {
-    console.log('SocialsGateway initialized');
     this.io.on('connection', (socket) => {});
   }
 

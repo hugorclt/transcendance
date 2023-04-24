@@ -15,7 +15,6 @@ function UserProvider({ children }: { children: ReactNode }) {
   const socket = useContext(SocketContext);
 
   useEffect(() => {
-    console.log("user provider");
     axiosPrivate
       .get("/users/me")
       .then((res: AxiosResponse) => {

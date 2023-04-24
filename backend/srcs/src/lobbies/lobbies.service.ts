@@ -431,7 +431,6 @@ export class LobbiesService {
     lobby2: LobbyWithMembersEntity,
   ): Promise<LobbyWithMembersEntity> {
     //update lobby members
-    console.log('merging lobby 1 and lobby 2');
     const updatedMembers = await this.prisma.lobbyMember.updateMany({
       where: {
         id: {
@@ -449,10 +448,8 @@ export class LobbiesService {
         id: lobby2.id,
       },
     });
-    console.log('lobby2 has been deleted');
     //return updated lobby1
     const mergedLobby = await this.findLobbyWithMembers(lobby1.id);
-    console.log('lobby has been merged: ', mergedLobby);
     return mergedLobby;
   }
 

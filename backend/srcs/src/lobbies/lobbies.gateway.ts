@@ -35,7 +35,6 @@ export class LobbiesGateway
 
   matchmaking(lobby: LobbyWithMembersEntity): LobbyWithMembersEntity {
     var queue;
-    console.log('matchmaking lobby: ', lobby);
     if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
       //soloQ champions
       queue = this._soloChampionsQ;
@@ -116,10 +115,13 @@ export class LobbiesGateway
       this.emitToLobby(lobby.id, 'time-to-choose', seconds--);
     }, 1000);
 
-    await delay(17000);
+    await delay(16000);
     clearInterval(interval);
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                         A REVOIR POUR LE LIFECYCLE                         */
+  /* -------------------------------------------------------------------------- */
   @SubscribeMessage('ready-to-play')
   async onReadyToPlay(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);

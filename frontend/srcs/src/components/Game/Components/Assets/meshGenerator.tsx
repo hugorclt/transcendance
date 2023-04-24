@@ -8,7 +8,6 @@ import { Trail } from "@react-three/drei";
 import { GridCustom } from "./custom/GridCustom";
 import { Euler, TextureLoader } from "three";
 
-
 const PADDLE_COLORS = {
   [EType.CLASSIC_PADDLE]: {
     color: "#fffff",
@@ -62,7 +61,7 @@ export function createMeshComponent(
     materialProps.map = texture;
   }
 
-  console.log(object.type);
+  // console.log(object.type);
 
   switch (object.type) {
     /*================================ PADDLE ==============================*/
@@ -129,7 +128,7 @@ export function createMeshComponent(
 
     case EType.BOX:
       if (object.texture) {
-        materialProps.color = 'white';
+        materialProps.color = "white";
       }
       return (
         <mesh position={position}>

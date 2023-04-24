@@ -4,9 +4,6 @@ import { COLORS } from "../../../colors";
 import Paddle from "./Paddle/Paddle";
 
 function Paddles({ players }) {
-  console.log("players", players);
-
-
   return (
     <>
       {players.map((player: any, index: any) => {

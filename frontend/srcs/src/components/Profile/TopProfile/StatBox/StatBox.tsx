@@ -28,7 +28,6 @@ export function StatBox() {
   });
 
   useEffect(() => {
-    console.log("Getting user stats: ", user.id);
     axiosPrivate
       .get(`stats/user/${user.id}`)
       .then((response: AxiosResponse) => {

@@ -53,7 +53,6 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
       }));
     });
     socket?.on("user-left-lobby", (userLeaving) => {
-      console.log(user);
       if (user.id == userLeaving.userId) {
         setLobby(lobbyDefaultValue);
       } else {
