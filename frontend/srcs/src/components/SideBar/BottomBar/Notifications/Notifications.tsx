@@ -14,6 +14,7 @@ function NotificationsPanel() {
     const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
+        // TODO
         // axiosPrivate.get("/invitations/notif-checked").then((res: AxiosResponse) => {
             // setNotif(res.data);
         // })
