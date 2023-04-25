@@ -9,7 +9,6 @@ export function mergeParticipants(participants: any[], newParticipants: any[]) {
       return { ...participants[index], ...newUser };
     }
   });
-  console.log(part);
   return part;
 }
 

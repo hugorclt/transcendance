@@ -35,7 +35,6 @@ const GameScreen = () => {
 
   //   let chunks: any = [];
   //   mediaRecorder.ondataavailable = (event) => {
-  //     console.log("oui");
   //     chunks.push(event.data);
   //   };
 
@@ -47,7 +46,6 @@ const GameScreen = () => {
   //       let blob = new Blob(chunks, {
   //         type: chunks[0].type,
   //       });
-  //       console.log(blob);
   //       downloadRef.current.href = URL.createObjectURL(blob);
   //       downloadRef.current.download = "video.webm";
   //     }, 2000);
@@ -72,7 +70,6 @@ const GameScreen = () => {
           <Game />
           {/* <Skybox /> */}
           <MyEffects />
-          {/* <PaddleScene width={10} length={3} /> */}
         </Canvas>
       </div>
     </>

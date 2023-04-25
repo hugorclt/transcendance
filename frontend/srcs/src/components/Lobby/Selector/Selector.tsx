@@ -1,22 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
+import React from "react";
 import Timer from "./Timer/Timer";
-import {
-  MapSelectorContainer,
-  PaddleSelectorContainer,
-  SelectItemContainer,
-  SelectorContainer,
-  TimerContainer,
-} from "./Selector.style";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { AxiosError, AxiosResponse } from "axios";
-import PaddleSelectorCards from "./PaddleSelector/PaddleSelectorCards/PaddleSelectorCards";
-import MapSelectorCards from "./MapSelector/MapSelectorCards/MapSelectorCards";
-import { useAtom } from "jotai";
-import { lobbyAtom } from "../../../services/store";
-import { getMapName } from "../../../services/utils/getMapName";
-import { EMap } from "../../../shared/enum";
-import {nanoid} from 'nanoid';
+import { SelectorContainer, TimerContainer } from "./Selector.style";
 import MapSelector from "./MapSelector/MapSelector";
 import PaddleSelector from "./PaddleSelector/PaddleSelector";
 

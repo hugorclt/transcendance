@@ -26,6 +26,7 @@ export enum EType {
   BREAKABLE_BRICK,
   UNBREAKABLE_BRICK,
   WALL,
+  GRID,
   GOAL,
   PADDLE,//ok (IPADDLE) ==> should not be triggered
   CLASSIC_PADDLE,//ok

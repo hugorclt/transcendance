@@ -15,6 +15,7 @@ import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
 import { LobbyState } from '@prisma/client';
+import { Queue } from './utils/Queue';
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -25,11 +26,48 @@ export class LobbiesGateway
   constructor(private readonly prisma: PrismaService) {}
 
   @WebSocketServer()
-  io: Namespace;
+  public io: Namespace;
   private _games: Map<string, Game>;
+  private _soloClassicQ: Queue<LobbyWithMembersEntity>;
+  private _duoClassicQ: Queue<LobbyWithMembersEntity>;
+  private _soloChampionsQ: Queue<LobbyWithMembersEntity>;
+  private _duoChampionsQ: Queue<LobbyWithMembersEntity>;
+
+  matchmaking(lobby: LobbyWithMembersEntity): LobbyWithMembersEntity {
+    var queue;
+    if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
+      //soloQ champions
+      queue = this._soloChampionsQ;
+    } else if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 4) {
+      //duoQ champions
+      queue = this._duoChampionsQ;
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 2) {
+      //soloQ Classic
+      queue = this._soloClassicQ;
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 4) {
+      //duo Q classic
+      queue = this._duoClassicQ;
+    }
+    if (queue.size() === 0) {
+      queue.enqueue(lobby);
+    } else return queue.dequeue();
+  }
+
+  async mergeLobbyRooms(newLobby: LobbyWithMembersEntity, oldLobbyId: string) {
+    this.io.adapter.rooms.get(oldLobbyId).forEach(async (clientId) => {
+      const client = this.io.sockets.get(clientId);
+      await client.join(newLobby.id);
+      await client.leave(oldLobbyId);
+    });
+  }
 
   async afterInit() {
     this._games = new Map<string, Game>();
+    this._soloClassicQ = new Queue<LobbyWithMembersEntity>();
+    this._duoClassicQ = new Queue<LobbyWithMembersEntity>();
+    this._soloChampionsQ = new Queue<LobbyWithMembersEntity>();
+    this._duoChampionsQ = new Queue<LobbyWithMembersEntity>();
+
     /* ------------------------------ testing code ------------------------------ */
     console.log('initialization of 1v1 private with hugo / dylan');
     const lobby = await this.prisma.lobby.findFirst({
@@ -72,18 +110,18 @@ export class LobbiesGateway
 
   async readySelection(lobby: LobbyWithMembersEntity) {
     const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-    this.emitToLobby(lobby.id, 'on-lobby-update', {
-      state: LobbyState.SELECTION,
-    });
     var seconds = 15;
     const interval = setInterval(() => {
       this.emitToLobby(lobby.id, 'time-to-choose', seconds--);
     }, 1000);
 
-    await delay(17000);
+    await delay(16000);
     clearInterval(interval);
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                         A REVOIR POUR LE LIFECYCLE                         */
+  /* -------------------------------------------------------------------------- */
   @SubscribeMessage('ready-to-play')
   async onReadyToPlay(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);

@@ -13,8 +13,14 @@ import TeamCard from "../../../components/Lobby/TeamBuilder/TeamCard/TeamCard";
 import LeaveLobbyButton from "../../../components/Lobby/TeamBuilder/TeamBuilderButtons/LeaveLobbyButton/LeaveLobbyButton";
 import ChangeTeamButton from "../../../components/Lobby/TeamBuilder/TeamBuilderButtons/ChangeTeamButton/ChangeTeamButton";
 import ReadyButton from "../../../components/Lobby/TeamBuilder/TeamBuilderButtons/ReadyButton/ReadyButton";
+import PlayButton from "../../../components/Lobby/TeamBuilder/TeamBuilderButtons/PlayButton/PlayButton";
+import { useAtom } from "jotai";
+import { lobbyAtom, userAtom } from "../../../services/store";
 
 function TeamBuilderLayout() {
+  const [user, setUser] = useAtom(userAtom);
+  const [lobby, setLobby] = useAtom(lobbyAtom);
+
   return (
     <TeamBuilderContainer>
       <GameTitleContainer>
@@ -33,7 +39,7 @@ function TeamBuilderLayout() {
         </TeamContainer>
       </TeamsContainer>
       <ButtonsContainer>
-        <ReadyButton />
+        {user.id == lobby.ownerId ? <PlayButton /> : <ReadyButton />}
         <LeaveLobbyButton />
       </ButtonsContainer>
     </TeamBuilderContainer>

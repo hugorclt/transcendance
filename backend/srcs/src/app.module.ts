@@ -14,6 +14,8 @@ import { MessagesModule } from './socials/rooms/messages/messages.module';
 import { ItemsModule } from './items/items.module';
 import { InvitationsModule } from './invitations/invitations.module';
 import { ConfigModule } from '@nestjs/config';
+import { MatchesModule } from './matches/matches.module';
+import { StatsModule } from './stats/stats.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
 
@@ -37,6 +39,8 @@ import { join } from 'path';
     LobbiesModule,
     ItemsModule,
     InvitationsModule,
+    MatchesModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

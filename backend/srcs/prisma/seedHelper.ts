@@ -9,6 +9,12 @@ function generateBase64Image(path) {
 
 export const item = [
   {
+    name: 'Base Paddle',
+    image: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
+    price: 0,
+    type: EItem.PADDLE,
+  },
+  {
     name: 'Red Paddle',
     image: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
     price: 1500,

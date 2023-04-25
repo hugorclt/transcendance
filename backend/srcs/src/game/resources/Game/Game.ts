@@ -63,12 +63,12 @@ export class Game {
     this._collisions = new Array<TCollision>();
     this._id = lobby.id;
 
-    var config;
-    if (lobby.mode == 'CLASSIC') {
-      config = maps[0];
-    } else if (lobby.mode == 'CHAMPIONS') {
-      config = maps[1];
-    }
+    console.log('creating game: ', lobby);
+
+    const config = maps.find((map) => 
+      map.name == lobby.map);
+
+    console.log("detected config: ", config.name);
     this._init_ball(config);
     this._init_field(config);
     this._init_players(config, lobby);
@@ -88,8 +88,6 @@ export class Game {
     this._objects.forEach((object) => {
       if (this._ball.hitBox.intersect(object.hitBox)) {
         this._collisions.push(object.collide(this._ball));
-        console.log(`Object class: ${object.constructor.name}`);
-        console.log(`Object position: ${JSON.stringify(object.getPosition())}`);
       }
     });
   }
@@ -116,7 +114,7 @@ export class Game {
     this._lastTimestamp = Date.now();
     return {
       timestamp: this._lastTimestamp,
-      players: this._players.map((player) => player.exportPlayerInfo()),
+      players: this._players.map((player) => player.exportPlayerFrame()),
       ball: this._ball.exportFrame(),
       collisions: this.collisions,
     };

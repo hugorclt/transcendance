@@ -30,11 +30,11 @@ model User {
   symmetricFriends User[]        @relation("friends")
   isBloqued        User[]        @relation("bloqued")
   hasBloqued       User[]        @relation("bloqued")
-  playerOne        Match[]       @relation("playerOne")
-  playerTwo        Match[]       @relation("playerTwo")
-  winner           Match[]       @relation("winner")
   isBanned         Room[]        @relation("Banned")
   roomOwner        Room[]        @relation("owner")
+  matchWinner      Match[]       @relation("Winner")
+  matchLoser       Match[]       @relation("Loser")
+  stat             Stat?
 }
 
 model Preference {
@@ -104,15 +104,23 @@ model LobbyMember {
 }
 
 model Match {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  date        DateTime @default(now())
-  duration    DateTime
-  winnerId    String   @db.Uuid
-  playerOneId String   @db.Uuid
-  playerTwoId String   @db.Uuid
-  playerOne   User     @relation("playerOne", fields: [playerOneId], references: [id])
-  playerTwo   User     @relation("playerTwo", fields: [playerTwoId], references: [id])
-  winner      User     @relation("winner", fields: [winnerId], references: [id])
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date            DateTime @default(now())
+  duration        DateTime
+  winnerScore     Int
+  winners         User[] @relation("Winner")
+  loserScore      Int
+  losers          User[] @relation("Loser")
+}
+
+model Stat {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  xp            Int     @default(0)
+  lvl           Int     @default(0)
+  nbGame        Int     @default(0)
+  nbWin         Int     @default(0)
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String     @unique @db.Uuid
 }
 
 //================== SHOP =======================

@@ -34,7 +34,7 @@ export class LobbiesController {
   async getVotes(@Request() req) {
     return await this.lobbiesService.getVotes(req.body.lobbyId);
   }
-  
+
   @Post()
   @ApiCreatedResponse({ type: LobbyWithMembersEntity })
   async create(
@@ -44,18 +44,18 @@ export class LobbiesController {
     const lobby = await this.lobbiesService.create(
       req.user.sub,
       createLobbyDto,
-      );
-      if (lobby) {
-        return lobby;
-      }
+    );
+    if (lobby) {
+      return lobby;
+    }
   }
-    
+
   @Get()
   @ApiOkResponse({ type: LobbyEntity, isArray: true })
   async findAll(): Promise<LobbyEntity[]> {
     return await this.lobbiesService.findAll();
   }
-    
+
   @Get('current-lobby')
   @ApiOkResponse({ type: LobbyWithMembersEntity })
   async findLobbyForUser(@Request() req: any): Promise<LobbyWithMembersEntity> {
@@ -120,7 +120,6 @@ export class LobbiesController {
     @Param('id') id: string,
     @Request() req: any,
   ): Promise<LobbyMemberEntity> {
-    console.log('changing team for user: ', req.user.sub, ' in lobby: ', id);
     return await this.lobbiesService.changeTeam(id, req.user.sub);
   }
 
@@ -135,11 +134,14 @@ export class LobbiesController {
 
   @Get(':id/changeReady')
   @ApiOkResponse({ type: LobbyWithMembersEntity })
-  async changeReady(
-    @Param('id') id: string,
-    @Request() req: any,
-  ): Promise<void> {
+  async changeReady(@Param('id') id: string, @Request() req: any) {
     return await this.lobbiesService.changeReady(id, req.user.sub);
+  }
+
+  @Get(':id/play')
+  @ApiOkResponse({ type: LobbyWithMembersEntity })
+  async play(@Param('id') id: string, @Request() req: any) {
+    return await this.lobbiesService.startGame(id, req.user.sub);
   }
 
   @Patch(':id')
@@ -157,14 +159,21 @@ export class LobbiesController {
     return await this.lobbiesService.delete(id);
   }
 
-  @Post("paddle-selected")
+  @Post('paddle-selected')
   async paddleSelected(@Request() req) {
-    return await this.lobbiesService.paddleSelected(req.user.sub, req.body.lobbyId, req.body.name);
+    return await this.lobbiesService.paddleSelected(
+      req.user.sub,
+      req.body.lobbyId,
+      req.body.name,
+    );
   }
 
   @Post('vote')
   async voteMap(@Request() req) {
-    return await this.lobbiesService.voteMap(req.user.sub, req.body.lobbyId, req.body.mapName);
+    return await this.lobbiesService.voteMap(
+      req.user.sub,
+      req.body.lobbyId,
+      req.body.mapName,
+    );
   }
-
 }

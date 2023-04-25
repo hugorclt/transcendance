@@ -5,15 +5,29 @@ import { item } from './seedHelper';
 const prisma = new PrismaClient();
 
 async function main() {
-  // await prisma.user.deleteMany({
-  //   where: {},
-  // });
-  // await prisma.lobby.deleteMany({
-  //   where: {},
-  // });
-  // await prisma.lobbyMember.deleteMany({
-  //   where: {},
-  // });
+  await Promise.all(
+    item.map(async (item) => {
+      await prisma.item.create({
+        data: item,
+      });
+    }),
+  );
+
+  const basePaddle = await prisma.item.findFirst({
+    where: {
+      name: 'Base Paddle',
+    },
+  });
+
+  await prisma.user.deleteMany({
+    where: {},
+  });
+  await prisma.lobby.deleteMany({
+    where: {},
+  });
+  await prisma.lobbyMember.deleteMany({
+    where: {},
+  });
 
   const dominique = await prisma.user.create({
     data: {
@@ -23,6 +37,14 @@ async function main() {
       preferences: {
         create: {
           visibility: 'VISIBLE',
+        },
+      },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
         },
       },
     },
@@ -35,6 +57,14 @@ async function main() {
       preferences: {
         create: {
           visibility: 'VISIBLE',
+        },
+      },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
         },
       },
     },
@@ -51,6 +81,14 @@ async function main() {
           visibility: 'VISIBLE',
         },
       },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
+        },
+      },
     },
   });
   const dylan = await prisma.user.create({
@@ -63,11 +101,60 @@ async function main() {
           visibility: 'VISIBLE',
         },
       },
-      // friends: {
-      //   connect: {
-      //     id: hugo.id,
-      //   },
-      // },
+      friends: {
+        connect: {
+          id: hugo.id,
+        },
+      },
+      stat: {
+        create: {},
+      },
+      items: {
+        connect: {
+          id: basePaddle.id,
+        },
+      },
+    },
+  });
+  const hugoUpdate = await prisma.user.update({
+    where: {
+      id: hugo.id,
+    },
+    data: {
+      friends: {
+        connect: {
+          id: dylan.id,
+        },
+      },
+    },
+  });
+  const lobby = await prisma.lobby.create({
+    data: {
+      ownerId: dylan.id,
+      nbPlayers: 2,
+      maxDuration: 180,
+      mode: EMode.CHAMPIONS,
+      map: EMap.SPACE,
+      state: LobbyState.FULL,
+      private: true,
+      members: {
+        create: [
+          {
+            team: false,
+            ready: true,
+            user: {
+              connect: { id: dylan.id },
+            },
+          },
+          {
+            team: true,
+            ready: false,
+            user: {
+              connect: { id: hugo.id },
+            },
+          },
+        ],
+      },
     },
   });
   // const hugoUpdate = await prisma.user.update({
@@ -112,10 +199,46 @@ async function main() {
   //   },
   // });
 
-  item.map(async (item) => {
-    await prisma.item.create({
-      data: item,
-    });
+  const match1 = await prisma.match.create({
+    data: {
+      duration: new Date(),
+      winnerScore: 10,
+      loserScore: 5,
+      winners: {
+        connect: { id: dylan.id },
+      },
+      losers: {
+        connect: { id: hugo.id },
+      },
+    },
+  });
+
+  const match2 = await prisma.match.create({
+    data: {
+      duration: new Date(),
+      winnerScore: 12,
+      loserScore: 7,
+      winners: {
+        connect: { id: ryad.id },
+      },
+      losers: {
+        connect: { id: dominique.id },
+      },
+    },
+  });
+
+  const match3 = await prisma.match.create({
+    data: {
+      duration: new Date(),
+      winnerScore: 10,
+      loserScore: 5,
+      winners: {
+        connect: { id: dylan.id },
+      },
+      losers: {
+        connect: { id: ryad.id },
+      },
+    },
   });
 }
 

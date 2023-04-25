@@ -65,6 +65,14 @@ export interface TSelectedPage {
   selectedPage: number;
 }
 
+export interface TStat {
+  id: string;
+  xp: number;
+  lvl: number;
+  nbGame: number;
+  nbWin: number;
+}
+
 export interface TItem {
   id: string;
   name: string;
@@ -73,6 +81,7 @@ export interface TItem {
   type: EItem;
 }
 
+<<<<<<< HEAD
 export interface TNotif {
   id: string;
   username: string;
@@ -83,3 +92,12 @@ export interface TNotif {
   userId: string;
   userFromId: string;
 }
+=======
+export interface TMatch {
+  id: string;
+  winnerScore: number;
+  winners: TUser[];
+  loserScore: number;
+  losers: TUser[];
+}
+>>>>>>> dylan-dev
