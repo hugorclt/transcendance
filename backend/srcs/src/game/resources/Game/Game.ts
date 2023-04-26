@@ -6,6 +6,7 @@ import { IObject } from '../interfaces/IObject';
 import { TCollision } from '../types';
 import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 import { maps } from '../utils/config/maps';
+import { goalCollide } from '../utils/collisions/goalCollide';
 
 export class Game {
   private _id: string;
@@ -92,7 +93,10 @@ export class Game {
     });
   }
 
-  detectGoal() {}
+  detectGoal() {
+
+  }
+  
 
   exportGameInfo(): IGameInfo {
     const field = this._field.exportFieldInfo();
@@ -112,6 +116,7 @@ export class Game {
     const deltaTime = (Date.now() - this._lastTimestamp) / 1000;
     this.gameLoop(deltaTime);
     this._lastTimestamp = Date.now();
+    // console.log(this.collisions);
     return {
       timestamp: this._lastTimestamp,
       players: this._players.map((player) => player.exportPlayerFrame()),

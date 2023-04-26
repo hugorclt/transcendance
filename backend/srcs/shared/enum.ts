@@ -38,6 +38,11 @@ export enum EType {
   GREEN_PADDLE,//ok
 }
 
+export enum ETexture {
+  BRICK,
+  
+}
+
 // export enum EItem {
 //   PADDLE,
 //   TRAIL,

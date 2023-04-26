@@ -23,6 +23,7 @@ function Game() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState("");
 
+
   useEffect(() => {
     socket?.on("game-info", (data) => {
       setGameInfo(data);

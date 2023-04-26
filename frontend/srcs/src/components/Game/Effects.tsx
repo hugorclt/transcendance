@@ -8,7 +8,7 @@ export function MyEffects() {
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur luminanceThreshold={1} />
       </EffectComposer>
-      <OrbitControls />
+      <OrbitControls enabled={false} />
       <SoftShadows />
       <hemisphereLight args={["#ffff", 0.6]} />
       {/* <Stats /> */}

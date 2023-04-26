@@ -108,7 +108,7 @@ export const GridCustom = React.forwardRef(
     {
       args,
       cellColor = '#000000',
-      sectionColor = '#2080ff',
+      sectionColor = 'white',
       cellSize = 0,
       sectionSize = 2.5,
       followCamera = false,
