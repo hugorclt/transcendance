@@ -3,10 +3,11 @@ import { Ball } from '../Ball/Ball';
 import { Player } from '../Player/Player';
 import { Field } from '../Field/Field';
 import { IObject } from '../interfaces/IObject';
-import { TCollision } from '../types';
+import { TCollision, TScore } from '../types';
 import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 import { maps } from '../utils/config/maps';
 import { goalCollide } from '../utils/collisions/goalCollide';
+import { EType } from 'shared/enum';
 
 export class Game {
   private _id: string;
@@ -18,6 +19,7 @@ export class Game {
   private _objects: Array<IObject>;
   private _movingObjects: Array<IObject>;
   private _collisions: Array<TCollision>;
+  private _score: TScore;
 
   private _init_ball(config: any) {
     const ball = config.ball;
@@ -62,6 +64,10 @@ export class Game {
     this._objects = new Array<IObject>();
     this._movingObjects = new Array<IObject>();
     this._collisions = new Array<TCollision>();
+    this._score = {
+      team1: 0,
+      team2: 0,
+    }
     this._id = lobby.id;
 
     console.log('creating game: ', lobby);
@@ -94,7 +100,15 @@ export class Game {
   }
 
   detectGoal() {
-
+    const goal = this._collisions.find((collision) => collision.type  == EType.GOAL);
+    if (goal) {
+      if (goal.position.z > 0) {
+        this._score.team1 += 1;
+      }
+      else {
+        this._score.team2 += 1;
+      }
+    }
   }
   
 
@@ -122,6 +136,7 @@ export class Game {
       players: this._players.map((player) => player.exportPlayerFrame()),
       ball: this._ball.exportFrame(),
       collisions: this.collisions,
+      score: this._score,
     };
   }
 

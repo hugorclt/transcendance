@@ -131,7 +131,7 @@ export class LobbiesGateway
     playerInfo.player.ready = true;
     if (playerInfo.game.players.find((player) => !player.ready)) return;
     playerInfo.game.start();
-    setInterval(() => {
+    const interval = setInterval(() => {
       const frame = playerInfo.game.generateFrame();
       this.io.to(playerInfo.lobbyId).emit('frame', frame);
 
@@ -139,13 +139,20 @@ export class LobbiesGateway
 
       if (frame.collisions?.length > 0) {
         this.io.to(playerInfo.lobbyId).emit('collisions', frame.collisions);
-        for (const collision of frame.collisions) {
-          if (collision.type === EType.GOAL) {
-            // console.log("GOAL", collision.direction);
-            this.io.to(playerInfo.lobbyId).emit('goal', collision.direction);
-          }
-        }
+        
+        // for (const collision of frame.collisions) {
+        //   if (collision.type === EType.GOAL) {
+        //     // console.log("GOAL", collision.direction);
+        //     this.io.to(playerInfo.lobbyId).emit('goal', collision.direction);
+        //   }
+        // }
       }
+
+      if (frame.score.team1 >= 2 || frame.score.team2 >= 2)
+        clearInterval(interval);
+
+
+
     }, 1000 / 60);
   }
 

@@ -43,6 +43,7 @@ export class Field {
         position: new Vector3(0, 0, -config.depth / 2 - config.goals.depth),
       }),
     );
+
   }
 
   public exportFieldInfo(): IField {
