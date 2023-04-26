@@ -15,5 +15,5 @@ export class ReturnParticipantEntity {
     status: string;
 
     @ApiProperty()
-    isMute: boolean;
+    mute: Date;
 }

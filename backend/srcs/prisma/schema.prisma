@@ -153,7 +153,7 @@ model Participant {
   roomId   String   @db.Uuid
   userId   String   @db.Uuid
   joinedAt DateTime @default(now())
-  isMute   Boolean  @default(false)
+  mute     DateTime @default(now())
   room     Room     @relation(fields: [roomId], references: [id], onDelete: NoAction)
   user     User     @relation(fields: [userId], references: [id], onDelete: NoAction)
 }

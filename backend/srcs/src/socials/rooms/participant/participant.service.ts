@@ -45,7 +45,7 @@ export class ParticipantService {
           role: participant.role,
           name: user.username,
           status: user.status,
-          isMute: participant.isMute,
+          mute: participant.mute
         };
       }),
     );
