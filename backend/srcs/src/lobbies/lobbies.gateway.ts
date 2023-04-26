@@ -16,6 +16,9 @@ import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
 import { LobbyState } from '@prisma/client';
 import { Queue } from './utils/Queue';
+import { EType } from 'shared/enum';
+
+
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -131,8 +134,17 @@ export class LobbiesGateway
     setInterval(() => {
       const frame = playerInfo.game.generateFrame();
       this.io.to(playerInfo.lobbyId).emit('frame', frame);
+
+
+
       if (frame.collisions?.length > 0) {
         this.io.to(playerInfo.lobbyId).emit('collisions', frame.collisions);
+        for (const collision of frame.collisions) {
+          if (collision.type === EType.GOAL) {
+            // console.log("GOAL", collision.direction);
+            this.io.to(playerInfo.lobbyId).emit('goal', collision.direction);
+          }
+        }
       }
     }, 1000 / 60);
   }

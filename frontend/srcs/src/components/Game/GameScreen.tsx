@@ -11,19 +11,44 @@ import MyEffects from "./Effects";
 import Skybox from "./Components/sceneComponents/Skybox";
 import PaddleScene from "./Components/sceneComponents/Paddle";
 import Scoreboard from "./Scoreboard";
+import { useContext } from "react";
+import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 
 
 const GameScreen = () => {
+  const socket = useContext(LobbySocketContext);
   const screenRef = useRef<any>();
   const downloadRef = useRef<any>();
   const [media, setMedia] = useState<any>();
-  const [playerScore, setPlayerScore] = useState<any>(0);
+  const [playerScore, setPlayerScore] = useState<any>({});
+  const [teamScore1, setTeamScore1] = useState<number>(0);
+  const [teamScore2, setTeamScore2] = useState<number>(0);
 
+  useEffect(() => {
+    socket?.on("goal", (data) => {
+      setPlayerScore(data);
+      
+
+      console.log(data._z)
+      if (data._z === 1) {setTeamScore1((score) => score + 1);}
+      if (data._z === -1) {setTeamScore2((score) => score + 1);}
+
+      //   if (data.collisions === "goal2")
+      //   setTeamScore2((score) => score + 1);
+
+    });
+    return () => {
+      socket?.off("goal");
+    };
+  }, [socket]);
+
+  useEffect(() => {
+  }, [playerScore]);
 
   return (
     <>
       <div style={{position: "absolute", zIndex: "10", width: "100%", display: "flex", justifyContent: "center"}}>
-        <Scoreboard team1Score={2} team2Score={7} />
+        <Scoreboard team1Score={teamScore1} team2Score={teamScore2} />
       </div>
       <div style={{ width: "100vw", height: "100vh"}}>
         <Canvas
