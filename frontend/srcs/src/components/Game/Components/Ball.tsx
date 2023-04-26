@@ -23,6 +23,15 @@ const Ball = (props: BallProps) => {
   const ballRef = useRef<Mesh>(null!);
   const socket = useContext(LobbySocketContext);
 
+  useFrame(({ clock }) => {
+    if (ballRef.current) {
+      ballRef.current.rotation.x += 0.01;
+      ballRef.current.rotation.y += 0.01;
+      ballRef.current.rotation.z += 0.01;
+
+    }
+  });
+
   useEffect(() => {
     socket?.on("frame", (data) => {
       ballRef.current.position.x = data.ball.position.x;

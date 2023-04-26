@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { RepeatWrapping, Vector3 } from "three";
 import { Object3D } from "./interfaces";
 import { Grid } from "@react-three/drei";
 import { Mesh } from "three";
@@ -6,7 +6,8 @@ import { EType } from "../../../../shared/enum";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Trail } from "@react-three/drei";
 import { GridCustom } from "./custom/GridCustom";
-import { Euler, TextureLoader } from "three";
+import { Euler } from "three";
+import { useTexture } from "@react-three/drei";
 
 const PADDLE_COLORS = {
   [EType.CLASSIC_PADDLE]: {
@@ -36,9 +37,9 @@ const PADDLE_COLORS = {
     emissiveIntensity: 4,
   },
   [EType.BLUE_PADDLE]: {
-    color: "#0aaaf4",
-    emissive: "#0aaaf4",
-    emissiveIntensity: 4,
+    color: "white",
+    emissive: "blue",
+    emissiveIntensity: 10,
   },
 };
 
@@ -53,11 +54,14 @@ export function createMeshComponent(
     object.position.z
   );
 
-  const textureLoader = new TextureLoader();
   const materialProps: any = {};
 
   if (object.texture) {
-    const texture = textureLoader.load(object.texture);
+    const texture = useTexture(object.texture);
+    texture.wrapS = RepeatWrapping;
+    texture.wrapT = RepeatWrapping;
+    texture.repeat.set(2, 2);
+
     materialProps.map = texture;
   }
 
@@ -73,23 +77,26 @@ export function createMeshComponent(
     case EType.PURPLE_PADDLE:
     case EType.GREEN_PADDLE:
     case EType.BLUE_PADDLE:
-      const colorConfig = PADDLE_COLORS[object.type];
+      const colorConfig = PADDLE_COLORS[16];
 
       return (
+        
+
         <mesh ref={ref} position={position}>
           <boxGeometry args={[object.width, object.height, object.depth]} />
           <meshToonMaterial
             color={colorConfig.color}
             emissive={colorConfig.emissive}
             emissiveIntensity={colorConfig.emissiveIntensity}
-            opacity={0.7}
-            transparent={true}
+            opacity={1}
+            transparent={false}
+            toneMapped={false}
           />
           {isActive && (
             <PerspectiveCamera
               makeDefault={true}
-              position={position}
-              fov={100}
+              position={[position.x, position.y + 10, position.z]}
+              fov={75}
             />
           )}
         </mesh>
@@ -98,16 +105,24 @@ export function createMeshComponent(
     /*================================ BALL ==============================*/
 
     case EType.SPHERE:
+      if (!object.texture) {
+        materialProps.color = "white";
+        materialProps.emissive = "blue";
+        materialProps.emissiveIntensity = 10;
+        materialProps.toneMapped = false;
+      } else {
+        materialProps.roughness = 0.5;
+        materialProps.metalness = 0.5;
+        materialProps.toneMapped = true;
+      }
       return (
         <mesh ref={ref} position={position} args={[]}>
           <sphereGeometry args={[object.width, 32, 32]} />
-          <meshToonMaterial
-            emissive="blue"
-            emissiveIntensity={10}
-            toneMapped={false}
-          />
+          <meshStandardMaterial {...materialProps} />
         </mesh>
       );
+    
+    
 
     /*================================ WALL ==============================*/
 
@@ -127,7 +142,7 @@ export function createMeshComponent(
       );
 
     case EType.BOX:
-      if (object.texture) {
+      if (!object.texture) {
         materialProps.color = "white";
       }
       return (
