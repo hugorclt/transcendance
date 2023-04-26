@@ -27,12 +27,6 @@ export class InvitationsController {
     private readonly invitationsService: InvitationsService,
   ) {}
 
-  @Get('notif-checked')
-  async notifChecked(@Request() req) {
-    console.log("cc", req.user);
-    return await this.notifChecked(req.user.sub);
-  }
-
   @Post()
   @ApiCreatedResponse({ type: InvitationEntity })
   async create(

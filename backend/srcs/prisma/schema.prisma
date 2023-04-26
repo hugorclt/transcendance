@@ -53,7 +53,6 @@ enum VisibilityMode {
 model Invitation {
   id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   type       InvitationType
-  isRead     Boolean
   userId     String         @db.Uuid
   userFromId String?        @db.Uuid
   lobbyId    String?        @db.Uuid
@@ -104,33 +103,33 @@ model LobbyMember {
 }
 
 model Match {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  date            DateTime @default(now())
-  duration        DateTime
-  winnerScore     Int
-  winners         User[] @relation("Winner")
-  loserScore      Int
-  losers          User[] @relation("Loser")
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date        DateTime @default(now())
+  duration    DateTime
+  winnerScore Int
+  winners     User[]   @relation("Winner")
+  loserScore  Int
+  losers      User[]   @relation("Loser")
 }
 
 model Stat {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  xp            Int     @default(0)
-  lvl           Int     @default(0)
-  nbGame        Int     @default(0)
-  nbWin         Int     @default(0)
-  user       User       @relation(fields: [userId], references: [id])
-  userId     String     @unique @db.Uuid
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  xp     Int    @default(0)
+  lvl    Int    @default(0)
+  nbGame Int    @default(0)
+  nbWin  Int    @default(0)
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.Uuid
 }
 
 //================== SHOP =======================
 model Item {
-  id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name   String
   image  String
   price  Int
   type   EItem
-  owners User[]   @relation("itemOwner")
+  owners User[] @relation("itemOwner")
 }
 
 model Room {

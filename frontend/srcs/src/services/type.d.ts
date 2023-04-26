@@ -81,18 +81,15 @@ export interface TItem {
   type: EItem;
 }
 
-<<<<<<< HEAD
 export interface TNotif {
   id: string;
   username: string;
   desc: string;
-  isRead: boolean;
   type: EInvitationType;
   lobbyId: string;
   userId: string;
   userFromId: string;
 }
-=======
 export interface TMatch {
   id: string;
   winnerScore: number;
@@ -100,4 +97,3 @@ export interface TMatch {
   loserScore: number;
   losers: TUser[];
 }
->>>>>>> dylan-dev

@@ -5,6 +5,7 @@ import {
   TItem,
   TLobby,
   TMatch,
+  TNotif,
   TUser,
   TUserPreferences,
 } from "./type";
@@ -44,3 +45,5 @@ export const conversationAtom = atom<TConversation[]>([]);
 export const selectedPageAtom = atom<string>("/");
 
 export const matchAtom = atom<TMatch[]>([]);
+
+export const notifAtom = atom<TNotif[]>([]);

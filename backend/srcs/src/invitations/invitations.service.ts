@@ -36,6 +36,14 @@ export class InvitationsService {
       invitation = await this.createLobbyInvitation(createInvitationDto);
     }
     this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
+    this.socialsGateway.emitToUser(invitation.userId, 'new-notifs', {
+      username: invitation.userFrom.username,
+      desc: this.createDesc(invitation),
+      userFromId: invitation.userFromId,
+      lobbyId: invitation.lobbyId,
+      userId: invitation.userId,
+      id: invitation.id,
+    });
     return invitation;
   }
 
@@ -52,7 +60,9 @@ export class InvitationsService {
         type: createInvitationDto.type,
         userId: createInvitationDto.userId,
         lobbyId: lobby.id,
-        isRead: false,
+      },
+      include: {
+        userFrom: true,
       },
     });
     return { ...invitation, userFromUsername: null };
@@ -70,7 +80,9 @@ export class InvitationsService {
         type: createInvitationDto.type,
         userId: receiver.id,
         userFromId: sender.sub,
-        isRead: false,
+      },
+      include: {
+        userFrom: true,
       },
     });
     return {
@@ -97,44 +109,28 @@ export class InvitationsService {
         userId: userId,
       },
       include: {
-        userFrom: true
-      }
-    })
+        userFrom: true,
+      },
+    });
 
     return notifs.map((notif) => {
-      return {username: notif.userFrom.username, desc: this.createDesc(notif), userFromId: notif.userFromId, lobbyId: notif.lobbyId, userId: notif.userId, id: notif.id}
-    })
-  }
-
-  async notifChecked(userId: string) {
-    await this.prisma.invitation.updateMany({
-      where: {
-        userId: userId,
-      },
-      data: {
-        isRead: true,
-      },
-    })
-
-    const notifs = await this.prisma.invitation.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        userFrom: true
-      }
-    })
-    return notifs.map((notif) => {
-      return {user: notif.userFrom.username, desc: this.createDesc(notif), type: notif.type, isRead: notif.isRead}
-    })
+      return {
+        username: notif.userFrom.username,
+        desc: this.createDesc(notif),
+        userFromId: notif.userFromId,
+        lobbyId: notif.lobbyId,
+        userId: notif.userId,
+        id: notif.id,
+      };
+    });
   }
 
   createDesc(invitation: InvitationEntity) {
-    switch(invitation.type) {
+    switch (invitation.type) {
       case InvitationType.FRIEND:
-        return "has sent you a friend request";
+        return 'has sent you a friend request';
       case InvitationType.LOBBY:
-        return "has invited you in a game";
+        return 'has invited you in a game';
     }
   }
 
@@ -154,6 +150,11 @@ export class InvitationsService {
       },
     });
     if (!invitation) throw new NotFoundException('Invitation not found');
+    this.socialsGateway.emitToUser(
+      invitation.userId,
+      'delete-notifs',
+      invitation.id,
+    );
     return await this.remove(invitation.id);
   }
 

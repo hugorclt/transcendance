@@ -4,10 +4,7 @@ import { Invitation, InvitationType } from '@prisma/client';
 export class InvitationEntity implements Invitation {
   @ApiProperty()
   id: string;
-
-  @ApiProperty()
-  isRead: boolean;
-
+  
   @ApiProperty()
   type: InvitationType;
 

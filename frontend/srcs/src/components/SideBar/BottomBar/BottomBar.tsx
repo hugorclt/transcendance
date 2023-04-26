@@ -1,6 +1,11 @@
 import React, { useContext, useState } from "react";
 import { BottomBarContainer } from "./BottomBarStyle";
-import { MdNotificationsNone, MdSettings, MdLogout, MdNotificationsActive } from "react-icons/md";
+import {
+  MdNotificationsNone,
+  MdSettings,
+  MdLogout,
+  MdNotificationsActive,
+} from "react-icons/md";
 import { COLORS } from "../../../colors";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
@@ -49,10 +54,9 @@ function BottomBar() {
   }
 
   const notifIsRead = () => {
-    const isRead = notifs.find((notif) => notif.isRead == true)
-    if (isRead) return true;
+    if (notifs.length == 0) return true;
     return false;
-  }
+  };
 
   return (
     <BottomBarContainer>
@@ -60,14 +64,21 @@ function BottomBar() {
         position="left bottom"
         trigger={
           <ButtonNoStyle>
-            {notifIsRead() == false ?
-              <MdNotificationsActive className="buzzing" size={26} style={{ color: COLORS.secondary }} />
-              :
-              <MdNotificationsNone size={26} style={{ color: COLORS.secondary }} />
-            }
+            {notifIsRead() == false ? (
+              <MdNotificationsActive
+                className="buzzing"
+                size={26}
+                style={{ color: COLORS.secondary }}
+              />
+            ) : (
+              <MdNotificationsNone
+                size={26}
+                style={{ color: COLORS.secondary }}
+              />
+            )}
           </ButtonNoStyle>
         }>
-          <NotificationsPanel />
+        <NotificationsPanel />
       </Popup>
       <Popup
         modal
@@ -76,7 +87,7 @@ function BottomBar() {
             <MdSettings size={26} style={{ color: COLORS.secondary }} />
           </ButtonNoStyle>
         }>
-          <Settings />
+        <Settings />
       </Popup>
       <MdLogout
         onClick={logout}

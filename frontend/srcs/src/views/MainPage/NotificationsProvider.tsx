@@ -13,14 +13,19 @@ function NotificationsProvider({ children }: { children: ReactNode }) {
   /* ------------------------------ first render ------------------------------ */
   useEffect(() => {
     axiosPrivate.get("/invitations").then((res) => {
-      console.log(res.data)
-      setNotif(res.data)
-    })
+      console.log(res.data);
+      setNotif(res.data);
+    });
   }, []);
 
   /* ------------------------------ socket render ----------------------------- */
   useEffect(() => {
-    socket?.on("on-notifs-update", (newChat) => {
+    socket?.on("new-notifs", (newChat) => {
+      setNotif((prev) => [...prev, newChat]);
+    });
+
+    socket?.on("delete-notifs", (id) => {
+      setNotif((prev) => prev.filter((notif) => notif.id !== id))
     });
 
     return () => {
