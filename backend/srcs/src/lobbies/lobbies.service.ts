@@ -598,19 +598,8 @@ export class LobbiesService {
   }
 
   async voteMap(userId: string, lobbyId: string, mapName: string) {
-    var map;
-
-    //TODO ===> HARDCODED
-    switch (mapName) {
-      case 'CLASSIC':
-        map = EMap.CLASSIC;
-        break;
-      case 'SPACE':
-        map = EMap.SPACE;
-        break;
-    }
-
-    if (!map) throw new NotFoundException();
+    const selectedMap = maps.find((map) => mapName == map.name);
+    if (!selectedMap) throw new NotFoundException();
 
     const votes = await this.prisma.lobby.update({
       include: {
@@ -626,7 +615,7 @@ export class LobbiesService {
               userId: userId,
             },
             data: {
-              vote: map,
+              vote: selectedMap.mapRef,
             },
           },
         },

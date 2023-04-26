@@ -49,6 +49,7 @@ export class Game {
 
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     lobby.members.forEach((member) => {
+      console.log('creating player with paddle: ', member.paddleType);
       this._players.push(
         new Player(member.userId, member.team, member.paddleType, config),
       );
@@ -72,10 +73,9 @@ export class Game {
 
     console.log('creating game: ', lobby);
 
-    const config = maps.find((map) => 
-      map.name == lobby.map);
+    const config = maps.find((map) => map.name == lobby.map);
 
-    console.log("detected config: ", config.name);
+    console.log('detected config: ', config.name);
     this._init_ball(config);
     this._init_field(config);
     this._init_players(config, lobby);
@@ -130,7 +130,6 @@ export class Game {
     const deltaTime = (Date.now() - this._lastTimestamp) / 1000;
     this.gameLoop(deltaTime);
     this._lastTimestamp = Date.now();
-    // console.log(this.collisions);
     return {
       timestamp: this._lastTimestamp,
       players: this._players.map((player) => player.exportPlayerFrame()),
