@@ -153,5 +153,4 @@ export class Game {
     return this._collisions;
   }
 
-  /* ---------------------------- helper functions ---------------------------- */
 }

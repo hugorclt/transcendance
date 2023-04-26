@@ -1,20 +1,13 @@
-import React, {
-  Suspense,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { PerspectiveCamera, OrthographicCamera } from "@react-three/drei";
+import React, { Suspense, useContext, useEffect, useState } from "react";
 import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Ball from "./Components/Ball";
-import { Vector3 } from "three";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
-import CollisionDisk from "./Components/CollisionDisk/CollisionDisk";
-import GameInfoCard from "../Lobby/TeamBuilder/GameInfoCard/GameInfoCard";
 import Skybox from "./Components/sceneComponents/Skybox";
+import { useNavigate } from "react-router";
+import { useAtom } from "jotai";
+import { endGameAtom } from "../../services/store";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -22,16 +15,22 @@ function Game() {
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState("");
-
+  const navigate = useNavigate();
+  const [gameAtom, setEndGameAtom] = useAtom(endGameAtom);
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
       setGameInfo(data);
       setIsLoading(false);
-      socket?.emit("ready-to-play");
+    });
+
+    socket?.on("game-end", (data) => {
+      setEndGameAtom(data);
+      navigate("/");
     });
     return () => {
       socket?.off("game-info");
+      socket?.off("game-end");
     };
   }, [socket]);
 

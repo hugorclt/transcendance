@@ -493,7 +493,7 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
   }
 
-  async startGame(lobbbyId: string, userId: string) {
+  async startGame(lobbyId: string, userId: string) {
     var lobby = await this.prisma.lobby.findFirst({
       where: {
         ownerId: userId,
@@ -529,7 +529,7 @@ export class LobbiesService {
         lobby.id,
         LobbyState.SELECTION,
       );
-      await this.lobbiesGateway.readySelection(lobbyWithMembers);
+      await this.lobbiesGateway.timer(lobby.id, 'time-to-choose', 15);
       lobbyWithMembers = await this.updateLobbyState(lobby.id, LobbyState.GAME);
       this.lobbiesGateway.readyToStart(lobbyWithMembers);
     } else {
@@ -538,6 +538,12 @@ export class LobbiesService {
         LobbyState.GAME,
       );
       this.lobbiesGateway.readyToStart(lobbyWithMembers);
+      console.log('game-ended');
+      this.prisma.lobby.delete({
+        where: {
+          id: lobbyId,
+        },
+      });
     }
   }
 

@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import {
   TConversation,
+  TEndGame,
   TFriend,
   TItem,
   TLobby,
@@ -49,3 +50,12 @@ export const matchAtom = atom<TMatch[]>([]);
 export const notifAtom = atom<TNotif[]>([]);
 
 export const sideBarAtom = atom<boolean>(false);
+
+export const endGameAtom = atom<TEndGame>({
+  winnerScore: 0,
+  winners: [],
+  loserScore: 0,
+  losers: [],
+  xp: 0,
+  money: 0,
+});

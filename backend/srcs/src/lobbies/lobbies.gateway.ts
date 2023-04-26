@@ -18,7 +18,6 @@ import { LobbyState } from '@prisma/client';
 import { Queue } from './utils/Queue';
 import { EType } from 'shared/enum';
 
-
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
   namespace: 'lobbies',
@@ -70,28 +69,6 @@ export class LobbiesGateway
     this._duoClassicQ = new Queue<LobbyWithMembersEntity>();
     this._soloChampionsQ = new Queue<LobbyWithMembersEntity>();
     this._duoChampionsQ = new Queue<LobbyWithMembersEntity>();
-
-    /* ------------------------------ testing code ------------------------------ */
-    console.log('initialization of 1v1 private with hugo / dylan');
-    const lobby = await this.prisma.lobby.findFirst({
-      where: {
-        members: {
-          some: {
-            user: {
-              username: 'Hugo',
-            },
-          },
-        },
-      },
-      include: {
-        members: true,
-      },
-    });
-    if (lobby && lobby.state == 'GAME') {
-      this._games.set(lobby.id, new Game(lobby));
-      this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
-    }
-    /* ----------------------------------- ... ---------------------------------- */
   }
 
   async handleConnection(client: AuthSocket) {
@@ -107,52 +84,20 @@ export class LobbiesGateway
   }
 
   async readyToStart(lobby: LobbyWithMembersEntity) {
-    this._games.set(lobby.id, new Game(lobby));
+    const game = new Game(lobby);
+    this._games.set(lobby.id, game);
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
-  }
-
-  async readySelection(lobby: LobbyWithMembersEntity) {
-    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-    var seconds = 15;
+    await this.timer(lobby.id, 'game-start-timer', 5);
+    game.start();
     const interval = setInterval(() => {
-      this.emitToLobby(lobby.id, 'time-to-choose', seconds--);
-    }, 1000);
+      const frame = game.generateFrame();
+      this.io.to(lobby.id).emit('frame', frame);
 
-    await delay(16000);
-    clearInterval(interval);
-  }
-
-  /* -------------------------------------------------------------------------- */
-  /*                         A REVOIR POUR LE LIFECYCLE                         */
-  /* -------------------------------------------------------------------------- */
-  @SubscribeMessage('ready-to-play')
-  async onReadyToPlay(client: AuthSocket) {
-    const playerInfo = this.getPlayerInfoFromClient(client);
-    playerInfo.player.ready = true;
-    if (playerInfo.game.players.find((player) => !player.ready)) return;
-    playerInfo.game.start();
-    const interval = setInterval(() => {
-      const frame = playerInfo.game.generateFrame();
-      this.io.to(playerInfo.lobbyId).emit('frame', frame);
-
-
-
-      if (frame.collisions?.length > 0) {
-        this.io.to(playerInfo.lobbyId).emit('collisions', frame.collisions);
-        
-        // for (const collision of frame.collisions) {
-        //   if (collision.type === EType.GOAL) {
-        //     // console.log("GOAL", collision.direction);
-        //     this.io.to(playerInfo.lobbyId).emit('goal', collision.direction);
-        //   }
-        // }
-      }
-
-      if (frame.score.team1 >= 2 || frame.score.team2 >= 2)
+      if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
         clearInterval(interval);
-
-
-
+        this.io.to(lobby.id).emit('end-game', {});
+        return ;
+      }
     }, 1000 / 60);
   }
 
@@ -214,6 +159,15 @@ export class LobbiesGateway
       },
     });
     return lobby?.id;
+  }
+
+  async timer(lobbyId: string, eventName: string, seconds: number) {
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    const interval = setInterval(() => {
+      this.emitToLobby(lobbyId, eventName, seconds--);
+    }, 1000);
+    await delay(seconds + 2);
+    clearInterval(interval);
   }
 
   async removeUserFromLobby(lobbyId: string, userId: string) {
