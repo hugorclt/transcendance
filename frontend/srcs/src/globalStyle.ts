@@ -127,4 +127,11 @@ input::placeholder {
     }
 }
 
+
+@font-face {
+  font-family: 'scoreboard';
+  src: url('/60s Scoreboard.ttf') format('truetype');
+}
+
 `;
+
