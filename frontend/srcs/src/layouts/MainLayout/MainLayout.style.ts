@@ -28,7 +28,7 @@ export const PageContainer = styled.div`
   //padding: 16px;
   min-width: 280px;
   @media (max-width: ${screenSize.laptop}) {
-    padding: 8px;
+    padding: 0 8px;
   }
   box-sizing: border-box;
 `;
@@ -45,3 +45,18 @@ export const NavBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const NavBarMobileContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`
+
+export const SideBarMobileContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: ${COLORS.background};
+  z-index: 30;
+`

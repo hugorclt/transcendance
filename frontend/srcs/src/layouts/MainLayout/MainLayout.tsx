@@ -7,10 +7,18 @@ import {
   NavBarContainer,
   MainContainer,
   PageContainer,
+  NavBarMobileContainer,
+  SideBarMobileContainer,
 } from "./MainLayout.style";
 import SideBarPage from "../../views/SideBarPage/SideBarPage";
+import Heptahedre from "../../components/common/Heptahedre/Heptahedre";
+import NavBar from "../../components/NavBar/NavBar";
+import { useAtom } from "jotai";
+import SideBar from "../../components/SideBar/SideBar";
+import { sideBarAtom } from "../../services/store";
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
+  const [openSideBar, setOpenSideBar] = useAtom(sideBarAtom);
   return (
     <>
       {/* laptop and desktop */}
@@ -30,10 +38,16 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       {/* tablet and mobile */}
       <MediaQuery maxWidth={mediaSize.laptop}>
         <MainLayoutContainer>
-          <NavBarContainer>
-            <h1>NAVBAR</h1>
-          </NavBarContainer>
+          <NavBarMobileContainer>
+            <NavBar />
+          </NavBarMobileContainer>
           <PageContainer>{children}</PageContainer>
+
+          {openSideBar && (
+            <SideBarMobileContainer>
+              <SideBar />
+            </SideBarMobileContainer>
+          )}
         </MainLayoutContainer>
       </MediaQuery>
     </>

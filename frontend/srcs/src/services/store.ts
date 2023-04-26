@@ -47,3 +47,5 @@ export const selectedPageAtom = atom<string>("/");
 export const matchAtom = atom<TMatch[]>([]);
 
 export const notifAtom = atom<TNotif[]>([]);
+
+export const sideBarAtom = atom<boolean>(false);
