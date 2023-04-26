@@ -7,13 +7,14 @@ import Paddles from "./Components/Paddles";
 import Skybox from "./Components/sceneComponents/Skybox";
 import { useNavigate } from "react-router";
 import { useAtom } from "jotai";
-import { endGameAtom } from "../../services/store";
+import { endGameAtom, lobbyAtom, lobbyDefaultValue } from "../../services/store";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
   const [gameInfo, setGameInfo] = useState<any>({});
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(true);
+  const [lobby, setLobby] = useAtom(lobbyAtom);
   const [currentUserId, setCurrentUserId] = useState("");
   const navigate = useNavigate();
   const [gameAtom, setEndGameAtom] = useAtom(endGameAtom);
@@ -24,8 +25,10 @@ function Game() {
       setIsLoading(false);
     });
 
-    socket?.on("game-end", (data) => {
+    socket?.on("end-game", (data) => {
       setEndGameAtom(data);
+      console.log('je vais a slash')
+      setLobby(lobbyDefaultValue)
       navigate("/");
     });
     return () => {

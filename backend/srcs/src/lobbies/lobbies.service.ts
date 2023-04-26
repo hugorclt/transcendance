@@ -448,12 +448,9 @@ export class LobbiesService {
         team: true,
       },
     });
-    const deleteLobby = await this.prisma.lobby.delete({
-      where: {
-        id: lobby2.id,
-      },
-    });
+    const deleteLobby = await this.delete(lobby2.id);
     const mergedLobby = await this.findLobbyWithMembers(lobby1.id);
+    this.lobbiesGateway.emitToLobby(lobby2.id, 'on-lobby-update', mergedLobby);
     return mergedLobby;
   }
 
@@ -530,21 +527,14 @@ export class LobbiesService {
         LobbyState.SELECTION,
       );
       await this.lobbiesGateway.timer(lobby.id, 'time-to-choose', 15);
-      lobbyWithMembers = await this.updateLobbyState(lobby.id, LobbyState.GAME);
-      this.lobbiesGateway.readyToStart(lobbyWithMembers);
-    } else {
-      var lobbyWithMembers = await this.updateLobbyState(
-        lobby.id,
-        LobbyState.GAME,
-      );
-      this.lobbiesGateway.readyToStart(lobbyWithMembers);
-      console.log('game-ended');
-      this.prisma.lobby.delete({
-        where: {
-          id: lobbyId,
-        },
-      });
     }
+    var lobbyWithMembers = await this.updateLobbyState(
+      lobby.id,
+      LobbyState.GAME,
+    );
+    await this.lobbiesGateway.readyToStart(lobbyWithMembers);
+    console.log('game-end');
+    await this.delete(lobbyId);
   }
 
   async paddleSelected(userId: string, lobbyId: string, paddleName: string) {

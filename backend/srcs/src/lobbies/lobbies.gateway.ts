@@ -166,7 +166,7 @@ export class LobbiesGateway
     const interval = setInterval(() => {
       this.emitToLobby(lobbyId, eventName, seconds--);
     }, 1000);
-    await delay(seconds + 2);
+    await delay((seconds + 2) * 1000);
     clearInterval(interval);
   }
 
