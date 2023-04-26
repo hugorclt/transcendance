@@ -7,18 +7,14 @@ import { LobbySocketContext } from "../../../../services/Lobby/LobbySocketContex
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import { lobbyAtom } from "../../../../services/store";
+import { EMap } from "../../../../shared/enum";
 
 function MapSelector() {
   const axiosPrivate = useAxiosPrivate();
   const socket = useContext(LobbySocketContext);
   const [lobby] = useAtom(lobbyAtom);
   const [maps, setMaps] = useState<{ name: string; img: string }[]>([]);
-  const [vote, setVote] = useState(
-    new Map([
-      ["CLASSIC", 0],
-      ["SPACE", 0],
-    ])
-  );
+  const [vote, setVote] = useState(new Map<string, number>());
 
   const computeVote = (votes: string[]) => {
     const newVote = new Map<string, number>();
@@ -42,11 +38,14 @@ function MapSelector() {
       .get("/lobbies/map")
       .then((res: AxiosResponse) => {
         setMaps(res.data);
+        res.data.forEach((map) => {
+          vote.set(map.name, 0);
+        });
       })
       .catch((err: AxiosError) => {});
 
     axiosPrivate
-      .post("/lobbies/votesget-votes", { lobbyId: lobby.id })
+      .post("/lobbies/get-votes", { lobbyId: lobby.id })
       .then((res: AxiosResponse) => {
         console.log(res.data);
         computeVote(res.data);

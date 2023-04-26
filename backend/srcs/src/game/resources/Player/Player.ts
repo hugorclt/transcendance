@@ -33,28 +33,49 @@ export class Player {
         0,
         team ? config.depth / 2 : -(config.depth / 2),
       ),
-    }
+    };
     switch (paddleType) {
       case EPaddle.CLASSIC:
-        this._paddle = new ClassicPaddle({...paddleConfig, type:EType.CLASSIC_PADDLE});
+        this._paddle = new ClassicPaddle({
+          ...paddleConfig,
+          type: EType.CLASSIC_PADDLE,
+        });
         break;
       case EPaddle.BASIC:
-        this._paddle = new BasePaddle({...paddleConfig, type:EType.BASIC_PADDLE});
+        this._paddle = new BasePaddle({
+          ...paddleConfig,
+          type: EType.BASIC_PADDLE,
+        });
         break;
       case EPaddle.RED:
-        this._paddle = new RedPaddle({...paddleConfig, type:EType.RED_PADDLE});
+        this._paddle = new RedPaddle({
+          ...paddleConfig,
+          type: EType.RED_PADDLE,
+        });
         break;
       case EPaddle.BLUE:
-        this._paddle = new BluePaddle({...paddleConfig, type:EType.BLUE_PADDLE});
+        this._paddle = new BluePaddle({
+          ...paddleConfig,
+          type: EType.BLUE_PADDLE,
+        });
         break;
       case EPaddle.ORANGE:
-        this._paddle = new OrangePaddle({...paddleConfig, type:EType.ORANGE_PADDLE});
+        this._paddle = new OrangePaddle({
+          ...paddleConfig,
+          type: EType.ORANGE_PADDLE,
+        });
         break;
       case EPaddle.PURPLE:
-        this._paddle = new PurplePaddle({...paddleConfig, type:EType.PURPLE_PADDLE});
+        this._paddle = new PurplePaddle({
+          ...paddleConfig,
+          type: EType.PURPLE_PADDLE,
+        });
         break;
       case EPaddle.GREEN:
-        this._paddle = new GreenPaddle({...paddleConfig, type:EType.GREEN_PADDLE});
+        this._paddle = new GreenPaddle({
+          ...paddleConfig,
+          type: EType.GREEN_PADDLE,
+        });
         break;
     }
   }
@@ -77,19 +98,19 @@ export class Player {
     return this._paddle;
   }
 
-  public exportPlayerInfo() : IPlayer {
-    return ({
+  public exportPlayerInfo(): IPlayer {
+    return {
       id: this._id,
       team: this._team,
-      paddle: this._paddle.exportInfo()
-    })
+      paddle: this._paddle.exportInfo(),
+    };
   }
 
-  public exportPlayerFrame() : IPlayer{
-    return ({
+  public exportPlayerFrame(): IPlayer {
+    return {
       id: this._id,
       team: this._team,
       paddle: this._paddle.exportFrame(),
-    })
+    };
   }
 }

@@ -23,17 +23,14 @@ function Paddle(props: PlayerProps) {
   const keyMap = useKeyboard();
   const [isActive, setIsActive] = useState(false);
   const [user, setUser] = useAtom(userAtom);
-  let side1 : string, side2 : string;
-
+  let side1: string, side2: string;
 
   if (user.id === props.id) {
     side1 = props.team ? "left-move" : "right-move";
     side2 = props.team ? "right-move" : "left-move";
   }
 
-
   useFrame(({ mouse }) => {
-
     keyMap["KeyA"] && socket?.emit(side1);
     keyMap["KeyD"] && socket?.emit(side2);
     keyMap["KeyW"] && socket?.emit("up-move");
@@ -42,9 +39,9 @@ function Paddle(props: PlayerProps) {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-      // console.log("paddle.props", props.paddle);
-      // console.log('playerRef changed:', playerRef.current);
-
+      if (data.collisions.length > 0) {
+        console.log("collision: ", data.collisions);
+      }
       if (user.id === props.id) setIsActive(true);
       data.players.forEach((player) => {
         if (player.id === props.id) {
