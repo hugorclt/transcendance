@@ -6,11 +6,14 @@ import { UsersModule } from 'src/users/users.module';
 import { LobbiesGateway } from './lobbies.gateway';
 import { InvitationsModule } from 'src/invitations/invitations.module';
 import { LobbyMembersModule } from './members/lobby-members.module';
+import { SocialsGateway } from 'src/socials/socials.gateway';
+import { SocialsModule } from 'src/socials/socials.module';
 
 @Module({
   imports: [
     PrismaModule,
     LobbyMembersModule,
+    SocialsModule,
     forwardRef(() => InvitationsModule),
     forwardRef(() => UsersModule),
   ],

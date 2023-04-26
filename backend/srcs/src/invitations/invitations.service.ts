@@ -33,15 +33,16 @@ export class InvitationsService {
         sender,
       );
     } else if (createInvitationDto.type == 'LOBBY') {
-      invitation = await this.createLobbyInvitation(createInvitationDto);
+      invitation = await this.createLobbyInvitation(createInvitationDto, sender);
     }
-    this.socialsGateway.emitToUser(invitation.userId, 'invitation', invitation);
+    this.socialsGateway.emitToUser(invitation.userId, 'invitation', {...invitation, userFromUsername: invitation.userFrom.username});
     this.socialsGateway.emitToUser(invitation.userId, 'new-notifs', {
       username: invitation.userFrom.username,
       desc: this.createDesc(invitation),
       userFromId: invitation.userFromId,
       lobbyId: invitation.lobbyId,
       userId: invitation.userId,
+      type: invitation.type,
       id: invitation.id,
     });
     return invitation;
@@ -49,7 +50,8 @@ export class InvitationsService {
 
   async createLobbyInvitation(
     createInvitationDto: CreateInvitationDto,
-  ): Promise<InvitationExtendedEntity> {
+    sender: any,
+  ): Promise<InvitationEntity> {
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: createInvitationDto.lobbyId },
     });
@@ -60,18 +62,19 @@ export class InvitationsService {
         type: createInvitationDto.type,
         userId: createInvitationDto.userId,
         lobbyId: lobby.id,
+        userFromId: sender,
       },
       include: {
         userFrom: true,
       },
     });
-    return { ...invitation, userFromUsername: null };
+    return invitation;
   }
 
   async createFriendInvitation(
     createInvitationDto: CreateInvitationDto,
     sender: any,
-  ): Promise<InvitationExtendedEntity> {
+  ): Promise<InvitationEntity> {
     const receiver = await this.prisma.user.findUnique({
       where: { username: createInvitationDto.username },
     });
@@ -85,10 +88,7 @@ export class InvitationsService {
         userFrom: true,
       },
     });
-    return {
-      ...invitation,
-      userFromUsername: sender.username,
-    };
+    return invitation;
   }
 
   async createMany(

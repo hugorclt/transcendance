@@ -16,6 +16,7 @@ import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
 import { EMap, EPaddle, LobbyState } from '@prisma/client';
 import { maps } from 'src/game/resources/utils/config/maps';
+import { SocialsGateway } from 'src/socials/socials.gateway';
 
 @Injectable()
 export class LobbiesService {
@@ -25,6 +26,7 @@ export class LobbiesService {
     private readonly invitationsService: InvitationsService,
     private readonly lobbyMembersService: LobbyMembersService,
     private readonly lobbiesGateway: LobbiesGateway,
+    private readonly socialGateway: SocialsGateway,
   ) {}
 
   async create(
@@ -157,6 +159,11 @@ export class LobbiesService {
       lobby.invitations.map(async (invitation) => {
         if (invitation.userId == joinLobbyDto.userId) {
           await this.invitationsService.remove(invitation.id);
+          this.socialGateway.emitToUser(
+            invitation.userId,
+            'delete-notifs',
+            invitation.id,
+          );
         }
       }),
     );
