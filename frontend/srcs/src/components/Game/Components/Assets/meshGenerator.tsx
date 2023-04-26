@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { RepeatWrapping, Vector3 } from "three";
 import { Object3D } from "./interfaces";
 import { Grid } from "@react-three/drei";
 import { Mesh } from "three";
@@ -58,6 +58,10 @@ export function createMeshComponent(
 
   if (object.texture) {
     const texture = useTexture(object.texture);
+    texture.wrapS = RepeatWrapping;
+    texture.wrapT = RepeatWrapping;
+    texture.repeat.set(2, 2);
+
     materialProps.map = texture;
   }
 
@@ -109,6 +113,7 @@ export function createMeshComponent(
       } else {
         materialProps.roughness = 0.5;
         materialProps.metalness = 0.5;
+        materialProps.toneMapped = true;
       }
       return (
         <mesh ref={ref} position={position} args={[]}>
