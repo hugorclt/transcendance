@@ -662,10 +662,20 @@ export class LobbiesService {
     });
   }
 
-  async getMap() {
-    return maps.map((map) => {
-      return { name: map.name, img: map.miniature };
+  async getMap(lobbyId: string) {
+    const lobby = await this.prisma.lobby.findUnique({
+      where: {
+        id: lobbyId,
+      },
     });
+    if (!lobby) throw new NotFoundException('No such lobby');
+    return maps
+      .map((map) => {
+        if (map.mode == lobby.mode) {
+          return { name: map.name, img: map.miniature };
+        }
+      })
+      .filter((map) => map !== undefined);
   }
 
   async voteMap(userId: string, lobbyId: string, mapName: string) {

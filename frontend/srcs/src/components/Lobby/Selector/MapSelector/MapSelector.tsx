@@ -35,7 +35,7 @@ function MapSelector() {
 
   useEffect(() => {
     axiosPrivate
-      .get("/lobbies/map")
+      .post("/lobbies/get-maps", { lobbyId: lobby.id })
       .then((res: AxiosResponse) => {
         setMaps(res.data);
         res.data.forEach((map) => {

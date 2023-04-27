@@ -25,9 +25,9 @@ import { KickLobbyMemberDto } from './members/dto/kick-lobby-member.dto';
 @ApiTags('lobbies')
 export class LobbiesController {
   constructor(private readonly lobbiesService: LobbiesService) {}
-  @Get('map')
+  @Post('get-maps')
   async getMap(@Request() req) {
-    return await this.lobbiesService.getMap();
+    return await this.lobbiesService.getMap(req.body.lobbyId);
   }
 
   @Post('get-votes')
