@@ -122,6 +122,11 @@ export class LobbiesGateway
     return { lobbyId: lobbyId, game: game, player: player };
   }
 
+  @SubscribeMessage('test')
+  async getTested(client: AuthSocket) {
+    console.log('justGotTested');
+    this.io.emit('testedGoodMyFriend');
+  }
   @SubscribeMessage('left-move')
   async onLeftMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);

@@ -30,6 +30,17 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
+    socket?.on("unauthorized", () => {
+      console.log("user socket unauthorized");
+      //TODO: get another token
+    });
+
+    return () => {
+      socket?.off("unauthorized");
+    };
+  }, [socket]);
+
+  useEffect(() => {
     async function initSocket() {
       if (!connected.current) {
         const s: any = await initializeSocket(user?.accessToken);
