@@ -17,6 +17,8 @@ import { LobbiesGateway } from './lobbies.gateway';
 import { EMap, EPaddle, LobbyState } from '@prisma/client';
 import { maps } from 'src/game/resources/utils/config/maps';
 import { SocialsGateway } from 'src/socials/socials.gateway';
+import { MatchesService } from 'src/matches/matches.service';
+import { StatsService } from 'src/stats/stats.service';
 
 @Injectable()
 export class LobbiesService {
@@ -27,6 +29,8 @@ export class LobbiesService {
     private readonly lobbyMembersService: LobbyMembersService,
     private readonly lobbiesGateway: LobbiesGateway,
     private readonly socialGateway: SocialsGateway,
+    private readonly matchesService: MatchesService,
+    private readonly statsService: StatsService,
   ) {}
 
   async create(
@@ -542,8 +546,66 @@ export class LobbiesService {
       if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
         clearInterval(interval);
         this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', undefined);
-        console.log('game has ended');
-        //should do all the bdd stuff with lobby / members / match / stats
+        var winners;
+        var losers;
+        var winnerScore;
+        var loserScore;
+        if (frame.score.team1 > frame.score.team2) {
+          winners = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == false) return member.userId;
+          });
+          losers = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == true) return member.userId;
+          });
+          winnerScore = frame.score.team1;
+          loserScore = frame.score.team2;
+        } else {
+          winners = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == true) return member.userId;
+          });
+          losers = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == false) return member.userId;
+          });
+          winnerScore = frame.score.team2;
+          loserScore = frame.score.team1;
+        }
+        winners = winners.filter((winner) => winner !== undefined);
+        losers = losers.filter((loser) => loser !== undefined);
+        const match = await this.matchesService.create({
+          date: new Date(),
+          duration: new Date(),
+          winnerScore: winnerScore,
+          winners: winners,
+          loserScore: loserScore,
+          losers: losers,
+        });
+        const winnersStats = await this.prisma.stat.updateMany({
+          where: {
+            userId: {
+              in: winners,
+            },
+          },
+          data: {
+            nbGame: {
+              increment: 1,
+            },
+            nbWin: {
+              increment: 1,
+            },
+          },
+        });
+        const loserStats = await this.prisma.stat.updateMany({
+          where: {
+            userId: {
+              in: losers,
+            },
+          },
+          data: {
+            nbGame: {
+              increment: 1,
+            },
+          },
+        });
         await this.delete(lobby.id);
         return;
       }
