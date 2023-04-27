@@ -105,13 +105,9 @@ export class Game {
     );
     if (goal) {
       if (goal.direction.z < 0) {
-        console.log('Goal team 1: previous score was: ', this._score.team1);
         this._score.team1 += 1;
-        console.log('New score: ', this._score.team1);
       } else {
-        console.log('Goal team 2: previous score was: ', this._score.team2);
         this._score.team2 += 1;
-        console.log('New score: ', this._score.team2);
       }
     }
   }
