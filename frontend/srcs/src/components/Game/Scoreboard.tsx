@@ -22,13 +22,13 @@ function Scoreboard() {
   const [team2score, setTeam2score] = useState(0);
 
 useEffect(() => {
-  if (scoreChanged) {
+  if (scoreChanged === true) {
     const blinkTimeout = setTimeout(() => {
       setScoreChanged(false);
     }, 1000);
     return () => clearTimeout(blinkTimeout);
   }
-}, [scoreChanged]);
+});
 
   useEffect(() => {
     socket?.on("frame", (frame) => {
