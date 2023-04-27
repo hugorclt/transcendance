@@ -68,7 +68,7 @@ export class Game {
     this._score = {
       team1: 0,
       team2: 0,
-    }
+    };
     this._id = lobby.id;
 
     console.log('creating game: ', lobby);
@@ -100,17 +100,21 @@ export class Game {
   }
 
   detectGoal() {
-    const goal = this._collisions.find((collision) => collision.type  == EType.GOAL);
+    const goal = this._collisions.find(
+      (collision) => collision.type == EType.GOAL,
+    );
     if (goal) {
-      if (goal.position.z > 0) {
+      if (goal.direction.z < 0) {
+        console.log('Goal team 1: previous score was: ', this._score.team1);
         this._score.team1 += 1;
-      }
-      else {
+        console.log('New score: ', this._score.team1);
+      } else {
+        console.log('Goal team 2: previous score was: ', this._score.team2);
         this._score.team2 += 1;
+        console.log('New score: ', this._score.team2);
       }
     }
   }
-  
 
   exportGameInfo(): IGameInfo {
     const field = this._field.exportFieldInfo();
@@ -152,5 +156,4 @@ export class Game {
   public get collisions() {
     return this._collisions;
   }
-
 }
