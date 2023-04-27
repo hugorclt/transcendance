@@ -58,7 +58,7 @@ export interface TParticipant {
   name: string;
   role: string;
   status: string;
-  isMute: boolean;
+  mute: Date;
 }
 
 export interface TSelectedPage {
@@ -81,10 +81,28 @@ export interface TItem {
   type: EItem;
 }
 
+export interface TNotif {
+  id: string;
+  username: string;
+  desc: string;
+  type: EInvitationType;
+  lobbyId: string;
+  userId: string;
+  userFromId: string;
+}
 export interface TMatch {
   id: string;
   winnerScore: number;
   winners: TUser[];
   loserScore: number;
   losers: TUser[];
+}
+
+export interface TEndGame {
+  winnerScore: number;
+  winners: TUser[];
+  loserScore: number;
+  losers: TUser[];
+  xp: 0;
+  money: 0;
 }

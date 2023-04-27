@@ -34,7 +34,7 @@ function LeftSideChat({ chat }: TChatProps) {
             status={user.status}
             role={user.role}
             isAdmin={isAdmin}
-            isMute={user.isMute}
+            mute={user.mute}
           />
         );
       })}

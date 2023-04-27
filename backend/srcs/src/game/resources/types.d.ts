@@ -6,3 +6,8 @@ export type TCollision = {
   position: Vector3;
   direction: Vector3;
 };
+
+export type TScore = {
+  team1: number;
+  team2: number;
+}

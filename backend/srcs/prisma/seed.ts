@@ -101,11 +101,6 @@ async function main() {
           visibility: 'VISIBLE',
         },
       },
-      friends: {
-        connect: {
-          id: hugo.id,
-        },
-      },
       stat: {
         create: {},
       },
@@ -113,47 +108,6 @@ async function main() {
         connect: {
           id: basePaddle.id,
         },
-      },
-    },
-  });
-  const hugoUpdate = await prisma.user.update({
-    where: {
-      id: hugo.id,
-    },
-    data: {
-      friends: {
-        connect: {
-          id: dylan.id,
-        },
-      },
-    },
-  });
-  const lobby = await prisma.lobby.create({
-    data: {
-      ownerId: dylan.id,
-      nbPlayers: 2,
-      maxDuration: 180,
-      mode: EMode.CLASSIC,
-      map: EMap.CLASSIC,
-      state: LobbyState.FULL,
-      private: true,
-      members: {
-        create: [
-          {
-            team: false,
-            ready: true,
-            user: {
-              connect: { id: dylan.id },
-            },
-          },
-          {
-            team: true,
-            ready: false,
-            user: {
-              connect: { id: hugo.id },
-            },
-          },
-        ],
       },
     },
   });

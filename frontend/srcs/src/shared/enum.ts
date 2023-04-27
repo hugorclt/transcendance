@@ -43,3 +43,8 @@ export enum EItem {
   TRAIL,
   GOAL,
 }
+
+export enum InvitationType {
+  LOBBY,
+  FRIEND,
+}

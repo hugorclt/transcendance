@@ -6,7 +6,7 @@ import { InputRange, SliderContainer } from "./LeftSideChatCardsStyle";
 interface TAdminInteractionProps {
   userId: string;
   roomId: string;
-  isMute: boolean;
+  mute: Date;
 }
 
 function AdminInteraction(props: TAdminInteractionProps) {
@@ -23,23 +23,22 @@ function AdminInteraction(props: TAdminInteractionProps) {
     axiosPrivate.post("rooms/mute", {
       targetId: props.userId,
       roomId: props.roomId,
-      isMute: props.isMute,
       time: sliderValue,
     });
   };
 
   const handleBan = () => {
-    axiosPrivate.post("rooms/ban", {
-      targetId: props.userId,
-      roomId: props.roomId,
-    }).then(() => {
-      
-    });
+    axiosPrivate
+      .post("rooms/ban", {
+        targetId: props.userId,
+        roomId: props.roomId,
+      })
+      .then(() => {});
   };
   return (
     <>
       <InsidePopUpButton onClick={handleMute}>
-        {props.isMute ? "Unmute user" : "Mute user"}
+        {"Mute user"}
       </InsidePopUpButton>
       <SliderContainer>
         <InputRange

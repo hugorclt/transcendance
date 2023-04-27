@@ -312,6 +312,20 @@ export class UsersService {
     //TODO
     //=> if not exist: error
     //=> if exists delete and continue
+    const invitation = await this.prisma.invitation.findFirst({
+      where: {
+        userFromId: addFriendDto.userFromId,
+        userId: addFriendDto.userId,
+      },
+    });
+    console.log(invitation);
+    if (!invitation) throw new NotFoundException('Invitation not found');
+    this.socialsGateway.emitToUser(
+      invitation.userId,
+      'delete-notifs',
+      invitation.id,
+    );
+    await this.prisma.invitation.delete({ where: { id: invitation.id } });
     const existingFriends = await this.prisma.user.findUnique({
       where: { id: addFriendDto.userFromId },
       include: { friends: { where: { id: addFriendDto.userId } } },

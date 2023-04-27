@@ -17,7 +17,7 @@ import { LobbyEventEntity } from './entities/lobby-event.entity';
 import { LobbyState } from '@prisma/client';
 import { Queue } from './utils/Queue';
 import { EType } from 'shared/enum';
-
+import { IFrame } from 'shared/gameInterfaces';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -57,7 +57,7 @@ export class LobbiesGateway
   }
 
   async mergeLobbyRooms(newLobby: LobbyWithMembersEntity, oldLobbyId: string) {
-    this.io.adapter.rooms.get(oldLobbyId).forEach(async (clientId) => {
+    this.io.adapter.rooms.get(oldLobbyId)?.forEach(async (clientId) => {
       const client = this.io.sockets.get(clientId);
       await client.join(newLobby.id);
       await client.leave(oldLobbyId);
@@ -70,28 +70,6 @@ export class LobbiesGateway
     this._duoClassicQ = new Queue<LobbyWithMembersEntity>();
     this._soloChampionsQ = new Queue<LobbyWithMembersEntity>();
     this._duoChampionsQ = new Queue<LobbyWithMembersEntity>();
-
-    /* ------------------------------ testing code ------------------------------ */
-    console.log('initialization of 1v1 private with hugo / dylan');
-    const lobby = await this.prisma.lobby.findFirst({
-      where: {
-        members: {
-          some: {
-            user: {
-              username: 'Hugo',
-            },
-          },
-        },
-      },
-      include: {
-        members: true,
-      },
-    });
-    if (lobby && lobby.state == 'GAME') {
-      this._games.set(lobby.id, new Game(lobby));
-      this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
-    }
-    /* ----------------------------------- ... ---------------------------------- */
   }
 
   async handleConnection(client: AuthSocket) {
@@ -107,46 +85,19 @@ export class LobbiesGateway
   }
 
   async readyToStart(lobby: LobbyWithMembersEntity) {
-    this._games.set(lobby.id, new Game(lobby));
+    const game = new Game(lobby);
+    this._games.set(lobby.id, game);
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
+    await this.timer(lobby.id, 'game-start-timer', 5);
+    game.start();
+    console.log('game just started');
   }
 
-  async readySelection(lobby: LobbyWithMembersEntity) {
-    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-    var seconds = 15;
-    const interval = setInterval(() => {
-      this.emitToLobby(lobby.id, 'time-to-choose', seconds--);
-    }, 1000);
-
-    await delay(16000);
-    clearInterval(interval);
-  }
-
-  /* -------------------------------------------------------------------------- */
-  /*                         A REVOIR POUR LE LIFECYCLE                         */
-  /* -------------------------------------------------------------------------- */
-  @SubscribeMessage('ready-to-play')
-  async onReadyToPlay(client: AuthSocket) {
-    const playerInfo = this.getPlayerInfoFromClient(client);
-    playerInfo.player.ready = true;
-    if (playerInfo.game.players.find((player) => !player.ready)) return;
-    playerInfo.game.start();
-    setInterval(() => {
-      const frame = playerInfo.game.generateFrame();
-      this.io.to(playerInfo.lobbyId).emit('frame', frame);
-
-
-
-      if (frame.collisions?.length > 0) {
-        this.io.to(playerInfo.lobbyId).emit('collisions', frame.collisions);
-        for (const collision of frame.collisions) {
-          if (collision.type === EType.GOAL) {
-            // console.log("GOAL", collision.direction);
-            this.io.to(playerInfo.lobbyId).emit('goal', collision.direction);
-          }
-        }
-      }
-    }, 1000 / 60);
+  generateFrame(lobbyId: string) {
+    const game = this._games.get(lobbyId);
+    const frame = game.generateFrame();
+    this.io.to(lobbyId).emit('frame', frame);
+    return frame;
   }
 
   @SubscribeMessage('get-game-info')
@@ -207,6 +158,15 @@ export class LobbiesGateway
       },
     });
     return lobby?.id;
+  }
+
+  async timer(lobbyId: string, eventName: string, seconds: number) {
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    const interval = setInterval(() => {
+      this.emitToLobby(lobbyId, eventName, seconds--);
+    }, 1000);
+    await delay(1000);
+    clearInterval(interval);
   }
 
   async removeUserFromLobby(lobbyId: string, userId: string) {

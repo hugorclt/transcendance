@@ -212,7 +212,7 @@ export class RoomsService {
     });
     if (!room) throw new NotFoundException();
     const sender = room.participants.find((user) => user.userId == senderId);
-    if (sender.isMute == true) return { isMuted: true };
+    if (sender.mute.getTime() > new Date().getTime()) return { isMuted: true };
     const message = await this.messageService.create({
       content: newMessage.content,
       senderId,
@@ -248,6 +248,19 @@ export class RoomsService {
 
   async muteFromRoom(muterId: string, managerRoomDto: ManagerRoomDto) {
     this.checkManagerState(muterId, managerRoomDto);
+    const participant = await this.prisma.participant.findFirst({
+      where: {
+        userId: managerRoomDto.targetId,
+        roomId: managerRoomDto.roomId,
+      }
+    })
+    const time = new Date();
+    var timeToMute = new Date();
+
+    if (participant.mute.getTime() < time.getTime()) {
+      timeToMute = new Date(time.getTime() + managerRoomDto.time * 60000);
+    }
+
     const newRoom = await this.prisma.room.update({
       where: {
         id: managerRoomDto.roomId,
@@ -256,7 +269,7 @@ export class RoomsService {
         participants: {
           updateMany: {
             where: { userId: managerRoomDto.targetId },
-            data: { isMute: !managerRoomDto.isMute },
+            data: { mute: timeToMute },
           },
         },
       },
@@ -485,7 +498,7 @@ export class RoomsService {
 
   async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
     if (managerId == managerRoomDto.targetId)
-      throw new UnprocessableEntityException();
+      throw new NotFoundException();
     const isOwner = await this.isOwner(
       managerRoomDto.targetId,
       managerRoomDto.roomId,

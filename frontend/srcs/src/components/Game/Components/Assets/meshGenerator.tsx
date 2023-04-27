@@ -16,6 +16,12 @@ const PADDLE_COLORS = {
     emissiveIntensity: 4,
   },
 
+  [EType.BASIC_PADDLE]: {
+    color: "#fffff",
+    emissive: "white",
+    emissiveIntensity: 4,
+  },
+
   [EType.RED_PADDLE]: {
     color: "#f69090",
     emissive: "red",
@@ -70,6 +76,7 @@ export function createMeshComponent(
   switch (object.type) {
     /*================================ PADDLE ==============================*/
 
+    case EType.BASIC_PADDLE:
     case EType.CLASSIC_PADDLE:
     case EType.PADDLE:
     case EType.RED_PADDLE:
@@ -77,11 +84,9 @@ export function createMeshComponent(
     case EType.PURPLE_PADDLE:
     case EType.GREEN_PADDLE:
     case EType.BLUE_PADDLE:
-      const colorConfig = PADDLE_COLORS[16];
+      const colorConfig = PADDLE_COLORS[object.type];
 
       return (
-        
-
         <mesh ref={ref} position={position}>
           <boxGeometry args={[object.width, object.height, object.depth]} />
           <meshToonMaterial
@@ -121,8 +126,6 @@ export function createMeshComponent(
           <meshStandardMaterial {...materialProps} />
         </mesh>
       );
-    
-    
 
     /*================================ WALL ==============================*/
 

@@ -16,6 +16,9 @@ import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
 import { EMap, EPaddle, LobbyState } from '@prisma/client';
 import { maps } from 'src/game/resources/utils/config/maps';
+import { SocialsGateway } from 'src/socials/socials.gateway';
+import { MatchesService } from 'src/matches/matches.service';
+import { StatsService } from 'src/stats/stats.service';
 
 @Injectable()
 export class LobbiesService {
@@ -25,6 +28,9 @@ export class LobbiesService {
     private readonly invitationsService: InvitationsService,
     private readonly lobbyMembersService: LobbyMembersService,
     private readonly lobbiesGateway: LobbiesGateway,
+    private readonly socialGateway: SocialsGateway,
+    private readonly matchesService: MatchesService,
+    private readonly statsService: StatsService,
   ) {}
 
   async create(
@@ -119,6 +125,7 @@ export class LobbiesService {
 
   //A PROTEGER
   async delete(id: string): Promise<LobbyEntity> {
+    console.log('getting users from lobby: ', id);
     const users = await this.prisma.user.findMany({
       where: {
         lobbyMember: {
@@ -133,10 +140,12 @@ export class LobbiesService {
         await this.usersService.updateStatus(user.id, 'CONNECTED');
       }),
     );
+    console.log('updating lobby by deleting members');
     const lobby = await this.prisma.lobby.update({
       where: { id },
       data: { members: { deleteMany: {} } },
     });
+    console.log('deleting lobby where id: ', id);
     return await this.prisma.lobby.delete({ where: { id } });
   }
 
@@ -157,6 +166,11 @@ export class LobbiesService {
       lobby.invitations.map(async (invitation) => {
         if (invitation.userId == joinLobbyDto.userId) {
           await this.invitationsService.remove(invitation.id);
+          this.socialGateway.emitToUser(
+            invitation.userId,
+            'delete-notifs',
+            invitation.id,
+          );
         }
       }),
     );
@@ -430,7 +444,6 @@ export class LobbiesService {
     lobby1: LobbyWithMembersEntity,
     lobby2: LobbyWithMembersEntity,
   ): Promise<LobbyWithMembersEntity> {
-    //update lobby members
     const updatedMembers = await this.prisma.lobbyMember.updateMany({
       where: {
         id: {
@@ -442,14 +455,9 @@ export class LobbiesService {
         team: true,
       },
     });
-    //delete lobby2
-    const deleteLobby = await this.prisma.lobby.delete({
-      where: {
-        id: lobby2.id,
-      },
-    });
-    //return updated lobby1
+    const deleteLobby = await this.delete(lobby2.id);
     const mergedLobby = await this.findLobbyWithMembers(lobby1.id);
+    this.lobbiesGateway.emitToLobby(lobby2.id, 'on-lobby-update', mergedLobby);
     return mergedLobby;
   }
 
@@ -489,7 +497,7 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
   }
 
-  async startGame(lobbbyId: string, userId: string) {
+  async startGame(lobbyId: string, userId: string) {
     var lobby = await this.prisma.lobby.findFirst({
       where: {
         ownerId: userId,
@@ -525,21 +533,92 @@ export class LobbiesService {
         lobby.id,
         LobbyState.SELECTION,
       );
-      await this.lobbiesGateway.readySelection(lobbyWithMembers);
-      lobbyWithMembers = await this.updateLobbyState(lobby.id, LobbyState.GAME);
-      this.lobbiesGateway.readyToStart(lobbyWithMembers);
-    } else {
-      var lobbyWithMembers = await this.updateLobbyState(
-        lobby.id,
-        LobbyState.GAME,
-      );
-      this.lobbiesGateway.readyToStart(lobbyWithMembers);
+      await this.lobbiesGateway.timer(lobby.id, 'time-to-choose', 15);
     }
+    var lobbyWithMembers = await this.updateLobbyState(
+      lobby.id,
+      LobbyState.GAME,
+    );
+    await this.lobbiesGateway.readyToStart(lobbyWithMembers);
+    /* ------------------------------ interval loop ----------------------------- */
+    const interval = setInterval(async () => {
+      const frame = this.lobbiesGateway.generateFrame(lobby.id);
+      if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
+        clearInterval(interval);
+        this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', undefined);
+        var winners;
+        var losers;
+        var winnerScore;
+        var loserScore;
+        if (frame.score.team1 > frame.score.team2) {
+          winners = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == false) return member.userId;
+          });
+          losers = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == true) return member.userId;
+          });
+          winnerScore = frame.score.team1;
+          loserScore = frame.score.team2;
+        } else {
+          winners = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == true) return member.userId;
+          });
+          losers = lobbyWithMembers.members.flatMap((member) => {
+            if (member.team == false) return member.userId;
+          });
+          winnerScore = frame.score.team2;
+          loserScore = frame.score.team1;
+        }
+        winners = winners.filter((winner) => winner !== undefined);
+        losers = losers.filter((loser) => loser !== undefined);
+        const match = await this.matchesService.create({
+          date: new Date(),
+          duration: new Date(),
+          winnerScore: winnerScore,
+          winners: winners,
+          loserScore: loserScore,
+          losers: losers,
+        });
+        const winnersStats = await this.prisma.stat.updateMany({
+          where: {
+            userId: {
+              in: winners,
+            },
+          },
+          data: {
+            nbGame: {
+              increment: 1,
+            },
+            nbWin: {
+              increment: 1,
+            },
+          },
+        });
+        const loserStats = await this.prisma.stat.updateMany({
+          where: {
+            userId: {
+              in: losers,
+            },
+          },
+          data: {
+            nbGame: {
+              increment: 1,
+            },
+          },
+        });
+        await this.delete(lobby.id);
+        return;
+      }
+    }, 1000 / 60);
   }
 
   async paddleSelected(userId: string, lobbyId: string, paddleName: string) {
     var paddleType;
     switch (paddleName) {
+      case 'Base Paddle':
+        paddleType = EPaddle.BASIC;
+        break;
+
       case 'Red Paddle':
         paddleType = EPaddle.RED;
         break;
@@ -559,8 +638,10 @@ export class LobbiesService {
       case 'Green Paddle':
         paddleType = EPaddle.GREEN;
         break;
+
+      default:
+        paddleType = EPaddle.BASIC;
     }
-    if (!paddleType) throw new NotFoundException();
 
     return await this.prisma.lobby.update({
       where: {
@@ -588,17 +669,8 @@ export class LobbiesService {
   }
 
   async voteMap(userId: string, lobbyId: string, mapName: string) {
-    var map;
-    switch (mapName) {
-      case 'CLASSIC':
-        map = EMap.CLASSIC;
-        break;
-      case 'SPACE':
-        map = EMap.SPACE;
-        break;
-    }
-
-    if (!map) throw new NotFoundException();
+    const selectedMap = maps.find((map) => mapName == map.name);
+    if (!selectedMap) throw new NotFoundException();
 
     const votes = await this.prisma.lobby.update({
       include: {
@@ -614,7 +686,7 @@ export class LobbiesService {
               userId: userId,
             },
             data: {
-              vote: map,
+              vote: selectedMap.mapRef,
             },
           },
         },

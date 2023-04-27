@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Heptahedre from "../common/Heptahedre/Heptahedre";
+import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 
 function Score({ value, blink }) {
   return (
@@ -8,15 +9,17 @@ function Score({ value, blink }) {
         fontFamily: "scoreboard",
         fontSize: "50px",
         animation: blink ? "blink 1s linear 0s 3" : "none",
-      }}
-    >
+      }}>
       {value}
     </span>
   );
 }
 
-function Scoreboard({ team1Score, team2Score }) {
+function Scoreboard() {
   const [scoreChanged, setScoreChanged] = useState(false);
+  const socket = useContext(LobbySocketContext);
+  const [team1score, setTeam1score] = useState(0);
+  const [team2score, setTeam2score] = useState(0);
 
   useEffect(() => {
     if (scoreChanged) {
@@ -28,8 +31,18 @@ function Scoreboard({ team1Score, team2Score }) {
   }, [scoreChanged]);
 
   useEffect(() => {
-    setScoreChanged(true);
-  }, [team1Score, team2Score]);
+    socket?.on("frame", (frame) => {
+      if (team1score != frame.score.team1 || team2score != frame.score.team2) {
+        setTeam1score(frame.score.team1);
+        setTeam2score(frame.score.team2);
+        setScoreChanged(true);
+      }
+    });
+
+    return () => {
+      socket?.off("frame");
+    }
+  }, [socket]);
 
   return (
     <>
@@ -44,15 +57,13 @@ function Scoreboard({ team1Score, team2Score }) {
           top: "30%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-        }}
-      >
+        }}>
         Team 1&nbsp;&nbsp;&nbsp;
-        <Score value={team1Score} blink={scoreChanged} />
-        {" "} - {" "}
-        <Score value={team2Score} blink={scoreChanged} />
+        <Score value={team1score} blink={scoreChanged} /> -{" "}
+        <Score value={team2score} blink={scoreChanged} />
         &nbsp;&nbsp;&nbsp;Team 2
       </div>
-      <Heptahedre/>
+      <Heptahedre />
     </>
   );
 }

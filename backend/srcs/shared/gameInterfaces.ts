@@ -1,4 +1,4 @@
-import { TCollision } from 'src/game/resources/types';
+import { TCollision, TScore } from 'src/game/resources/types';
 import { EType } from './enum';
 
 export interface Object3D {
@@ -42,4 +42,5 @@ export interface IFrame {
   players: IPlayer[];
   ball: Object3D;
   collisions: TCollision[]; //A CHANGER
+  score: { team1: number; team2: number };
 }

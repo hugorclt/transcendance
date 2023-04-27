@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class ManagerRoomDto {
   @ApiProperty()
@@ -12,11 +12,11 @@ export class ManagerRoomDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsString()
-  isMute?: string;
+  @IsBoolean()
+  isMute?: boolean;
 
   @ApiProperty()
   @IsOptional()
-  @IsBoolean()
-  time?: string;
+  @IsNumber()
+  time?: number;
 }

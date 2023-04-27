@@ -5,7 +5,7 @@ import { SocketContext } from "../../../../services/Auth/SocketContext";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { friendAtom, lobbyAtom } from "../../../../services/store";
+import { friendAtom, lobbyAtom, notifAtom } from "../../../../services/store";
 import { updateArray } from "../../../../services/utils/updateArray";
 
 function FriendNotifications() {
@@ -13,6 +13,7 @@ function FriendNotifications() {
   const axiosPrivate = useAxiosPrivate();
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const [friendlist, setFriendList] = useAtom(friendAtom);
+  const [notifs, setNotifs] = useAtom(notifAtom);
 
   const acceptFriendRequest = (userFromId: string, userId: string) => {
     axiosPrivate
@@ -68,16 +69,14 @@ function FriendNotifications() {
             className="text-green-800"
             onClick={() => {
               acceptFriendRequest(invitation.userFromId, invitation.userId);
-            }}
-          >
+            }}>
             Accept
           </button>
           <button
             className="text-red-800"
             onClick={() => {
               declineInvitation(invitation.id);
-            }}
-          >
+            }}>
             Refuse
           </button>
         </div>
@@ -96,16 +95,14 @@ function FriendNotifications() {
             className="text-green-800"
             onClick={() => {
               acceptLobbyRequest(invitation.lobbyId, invitation.userId);
-            }}
-          >
+            }}>
             Accept
           </button>
           <button
             className="text-red-800"
             onClick={() => {
               declineInvitation(invitation.id);
-            }}
-          >
+            }}>
             Refuse
           </button>
         </div>

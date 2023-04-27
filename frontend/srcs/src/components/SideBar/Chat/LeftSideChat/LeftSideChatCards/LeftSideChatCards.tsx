@@ -29,7 +29,7 @@ function LeftSideChatCards(props: {
   name: string;
   status: string;
   role: string;
-  isMute: boolean;
+  mute: Date;
   isAdmin: boolean;
 }) {
   const [user, setUser] = useAtom(userAtom);
@@ -59,9 +59,6 @@ function LeftSideChatCards(props: {
       </ChatManagerNameStatus>
       <LeftSideChatCardsRightBox>
         {displayRole(props.role)}
-        {props.isMute == true && (
-          <BiVolumeMute style={{ color: COLORS.secondary }} size={22} />
-        )}
         <Popup
           position="left center"
           arrowStyle={{ color: COLORS.background }}
@@ -79,7 +76,7 @@ function LeftSideChatCards(props: {
             </InsidePopUpButton>
             <InsidePopUpButton>Block user</InsidePopUpButton>
             {props.isAdmin ? (
-              <AdminInteraction userId={props.userId} roomId={props.roomId} isMute={props.isMute} />
+              <AdminInteraction userId={props.userId} roomId={props.roomId} mute={props.mute} />
             ) : (
               ""
             )}

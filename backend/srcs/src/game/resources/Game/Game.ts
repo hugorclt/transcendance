@@ -3,10 +3,11 @@ import { Ball } from '../Ball/Ball';
 import { Player } from '../Player/Player';
 import { Field } from '../Field/Field';
 import { IObject } from '../interfaces/IObject';
-import { TCollision } from '../types';
+import { TCollision, TScore } from '../types';
 import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 import { maps } from '../utils/config/maps';
 import { goalCollide } from '../utils/collisions/goalCollide';
+import { EType } from 'shared/enum';
 
 export class Game {
   private _id: string;
@@ -18,6 +19,7 @@ export class Game {
   private _objects: Array<IObject>;
   private _movingObjects: Array<IObject>;
   private _collisions: Array<TCollision>;
+  private _score: TScore;
 
   private _init_ball(config: any) {
     const ball = config.ball;
@@ -47,6 +49,7 @@ export class Game {
 
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     lobby.members.forEach((member) => {
+      console.log('creating player with paddle: ', member.paddleType);
       this._players.push(
         new Player(member.userId, member.team, member.paddleType, config),
       );
@@ -62,14 +65,17 @@ export class Game {
     this._objects = new Array<IObject>();
     this._movingObjects = new Array<IObject>();
     this._collisions = new Array<TCollision>();
+    this._score = {
+      team1: 0,
+      team2: 0,
+    };
     this._id = lobby.id;
 
-    var config;
-    if (lobby.mode == 'CHAMPIONS') {
-      config = maps[0];
-    } else if (lobby.mode == 'CLASSIC') {
-      config = maps[1];
-    }
+    console.log('creating game: ', lobby);
+
+    const config = maps.find((map) => map.name == lobby.map);
+
+    console.log('detected config: ', config.name);
     this._init_ball(config);
     this._init_field(config);
     this._init_players(config, lobby);
@@ -94,9 +100,17 @@ export class Game {
   }
 
   detectGoal() {
-
+    const goal = this._collisions.find(
+      (collision) => collision.type == EType.GOAL,
+    );
+    if (goal) {
+      if (goal.direction.z < 0) {
+        this._score.team1 += 1;
+      } else {
+        this._score.team2 += 1;
+      }
+    }
   }
-  
 
   exportGameInfo(): IGameInfo {
     const field = this._field.exportFieldInfo();
@@ -116,12 +130,12 @@ export class Game {
     const deltaTime = (Date.now() - this._lastTimestamp) / 1000;
     this.gameLoop(deltaTime);
     this._lastTimestamp = Date.now();
-    // console.log(this.collisions);
     return {
       timestamp: this._lastTimestamp,
       players: this._players.map((player) => player.exportPlayerFrame()),
       ball: this._ball.exportFrame(),
       collisions: this.collisions,
+      score: this._score,
     };
   }
 
@@ -138,6 +152,4 @@ export class Game {
   public get collisions() {
     return this._collisions;
   }
-
-  /* ---------------------------- helper functions ---------------------------- */
 }
