@@ -4,6 +4,7 @@ import { COLORS } from "../../colors";
 import Game from "./Game";
 import MyEffects from "./Effects";
 import Scoreboard from "./Scoreboard";
+import TimerBegin from "./Timer/TimerBegin";
 
 const GameScreen = () => {
   const screenRef = useRef<any>();
@@ -30,6 +31,7 @@ const GameScreen = () => {
           <MyEffects />
         </Canvas>
       </div>
+      <TimerBegin />
     </>
   );
 };

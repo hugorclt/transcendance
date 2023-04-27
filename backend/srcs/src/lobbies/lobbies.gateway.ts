@@ -57,7 +57,7 @@ export class LobbiesGateway
   }
 
   async mergeLobbyRooms(newLobby: LobbyWithMembersEntity, oldLobbyId: string) {
-    this.io.adapter.rooms.get(oldLobbyId).forEach(async (clientId) => {
+    this.io.adapter.rooms.get(oldLobbyId)?.forEach(async (clientId) => {
       const client = this.io.sockets.get(clientId);
       await client.join(newLobby.id);
       await client.leave(oldLobbyId);
@@ -88,7 +88,8 @@ export class LobbiesGateway
     const game = new Game(lobby);
     this._games.set(lobby.id, game);
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
-    await this.timer(lobby.id, 'game-start-timer', 5);
+    await this.timer(lobby.id, 'game-start-timer', 4);
+    this.emitToLobby(lobby.id, 'game-start-end-timer', undefined);
     game.start();
     console.log('game just started');
   }
@@ -165,7 +166,7 @@ export class LobbiesGateway
     const interval = setInterval(() => {
       this.emitToLobby(lobbyId, eventName, seconds--);
     }, 1000);
-    await delay((seconds + 2) * 1000);
+    await delay(seconds * 1000);
     clearInterval(interval);
   }
 
