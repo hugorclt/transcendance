@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
@@ -25,6 +26,9 @@ export class InvitationsService {
     sender: any,
   ): Promise<InvitationExtendedEntity> {
     var invitation;
+    //TODO: check if already pending invitation for same user,
+    // check if already friends
+    // check if user exists
     if (createInvitationDto.type == 'FRIEND') {
       if (createInvitationDto.username == sender.username)
         throw new UnprocessableEntityException();
@@ -33,9 +37,15 @@ export class InvitationsService {
         sender,
       );
     } else if (createInvitationDto.type == 'LOBBY') {
-      invitation = await this.createLobbyInvitation(createInvitationDto, sender);
+      invitation = await this.createLobbyInvitation(
+        createInvitationDto,
+        sender,
+      );
     }
-    this.socialsGateway.emitToUser(invitation.userId, 'invitation', {...invitation, userFromUsername: invitation.userFrom.username});
+    this.socialsGateway.emitToUser(invitation.userId, 'invitation', {
+      ...invitation,
+      userFromUsername: invitation.userFrom.username,
+    });
     this.socialsGateway.emitToUser(invitation.userId, 'new-notifs', {
       username: invitation.userFrom.username,
       desc: this.createDesc(invitation),
@@ -78,6 +88,7 @@ export class InvitationsService {
     const receiver = await this.prisma.user.findUnique({
       where: { username: createInvitationDto.username },
     });
+    if (!receiver) throw new NotFoundException('user not found');
     const invitation = await this.prisma.invitation.create({
       data: {
         type: createInvitationDto.type,
