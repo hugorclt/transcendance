@@ -17,6 +17,7 @@ import { LobbyEventEntity } from './entities/lobby-event.entity';
 import { LobbyState } from '@prisma/client';
 import { Queue } from './utils/Queue';
 import { EType } from 'shared/enum';
+import { IFrame } from 'shared/gameInterfaces';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -89,16 +90,14 @@ export class LobbiesGateway
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
     await this.timer(lobby.id, 'game-start-timer', 5);
     game.start();
-    const interval = setInterval(() => {
-      const frame = game.generateFrame();
-      this.io.to(lobby.id).emit('frame', frame);
+    console.log('game just started');
+  }
 
-      if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
-        clearInterval(interval);
-        this.io.to(lobby.id).emit('end-game', {});
-        return ;
-      }
-    }, 1000 / 60);
+  generateFrame(lobbyId: string) {
+    const game = this._games.get(lobbyId);
+    const frame = game.generateFrame();
+    this.io.to(lobbyId).emit('frame', frame);
+    return frame;
   }
 
   @SubscribeMessage('get-game-info')

@@ -121,6 +121,7 @@ export class LobbiesService {
 
   //A PROTEGER
   async delete(id: string): Promise<LobbyEntity> {
+    console.log('getting users from lobby: ', id);
     const users = await this.prisma.user.findMany({
       where: {
         lobbyMember: {
@@ -135,10 +136,12 @@ export class LobbiesService {
         await this.usersService.updateStatus(user.id, 'CONNECTED');
       }),
     );
+    console.log('updating lobby by deleting members');
     const lobby = await this.prisma.lobby.update({
       where: { id },
       data: { members: { deleteMany: {} } },
     });
+    console.log('deleting lobby where id: ', id);
     return await this.prisma.lobby.delete({ where: { id } });
   }
 
@@ -533,8 +536,18 @@ export class LobbiesService {
       LobbyState.GAME,
     );
     await this.lobbiesGateway.readyToStart(lobbyWithMembers);
-    console.log('game-end');
-    await this.delete(lobbyId);
+    /* ------------------------------ interval loop ----------------------------- */
+    const interval = setInterval(async () => {
+      const frame = this.lobbiesGateway.generateFrame(lobby.id);
+      if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
+        clearInterval(interval);
+        this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', undefined);
+        console.log('game has ended');
+        //should do all the bdd stuff with lobby / members / match / stats
+        await this.delete(lobby.id);
+        return;
+      }
+    }, 1000 / 60);
   }
 
   async paddleSelected(userId: string, lobbyId: string, paddleName: string) {

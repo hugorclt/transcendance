@@ -27,7 +27,6 @@ function Game() {
 
     socket?.on("end-game", (data) => {
       setEndGameAtom(data);
-      console.log('je vais a slash')
       setLobby(lobbyDefaultValue)
       navigate("/");
     });
