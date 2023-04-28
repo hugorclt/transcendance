@@ -14,6 +14,7 @@ model User {
   password         String
   avatar           String?
   refreshToken     String?
+  xp               Int           @default(0)
   type             Type          @default(LOCAL)
   status           Status?       @default(DISCONNECTED)
   balance          Int?          @default(0)

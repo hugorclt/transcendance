@@ -545,7 +545,6 @@ export class LobbiesService {
       const frame = this.lobbiesGateway.generateFrame(lobby.id);
       if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
         clearInterval(interval);
-        this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', undefined);
         var winners;
         var losers;
         var winnerScore;
@@ -606,10 +605,58 @@ export class LobbiesService {
             },
           },
         });
+        lobbyWithMembers.members.forEach(async member => {
+          this.lobbiesGateway.emitToLobby(member.userId, 'end-game', {
+            winnerScore: winnerScore,
+            loserScore: loserScore,
+            losers: losers,
+            winners: winners,
+            money: await this.calculateMoney(member.userId, winners),
+            xp: await this.calculateXp(member.userId, winners),
+          });
+        });
         await this.delete(lobby.id);
         return;
       }
     }, 1000 / 60);
+  }
+
+  async calculateXp(userId: string, winnerTeam: string[]) {
+    const isWinner = winnerTeam.includes(userId);
+    var xp = 10 + Math.floor(Math.random() * 10);
+    if (isWinner) {
+      xp += 30
+    }
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        xp: {
+          increment: xp,
+        }
+      }
+    })
+    return xp;
+  }
+
+  async calculateMoney(userId: string, winnerTeam: string[]) {
+    const isWinner = winnerTeam.includes(userId);
+    var money = 100 + Math.floor(Math.random() * 10);
+    if (isWinner) {
+      money += 300;
+    }
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        balance: {
+          increment: money
+        }
+      }
+    })
+    return money;
   }
 
   async paddleSelected(userId: string, lobbyId: string, paddleName: string) {

@@ -26,6 +26,7 @@ function Game() {
     });
 
     socket?.on("end-game", (data) => {
+      console.log(data);
       setEndGameAtom(data);
       setLobby(lobbyDefaultValue)
       navigate("/");
@@ -35,10 +36,6 @@ function Game() {
       socket?.off("game-end");
     };
   }, [socket]);
-
-  useEffect(() => {
-    // console.log("gamedata :", gameInfo.ball);
-  }, [gameInfo]);
 
   useEffect(() => {
     socket?.emit("get-game-info");
