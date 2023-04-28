@@ -13,13 +13,13 @@ const PADDLE_COLORS = {
   [EType.CLASSIC_PADDLE]: {
     color: "#fffff",
     emissive: "white",
-    emissiveIntensity: 4,
+    emissiveIntensity: 1,
   },
 
   [EType.BASIC_PADDLE]: {
     color: "#fffff",
     emissive: "white",
-    emissiveIntensity: 4,
+    emissiveIntensity: 1,
   },
 
   [EType.RED_PADDLE]: {
@@ -66,7 +66,7 @@ export function createMeshComponent(
     const texture = useTexture(object.texture);
     texture.wrapS = RepeatWrapping;
     texture.wrapT = RepeatWrapping;
-    texture.repeat.set(2, 2);
+    texture.repeat.set(4, 4);
 
     materialProps.map = texture;
   }
@@ -121,8 +121,8 @@ export function createMeshComponent(
         materialProps.toneMapped = true;
       }
       return (
-        <mesh ref={ref} position={position} args={[]}>
-          <sphereGeometry args={[object.width, 32, 32]} />
+        <mesh ref={ref} position={position} args={[]} castShadow={true}>
+          <sphereGeometry args={[object.width, 32, 16]} />
           <meshStandardMaterial {...materialProps} />
         </mesh>
       );
@@ -149,7 +149,7 @@ export function createMeshComponent(
         materialProps.color = "white";
       }
       return (
-        <mesh position={position}>
+        <mesh position={position} receiveShadow={true}>
           <boxGeometry args={[object.width, object.height, object.depth]} />
           <meshStandardMaterial {...materialProps} />
         </mesh>

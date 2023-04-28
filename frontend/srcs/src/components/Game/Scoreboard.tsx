@@ -25,7 +25,7 @@ useEffect(() => {
   if (scoreChanged === true) {
     const blinkTimeout = setTimeout(() => {
       setScoreChanged(false);
-    }, 1000);
+    }, 0);
     return () => clearTimeout(blinkTimeout);
   }
 });
