@@ -7,20 +7,25 @@ export function MyEffects() {
   return (
     <>
       <EffectComposer multisampling={0}>
-        <Bloom />
+        <Bloom
+          mipmapBlur={true}
+          // luminanceThreshold={0} 
+          radius={3}
+          levels={1}/>
         <SMAA />
       </EffectComposer>
       <OrbitControls enabled={false} />
       <hemisphereLight args={["#ffffff", 0.8]} />
       <directionalLight
-          position={[-5, 10, 5]}
-          intensity={0.8}
+          position={[5, 10, 5]}
+          intensity={0.7}
           castShadow={true}
           // shadow-mapSize-width={512}
           // shadow-mapSize-height={512}
           // shadow-bias={1}
           // shadow-radius={5}
         />
+        
       {/* <Stats /> */}
     </>
   );

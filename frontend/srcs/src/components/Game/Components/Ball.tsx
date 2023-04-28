@@ -28,8 +28,8 @@ const Ball = (props: BallProps) => {
 
   useFrame(({ clock }) => {
     if (ballRef.current) {
-      ballRef.current.rotation.x += velocity.z / 10;
-      ballRef.current.rotation.z += velocity.x / 10;
+      ballRef.current.rotation.x += velocity.z / 100;
+      ballRef.current.rotation.z += velocity.x / 100;
 
     }
   });

@@ -13,13 +13,13 @@ const PADDLE_COLORS = {
   [EType.CLASSIC_PADDLE]: {
     color: "#fffff",
     emissive: "white",
-    emissiveIntensity: 1,
+    emissiveIntensity: 4,
   },
 
   [EType.BASIC_PADDLE]: {
     color: "#fffff",
     emissive: "white",
-    emissiveIntensity: 1,
+    emissiveIntensity: 4,
   },
 
   [EType.RED_PADDLE]: {
@@ -116,9 +116,13 @@ export function createMeshComponent(
         materialProps.emissiveIntensity = 10;
         materialProps.toneMapped = false;
       } else {
-        materialProps.roughness = 0.5;
-        materialProps.metalness = 0.5;
-        materialProps.toneMapped = true;
+        materialProps.map = useTexture('/water.jpg');
+        // materialProps.emissiveMap = useTexture('/laval.jpg');
+        materialProps.roughness = 0;
+        materialProps.metalness = 0;
+        materialProps.toneMapped = false;
+        materialProps.emissiveIntensity = 1000;
+        
       }
       return (
         <mesh ref={ref} position={position} args={[]} castShadow={true}>
@@ -126,6 +130,7 @@ export function createMeshComponent(
           <meshStandardMaterial {...materialProps} />
         </mesh>
       );
+
 
     /*================================ WALL ==============================*/
 
