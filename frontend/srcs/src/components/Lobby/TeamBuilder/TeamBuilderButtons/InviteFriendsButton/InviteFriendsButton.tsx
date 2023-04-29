@@ -7,6 +7,8 @@ import { TFriend } from "../../../../../services/type";
 import InviteFriendCard from "./InviteFriendCard/InviteFriendCard";
 import {
   InviteFriendButtonContainer,
+  InviteFriendsList,
+  InviteFriendsListScroll,
   ModalBox,
   StyledButton,
 } from "./InviteFriendsButtonStyle";
@@ -59,25 +61,18 @@ function InviteFriendsButton() {
         nested
       >
         <ModalBox>
-          <div>
-            {friendList.map((val, index) => {
-              return (
-                <div key={index} onClick={() => handleAddFriends(val.id)}>
-                  <p
-                    key={index}
-                    className={invitedFriends.includes(val.id) ? "callout" : ""}
-                  >
-                    {val.username}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-          {/* <li>
-            {friendList.map((val: TFriend) => {
-              return <InviteFriendCard key={val.id} friend={val} />;
-            })}
-          </li> */}
+          <InviteFriendsList>
+            <InviteFriendsListScroll>
+              {friendList.map((val, index) => {
+                return (
+                  <InviteFriendCard
+                    friend={val}
+                    onClick={() => handleAddFriends(val.id)}
+                  />
+                );
+              })}
+            </InviteFriendsListScroll>
+          </InviteFriendsList>
           <StyledButton onClick={handleSubmit} type="submit" value="Invite" />
         </ModalBox>
       </Popup>
