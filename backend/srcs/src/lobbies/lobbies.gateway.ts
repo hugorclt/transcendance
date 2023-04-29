@@ -130,13 +130,13 @@ export class LobbiesGateway
   @SubscribeMessage('up-move')
   async onUpMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    playerInfo.player.paddle.moveUp();
+    if (playerInfo.game.mode != 'CLASSIC') playerInfo.player.paddle.moveUp();
   }
 
   @SubscribeMessage('down-move')
   async ondownMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    playerInfo.player.paddle.moveDown();
+    if (playerInfo.game.mode != 'CLASSIC') playerInfo.player.paddle.moveDown();
   }
 
   /* ------------------------------- helper func ------------------------------ */

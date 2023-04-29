@@ -125,7 +125,6 @@ export class LobbiesService {
 
   //A PROTEGER
   async delete(id: string): Promise<LobbyEntity> {
-    console.log('getting users from lobby: ', id);
     const users = await this.prisma.user.findMany({
       where: {
         lobbyMember: {
@@ -140,12 +139,10 @@ export class LobbiesService {
         await this.usersService.updateStatus(user.id, 'CONNECTED');
       }),
     );
-    console.log('updating lobby by deleting members');
     const lobby = await this.prisma.lobby.update({
       where: { id },
       data: { members: { deleteMany: {} } },
     });
-    console.log('deleting lobby where id: ', id);
     return await this.prisma.lobby.delete({ where: { id } });
   }
 
@@ -605,7 +602,7 @@ export class LobbiesService {
             },
           },
         });
-        lobbyWithMembers.members.forEach(async member => {
+        lobbyWithMembers.members.forEach(async (member) => {
           this.lobbiesGateway.emitToLobby(member.userId, 'end-game', {
             winnerScore: winnerScore,
             loserScore: loserScore,
@@ -626,7 +623,7 @@ export class LobbiesService {
     const isWinner = winnerTeam.includes(userId);
     var xp = 10 + Math.floor(Math.random() * 10);
     if (isWinner) {
-      xp += 30
+      xp += 30;
     }
     await this.prisma.user.update({
       where: {
@@ -635,9 +632,9 @@ export class LobbiesService {
       data: {
         xp: {
           increment: xp,
-        }
-      }
-    })
+        },
+      },
+    });
     return xp;
   }
 
@@ -653,10 +650,10 @@ export class LobbiesService {
       },
       data: {
         balance: {
-          increment: money
-        }
-      }
-    })
+          increment: money,
+        },
+      },
+    });
     return money;
   }
 
