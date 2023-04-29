@@ -38,6 +38,17 @@ export function LobbySocketProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    socket?.on("unauthorized", () => {
+      console.log("user socket unauthorized");
+      //TODO: get another token
+    });
+
+    return () => {
+      socket?.off("unauthorized");
+    };
+  }, [socket]);
+
+  useEffect(() => {
     socket?.on("user-joined-lobby", (userJoining) => {
       setLobby((prev) => ({
         ...prev,

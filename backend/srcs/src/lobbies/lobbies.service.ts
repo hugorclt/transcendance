@@ -616,6 +616,7 @@ export class LobbiesService {
           });
         });
         await this.delete(lobby.id);
+        this.lobbiesGateway.deleteRoom(lobby.id);
         return;
       }
     }, 1000 / 60);

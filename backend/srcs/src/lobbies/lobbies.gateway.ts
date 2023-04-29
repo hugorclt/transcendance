@@ -14,10 +14,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
-import { LobbyState } from '@prisma/client';
 import { Queue } from './utils/Queue';
-import { EType } from 'shared/enum';
-import { IFrame } from 'shared/gameInterfaces';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -39,16 +36,12 @@ export class LobbiesGateway
   matchmaking(lobby: LobbyWithMembersEntity): LobbyWithMembersEntity {
     var queue;
     if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
-      //soloQ champions
       queue = this._soloChampionsQ;
     } else if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 4) {
-      //duoQ champions
       queue = this._duoChampionsQ;
     } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 2) {
-      //soloQ Classic
       queue = this._soloClassicQ;
     } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 4) {
-      //duo Q classic
       queue = this._duoClassicQ;
     }
     if (queue.size() === 0) {
@@ -185,6 +178,11 @@ export class LobbiesGateway
     if (!socketId) return;
     const socket = this.io.sockets.get(socketId);
     await socket.join(lobbyId);
+  }
+
+  deleteRoom(lobbyId: string) {
+    this.io.in(lobbyId).socketsLeave(lobbyId);
+    this._games.delete(lobbyId);
   }
 
   emitToLobby(lobbyId: string, eventName: string, eventData: any) {
