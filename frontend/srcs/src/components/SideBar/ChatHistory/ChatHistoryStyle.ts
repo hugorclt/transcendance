@@ -88,3 +88,23 @@ export const CreateRoomScroll = styled.div`
     padding: 8px;
   }
 `;
+
+export const CreateRoomFriendsCardsContainer = styled.div`
+  border-radius: 8px;
+  padding: 4px;
+
+  p {
+    font-size: 0.80rem;
+  }
+`;
+
+export const CreateRoomFriendsCards = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+`;

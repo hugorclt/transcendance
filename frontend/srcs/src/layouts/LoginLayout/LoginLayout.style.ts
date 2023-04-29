@@ -19,5 +19,6 @@ export const LoginHeaderContainer = styled.div`
 
   h1 {
     position: absolute;
+    z-index: 20;
   }
 `;
