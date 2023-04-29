@@ -108,7 +108,7 @@ function Chat({ chat }: TChatProps) {
     }
   }, [messageList]);
 
-  const renderMessage = (msg: TMessage) => {
+  const renderMessage = (msg: TMessage, idx: number, array: TMessage[]) => {
     const sender = chatHistory
       .find((chat) => chat.id == chat.id)
       ?.participants.find((user) => user.id == msg.senderId);
@@ -125,7 +125,12 @@ function Chat({ chat }: TChatProps) {
         style={{
           justifyContent: isMe ? "flex-end" : "flex-start",
         }}>
-        <div style={{ color: COLORS.primary }}>{senderName}</div>
+        {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
+          <div style={{ color: COLORS.primary }}>{senderName}</div>
+        ) : (
+          <></>
+        )}
+
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
@@ -196,8 +201,8 @@ function Chat({ chat }: TChatProps) {
           </div>
         </ChatTop>
         <ChatMessageContainer ref={messageBoxRef}>
-          {messageList.map((val) => {
-            return renderMessage(val);
+          {messageList.map((val, idx, array) => {
+            return renderMessage(val, idx, array);
           })}
         </ChatMessageContainer>
         <ChatForm onSubmit={sendMessage} autoComplete="off">
