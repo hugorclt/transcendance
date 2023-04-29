@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
@@ -53,6 +54,24 @@ export class ItemsService {
 
     const alreadyHave = await this.findItem(userId, item.id);
     if (alreadyHave) throw new ConflictException();
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      }
+    })
+    if (item.price > user.balance) throw new UnauthorizedException();
+
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        balance: {
+          decrement: item.price,
+        }
+      }
+    })
 
     await this.prisma.item.update({
       where: {

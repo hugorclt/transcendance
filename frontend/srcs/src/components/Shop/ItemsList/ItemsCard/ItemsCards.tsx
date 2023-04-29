@@ -12,18 +12,25 @@ import {
 import { TItemsProps } from "./ItemsCardType";
 import { ImUnlocked } from "react-icons/im";
 import { COLORS } from "../../../../colors";
+import { useAtom } from "jotai";
+import { userAtom } from "../../../../services/store";
 
 function ItemsCards({ name, desc, price, image }: TItemsProps) {
   const [isOwned, setIsOwned] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useAtom(userAtom);
 
   const handleYes = () => {
     axiosPrivate
       .post("items/buy", { name: name })
       .then((res: AxiosResponse) => {
         setIsOwned(true);
+        setUser((prev) => ({
+          ...prev,
+          balance: user.balance - +price,
+        }))
       })
       .catch((err: AxiosError) => {
         setErrMsg("Error while buying item please retry");
