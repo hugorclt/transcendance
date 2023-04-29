@@ -116,24 +116,25 @@ function CreateRoom() {
       <CreateRoomFriends>
         <CreateRoomScroll>
           {friendList.map((val, index) => {
-            console.log(chooseColor(val.id));
             return (
               <CreateRoomFriendsCardsContainer
+                key={index}
                 style={{ backgroundColor: chooseColor(val.id) }}
               >
-                <CreateRoomFriendsCards key={index}>
+                <CreateRoomFriendsCards>
                   <h4 key={index}>{val.username}</h4>
                   <div>
                     <AiOutlinePlusSquare
                       onClick={() => handleAddUser(val.id)}
                       size={32}
                       color={COLORS.primary}
-                      style={{ marginRight: "8px" }}
+                      style={{ marginRight: "8px", cursor: "pointer" }}
                     />
                     <MdAdminPanelSettings
                       onClick={() => handleAddAdmin(val.id)}
                       size={32}
                       color={COLORS.primary}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </CreateRoomFriendsCards>
