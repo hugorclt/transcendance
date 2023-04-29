@@ -7,7 +7,12 @@ import Paddles from "./Components/Paddles";
 import Skybox from "./Components/sceneComponents/Skybox";
 import { useNavigate } from "react-router";
 import { useAtom } from "jotai";
-import { endGameAtom, lobbyAtom, lobbyDefaultValue } from "../../services/store";
+import {
+  endGameAtom,
+  lobbyAtom,
+  lobbyDefaultValue,
+  userAtom,
+} from "../../services/store";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -18,6 +23,7 @@ function Game() {
   const [currentUserId, setCurrentUserId] = useState("");
   const navigate = useNavigate();
   const [gameAtom, setEndGameAtom] = useAtom(endGameAtom);
+  const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
@@ -26,9 +32,17 @@ function Game() {
     });
 
     socket?.on("end-game", (data) => {
-      console.log(data);
+      setUser((prev) => {
+        return {
+          ...prev,
+          exp: prev.exp + data.xp,
+          balance: prev.balance + data.money,
+        };
+      });
+      console.log("prev: ", user.exp, "now: ", user.exp + data.xp)
+      console.log("prev: ", user.exp, "now: ", user.exp + data.xp)
       setEndGameAtom(data);
-      setLobby(lobbyDefaultValue)
+      setLobby(lobbyDefaultValue);
       navigate("/");
     });
     return () => {

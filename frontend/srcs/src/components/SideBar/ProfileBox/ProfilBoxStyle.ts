@@ -46,7 +46,6 @@ export const ExperienceBar = styled.div`
 
 export const LevelExperienceBar = styled.div`
   background-color: ${COLORS.secondary};
-  width: 30%;
   height: 16px;
 `;
 

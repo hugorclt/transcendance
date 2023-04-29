@@ -18,9 +18,11 @@ function UserProvider({ children }: { children: ReactNode }) {
     axiosPrivate
       .get("/users/me")
       .then((res: AxiosResponse) => {
+        console.log(res.data);
         setUser((prev) => ({
           ...prev,
           ...res.data,
+          exp: res.data.xp,
         }));
         setIsLoaded(true);
       })

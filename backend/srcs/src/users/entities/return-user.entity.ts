@@ -21,6 +21,9 @@ export class ReturnUserEntity {
 
   @ApiProperty({ required: false })
   balance: number;
+
+  @ApiProperty({ required: false })
+  xp: number;
 }
 
 export class ReturnUserEntityWithPreferences extends ReturnUserEntity {

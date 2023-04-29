@@ -67,3 +67,23 @@ export const GameModeHero = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const LobbyFlex = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+`
+
+export const MoneyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+`
+
+export const XpContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+
+`

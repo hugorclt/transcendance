@@ -7,17 +7,25 @@ import {
   GameModeContainer,
   GameModeContainerMobile,
   GameModeHero,
+  LobbyFlex,
+  MoneyContainer,
+  XpContainer,
 } from "./LobbyCreator.style";
 import { useAtom } from "jotai";
 import MediaQuery from "react-responsive";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { ButtonNoStyle } from "./LobbyCreator.style";
-import { lobbyAtom } from "../../../services/store";
+import { endGameAtom, lobbyAtom, userAtom } from "../../../services/store";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useLobbyCreatorContext } from "../../../views/LobbyPage/LobbyCreatorProvider";
 import HeptaButton from "../../common/Button/HeptaButton/HeptaButton";
 import { COLORS } from "../../../colors";
 import { mediaSize } from "../../../mediaSize";
+import Popup from "reactjs-popup";
+import { PopUpBox } from "../../SideBar/FriendsList/FriendsCards/FriendsCardsStyle";
+import { EndGameStatInfoContainer } from "../../../views/LobbyPage/LobbyPage.style";
+import { TbCurrencyShekel } from "react-icons/tb";
+import { FaLevelUpAlt } from "react-icons/fa";
 
 const dataGameMode = [
   {
@@ -32,6 +40,61 @@ const dataGameMode = [
     img: "",
   },
 ];
+
+const createModalEnd = () => {
+  const [endGameInfo, setEndGameInfo] = useAtom(endGameAtom);
+  const [open, setOpen] = useState(true);
+  const [user, setUser] = useAtom(userAtom);
+
+  if (endGameInfo.winners.length != 0) {
+    const clickFinish = () => {
+      setOpen(false);
+      setEndGameInfo({
+        winnerScore: 0,
+        winners: [],
+        loserScore: 0,
+        losers: [],
+        xp: 0,
+        money: 0,
+      });
+    };
+
+    return (
+      <>
+        <Popup modal open={open}>
+          <PopUpBox>
+            <EndGameStatInfoContainer>
+              <h3 className="game-winner">
+                {endGameInfo.winners.includes(user.id)
+                  ? "You Won!"
+                  : "You loose!"}
+              </h3>
+              <h3>
+                Team1{" "}
+                <span>
+                  {endGameInfo.winnerScore} - {endGameInfo.loserScore}
+                </span>{" "}
+                Team2
+              </h3>
+              <LobbyFlex>
+                <XpContainer>
+                  <FaLevelUpAlt size={30} color={COLORS.secondary} />
+                  <h3>+{endGameInfo.xp}</h3>
+                </XpContainer>
+                <MoneyContainer>
+                  <TbCurrencyShekel size={42} color={COLORS.secondary} />
+                  <h3>+{endGameInfo.money}</h3>
+                </MoneyContainer>
+              </LobbyFlex>
+              <button onClick={clickFinish}>Continue</button>
+            </EndGameStatInfoContainer>
+          </PopUpBox>
+        </Popup>
+      </>
+    );
+  }
+  return <></>;
+};
 
 function LobbyCreator() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
@@ -80,6 +143,7 @@ function LobbyCreator() {
 
   return (
     <>
+      {createModalEnd()}
       {/* desktop - tabel */}
       <MediaQuery minWidth={mediaSize.tablet + 1}>
         <GameModeContainer>
