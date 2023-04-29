@@ -183,12 +183,6 @@ export class RoomsService {
       this.changeOwner(roomId);
     }
 
-    if (nbParticipant == 0) {
-      await this.prisma.room.delete({
-        where: { id: roomId },
-      });
-    }
-
     const newRoom = await this.prisma.room.update({
       where: {
         id: roomId,
@@ -204,6 +198,13 @@ export class RoomsService {
         participants: true,
       }
     });
+
+    if (nbParticipant == 0) {
+      await this.prisma.room.delete({
+        where: { id: roomId },
+      });
+    }
+
     this.socialGateway.leaveUserFromRoom(roomId, userId);
     if (newRoom)
       this.socialGateway.emitToUser(newRoom.id, 'on-chat-update', {

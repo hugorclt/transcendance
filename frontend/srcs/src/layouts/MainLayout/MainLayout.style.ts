@@ -27,9 +27,6 @@ export const PageContainer = styled.div`
   width: 100%;
   //padding: 16px;
   min-width: 280px;
-  @media (max-width: ${screenSize.laptop}) {
-    padding: 0 8px;
-  }
   box-sizing: border-box;
 `;
 

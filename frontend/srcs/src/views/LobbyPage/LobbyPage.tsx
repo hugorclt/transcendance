@@ -9,6 +9,7 @@ import { TEndGame } from "../../services/type";
 import Popup from "reactjs-popup";
 import { PopUpBox } from "../../components/SideBar/FriendsList/FriendsCards/FriendsCardsStyle";
 import { EndGameStatInfoContainer } from "./LobbyPage.style";
+import MatchMakingLayout from "../../layouts/LobbyLayout/MatchMakingLayout/MatchMakingLayout";
 
 function LobbyPage() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
@@ -18,7 +19,7 @@ function LobbyPage() {
   } else if (lobby.state == "SELECTION") {
     return <Selector />;
   } else if (lobby.state == "MATCHMAKING") {
-    return <h1>MATCHMAKING</h1>;
+    return <MatchMakingLayout />
   } else {
     return (
       <LobbyCreatorProvider>
