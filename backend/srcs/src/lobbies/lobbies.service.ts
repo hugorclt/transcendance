@@ -322,8 +322,6 @@ export class LobbiesService {
       );
     }
     const member = lobby.members.find((member) => member.userId == userId);
-    if (member.ready)
-      throw new MethodNotAllowedException('Cannot change team, you are ready');
     const opponentTeamSize = lobby.members.filter(
       (el) => el.team != member.team,
     ).length;
@@ -379,10 +377,15 @@ export class LobbiesService {
     if (ownerTeam) {
       await Promise.all(
         ownerTeamMembers.map(async (member) => {
-          await this.lobbyMembersService.update(member.id, {
-            team: !member.team,
-            ready: false,
-          });
+          if (member.userId != lobby.ownerId)
+            await this.lobbyMembersService.update(member.id, {
+              team: !member.team,
+              ready: false,
+            });
+          else
+            await this.lobbyMembersService.update(member.id, {
+              team: !member.team,
+            });
         }),
       );
     }

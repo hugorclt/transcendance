@@ -47,13 +47,12 @@ function InviteFriendsButton() {
     <InviteFriendButtonContainer>
       <Popup
         trigger={
-          <div>
-            <RoundIconButton
-              onClick={() => setOpen(true)}
-              size={22}
-              Icon={AddFriendIcon}
-            />
-          </div>
+          <RoundIconButton
+            onClick={() => setOpen(true)}
+            size={22}
+            Icon={AddFriendIcon}
+            disabled={lobby.state == "FULL" ? true : false}
+          />
         }
         modal
         open={open}
