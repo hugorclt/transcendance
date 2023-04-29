@@ -189,7 +189,21 @@ export class RoomsService {
       });
     }
 
-    const newRoom = await this.findOne(roomId);
+    const newRoom = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        roomMsg: {
+          deleteMany: {
+            senderId: userId,
+          }
+        }
+      },
+      include: {
+        participants: true,
+      }
+    });
     this.socialGateway.leaveUserFromRoom(roomId, userId);
     if (newRoom)
       this.socialGateway.emitToUser(newRoom.id, 'on-chat-update', {
