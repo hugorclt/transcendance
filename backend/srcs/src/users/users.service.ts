@@ -565,6 +565,7 @@ export class UsersService {
       }
     })
     const isBloqued = userTo.isBloqued.some((blocked) => blocked.id == userBlockedId)
+    console.log(isBloqued);
     if (isBloqued) return true;
     return false;
   }
