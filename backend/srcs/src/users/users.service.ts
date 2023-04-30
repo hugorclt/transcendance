@@ -291,10 +291,10 @@ export class UsersService {
         isBloqued: {
           disconnect: {
             username: toUnblockName,
-          }
-        }
-      }
-    })
+          },
+        },
+      },
+    });
   }
 
   async blockUser(userId: string, toBlockId: string) {
@@ -306,18 +306,18 @@ export class UsersService {
         isBloqued: {
           connect: {
             id: toBlockId,
-          }
-        }
-      }
-    })
+          },
+        },
+      },
+    });
 
     const userTo = await this.findOne(toBlockId);
-    this.removeFriends(userId, userTo.username)
-    this.socialsGateway.removeFriend(userTo.id, userId);
-    return ;
+    this.removeFriends(userId, userTo.username);
+    this.socialsGateway.removeFriend(userId, userTo.id);
+    return;
   }
 
-  async getBlocked(id: string) : Promise<string[]> {
+  async getBlocked(id: string): Promise<string[]> {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -326,7 +326,7 @@ export class UsersService {
         isBloqued: true,
       },
     });
-    return user.isBloqued.map((block) => (block.username))
+    return user.isBloqued.map((block) => block.username);
   }
 
   async getUserPreferences(id: string): Promise<UserPreferencesEntity> {
@@ -502,6 +502,11 @@ export class UsersService {
 
     this.removeOneRelation(remover, removed);
     this.removeOneRelation(removed, remover);
+    this.socialsGateway.removeFriend(
+      userId,
+      usernameToRemove,
+    );
+    this.socialsGateway.removeFriend(removed.id, remover.username);
     return exclude(removed, ['password', 'type', 'refreshToken']);
   }
 
@@ -562,9 +567,11 @@ export class UsersService {
       },
       include: {
         isBloqued: true,
-      }
-    })
-    const isBloqued = userTo.isBloqued.some((blocked) => blocked.id == userBlockedId)
+      },
+    });
+    const isBloqued = userTo.isBloqued.some(
+      (blocked) => blocked.id == userBlockedId,
+    );
     console.log(isBloqued);
     if (isBloqued) return true;
     return false;

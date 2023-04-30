@@ -52,6 +52,7 @@ function FriendsTopBar() {
           <AiOutlineClose
             size={24}
             color={COLORS.secondary}
+            style={{ cursor: "pointer" }}
             onClick={() => setOpenInvite(false)}
           />
         </>
@@ -78,6 +79,7 @@ function FriendsTopBar() {
               setSearchFriends("");
               setOpenFilter(false);
             }}
+            style={{ cursor: "pointer" }}
           />
         </>
       );
@@ -90,11 +92,13 @@ function FriendsTopBar() {
             onClick={() => setOpenInvite(true)}
             size={22}
             color={COLORS.secondary}
+            style={{ cursor: "pointer" }}
           />
           <AiOutlineSearch
             size={22}
             color={COLORS.secondary}
             onClick={() => setOpenFilter(true)}
+            style={{ cursor: "pointer" }}
           />
         </RightFriendsTopBarBox>
       </>

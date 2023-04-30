@@ -76,4 +76,5 @@ export const StyledSelect = styled.select`
   background-color: ${COLORS.background};
   color: ${COLORS.primary};
   opacity:50%;
+  cursor: pointer;
 `

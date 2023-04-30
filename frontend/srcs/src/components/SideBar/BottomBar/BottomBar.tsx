@@ -71,12 +71,12 @@ function BottomBar() {
               <MdNotificationsActive
                 className="buzzing"
                 size={26}
-                style={{ color: COLORS.secondary }}
+                style={{ color: COLORS.secondary, cursor: "pointer" }}
               />
             ) : (
               <MdNotificationsNone
                 size={26}
-                style={{ color: COLORS.secondary }}
+                style={{ color: COLORS.secondary, cursor: "pointer" }}
               />
             )}
           </ButtonNoStyle>
@@ -85,7 +85,7 @@ function BottomBar() {
         <NotificationsPanel />
       </Popup>
       <ButtonNoStyle onClick={() => setOpen(true)}>
-        <MdSettings size={26} style={{ color: COLORS.secondary }} />
+        <MdSettings size={26} style={{ color: COLORS.secondary, cursor: "pointer" }} />
       </ButtonNoStyle>
       <Popup modal open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
         <SettingsContainer>
@@ -96,7 +96,7 @@ function BottomBar() {
       <MdLogout
         onClick={logout}
         size={26}
-        style={{ color: COLORS.secondary }}
+        style={{ color: COLORS.secondary, cursor: "pointer" }}
       />
     </BottomBarContainer>
   );

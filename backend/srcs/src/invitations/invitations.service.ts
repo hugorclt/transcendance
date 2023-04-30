@@ -70,8 +70,20 @@ export class InvitationsService {
     });
     //check lobby can be joined (game not started, lobby not full, sender is lobby owner)
     //TODO
-    if (await this.usersService.checkIfUserBlocked(createInvitationDto.userId, sender)) throw new NotFoundException();
-    if (await this.usersService.checkIfUserBlocked(sender, createInvitationDto.userId)) throw new NotFoundException();
+    if (
+      await this.usersService.checkIfUserBlocked(
+        createInvitationDto.userId,
+        sender,
+      )
+    )
+      throw new NotFoundException();
+    if (
+      await this.usersService.checkIfUserBlocked(
+        sender,
+        createInvitationDto.userId,
+      )
+    )
+      throw new NotFoundException();
     const invitation = await this.prisma.invitation.create({
       data: {
         type: createInvitationDto.type,
@@ -94,10 +106,10 @@ export class InvitationsService {
       where: { username: createInvitationDto.username },
     });
     if (!receiver) throw new NotFoundException('user not found');
-    if (await this.usersService.checkIfUserBlocked(receiver.id, sender.sub)) throw new NotFoundException();
-    const test = await this.usersService.checkIfUserBlocked(sender.sub, receiver.id);
-    console.log(test);
-    if (test) throw new NotFoundException();
+    if (await this.usersService.checkIfUserBlocked(receiver.id, sender.sub))
+      throw new NotFoundException();
+    if (await this.usersService.checkIfUserBlocked(sender.sub, receiver.id))
+      throw new NotFoundException();
     const invitation = await this.prisma.invitation.create({
       data: {
         type: createInvitationDto.type,

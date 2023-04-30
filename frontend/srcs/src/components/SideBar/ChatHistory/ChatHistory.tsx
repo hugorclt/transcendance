@@ -20,7 +20,7 @@ import SliderMenu from "../../common/SliderMenu/SliderMenu";
 import { RxCross2 } from "react-icons/rx";
 
 function ChatHistory() {
-  const { open, setOpen } = useContext(RoomModalOpenContext);
+  const [ open, setOpen ] = useState(false);
   const [isCreate, setIsCreate] = useState("CREATE");
   const [chatHistory, setChatHistory] = useAtom(conversationAtom);
   const [user] = useAtom(userAtom);
@@ -34,7 +34,7 @@ function ChatHistory() {
           style={{ color: COLORS.secondary, cursor: "pointer" }}
           onClick={() => setOpen(true)}
         />
-        <Popup modal open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+        <Popup modal open={open} onClose={() => setOpen(false)}>
           <ModalBoxCreateRoom>
             <ModalCreateJoin>
               <RxCross2

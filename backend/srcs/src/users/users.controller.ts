@@ -20,7 +20,6 @@ import {
 } from './entities/return-user.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { Request } from '@nestjs/common';
-import { SocialsGateway } from 'src/socials/socials.gateway';
 import { RemoveFriendsDto } from './dto/remove-friend.dto';
 import { UserPreferencesEntity } from './entities/user-preferences.entity';
 import { addFriendDto } from './dto/add-friend.dto';
@@ -32,7 +31,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly socialGateway: SocialsGateway,
   ) {}
 
   @Post()
@@ -136,11 +134,6 @@ export class UsersController {
       req.user.sub,
       removeFriendsDto.usernameToRemove,
     );
-    this.socialGateway.removeFriend(
-      req.user.sub,
-      removeFriendsDto.usernameToRemove,
-    );
-    this.socialGateway.removeFriend(removed.id, req.user.username);
     return removed;
   }
 
