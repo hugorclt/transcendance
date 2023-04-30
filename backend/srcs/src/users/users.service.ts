@@ -282,6 +282,54 @@ export class UsersService {
     return exclude(user, ['password', 'type', 'refreshToken']);
   }
 
+  async unBlockUser(userId: string, toUnblockName: string) {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isBloqued: {
+          disconnect: {
+            username: toUnblockName,
+          }
+        }
+      }
+    })
+  }
+
+  async blockUser(userId: string, toBlockId: string) {
+    const user = await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isBloqued: {
+          connect: {
+            id: toBlockId,
+          }
+        },
+        friends: {
+          disconnect: {
+            id: toBlockId,
+          }
+        }
+      }
+    })
+    return ;
+  }
+
+  async getBlocked(id: string) : Promise<string[]> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        isBloqued: true,
+      },
+    });
+    return user.isBloqued.map((block) => (block.username))
+  }
+
   async getUserPreferences(id: string): Promise<UserPreferencesEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id },

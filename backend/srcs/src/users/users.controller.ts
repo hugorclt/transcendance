@@ -43,6 +43,11 @@ export class UsersController {
     return await this.usersService.create(createUserDto);
   }
 
+  @Get('blocked')
+  async getBlocked(@Request() req) : Promise<string[]> {
+    return await this.usersService.getBlocked(req.user.sub);
+  }
+
   @Get()
   @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findAll(): Promise<ReturnUserEntity[]> {
@@ -159,5 +164,21 @@ export class UsersController {
       req.user.sub,
       req.body.password,
     );
+  }
+
+  @Post('/block')
+  async blockUser(@Request() req) {
+    return await this.usersService.blockUser(
+      req.user.sub,
+      req.body.id,
+    )
+  }
+
+  @Post("/unblock")
+  async unblock(@Request() req) {
+    return await this.usersService.unBlockUser(
+      req.user.sub,
+      req.body.username
+    )
   }
 }

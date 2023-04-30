@@ -18,9 +18,12 @@ import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { TFriendCardsProps } from "./FriendsCardsType";
 import { getImageBase64 } from "../../../../services/utils/getImageBase64";
+import { useAtom } from "jotai";
+import { friendAtom } from "../../../../services/store";
 
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
+  const [friendList, setFriendList] = useAtom(friendAtom);
   
   const handleRemove = () => {
     axiosPrivate
@@ -45,6 +48,14 @@ function FriendsCards({ friend }: TFriendCardsProps) {
         console.log("error while creating the room");
       });
   };
+
+  const handleBlock = () => {
+    axiosPrivate.post("/users/block", {
+      id: friend.id,
+    }).then((res: AxiosResponse) => {
+      setFriendList((prev) => (prev.filter((user) => user.id != friend.id)))
+    });
+  }
 
   return (
     <FriendsCardsBox>
@@ -77,7 +88,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
           <InsidePopUpButton onClick={handleChat}>
             Send message
           </InsidePopUpButton>
-          <InsidePopUpButton>Block friends</InsidePopUpButton>
+          <InsidePopUpButton onClick={handleBlock}>Block friends</InsidePopUpButton>
           <InsidePopUpButton onClick={handleRemove}>
             Remove friends
           </InsidePopUpButton>
