@@ -307,14 +307,13 @@ export class UsersService {
           connect: {
             id: toBlockId,
           }
-        },
-        friends: {
-          disconnect: {
-            id: toBlockId,
-          }
         }
       }
     })
+
+    const userTo = await this.findOne(toBlockId);
+    this.removeFriends(userId, userTo.username)
+    this.socialsGateway.removeFriend(userTo.id, userId);
     return ;
   }
 
@@ -366,7 +365,6 @@ export class UsersService {
         userId: addFriendDto.userId,
       },
     });
-    console.log(invitation);
     if (!invitation) throw new NotFoundException('Invitation not found');
     this.socialsGateway.emitToUser(
       invitation.userId,
@@ -555,5 +553,19 @@ export class UsersService {
       where: { username: { in: userId } },
     });
     return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
+  }
+
+  async checkIfUserBlocked(userId: string, userBlockedId: string) {
+    const userTo = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        isBloqued: true,
+      }
+    })
+    const isBloqued = userTo.isBloqued.some((blocked) => blocked.id == userBlockedId)
+    if (isBloqued) return true;
+    return false;
   }
 }
