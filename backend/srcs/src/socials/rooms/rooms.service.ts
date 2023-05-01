@@ -46,13 +46,14 @@ export class RoomsService {
 
       const roomExists = await this.prisma.room.findUnique({
         where: {
-          id: concatenatedID,
+          name: concatenatedID,
         }
       });
       if (roomExists !== null) throw new ConflictException();
       createRoomDto.name = concatenatedID;
     }
 
+    
     const room = await this.prisma.room.create({
       data: {
         name: createRoomDto.name,
@@ -75,15 +76,15 @@ export class RoomsService {
         banned: true,
       },
     });
-
+    
     const roomEntity = await this.createRoomReturnEntity(room, undefined);
-
+    
     await this.socialGateway.joinUsersToRoom(
       room,
       createRoomDto.users.map((user) => user.userId),
-    );
-    this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
-    return roomEntity;
+      );
+      this.socialGateway.emitRoomCreated(ownerId, roomEntity);
+      return roomEntity;
   }
 
   async findHistory(userId: string): Promise<ReturnRoomEntity[]> {

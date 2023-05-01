@@ -24,7 +24,7 @@ import { friendAtom } from "../../../../services/store";
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
   const [friendList, setFriendList] = useAtom(friendAtom);
-  
+
   const handleRemove = () => {
     axiosPrivate
       .post("/users/friends/remove", { usernameToRemove: friend.username })
@@ -37,7 +37,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       .post("/rooms/create", {
         name: "undefined",
         password: "",
-        users: [friend.username],
+        users: [{ userId: friend.id, role: "BASIC" }],
         isPrivate: false,
         isDm: true,
       })
@@ -50,12 +50,14 @@ function FriendsCards({ friend }: TFriendCardsProps) {
   };
 
   const handleBlock = () => {
-    axiosPrivate.post("/users/block", {
-      id: friend.id,
-    }).then((res: AxiosResponse) => {
-      setFriendList((prev) => (prev.filter((user) => user.id != friend.id)))
-    });
-  }
+    axiosPrivate
+      .post("/users/block", {
+        id: friend.id,
+      })
+      .then((res: AxiosResponse) => {
+        setFriendList((prev) => prev.filter((user) => user.id != friend.id));
+      });
+  };
 
   return (
     <FriendsCardsBox>
@@ -66,7 +68,9 @@ function FriendsCards({ friend }: TFriendCardsProps) {
             <FriendsCardsStatusRound
               style={{ backgroundColor: convertStatusColor(friend.status) }}
             />
-            {friend?.username.length > 8 ? friend?.username.substring(0, 8).concat("..."): friend?.username.toLocaleUpperCase()}
+            {friend?.username.length > 8
+              ? friend?.username.substring(0, 8).concat("...")
+              : friend?.username.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>
             {friend.status.toLocaleUpperCase()}
@@ -83,12 +87,15 @@ function FriendsCards({ friend }: TFriendCardsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }>
+        }
+      >
         <PopUpBox>
           <InsidePopUpButton onClick={handleChat}>
             Send message
           </InsidePopUpButton>
-          <InsidePopUpButton onClick={handleBlock}>Block friends</InsidePopUpButton>
+          <InsidePopUpButton onClick={handleBlock}>
+            Block friends
+          </InsidePopUpButton>
           <InsidePopUpButton onClick={handleRemove}>
             Remove friends
           </InsidePopUpButton>
