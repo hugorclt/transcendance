@@ -4,6 +4,8 @@ import { screenSize } from "../../../mediaSize";
 export const SelectorContainer = styled.div`
   width: 100%;
   height: 100%;
+  padding: 4px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -152,7 +152,7 @@ function LobbyCreator() {
   return (
     <>
       {createModalEnd()}
-      {/* desktop - tabel */}
+      {/* desktop - tablet */}
       <MediaQuery minWidth={mediaSize.tablet + 1}>
         <GameModeContainer>
           <GameModeCardsBody>
@@ -163,7 +163,7 @@ function LobbyCreator() {
             />
             <GameModeCard
               mode="Champions"
-              description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay"
+              description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers"
               img={"../../../../public/planet.jpeg"}
             />
           </GameModeCardsBody>

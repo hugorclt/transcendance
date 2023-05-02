@@ -552,6 +552,33 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
   }
 
+  async selectMap(lobbyId: string) {
+    const newVote = new Map<string, number>();
+    const members = await this.prisma.lobby.findUnique({
+      where: {
+        id: lobbyId,
+      },
+      include: {
+        members: true,
+      },
+    });
+    members.members.forEach((member) => {
+      const count = newVote.get(member.vote) || 0;
+      newVote.set(member.vote, count + 1);
+    });
+
+    await this.prisma.lobby.update({
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        map: [...newVote.entries()].reduce((a, e) =>
+          e[1] > a[1] ? e : a,
+        )[0] as EMap,
+      },
+    });
+  }
+
   async startGame(lobbyId: string, userId: string) {
     var lobby = await this.prisma.lobby.findFirst({
       where: {
@@ -589,6 +616,7 @@ export class LobbiesService {
         LobbyState.SELECTION,
       );
       await this.lobbiesGateway.timer(lobby.id, 'time-to-choose', 15);
+      // await this.selectMap(lobbyId);
     }
     var lobbyWithMembers = await this.updateLobbyState(
       lobby.id,
