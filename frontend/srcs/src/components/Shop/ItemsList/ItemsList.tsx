@@ -80,6 +80,7 @@ function ItemsList() {
                 image={item.image}
                 type={item.type}
                 owned={item.owned}
+                setData={setData}
               />
             );
           })}

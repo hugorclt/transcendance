@@ -5,4 +5,5 @@ export type TItemsProps = {
     image: string,
     type: string,
     owned: boolean,
+    setData: Dispatch<SetStateAction<TItemsProps[]>>,
 }

@@ -16,7 +16,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "../../../../services/store";
 import { TbCurrencyShekel } from "react-icons/tb";
 
-function ItemsCards({ name, desc, price, image, owned }: TItemsProps) {
+function ItemsCards({ name, desc, price, image, owned, setData }: TItemsProps) {
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const [open, setOpen] = useState(false);
@@ -30,6 +30,13 @@ function ItemsCards({ name, desc, price, image, owned }: TItemsProps) {
           ...prev,
           balance: user.balance - +price,
         }))
+        setData((prev) => {
+          return prev.map((item) => {
+            if (item.name == name)
+              item.owned = true
+            return item;
+          })
+        })
       })
       .catch((err: AxiosError) => {
         setErrMsg("Error while buying item please retry");
