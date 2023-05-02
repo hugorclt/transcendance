@@ -77,6 +77,27 @@ export class LobbiesService {
     return lobby;
   }
 
+  async cancel(userId: string): Promise<LobbyWithMembersEntity> {
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+    if (!lobby) throw new NotFoundException('Lobby not found');
+    const member = lobby.members.find((member) => member.userId === userId);
+    if (member.id != lobby.ownerId)
+      await this.lobbyMembersService.update(member.id, { ready: false });
+    if (lobby.state != 'MATCHMAKING') return lobby;
+    return await this.updateLobbyState(lobby.id, 'FULL');
+  }
+
   async findAll(): Promise<LobbyEntity[]> {
     return await this.prisma.lobby.findMany({});
   }
