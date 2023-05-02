@@ -41,6 +41,12 @@ export class MatchesController {
     return await this.matchesService.findAll();
   }
 
+  @Get('/user/:id')
+  @ApiOkResponse({ type: MatchEntity, isArray: true })
+  async findMatchByUserId(@Param('id') id: string): Promise<MatchEntity[]> {
+    return await this.matchesService.findMatchByUserId(id);
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: MatchEntity })
   async findOne(@Param('id') id: string): Promise<MatchEntity> {

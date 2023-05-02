@@ -15,7 +15,7 @@ const renderCards = () => {
 
   useEffect(() => {
     axiosPrivate
-      .get("/matches")
+      .get(`/matches/user/${user.id}`)
       .then((response) => {
         setMatch(response.data);
       })
@@ -32,22 +32,22 @@ const renderCards = () => {
   const getAlly = (match: TMatch): TUser[] => {
     if (getResult(match) == "DEFEAT") return match.losers;
     return match.winners;
-  }
+  };
 
   const getAllyScore = (match: TMatch): number => {
     if (getResult(match) == "DEFEAT") return match.loserScore;
     return match.winnerScore;
-  }
+  };
 
   const getEnnemy = (match: TMatch): TUser[] => {
     if (getResult(match) == "DEFEAT") return match.winners;
     return match.losers;
-  }
+  };
 
   const getEnnemyScore = (match: TMatch): number => {
     if (getResult(match) == "DEFEAT") return match.winnerScore;
     return match.loserScore;
-  }
+  };
 
   return match.map((match) => {
     return (
@@ -64,7 +64,7 @@ const renderCards = () => {
   });
 };
 
-export function BotProfile() {
+export function BotProfile(props) {
   return (
     <BotProfileContainer>
       <FirstCardContainer>

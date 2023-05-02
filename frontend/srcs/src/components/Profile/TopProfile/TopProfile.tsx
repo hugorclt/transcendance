@@ -3,14 +3,15 @@ import { ProfileBoxContainer } from "./ProfileBox/ProfileBoxStyle.js";
 import { ProfileBox } from "./ProfileBox/ProfileBox";
 import { StatBox } from "./StatBox/StatBox.jsx";
 import { TopProfileContainer } from "./TopProfileStyle.js";
+import { nanoid } from "nanoid";
 
-export function TopProfile() {
+export function TopProfile({ username }) {
   return (
     <TopProfileContainer>
       <ProfileBoxContainer>
-        <ProfileBox />
+        <ProfileBox username={username} />
       </ProfileBoxContainer>
-      <StatBox />
+      <StatBox username={username} />
     </TopProfileContainer>
   );
 }
