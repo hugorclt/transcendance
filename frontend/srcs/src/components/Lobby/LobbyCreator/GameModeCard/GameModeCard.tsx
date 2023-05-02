@@ -38,12 +38,16 @@ function GameModeCard(props: Props) {
     <GameModeCardsContainer style={{ backgroundImage: `url(${props.img})` }}>
       <GameModeCardsUpper>
         <GameModeCardsMain>
-        <GameModeCardsButton onClick={handle1v1Click}>
-          1 VS 1
-        </GameModeCardsButton>
-        <GameModeCardsButton onClick={handle2v2Click}>
-          2 VS 2
-        </GameModeCardsButton>
+          <GameModeCardsButton
+            style={{ cursor: "pointer" }}
+            onClick={handle1v1Click}>
+            1 VS 1
+          </GameModeCardsButton>
+          <GameModeCardsButton
+            style={{ cursor: "pointer" }}
+            onClick={handle2v2Click}>
+            2 VS 2
+          </GameModeCardsButton>
         </GameModeCardsMain>
       </GameModeCardsUpper>
       <GameModeCardsBottom>

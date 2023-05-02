@@ -34,12 +34,15 @@ function Ranking() {
   };
 
   useEffect(() => {
-    axiosPrivate.get("stats/leaderboards").then((res: AxiosResponse) => {
-      setData(res.data);
-    }).catch((err: AxiosError) => {
-      setErrMsg("Error while loading stats")
-    })
-  }, [])
+    axiosPrivate
+      .get("stats/leaderboards")
+      .then((res: AxiosResponse) => {
+        setData(res.data);
+      })
+      .catch((err: AxiosError) => {
+        setErrMsg("Error while loading stats");
+      });
+  }, []);
 
   const renderRow = () => {
     if (asc == true)
@@ -84,13 +87,21 @@ function Ranking() {
                   setSelect(stat);
                 }}
                 key={nanoid()}
-              >
+                style={{ cursor: "pointer" }}>
                 <h4>{stat}</h4>
                 {stat == select ? (
                   asc == true ? (
-                    <IoMdArrowDropup color={COLORS.primary} size={22} />
+                    <IoMdArrowDropup
+                      style={{ cursor: "pointer" }}
+                      color={COLORS.primary}
+                      size={22}
+                    />
                   ) : (
-                    <IoMdArrowDropdown color={COLORS.primary} size={22} />
+                    <IoMdArrowDropdown
+                      style={{ cursor: "pointer" }}
+                      color={COLORS.primary}
+                      size={22}
+                    />
                   )
                 ) : (
                   <></>
@@ -105,8 +116,7 @@ function Ranking() {
           <TableData>
             <ShopTopBarSelect
               value={select}
-              onChange={(e) => setSelect(e.target.value)}
-            >
+              onChange={(e) => setSelect(e.target.value)}>
               {stats.map((stat) => {
                 return <option key={nanoid()}>{stat}</option>;
               })}
@@ -115,7 +125,7 @@ function Ranking() {
         </TableRow>
       </MediaQuery>
       <RankingBody>{renderRow()}</RankingBody>
-      {errMsg.length > 0 ? <p style={{color: "red"}}>{errMsg}</p> : <></>}
+      {errMsg.length > 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
     </RankingTable>
   );
 }

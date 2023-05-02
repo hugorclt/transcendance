@@ -54,7 +54,7 @@ export const GameModeCardsMain = styled.div`
 
 export const GameModeCardsButton = styled.button`
   margin: 16px;
-  padding: 8px;
+  padding: 16px;
   border-radius: 8px;
   background-color: ${COLORS.secondary};
   border: 1px solid ${COLORS.border};

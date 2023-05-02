@@ -70,8 +70,8 @@ function General() {
       <p>Import a new Profile Picture </p>
       <PhotoContainer src={photo == "" ? getImageBase64(user.avatar) : photo} />
       <form onSubmit={handlePicture}>
-        <input onChange={handleFileChange} name="picture" type="file" />
-        <button>Upload picture</button>
+        <input  style={{ cursor: "pointer" }} onChange={handleFileChange} name="picture" type="file" />
+        <button style={{ cursor: "pointer" }}>Upload picture</button>
       </form>
       <p>Change username: </p>
       <form onSubmit={handleUsername}>
@@ -81,7 +81,7 @@ function General() {
           placeholder="New username"
           type="text"
         />
-        <button>Change Username</button>
+        <button style={{ cursor: "pointer" }}>Change Username</button>
       </form>
       <p>Change password: </p>
       <form onSubmit={handlePassword}>
@@ -91,7 +91,7 @@ function General() {
           placeholder="New password"
           type="password"
         />
-        <button>Change Password</button>
+        <button style={{ cursor: "pointer" }}>Change Password</button>
       </form>
       <p style={{ color: "red" }}>{errMsg}</p>
     </>

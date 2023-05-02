@@ -9,6 +9,8 @@ export const TeamBuilderContainer = styled.div`
   white-space: nowrap;
   flex-direction: column;
   align-items: center;
+  padding: 16px;
+  box-sizing: border-box;
 `;
 
 export const GameTitleContainer = styled.div`

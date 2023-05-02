@@ -6,4 +6,6 @@ export const ShopContainer = styled.div`
   flex-direction: column;
   height: calc(100vh - 150px); /* or height: calc(80vh); */
   min-height: 450px;
+  padding: 8px;
+  box-sizing: border-box;
 `;
