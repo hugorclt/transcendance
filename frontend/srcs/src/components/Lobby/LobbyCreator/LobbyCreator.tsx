@@ -30,14 +30,14 @@ import { FaLevelUpAlt } from "react-icons/fa";
 const dataGameMode = [
   {
     name: "Classic",
-    description: "Le Pong originel, berceau du gaming",
-    img: "",
+    description:"Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s.",
+    img:"../../../../public/planet-modified.jpeg",
   },
 
   {
     name: "Champions",
-    description: "Pong comme vous ne l'aviez jamais imagine",
-    img: "",
+    description:"Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay",
+    img:"../../../../public/planet.jpeg",
   },
 ];
 
@@ -151,7 +151,7 @@ function LobbyCreator() {
             <GameModeCard
               mode="Classic"
               description="Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s."
-              img={""}
+              img={"../../../../public/planet-modified.jpeg"}
             />
             <GameModeCard
               mode="Champions"
@@ -174,7 +174,7 @@ function LobbyCreator() {
       </MediaQuery>
 
       {/* mobile */}
-      <MediaQuery maxWidth={mediaSize.mobile}>
+      <MediaQuery maxWidth={mediaSize.tablet}>
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
@@ -184,7 +184,7 @@ function LobbyCreator() {
             <GameModeCard
               mode={dataGameMode[slider].name}
               description={dataGameMode[slider].description}
-              img={""}
+              img={"../../../../public/planet.jpeg"}
             />
             <ButtonNoStyle
               onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>

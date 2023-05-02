@@ -82,6 +82,7 @@ function Chat({ chat }: TChatProps) {
     axiosPrivate
       .get(`/rooms/history/${chat.id}`)
       .then((res: AxiosResponse) => {
+        console.log(res.data);
         setMessageList(
           res.data.map((message: TMessage) => ({
             content: message.content,
@@ -91,7 +92,7 @@ function Chat({ chat }: TChatProps) {
         );
       })
       .catch((err: AxiosError) => {
-        console.log("error");
+        console.log("error", err);
       });
     return () => {
       setMessageList([]);

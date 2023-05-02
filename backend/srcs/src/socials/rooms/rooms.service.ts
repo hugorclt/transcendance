@@ -47,13 +47,12 @@ export class RoomsService {
       const roomExists = await this.prisma.room.findUnique({
         where: {
           name: concatenatedID,
-        }
+        },
       });
       if (roomExists !== null) throw new ConflictException();
       createRoomDto.name = concatenatedID;
     }
 
-    
     const room = await this.prisma.room.create({
       data: {
         name: createRoomDto.name,
@@ -76,15 +75,15 @@ export class RoomsService {
         banned: true,
       },
     });
-    
+
     const roomEntity = await this.createRoomReturnEntity(room, undefined);
-    
+
     await this.socialGateway.joinUsersToRoom(
       room,
       createRoomDto.users.map((user) => user.userId),
-      );
-      this.socialGateway.emitRoomCreated(ownerId, roomEntity);
-      return roomEntity;
+    );
+    this.socialGateway.emitRoomCreated(ownerId, roomEntity);
+    return roomEntity;
   }
 
   async findHistory(userId: string): Promise<ReturnRoomEntity[]> {
@@ -108,14 +107,38 @@ export class RoomsService {
     if (!room) throw new NotFoundException();
 
     const messages = await this.messageService.getMessages(room.id);
-    return messages.map((message) => {
-      return {
-        content: message.content,
-        senderId: message.senderId,
-        roomId: message.roomId,
-        isMuted: false,
-      };
+    const ret = await Promise.all(
+      messages.flatMap(async (message) => {
+        if (await this.checkIfUserBlocked(userId, message.senderId)) {
+          console.log("oui");
+          return;
+        }
+        console.log("non");
+        return {
+          content: message.content,
+          senderId: message.senderId,
+          roomId: message.roomId,
+          isMuted: false,
+        };
+      }),
+    );
+    return ret.filter((message) => message != null);
+  }
+
+  async checkIfUserBlocked(userId: string, userBlockedId: string) {
+    const userTo = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        isBloqued: true,
+      },
     });
+    const isBloqued = userTo.isBloqued.some(
+      (blocked) => blocked.id == userBlockedId,
+    );
+    if (isBloqued) return true;
+    return false;
   }
 
   async joinRoom(
@@ -201,7 +224,21 @@ export class RoomsService {
       },
     });
 
-    if (nbParticipant == 0) {
+    if (nbParticipant == 0 || newRoom.isDm == true) {
+      if (newRoom.isDm == true) {
+        this.socialGateway.emitToUser(newRoom.id, 'on-chat-delete', {
+          roomId: newRoom.id,
+        });
+        await this.socialGateway.leaveUserFromRoom(
+          roomId,
+          newRoom.participants[0].userId,
+        );
+        await this.prisma.participant.deleteMany({
+          where: {
+            roomId: roomId,
+          },
+        });
+      }
       await this.prisma.room.delete({
         where: { id: roomId },
       });

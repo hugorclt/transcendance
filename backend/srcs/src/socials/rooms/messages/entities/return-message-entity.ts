@@ -19,5 +19,5 @@ export class ReturnMessageEntity {
 
     @ApiProperty()
     @IsBoolean()
-    isMuted: boolean;
+    isMuted?: boolean;
 }

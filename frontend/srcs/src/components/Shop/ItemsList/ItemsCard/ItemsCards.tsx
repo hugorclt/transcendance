@@ -14,6 +14,7 @@ import { ImUnlocked } from "react-icons/im";
 import { COLORS } from "../../../../colors";
 import { useAtom } from "jotai";
 import { userAtom } from "../../../../services/store";
+import { TbCurrencyShekel } from "react-icons/tb";
 
 function ItemsCards({ name, desc, price, image }: TItemsProps) {
   const [isOwned, setIsOwned] = useState(false);
@@ -62,6 +63,7 @@ function ItemsCards({ name, desc, price, image }: TItemsProps) {
       }}>
       <div className="top-text">
         <h5 style={{ color: isOwned ? COLORS.grey : "" }}>{price}</h5>
+        <TbCurrencyShekel color={COLORS.secondary} size={27} />
       </div>
       {isOwned && (
         <CardsContainerCenter>
@@ -73,7 +75,7 @@ function ItemsCards({ name, desc, price, image }: TItemsProps) {
         <h5 style={{ color: isOwned ? COLORS.grey : "" }}>{desc}</h5>
         {!isOwned && (
           <>
-            <button onClick={() => setOpen((o) => !o)}>BUY</button>
+            <button style={{backgroundColor: user.balance < +price ? COLORS.grey : COLORS.secondary}} disabled={user.balance < +price} onClick={() => setOpen((o) => !o)}>BUY</button>
             <Popup
               modal
               nested
