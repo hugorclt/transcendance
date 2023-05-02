@@ -107,14 +107,38 @@ export class RoomsService {
     if (!room) throw new NotFoundException();
 
     const messages = await this.messageService.getMessages(room.id);
-    return messages.map((message) => {
-      return {
-        content: message.content,
-        senderId: message.senderId,
-        roomId: message.roomId,
-        isMuted: false,
-      };
+    const ret = await Promise.all(
+      messages.flatMap(async (message) => {
+        if (await this.checkIfUserBlocked(userId, message.senderId)) {
+          console.log("oui");
+          return;
+        }
+        console.log("non");
+        return {
+          content: message.content,
+          senderId: message.senderId,
+          roomId: message.roomId,
+          isMuted: false,
+        };
+      }),
+    );
+    return ret.filter((message) => message != null);
+  }
+
+  async checkIfUserBlocked(userId: string, userBlockedId: string) {
+    const userTo = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        isBloqued: true,
+      },
     });
+    const isBloqued = userTo.isBloqued.some(
+      (blocked) => blocked.id == userBlockedId,
+    );
+    if (isBloqued) return true;
+    return false;
   }
 
   async joinRoom(
