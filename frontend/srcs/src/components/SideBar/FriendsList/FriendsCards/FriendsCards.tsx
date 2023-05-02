@@ -19,13 +19,18 @@ import { AxiosError, AxiosResponse } from "axios";
 import { TFriendCardsProps } from "./FriendsCardsType";
 import { getImageBase64 } from "../../../../services/utils/getImageBase64";
 import { useAtom } from "jotai";
-import { conversationAtom, friendAtom } from "../../../../services/store";
+import {
+  conversationAtom,
+  friendAtom,
+  lobbyAtom,
+} from "../../../../services/store";
 import { updateArray } from "../../../../services/utils/updateArray";
 
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
   const [friendList, setFriendList] = useAtom(friendAtom);
   const [chat, setChat] = useAtom(conversationAtom);
+  const [lobby, setLobby] = useAtom(lobbyAtom);
 
   const handleRemove = () => {
     axiosPrivate
@@ -58,6 +63,18 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       })
       .then((res: AxiosResponse) => {
         setFriendList((prev) => prev.filter((user) => user.id != friend.id));
+      });
+  };
+
+  const spectateGame = () => {
+    axiosPrivate
+      .get(`/lobbies/${friend.id}/spectate`)
+      .then((response: AxiosResponse) => {
+        console.log(JSON.stringify(response.data));
+        setLobby((prev) => ({ ...prev, ...response.data }));
+      })
+      .catch((error: AxiosError) => {
+        console.log(JSON.stringify(error.message));
       });
   };
 
@@ -101,6 +118,11 @@ function FriendsCards({ friend }: TFriendCardsProps) {
           <InsidePopUpButton onClick={handleRemove}>
             Remove friends
           </InsidePopUpButton>
+          {friend.status == "GAME" && (
+            <InsidePopUpButton onClick={spectateGame}>
+              Spectate
+            </InsidePopUpButton>
+          )}
         </PopUpBox>
       </Popup>
     </FriendsCardsBox>

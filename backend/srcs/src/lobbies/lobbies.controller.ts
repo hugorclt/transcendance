@@ -100,6 +100,14 @@ export class LobbiesController {
     );
   }
 
+  @Get(':id/spectate')
+  async spectate(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyWithMembersEntity> {
+    return await this.lobbiesService.spectate(id, req.user.sub);
+  }
+
   @Get(':id/participants')
   @ApiOkResponse({ type: LobbyMemberEntity, isArray: true })
   async findLobbyParticipants(

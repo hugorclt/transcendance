@@ -15,6 +15,7 @@ import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
 import { Queue } from './utils/Queue';
+import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -87,6 +88,15 @@ export class LobbiesGateway
 
   handleDisconnect(client: AuthSocket) {
     client.disconnect();
+  }
+
+  async spectateGame(user: ReturnUserEntity, lobbyId: string) {
+    const game = this._games.get(lobbyId);
+    if (!game) {
+      console.log('No such game to spectate');
+      return;
+    }
+    await this.joinUserToLobby(user.id, lobbyId);
   }
 
   async readyToStart(lobby: LobbyWithMembersEntity) {

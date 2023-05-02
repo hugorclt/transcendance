@@ -14,7 +14,7 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
-import { EMap, EPaddle, LobbyState } from '@prisma/client';
+import { EMap, EPaddle, LobbyState, Status } from '@prisma/client';
 import { maps } from 'src/game/resources/utils/config/maps';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { MatchesService } from 'src/matches/matches.service';
@@ -74,6 +74,31 @@ export class LobbiesService {
     });
     await this.usersService.updateStatus(user.id, 'LOBBY');
     await this.lobbiesGateway.joinUserToLobby(user.id, lobby.id);
+    return lobby;
+  }
+
+  async spectate(
+    userId: string,
+    senderId: string,
+  ): Promise<LobbyWithMembersEntity> {
+    const user = await this.canUserJoinLobbies(senderId);
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        state: LobbyState.GAME,
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+    if (!lobby) {
+      throw new NotFoundException('Cannot spectate this game, game not found');
+    }
+    await this.lobbiesGateway.spectateGame(user, lobby.id);
     return lobby;
   }
 
@@ -569,6 +594,12 @@ export class LobbiesService {
       lobby.id,
       LobbyState.GAME,
     );
+    await Promise.all(
+      lobbyWithMembers.members.map(async (member) => {
+        await this.usersService.updateStatus(member.userId, Status.GAME);
+      }),
+    );
+
     await this.lobbiesGateway.readyToStart(lobbyWithMembers);
     /* ------------------------------ interval loop ----------------------------- */
     const interval = setInterval(async () => {
