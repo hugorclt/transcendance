@@ -21,3 +21,30 @@ export const StyledButton = styled.input`
   border: none;
   border-radius: 5px;
 `;
+
+export const InviteFriendsList = styled.div`
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+
+  p {
+    color: ${COLORS.primary};
+  }
+
+  h3 {
+    color: ${COLORS.primary};
+    text-decoration: underline;
+  }
+`;
+
+export const InviteFriendsListScroll = styled.div`
+  overflow-y: auto;
+  background-color: ${COLORS.darkergrey};
+  border-radius: 8px;
+  padding: 16px;
+  height: 300px;
+
+  h4 {
+    padding: 8px;
+  }
+`;
