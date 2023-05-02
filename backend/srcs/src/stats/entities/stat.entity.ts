@@ -22,4 +22,7 @@ export class StatEntity implements Stat {
 
   @ApiProperty()
   userId: string;
+
+  @ApiProperty()
+  nbGoal: number;
 }

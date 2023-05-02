@@ -25,6 +25,25 @@ export class StatsService {
     return stat;
   }
 
+  async getLeaderboards() {
+    const globalStat = await this.prisma.stat.findMany({});
+
+    return Promise.all(
+      await globalStat.map(async (stats) => {
+        const user = await this.prisma.user.findUnique({
+          where: {
+            id: stats.userId,
+          },
+        });
+
+        return {
+          name: user.username,
+          stats: [stats.nbWin, stats.nbGoal],
+        };
+      }),
+    );
+  }
+
   async findAll(): Promise<StatEntity[]> {
     const stats = await this.prisma.stat.findMany({
       include: { user: true },

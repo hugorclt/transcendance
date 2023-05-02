@@ -119,6 +119,7 @@ model Stat {
   lvl    Int    @default(0)
   nbGame Int    @default(0)
   nbWin  Int    @default(0)
+  nbGoal Int    @default(0)
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique @db.Uuid
 }

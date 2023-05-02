@@ -30,14 +30,16 @@ import { FaLevelUpAlt } from "react-icons/fa";
 const dataGameMode = [
   {
     name: "Classic",
-    description:"Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s.",
-    img:"../../../../public/planet-modified.jpeg",
+    description:
+      "Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s.",
+    img: "../../../../public/planet-modified.jpeg",
   },
 
   {
     name: "Champions",
-    description:"Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay",
-    img:"../../../../public/planet.jpeg",
+    description:
+      "Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay",
+    img: "../../../../public/planet.jpeg",
   },
 ];
 
@@ -61,14 +63,16 @@ const createModalEnd = () => {
 
     return (
       <>
-        <Popup modal open={open}>
+        <Popup modal open={open} onClose={clickFinish}>
           <PopUpBox>
             <EndGameStatInfoContainer>
-              <h3 className="game-winner">
-                {endGameInfo.winners.includes(user.id)
-                  ? "You Won!"
-                  : "You loose!"}
-              </h3>
+              {endGameInfo.xp && (
+                <h3 className="game-winner">
+                  {endGameInfo.winners.includes(user.id)
+                    ? "You Won!"
+                    : "You loose!"}
+                </h3>
+              )}
               <h3>
                 Team1{" "}
                 <span>
@@ -77,14 +81,18 @@ const createModalEnd = () => {
                 Team2
               </h3>
               <LobbyFlex>
-                <XpContainer>
-                  <FaLevelUpAlt size={30} color={COLORS.secondary} />
-                  <h3>+{endGameInfo.xp}</h3>
-                </XpContainer>
-                <MoneyContainer>
-                  <TbCurrencyShekel size={42} color={COLORS.secondary} />
-                  <h3>+{endGameInfo.money}</h3>
-                </MoneyContainer>
+                {endGameInfo.xp && (
+                  <XpContainer>
+                    <FaLevelUpAlt size={30} color={COLORS.secondary} />
+                    <h3>+{endGameInfo.xp}</h3>
+                  </XpContainer>
+                )}
+                {endGameInfo.money && (
+                  <MoneyContainer>
+                    <TbCurrencyShekel size={42} color={COLORS.secondary} />
+                    <h3>+{endGameInfo.money}</h3>
+                  </MoneyContainer>
+                )}
               </LobbyFlex>
               <button onClick={clickFinish}>Continue</button>
             </EndGameStatInfoContainer>

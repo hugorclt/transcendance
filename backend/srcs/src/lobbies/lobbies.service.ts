@@ -652,6 +652,9 @@ export class LobbiesService {
             nbWin: {
               increment: 1,
             },
+            nbGoal: {
+              increment: winnerScore,
+            },
           },
         });
         const loserStats = await this.prisma.stat.updateMany({
@@ -663,6 +666,9 @@ export class LobbiesService {
           data: {
             nbGame: {
               increment: 1,
+            },
+            nbGoal: {
+              increment: loserScore,
             },
           },
         });
