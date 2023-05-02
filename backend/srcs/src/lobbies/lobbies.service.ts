@@ -676,6 +676,12 @@ export class LobbiesService {
             xp: await this.calculateXp(member.userId, winners),
           });
         });
+        this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', {
+          winnerScore: winnerScore,
+          loserScore: loserScore,
+          losers: losers,
+          winners: winners,
+        });
         await this.delete(lobby.id);
         this.lobbiesGateway.deleteRoom(lobby.id);
         return;

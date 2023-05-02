@@ -92,10 +92,7 @@ export class LobbiesGateway
 
   async spectateGame(user: ReturnUserEntity, lobbyId: string) {
     const game = this._games.get(lobbyId);
-    if (!game) {
-      console.log('No such game to spectate');
-      return;
-    }
+    if (!game) return;
     await this.joinUserToLobby(user.id, lobbyId);
   }
 
@@ -117,9 +114,20 @@ export class LobbiesGateway
 
   @SubscribeMessage('get-game-info')
   async onStartGame(client: AuthSocket) {
-    const lobbyId = await this.getLobby(client);
+    const lobbyId = this.getLobbyIdFromClient(client);
     const game = this._games.get(lobbyId);
     this.io.to(client.userId).emit('game-info', game.exportGameInfo());
+  }
+
+  getLobbyIdFromClient(client: AuthSocket): string {
+    const lobbyId = Array.from(this.io.adapter.sids.get(client.id)).find(
+      (id) => {
+        if (id != client.id && id != client.userId) {
+          return id;
+        }
+      },
+    );
+    return lobbyId;
   }
 
   getPlayerInfoFromClient(client: AuthSocket): LobbyEventEntity {

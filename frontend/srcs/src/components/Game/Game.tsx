@@ -1,6 +1,5 @@
 import React, { Suspense, useContext, useEffect, useState } from "react";
 import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Ball from "./Components/Ball";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
@@ -13,21 +12,28 @@ import {
   lobbyDefaultValue,
   userAtom,
 } from "../../services/store";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
   const [gameInfo, setGameInfo] = useState<any>({});
-  const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(true);
   const [lobby, setLobby] = useAtom(lobbyAtom);
-  const [currentUserId, setCurrentUserId] = useState("");
   const navigate = useNavigate();
   const [gameAtom, setEndGameAtom] = useAtom(endGameAtom);
   const [user, setUser] = useAtom(userAtom);
+  const [isSpec, setIsSpec] = useState<boolean>(false);
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
+      console.log("received game info: ", data);
       setGameInfo(data);
+      const check = data.players.some((player) => player.id == user.id);
+      console.log("check: ", check);
+      if (!check) {
+        console.log("spectator mode");
+        setIsSpec(true);
+      }
       setIsLoading(false);
     });
 
@@ -39,8 +45,6 @@ function Game() {
           balance: prev.balance + data.money,
         };
       });
-      console.log("prev: ", user.exp, "now: ", user.exp + data.xp)
-      console.log("prev: ", user.exp, "now: ", user.exp + data.xp)
       setEndGameAtom(data);
       setLobby(lobbyDefaultValue);
       navigate("/");
@@ -52,6 +56,7 @@ function Game() {
   }, [socket]);
 
   useEffect(() => {
+    console.log("get-game-info");
     socket?.emit("get-game-info");
   }, []);
 
@@ -66,6 +71,12 @@ function Game() {
           <Paddles players={gameInfo.players} />
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
+          {isSpec && (
+            <>
+              <PerspectiveCamera position={[0, 10, 0]} />
+              <OrbitControls />
+            </>
+          )}
         </>
       )}
       <Skybox />
