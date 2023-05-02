@@ -1,17 +1,14 @@
 import styled, { keyframes } from "styled-components";
 import { COLORS } from "../../../../colors";
-import { mediaSize } from "../../../../mediaSize";
+import { mediaSize, screenSize } from "../../../../mediaSize";
 
 export const GameModeCardsContainer = styled.div`
   border-radius: 5px;
   border: 1px solid ${COLORS.border};
   border-radius: 8px;
-  position: relative;
-  height: 100%;
-  min-height: 400px;
+  height: 70%;
   width: 30%;
   min-width: 220px;
-  top: 20%;
   margin: 24px;
   transition: all 0.7s cubic-bezier(0.45, 0, 0.55, 1) 0.1s;
   box-sizing: border-box;
@@ -19,14 +16,15 @@ export const GameModeCardsContainer = styled.div`
   justify-content: flex-end;
   flex-direction: column;
 
-  @media (min-width: ${mediaSize.mobile}) {
-    height: 50vh;
+  @media (min-width: ${screenSize.tablet}) {
     width: 40%;
+    min-height: 200px;
+    /* min-height: 400px; */
   }
 
-  @media (max-width: ${mediaSize.mobile}) {
+  @media (max-width: ${screenSize.tablet}) {
     width: 70%;
-    height: 50vh;
+    min-height: 300px;
   }
 `;
 
