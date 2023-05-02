@@ -19,11 +19,13 @@ import { AxiosError, AxiosResponse } from "axios";
 import { TFriendCardsProps } from "./FriendsCardsType";
 import { getImageBase64 } from "../../../../services/utils/getImageBase64";
 import { useAtom } from "jotai";
-import { friendAtom } from "../../../../services/store";
+import { conversationAtom, friendAtom } from "../../../../services/store";
+import { updateArray } from "../../../../services/utils/updateArray";
 
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
   const [friendList, setFriendList] = useAtom(friendAtom);
+  const [chat, setChat] = useAtom(conversationAtom);
 
   const handleRemove = () => {
     axiosPrivate
@@ -42,7 +44,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
         isDm: true,
       })
       .then((res: AxiosResponse) => {
-        console.log("Room succesfully created\n", res.data);
+        setChat((prev) => updateArray(prev, res.data));
       })
       .catch((err: AxiosError) => {
         console.log("error while creating the room");

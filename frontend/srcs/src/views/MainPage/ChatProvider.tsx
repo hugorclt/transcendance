@@ -14,7 +14,6 @@ function ChatProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     axiosPrivate.get("/rooms/history").then((res) => {
       if (!res.data[0]) return;
-      console.log(res.data);
       setChat(res.data);
     });
   }, []);
@@ -22,7 +21,6 @@ function ChatProvider({ children }: { children: ReactNode }) {
   /* ------------------------------ socket render ----------------------------- */
   useEffect(() => {
     socket?.on("on-chat-update", (newChat) => {
-      console.log(newChat);
       setChat((prev) => updateArray(prev, newChat));
 
       //TODO:Set orange pastille on new chat not read
