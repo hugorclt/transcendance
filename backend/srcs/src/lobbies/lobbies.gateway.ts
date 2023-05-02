@@ -33,6 +33,18 @@ export class LobbiesGateway
   private _soloChampionsQ: Queue<LobbyWithMembersEntity>;
   private _duoChampionsQ: Queue<LobbyWithMembersEntity>;
 
+  dequeue(lobby: LobbyWithMembersEntity) {
+    if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
+      this._soloChampionsQ.dequeue();
+    } else if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 4) {
+      this._duoChampionsQ.dequeue();
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 2) {
+      this._soloClassicQ.dequeue();
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 4) {
+      this._duoClassicQ.dequeue();
+    }
+  }
+
   matchmaking(lobby: LobbyWithMembersEntity): LobbyWithMembersEntity {
     var queue;
     if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
