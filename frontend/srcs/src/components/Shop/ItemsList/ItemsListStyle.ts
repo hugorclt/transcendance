@@ -42,7 +42,6 @@ export const ShopTopBarSelect = styled.select`
 export const CardsContainer = styled.div`
   width:100%;
   height:100%;
-  margin: 8px;
   overflow-y: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(304px, max-content));
