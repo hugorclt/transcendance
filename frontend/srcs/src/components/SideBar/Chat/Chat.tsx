@@ -48,6 +48,7 @@ function Chat({ chat }: TChatProps) {
   const messageBoxRef = useRef<null | HTMLFormElement>(null);
   const [user, setUser] = useAtom(userAtom);
   const [chatHistory, setChat] = useAtom(conversationAtom);
+  const [errMsg, setErrMsg] = useState("");
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
@@ -57,9 +58,11 @@ function Chat({ chat }: TChatProps) {
       .then((res: AxiosResponse) => {
         if (res.data.isMuted == false)
           setMessageList((prev) => [...prev, res.data]);
+          setErrMsg("");
       })
       .catch((err: AxiosError) => {
-        console.log("error while sending message");
+        if (err.response?.status === 403)
+          setErrMsg("You are muted");
       });
     setMessage("");
   };
@@ -130,6 +133,7 @@ function Chat({ chat }: TChatProps) {
           display: "flex",
           flexDirection: "column",
           alignItems: isMe ? "flex-end" : "flex-start",
+          boxSizing: "border-box",
         }}>
         {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
           <div style={{ color: COLORS.primary }}>{senderName}</div>
@@ -227,6 +231,7 @@ function Chat({ chat }: TChatProps) {
         <p style={{ color: message.length <= 256 ? COLORS.primary : "red" }}>
           {message.length + "/256"}
         </p>
+        {errMsg.length > 0 ? <p style={{color: "red"}}>{errMsg}</p> : <></>}
       </ChatTabContainer>
     </ChatBody>
   );
