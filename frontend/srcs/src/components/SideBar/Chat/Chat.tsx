@@ -34,9 +34,10 @@ import { conversationAtom, userAtom } from "../../../services/store";
 import { displayName } from "../../../services/Chat/displayName";
 import Popup from "reactjs-popup";
 import { IoIosSettings } from "react-icons/io";
-// import { ModalBox } from "../../Lobby/TeamBuilder/InviteFriendsButton/InviteFriendsButtonStyle";
 import ChatManager from "./ChatManager/ChatManager";
 import { getImageBase64 } from "../../../services/utils/getImageBase64";
+import MediaQuery from "react-responsive";
+import { mediaSize } from "../../../mediaSize";
 
 function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
@@ -129,8 +130,7 @@ function Chat({ chat }: TChatProps) {
           display: "flex",
           flexDirection: "column",
           alignItems: isMe ? "flex-end" : "flex-start",
-        }}
-      >
+        }}>
         {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
           <div style={{ color: COLORS.primary }}>{senderName}</div>
         ) : (
@@ -139,13 +139,11 @@ function Chat({ chat }: TChatProps) {
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}
-        >
+          }}>
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}
-          >
+            }}>
             {msg.content}
           </MessageContent>
         </MessageBox>
@@ -163,19 +161,23 @@ function Chat({ chat }: TChatProps) {
 
   return (
     <ChatBody>
-      {!chat.isDm && openManager && <LeftSideChat chat={chat} />}
+      <MediaQuery minWidth={mediaSize.laptop + 1}>
+        {!chat.isDm && openManager && <LeftSideChat chat={chat} />}
+      </MediaQuery>
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
             <ChatIcon src={getImageBase64(chat.avatar)} />
             <ChatTitle>{displayName(chat, user)}</ChatTitle>
-            {!chat.isDm && (
-              <FaUserFriends
-                onClick={() => setOpenManager(!openManager)}
-                style={{ color: COLORS.secondary }}
-                size={22}
-              />
-            )}
+            <MediaQuery minWidth={mediaSize.laptop + 1}>
+              {!chat.isDm && (
+                <FaUserFriends
+                  onClick={() => setOpenManager(!openManager)}
+                  style={{ color: COLORS.secondary }}
+                  size={22}
+                />
+              )}
+            </MediaQuery>
           </ChatMiddle>
           <div style={{ display: "flex" }}>
             {!chat.isDm && isOwner() && (
@@ -189,8 +191,7 @@ function Chat({ chat }: TChatProps) {
                   </div>
                 }
                 modal
-                nested
-              >
+                nested>
                 <ChatManager chat={chat} />
               </Popup>
             )}
