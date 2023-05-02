@@ -65,6 +65,7 @@ function Chat({ chat }: TChatProps) {
 
   useEffect(() => {
     socket?.on("on-new-message", (newMessage: TMessage) => {
+      console.log(newMessage);
       if (newMessage.roomId === chat.id) {
         setMessageList((prev) => {
           return [...prev, newMessage];
@@ -113,6 +114,7 @@ function Chat({ chat }: TChatProps) {
       .find((chat) => chat.id == chat.id)
       ?.participants.find((user) => user.id == msg.senderId);
     const isMe = sender?.name === user.username;
+    console.log(sender);
     const senderName = isMe ? (
       <div className="sender">You</div>
     ) : (
@@ -123,22 +125,26 @@ function Chat({ chat }: TChatProps) {
       <MessageLine
         key={nanoid()}
         style={{
-          justifyContent: isMe ? "flex-end" : "flex-start",
-        }}>
+          display: "flex",
+          flexDirection: "column",
+          alignItems: isMe ? "flex-end" : "flex-start",
+        }}
+      >
         {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
           <div style={{ color: COLORS.primary }}>{senderName}</div>
         ) : (
           <></>
         )}
-
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}>
+          }}
+        >
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}>
+            }}
+          >
             {msg.content}
           </MessageContent>
         </MessageBox>
@@ -156,7 +162,7 @@ function Chat({ chat }: TChatProps) {
 
   return (
     <ChatBody>
-      {openManager && <LeftSideChat chat={chat} />}
+      {!chat.isDm && openManager && <LeftSideChat chat={chat} />}
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
@@ -171,7 +177,7 @@ function Chat({ chat }: TChatProps) {
             )}
           </ChatMiddle>
           <div style={{ display: "flex" }}>
-            {isOwner() && (
+            {!chat.isDm && isOwner() && (
               <Popup
                 trigger={
                   <div>
@@ -182,7 +188,8 @@ function Chat({ chat }: TChatProps) {
                   </div>
                 }
                 modal
-                nested>
+                nested
+              >
                 <ChatManager chat={chat} />
               </Popup>
             )}
@@ -214,10 +221,10 @@ function Chat({ chat }: TChatProps) {
             }}
             type="text"
           />
-          <p style={{ color: message.length <= 256 ? COLORS.primary : "red" }}>
-            {message.length + "/256"}
-          </p>
         </ChatForm>
+        <p style={{ color: message.length <= 256 ? COLORS.primary : "red" }}>
+          {message.length + "/256"}
+        </p>
       </ChatTabContainer>
     </ChatBody>
   );

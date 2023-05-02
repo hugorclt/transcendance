@@ -20,7 +20,6 @@ import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { defaultAvatar } from 'src/utils/base64';
-// import logo from ''
 
 @Injectable()
 export class RoomsService {
@@ -39,19 +38,22 @@ export class RoomsService {
     const hash = await bcrypt.hash(createRoomDto.password, salt);
 
     createRoomDto.users.push({ userId: ownerId, role: 'OWNER' });
-    // if (createRoomDto.isDm == true) {
-    //   const id1 = await this.usersService.findOneByUsername(
-    //     createRoomDto.users[0].username,
-    //   );
-    //   const id2 = createRoomDto.users.find((user) => user.role == "OWNER");
-    //   const owner
-    //   const concatenatedID = this.concatenateID(id1.id, id2);
+    if (createRoomDto.isDm == true) {
+      const concatenatedID = this.concatenateID(
+        createRoomDto.users[0].userId,
+        createRoomDto.users[1].userId,
+      );
 
-    //   const roomExists = await this.findOneByName(concatenatedID);
-    //   if (roomExists !== null) return roomExists;
-    //   createRoomDto.name = concatenatedID;
-    // }
+      const roomExists = await this.prisma.room.findUnique({
+        where: {
+          name: concatenatedID,
+        }
+      });
+      if (roomExists !== null) throw new ConflictException();
+      createRoomDto.name = concatenatedID;
+    }
 
+    
     const room = await this.prisma.room.create({
       data: {
         name: createRoomDto.name,
@@ -74,15 +76,15 @@ export class RoomsService {
         banned: true,
       },
     });
-
+    
     const roomEntity = await this.createRoomReturnEntity(room, undefined);
-
+    
     await this.socialGateway.joinUsersToRoom(
       room,
       createRoomDto.users.map((user) => user.userId),
-    );
-    this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
-    return roomEntity;
+      );
+      this.socialGateway.emitRoomCreated(ownerId, roomEntity);
+      return roomEntity;
   }
 
   async findHistory(userId: string): Promise<ReturnRoomEntity[]> {
@@ -191,12 +193,12 @@ export class RoomsService {
         roomMsg: {
           deleteMany: {
             senderId: userId,
-          }
-        }
+          },
+        },
       },
       include: {
         participants: true,
-      }
+      },
     });
 
     if (nbParticipant == 0) {
@@ -234,7 +236,7 @@ export class RoomsService {
       roomId: room.id,
     });
     if (!message) throw new UnprocessableEntityException();
-    this.socialGateway.sendMessageToRoom(message);
+    this.socialGateway.sendMessageToRoom(message, room.participants);
 
     return { ...message, isMuted: false };
   }
@@ -267,8 +269,8 @@ export class RoomsService {
       where: {
         userId: managerRoomDto.targetId,
         roomId: managerRoomDto.roomId,
-      }
-    })
+      },
+    });
     const time = new Date();
     var timeToMute = new Date();
 
@@ -512,8 +514,7 @@ export class RoomsService {
   }
 
   async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
-    if (managerId == managerRoomDto.targetId)
-      throw new NotFoundException();
+    if (managerId == managerRoomDto.targetId) throw new NotFoundException();
     const isOwner = await this.isOwner(
       managerRoomDto.targetId,
       managerRoomDto.roomId,

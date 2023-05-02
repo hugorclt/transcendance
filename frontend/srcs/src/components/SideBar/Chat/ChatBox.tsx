@@ -2,8 +2,11 @@ import { useAtom } from "jotai";
 import React, { useContext } from "react";
 import Chat from "./Chat";
 import { conversationAtom } from "../../../services/store";
-import { TConversation } from "../../../services/type";
 import { ChatContainer } from "./ChatStyle";
+import { mediaSize } from "../../../mediaSize";
+import Popup from "reactjs-popup";
+import MediaQuery from "react-responsive";
+import { PopUpBox } from "../FriendsList/FriendsCards/FriendsCardsStyle";
 
 function ChatBox() {
   const [chat, setChat] = useAtom(conversationAtom);
@@ -12,9 +15,20 @@ function ChatBox() {
     const index = chat.findIndex((elem) => elem.isActive == true);
     if (index > -1) {
       return (
-        <ChatContainer>
-          <Chat chat={chat[index]} />
-        </ChatContainer>
+        <>
+          <MediaQuery maxWidth={mediaSize.laptop}>
+            <Popup open={index > -1} modal>
+              <PopUpBox>
+                <Chat chat={chat[index]} />
+              </PopUpBox>
+            </Popup>
+          </MediaQuery>
+          <MediaQuery minWidth={mediaSize.laptop + 1}>
+            <ChatContainer>
+              <Chat chat={chat[index]} />
+            </ChatContainer>
+          </MediaQuery>
+        </>
       );
     }
     return <></>;

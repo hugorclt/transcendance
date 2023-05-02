@@ -53,4 +53,5 @@ export const StyledButton = styled.input`
   color: ${COLORS.primary};
   border: none;
   border-radius: 5px;
+  cursor: pointer;
 `;

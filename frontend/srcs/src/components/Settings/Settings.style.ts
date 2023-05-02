@@ -7,6 +7,8 @@ export const SettingsContainer = styled.div`
   border-radius: 8px;
   border: 1px solid ${COLORS.border};
   padding: 6px;
+  width: 600px;
+  height: 500px;
 `;
 
 export const SettingsLeft = styled.div`
@@ -20,6 +22,10 @@ export const SettingsLeft = styled.div`
   h4 {
     margin: 4px;
   }
+
+  h4:hover {
+    color: ${COLORS.secondary};
+  }
 `;
 
 export const SettingsRight = styled.div`
@@ -27,6 +33,8 @@ export const SettingsRight = styled.div`
   flex-direction: column;
   align-items: flex-start;
   padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
   
   form {
     display: flex;

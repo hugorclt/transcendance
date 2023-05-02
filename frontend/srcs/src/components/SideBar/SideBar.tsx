@@ -20,7 +20,7 @@ function SideBar() {
   return (
     <ChatBarContainer>
       <MediaQuery maxWidth={mediaSize.laptop}>
-        <AiOutlineArrowLeft onClick={() => setSideBar(false)} style={{margin: "16px 16px -10px 16px"}} color={COLORS.secondary} size={24}/>
+        <AiOutlineArrowLeft onClick={() => setSideBar(false)} style={{margin: "16px 16px -10px 16px", cursor: "pointer"}} color={COLORS.secondary} size={24}/>
       </MediaQuery>
       <ProfilBoxContainer>
         <ProfilBox />

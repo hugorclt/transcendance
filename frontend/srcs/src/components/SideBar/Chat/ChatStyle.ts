@@ -25,6 +25,8 @@ export const ChatTabContainer = styled.div`
 export const ChatForm = styled.form`
   width: 95%;
   margin: 8px;
+  display: flex;
+  justify-content: center;
   border-radius: 5px;
 
   p {
@@ -48,7 +50,7 @@ export const ChatInput = styled.input`
   border-radius: 5px;
   padding: 8px;
   color: ${COLORS.primary};
-  background-color: ${COLORS.background};
+  background-color: ${COLORS.border};
 `;
 
 export const MessageLine = styled.div`
@@ -60,6 +62,7 @@ export const MessageLine = styled.div`
 
 export const MessageBox = styled.div`
   width: 70%;
+  box-sizing: border-box;
   background-color: ${COLORS.secondary};
   border-radius: 5px;
   padding: 8px;

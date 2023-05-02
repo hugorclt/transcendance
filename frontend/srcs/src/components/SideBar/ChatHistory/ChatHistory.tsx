@@ -17,9 +17,10 @@ import { useAtom } from "jotai";
 import { conversationAtom, userAtom } from "../../../services/store";
 import { RoomModalOpenContext } from "../../../views/SideBarPage/RoomModalOpenContext";
 import SliderMenu from "../../common/SliderMenu/SliderMenu";
+import { RxCross2 } from "react-icons/rx";
 
 function ChatHistory() {
-  const { open, setOpen } = useContext(RoomModalOpenContext);
+  const [open, setOpen] = useState(false);
   const [isCreate, setIsCreate] = useState("CREATE");
   const [chatHistory, setChatHistory] = useAtom(conversationAtom);
   const [user] = useAtom(userAtom);
@@ -28,24 +29,29 @@ function ChatHistory() {
     <>
       <ChatHistoryTopBar>
         <h4>Conversation</h4>
-        <Popup
-          trigger={
-            <div>
-              <BiMessageRoundedAdd
-                size={22}
-                style={{ color: COLORS.secondary }}
-                onClick={() => setOpen(true)}
-              />
-            </div>
-          }
-          modal
-          open={open}
-          nested
-        >
+        <BiMessageRoundedAdd
+          size={22}
+          style={{ color: COLORS.secondary, cursor: "pointer" }}
+          onClick={() => setOpen(true)}
+        />
+        <Popup modal open={open} onClose={() => setOpen(false)}>
           <ModalBoxCreateRoom>
             <ModalCreateJoin>
-              <SliderMenu items={["CREATE", "JOIN"]} flex={"space-between"} state={isCreate} setState={setIsCreate}/>
-              {isCreate == "CREATE" ? <CreateRoom /> : <JoinRoom /> }
+              <RxCross2
+                onClick={() => {
+                  setOpen(false);
+                }}
+                color={COLORS.secondary}
+                size={18}
+                style={{ cursor: "pointer" }}
+              />
+              <SliderMenu
+                items={["CREATE", "JOIN"]}
+                flex={"space-between"}
+                state={isCreate}
+                setState={setIsCreate}
+              />
+              {isCreate == "CREATE" ? <CreateRoom /> : <JoinRoom />}
             </ModalCreateJoin>
           </ModalBoxCreateRoom>
         </Popup>
@@ -53,11 +59,11 @@ function ChatHistory() {
       <ChatHistoryBox>
         {chatHistory.length > 0 &&
           chatHistory.flatMap((val) => {
-            const me = val.participants?.find((participant) => participant.name == user.username)
-            if (!val || (val.lastMessage == "" && me?.role != "OWNER")) return;
-            return (
-              <ChatCards key={nanoid()} conversation={val}/>
+            const me = val.participants?.find(
+              (participant) => participant.name == user.username
             );
+            if (!val || (val.lastMessage == "" && me?.role != "OWNER")) return;
+            return <ChatCards key={nanoid()} conversation={val} />;
           })}
       </ChatHistoryBox>
     </>

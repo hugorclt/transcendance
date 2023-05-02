@@ -35,7 +35,7 @@ function SliderMenu({ items, setState, state, flex }: TSliderMenuProps) {
               key={nanoid()}
               onClick={(e) => handleClick(e, item)}
             >
-              <h4 style={{ color: color }}>{item}</h4>
+              <h4 style={{ color: color, cursor: "pointer" }}>{item}</h4>
             </button>
           );
         })}

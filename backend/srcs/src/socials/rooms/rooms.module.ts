@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { UsersService } from 'src/users/users.service';
 import { SocialsModule } from '../socials.module';
 import { MessagesModule } from './messages/messages.module';
 import { ParticipantModule } from './participant/participant.module';

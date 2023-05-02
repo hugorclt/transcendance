@@ -18,10 +18,13 @@ import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { TFriendCardsProps } from "./FriendsCardsType";
 import { getImageBase64 } from "../../../../services/utils/getImageBase64";
+import { useAtom } from "jotai";
+import { friendAtom } from "../../../../services/store";
 
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
-  
+  const [friendList, setFriendList] = useAtom(friendAtom);
+
   const handleRemove = () => {
     axiosPrivate
       .post("/users/friends/remove", { usernameToRemove: friend.username })
@@ -34,7 +37,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       .post("/rooms/create", {
         name: "undefined",
         password: "",
-        users: [friend.username],
+        users: [{ userId: friend.id, role: "BASIC" }],
         isPrivate: false,
         isDm: true,
       })
@@ -43,6 +46,16 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       })
       .catch((err: AxiosError) => {
         console.log("error while creating the room");
+      });
+  };
+
+  const handleBlock = () => {
+    axiosPrivate
+      .post("/users/block", {
+        id: friend.id,
+      })
+      .then((res: AxiosResponse) => {
+        setFriendList((prev) => prev.filter((user) => user.id != friend.id));
       });
   };
 
@@ -55,7 +68,9 @@ function FriendsCards({ friend }: TFriendCardsProps) {
             <FriendsCardsStatusRound
               style={{ backgroundColor: convertStatusColor(friend.status) }}
             />
-            {friend?.username.length > 8 ? friend?.username.substring(0, 8).concat("..."): friend?.username.toLocaleUpperCase()}
+            {friend?.username.length > 8
+              ? friend?.username.substring(0, 8).concat("...")
+              : friend?.username.toLocaleUpperCase()}
           </FriendsCardsName>
           <FriendsCardsStatus>
             {friend.status.toLocaleUpperCase()}
@@ -72,12 +87,15 @@ function FriendsCards({ friend }: TFriendCardsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }>
+        }
+      >
         <PopUpBox>
           <InsidePopUpButton onClick={handleChat}>
             Send message
           </InsidePopUpButton>
-          <InsidePopUpButton>Block friends</InsidePopUpButton>
+          <InsidePopUpButton onClick={handleBlock}>
+            Block friends
+          </InsidePopUpButton>
           <InsidePopUpButton onClick={handleRemove}>
             Remove friends
           </InsidePopUpButton>
