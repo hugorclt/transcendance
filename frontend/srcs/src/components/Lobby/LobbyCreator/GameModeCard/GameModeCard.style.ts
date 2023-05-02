@@ -8,13 +8,15 @@ export const GameModeCardsContainer = styled.div`
   border-radius: 8px;
   position: relative;
   height: 100%;
+  min-height: 500px;
   width: 30%;
+  min-width: 304px;
   top: 20%;
   margin: 24px;
   transition: all 0.7s cubic-bezier(0.45, 0, 0.55, 1) 0.1s;
   box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   flex-direction: column;
 
   @media (min-width: ${mediaSize.mobile}) {
