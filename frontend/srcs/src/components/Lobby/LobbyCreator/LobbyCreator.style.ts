@@ -13,7 +13,7 @@ export const GameModeContainer = styled.div`
 
 export const ButtonNoStyle = styled.button`
   border: none;
-  background-color: ${COLORS.background};
+  background-color: inherit;
 `;
 
 export const GameModeCardsBody = styled.div`
