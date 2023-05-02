@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -31,7 +32,14 @@ export class InvitationsService {
     //TODO: check if already pending invitation for same user,
     // check if already friends
     // check if user exists
-    console.log(createInvitationDto);
+    const alreadyExist = await this.prisma.invitation.findFirst({
+      where: {
+        type: createInvitationDto.type,
+        userId: createInvitationDto.userId,
+        userFromId: sender.sub,
+      }
+    })
+    if (alreadyExist) throw new ConflictException();
     if (createInvitationDto.type == 'FRIEND') {
       if (createInvitationDto.username == sender.username)
         throw new UnprocessableEntityException();
