@@ -15,8 +15,24 @@ import { EItem } from '@prisma/client';
 export class ItemsService {
   constructor(private prisma: PrismaService, private socket: LobbiesGateway) {}
 
-  async findAll() {
-    return await this.prisma.item.findMany({});
+  async findAll(userId: string) {
+    const items = await this.prisma.item.findMany({});
+    const userItems = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        items: true,
+      }
+    })
+
+    return items.map((item) => {
+      console.log(item);
+      return {
+        ...item,
+        owned: userItems.items.some((userItem) => userItem.id == item.id) ? true : false,
+      }
+    })
   }
 
   async findItem(userId: string, itemId: string) {

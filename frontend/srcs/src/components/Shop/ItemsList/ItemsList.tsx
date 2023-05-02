@@ -79,6 +79,7 @@ function ItemsList() {
                 price={item.price}
                 image={item.image}
                 type={item.type}
+                owned={item.owned}
               />
             );
           })}
