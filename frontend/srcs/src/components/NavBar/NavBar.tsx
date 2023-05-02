@@ -23,7 +23,7 @@ function NavBar() {
           <option value="/">PLAY</option>
           <option value="/shop">SHOP</option>
           <option value="/profile">PROFIL</option>
-          <option value="/ranking">LEADERBOARDS</option>
+          <option value="/ranking">RANKING</option>
         </NavBarSelect>
         <NavBarContainer>
           <CiMenuBurger
