@@ -75,7 +75,7 @@ function ItemsCards({ name, desc, price, image }: TItemsProps) {
         <h5 style={{ color: isOwned ? COLORS.grey : "" }}>{desc}</h5>
         {!isOwned && (
           <>
-            <button style={{backgroundColor: user.balance < +price ? COLORS.grey : COLORS.secondary}} disabled={user.balance < +price} onClick={() => setOpen((o) => !o)}>BUY</button>
+            <button style={{cursor: "pointer",backgroundColor: user.balance < +price ? COLORS.grey : COLORS.secondary}} disabled={user.balance < +price} onClick={() => setOpen((o) => !o)}>BUY</button>
             <Popup
               modal
               nested
@@ -85,8 +85,8 @@ function ItemsCards({ name, desc, price, image }: TItemsProps) {
               <ModalBox>
                 <p>Confirm ?</p>
                 <ModalConfirmContainer>
-                  <button onClick={handleYes}>YES</button>
-                  <button onClick={() => setOpen((o) => !o)}>NO</button>
+                  <button style={{cursor: "pointer"}} onClick={handleYes}>YES</button>
+                  <button style={{cursor: "pointer"}} onClick={() => setOpen((o) => !o)}>NO</button>
                 </ModalConfirmContainer>
                 {errMsg.length != 0 && <p style={{ color: "red" }}>{errMsg}</p>}
               </ModalBox>
