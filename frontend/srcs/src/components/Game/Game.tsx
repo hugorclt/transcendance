@@ -13,6 +13,7 @@ import {
   userAtom,
 } from "../../services/store";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { Group, Vector3 } from "three";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -71,14 +72,17 @@ function Game() {
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
-          {gameInfo.mode == "CLASSIC" ? (
-            <>
-              <PerspectiveCamera position={[0, 0, 0]} />
-            </>
+          {gameInfo.mode === "CLASSIC" ? (
+            <group rotation={[0, Math.PI / 2, 0]}>
+              <>
+                <PerspectiveCamera position={[0, 70, 0]} makeDefault={true} />
+              </>
+            </group>
           ) : (
             isSpec && (
               <>
-                <PerspectiveCamera position={[0, 10, 0]} />
+                <PerspectiveCamera position={[0, 100, 0]} makeDefault={true} />
+                {/* <PerspectiveCamera position={[0, 10, 0]} makeDefault={true} /> */}
                 <OrbitControls />
               </>
             )
