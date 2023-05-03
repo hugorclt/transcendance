@@ -26,7 +26,7 @@ function GoogleAuth() {
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
-      onSuccess(codeResponse.code);
+      onSuccess(codeResponse);
     },
     flow: "auth-code",
   });
@@ -64,11 +64,11 @@ function GoogleAuth() {
     }
   };
 
-  var onSuccess = async (credentialResponse: string) => {
+  var onSuccess = async (credentialResponse) => {
     console.log(credentialResponse);
     await axios
       .post("/auth/google/login", {
-        token: credentialResponse,
+        token: credentialResponse.code,
       })
       .then((response: AxiosResponse) => {
         setSuccess(true);
