@@ -23,9 +23,7 @@ import {
 @UseGuards(AccessAuthGard)
 @ApiTags('invitations')
 export class InvitationsController {
-  constructor(
-    private readonly invitationsService: InvitationsService,
-  ) {}
+  constructor(private readonly invitationsService: InvitationsService) {}
 
   @Post()
   @ApiCreatedResponse({ type: InvitationEntity })
@@ -37,14 +35,6 @@ export class InvitationsController {
       createInvitationDto,
       req.user,
     );
-    // if (invitation.type == 'LOBBY') {
-    //should send pending invitation to players inside lobby
-    // this.lobbiesGateway.emitToRoom(
-    //   invitation.lobbyId,
-    //   'pending-invitation',
-    //   invitation,
-    // );
-    // }
     return invitation;
   }
 
@@ -54,21 +44,11 @@ export class InvitationsController {
     @Request() req: any,
     @Body() invitationDtoList: CreateInvitationDto[],
   ): Promise<InvitationEntity[]> {
+    console.log(invitationDtoList);
     const invitations = await this.invitationsService.createMany(
       invitationDtoList,
-      req.user.sub,
+      req.user,
     );
-    // invitations.map((invit) => {
-    //   this.socialsGateway.emitToUser(invit.userId, 'invitation', invit);
-    //   if (invit.type == 'LOBBY') {
-    //     //should send pending invitation to players inside lobby
-    //     // this.lobbiesGateway.emitToRoom(
-    //     //   invitation.lobbyId,
-    //     //   'pending-invitation',
-    //     //   invitation,
-    //     // );
-    //   }
-    // });
     return invitations;
   }
 
@@ -82,18 +62,12 @@ export class InvitationsController {
       invitation.id,
       req.user.sub,
     );
-    if (invitationDeclined.type == 'LOBBY') {
-      //TODO: should send invitation canceled to players in lobby
-      // await this.lobbiesGateway.emitToRoom(invitationDeclined.lobbyId, 'on-invitation-declined', invitationDeclined);
-    }
     return invitationDeclined;
   }
 
   @Get()
   @ApiOkResponse({ type: InvitationEntity, isArray: true })
-  async findAll(
-    @Request() req,
-  ) {
+  async findAll(@Request() req) {
     return await this.invitationsService.findForUser(req.user.sub);
   }
 

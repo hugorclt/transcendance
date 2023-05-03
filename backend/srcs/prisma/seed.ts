@@ -99,6 +99,7 @@ async function main() {
       username: 'Dylan',
       email: 'dylan@example.com',
       password: await bcrypt.hash('password', 10),
+      balance: 10000000,
       preferences: {
         create: {
           visibility: 'VISIBLE',
