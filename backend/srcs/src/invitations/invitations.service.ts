@@ -1,6 +1,8 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
@@ -12,12 +14,14 @@ import {
 } from './entities/invitation.entity';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { InvitationType } from '@prisma/client';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class InvitationsService {
   constructor(
     private readonly prisma: PrismaService,
     private socialsGateway: SocialsGateway,
+    private usersService: UsersService,
   ) {}
 
   async create(
@@ -25,6 +29,17 @@ export class InvitationsService {
     sender: any,
   ): Promise<InvitationExtendedEntity> {
     var invitation;
+    //TODO: check if already pending invitation for same user,
+    // check if already friends
+    // check if user exists
+    const alreadyExist = await this.prisma.invitation.findFirst({
+      where: {
+        type: createInvitationDto.type,
+        userId: createInvitationDto.userId,
+        userFromId: sender.sub,
+      }
+    })
+    if (alreadyExist) throw new ConflictException();
     if (createInvitationDto.type == 'FRIEND') {
       if (createInvitationDto.username == sender.username)
         throw new UnprocessableEntityException();
@@ -33,9 +48,15 @@ export class InvitationsService {
         sender,
       );
     } else if (createInvitationDto.type == 'LOBBY') {
-      invitation = await this.createLobbyInvitation(createInvitationDto, sender);
+      invitation = await this.createLobbyInvitation(
+        createInvitationDto,
+        sender,
+      );
     }
-    this.socialsGateway.emitToUser(invitation.userId, 'invitation', {...invitation, userFromUsername: invitation.userFrom.username});
+    this.socialsGateway.emitToUser(invitation.userId, 'invitation', {
+      ...invitation,
+      userFromUsername: invitation.userFrom.username,
+    });
     this.socialsGateway.emitToUser(invitation.userId, 'new-notifs', {
       username: invitation.userFrom.username,
       desc: this.createDesc(invitation),
@@ -57,6 +78,20 @@ export class InvitationsService {
     });
     //check lobby can be joined (game not started, lobby not full, sender is lobby owner)
     //TODO
+    if (
+      await this.usersService.checkIfUserBlocked(
+        createInvitationDto.userId,
+        sender,
+      )
+    )
+      throw new NotFoundException();
+    if (
+      await this.usersService.checkIfUserBlocked(
+        sender,
+        createInvitationDto.userId,
+      )
+    )
+      throw new NotFoundException();
     const invitation = await this.prisma.invitation.create({
       data: {
         type: createInvitationDto.type,
@@ -78,6 +113,11 @@ export class InvitationsService {
     const receiver = await this.prisma.user.findUnique({
       where: { username: createInvitationDto.username },
     });
+    if (!receiver) throw new NotFoundException('user not found');
+    if (await this.usersService.checkIfUserBlocked(receiver.id, sender.sub))
+      throw new NotFoundException();
+    if (await this.usersService.checkIfUserBlocked(sender.sub, receiver.id))
+      throw new NotFoundException();
     const invitation = await this.prisma.invitation.create({
       data: {
         type: createInvitationDto.type,

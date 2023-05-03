@@ -20,7 +20,6 @@ import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { defaultAvatar } from 'src/utils/base64';
-// import logo from ''
 
 @Injectable()
 export class RoomsService {
@@ -39,18 +38,20 @@ export class RoomsService {
     const hash = await bcrypt.hash(createRoomDto.password, salt);
 
     createRoomDto.users.push({ userId: ownerId, role: 'OWNER' });
-    // if (createRoomDto.isDm == true) {
-    //   const id1 = await this.usersService.findOneByUsername(
-    //     createRoomDto.users[0].username,
-    //   );
-    //   const id2 = createRoomDto.users.find((user) => user.role == "OWNER");
-    //   const owner
-    //   const concatenatedID = this.concatenateID(id1.id, id2);
+    if (createRoomDto.isDm == true) {
+      const concatenatedID = this.concatenateID(
+        createRoomDto.users[0].userId,
+        createRoomDto.users[1].userId,
+      );
 
-    //   const roomExists = await this.findOneByName(concatenatedID);
-    //   if (roomExists !== null) return roomExists;
-    //   createRoomDto.name = concatenatedID;
-    // }
+      const roomExists = await this.prisma.room.findUnique({
+        where: {
+          name: concatenatedID,
+        },
+      });
+      if (roomExists !== null) throw new ConflictException();
+      createRoomDto.name = concatenatedID;
+    }
 
     const room = await this.prisma.room.create({
       data: {
@@ -81,7 +82,7 @@ export class RoomsService {
       room,
       createRoomDto.users.map((user) => user.userId),
     );
-    this.socialGateway.emitRoomCreated(room.ownerId, roomEntity);
+    this.socialGateway.emitRoomCreated(ownerId, roomEntity);
     return roomEntity;
   }
 
@@ -106,14 +107,38 @@ export class RoomsService {
     if (!room) throw new NotFoundException();
 
     const messages = await this.messageService.getMessages(room.id);
-    return messages.map((message) => {
-      return {
-        content: message.content,
-        senderId: message.senderId,
-        roomId: message.roomId,
-        isMuted: false,
-      };
+    const ret = await Promise.all(
+      messages.flatMap(async (message) => {
+        if (await this.checkIfUserBlocked(userId, message.senderId)) {
+          console.log("oui");
+          return;
+        }
+        console.log("non");
+        return {
+          content: message.content,
+          senderId: message.senderId,
+          roomId: message.roomId,
+          isMuted: false,
+        };
+      }),
+    );
+    return ret.filter((message) => message != null);
+  }
+
+  async checkIfUserBlocked(userId: string, userBlockedId: string) {
+    const userTo = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        isBloqued: true,
+      },
     });
+    const isBloqued = userTo.isBloqued.some(
+      (blocked) => blocked.id == userBlockedId,
+    );
+    if (isBloqued) return true;
+    return false;
   }
 
   async joinRoom(
@@ -183,13 +208,42 @@ export class RoomsService {
       this.changeOwner(roomId);
     }
 
-    if (nbParticipant == 0) {
+    const newRoom = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        roomMsg: {
+          deleteMany: {
+            senderId: userId,
+          },
+        },
+      },
+      include: {
+        participants: true,
+      },
+    });
+
+    if (nbParticipant == 0 || newRoom.isDm == true) {
+      if (newRoom.isDm == true) {
+        this.socialGateway.emitToUser(newRoom.id, 'on-chat-delete', {
+          roomId: newRoom.id,
+        });
+        await this.socialGateway.leaveUserFromRoom(
+          roomId,
+          newRoom.participants[0].userId,
+        );
+        await this.prisma.participant.deleteMany({
+          where: {
+            roomId: roomId,
+          },
+        });
+      }
       await this.prisma.room.delete({
         where: { id: roomId },
       });
     }
 
-    const newRoom = await this.findOne(roomId);
     this.socialGateway.leaveUserFromRoom(roomId, userId);
     if (newRoom)
       this.socialGateway.emitToUser(newRoom.id, 'on-chat-update', {
@@ -212,14 +266,14 @@ export class RoomsService {
     });
     if (!room) throw new NotFoundException();
     const sender = room.participants.find((user) => user.userId == senderId);
-    if (sender.mute.getTime() > new Date().getTime()) return { isMuted: true };
+    if (sender.mute.getTime() > new Date().getTime()) throw new ForbiddenException();
     const message = await this.messageService.create({
       content: newMessage.content,
       senderId,
       roomId: room.id,
     });
     if (!message) throw new UnprocessableEntityException();
-    this.socialGateway.sendMessageToRoom(message);
+    this.socialGateway.sendMessageToRoom(message, room.participants);
 
     return { ...message, isMuted: false };
   }
@@ -252,8 +306,8 @@ export class RoomsService {
       where: {
         userId: managerRoomDto.targetId,
         roomId: managerRoomDto.roomId,
-      }
-    })
+      },
+    });
     const time = new Date();
     var timeToMute = new Date();
 
@@ -497,8 +551,7 @@ export class RoomsService {
   }
 
   async checkManagerState(managerId: string, managerRoomDto: ManagerRoomDto) {
-    if (managerId == managerRoomDto.targetId)
-      throw new NotFoundException();
+    if (managerId == managerRoomDto.targetId) throw new NotFoundException();
     const isOwner = await this.isOwner(
       managerRoomDto.targetId,
       managerRoomDto.roomId,

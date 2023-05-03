@@ -40,11 +40,24 @@ function ProfilBox() {
       );
   };
 
+  const calculateLevel = () => {
+    const xp =
+      Math.max(1, Math.log(user.exp / 500) / Math.log(Math.pow(2, 1 / 5)) + 1);
+    return xp;
+  };
+
+  const calculatePercentage = () => {
+    const level = calculateLevel();
+    return `${(level % 1) * 100}%`;
+  };
+
   return (
     <ProfilBoxLink>
       <ProfilBoxLeft>
         <ProfilBoxName>
-          {user?.username.length > 8 ? user?.username.substring(0, 8).concat("..."): user?.username.toLocaleUpperCase()}
+          {user?.username.length > 8
+            ? user?.username.substring(0, 8).concat("...")
+            : user?.username.toLocaleUpperCase()}
           <ProfileBoxStatus
             style={{
               backgroundColor: convertStatusColor(user.status),
@@ -53,9 +66,13 @@ function ProfilBox() {
         </ProfilBoxName>
         <ExperienceBarContainer>
           <ExperienceBar>
-            <LevelExperienceBar />
+            <LevelExperienceBar
+              style={{
+                width: calculatePercentage(),
+              }}
+            />
           </ExperienceBar>
-          <h5>10</h5>
+          <h5>{Math.floor(calculateLevel())}</h5>
         </ExperienceBarContainer>
       </ProfilBoxLeft>
       <ProfilBoxRight>

@@ -29,4 +29,7 @@ export class UserEntity implements User {
 
     @ApiProperty()
     refreshToken: string;
+
+    @ApiProperty()
+    xp: number;
 }

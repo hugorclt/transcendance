@@ -12,36 +12,36 @@ import {
 import { TItemsProps } from "./ItemsCardType";
 import { ImUnlocked } from "react-icons/im";
 import { COLORS } from "../../../../colors";
+import { useAtom } from "jotai";
+import { userAtom } from "../../../../services/store";
+import { TbCurrencyShekel } from "react-icons/tb";
 
-function ItemsCards({ name, desc, price, image }: TItemsProps) {
-  const [isOwned, setIsOwned] = useState(false);
+function ItemsCards({ name, desc, price, image, owned, setData }: TItemsProps) {
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useAtom(userAtom);
 
   const handleYes = () => {
     axiosPrivate
       .post("items/buy", { name: name })
       .then((res: AxiosResponse) => {
-        setIsOwned(true);
+        setUser((prev) => ({
+          ...prev,
+          balance: user.balance - +price,
+        }))
+        setData((prev) => {
+          return prev.map((item) => {
+            if (item.name == name)
+              item.owned = true
+            return item;
+          })
+        })
       })
       .catch((err: AxiosError) => {
         setErrMsg("Error while buying item please retry");
       });
   };
-
-  useEffect(() => {
-    axiosPrivate
-      .post("/items/has-item", { name: name })
-      .then((res: AxiosResponse) => {
-        setIsOwned(true);
-        setOpen(false);
-      })
-      .catch((err: AxiosError) => {
-        setIsOwned(false);
-        setOpen(false);
-      });
-  }, []);
 
   const closeModal = () => setOpen(false);
 
@@ -51,22 +51,23 @@ function ItemsCards({ name, desc, price, image }: TItemsProps) {
         backgroundPosition: "center center",
         backgroundImage: `url(data:image/gif;base64,${image})`,
         backgroundSize: "cover",
-        filter: isOwned ? "grayscale(80%)" : "none",
+        filter: owned ? "grayscale(80%)" : "none",
       }}>
       <div className="top-text">
-        <h5 style={{ color: isOwned ? COLORS.grey : "" }}>{price}</h5>
+        <h5 style={{ color: owned ? COLORS.grey : "" }}>{price}</h5>
+        <TbCurrencyShekel color={COLORS.secondary} size={27} />
       </div>
-      {isOwned && (
+      {owned && (
         <CardsContainerCenter>
           <ImUnlocked color={COLORS.primary} size={100} />
         </CardsContainerCenter>
       )}
       <div className="bottom-text">
-        <h4 style={{ color: isOwned ? COLORS.grey : "" }}>{name}</h4>
-        <h5 style={{ color: isOwned ? COLORS.grey : "" }}>{desc}</h5>
-        {!isOwned && (
+        <h4 style={{ color: owned ? COLORS.grey : "" }}>{name}</h4>
+        <h5 style={{ color: owned ? COLORS.grey : "" }}>{desc}</h5>
+        {!owned && (
           <>
-            <button onClick={() => setOpen((o) => !o)}>BUY</button>
+            <button style={{cursor: "pointer",backgroundColor: user.balance < +price ? COLORS.grey : COLORS.secondary}} disabled={user.balance < +price} onClick={() => setOpen((o) => !o)}>BUY</button>
             <Popup
               modal
               nested
@@ -76,8 +77,8 @@ function ItemsCards({ name, desc, price, image }: TItemsProps) {
               <ModalBox>
                 <p>Confirm ?</p>
                 <ModalConfirmContainer>
-                  <button onClick={handleYes}>YES</button>
-                  <button onClick={() => setOpen((o) => !o)}>NO</button>
+                  <button style={{cursor: "pointer"}} onClick={handleYes}>YES</button>
+                  <button style={{cursor: "pointer"}} onClick={() => setOpen((o) => !o)}>NO</button>
                 </ModalConfirmContainer>
                 {errMsg.length != 0 && <p style={{ color: "red" }}>{errMsg}</p>}
               </ModalBox>

@@ -34,9 +34,10 @@ import { conversationAtom, userAtom } from "../../../services/store";
 import { displayName } from "../../../services/Chat/displayName";
 import Popup from "reactjs-popup";
 import { IoIosSettings } from "react-icons/io";
-// import { ModalBox } from "../../Lobby/TeamBuilder/InviteFriendsButton/InviteFriendsButtonStyle";
 import ChatManager from "./ChatManager/ChatManager";
 import { getImageBase64 } from "../../../services/utils/getImageBase64";
+import MediaQuery from "react-responsive";
+import { mediaSize } from "../../../mediaSize";
 
 function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
@@ -47,6 +48,7 @@ function Chat({ chat }: TChatProps) {
   const messageBoxRef = useRef<null | HTMLFormElement>(null);
   const [user, setUser] = useAtom(userAtom);
   const [chatHistory, setChat] = useAtom(conversationAtom);
+  const [errMsg, setErrMsg] = useState("");
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
@@ -56,15 +58,18 @@ function Chat({ chat }: TChatProps) {
       .then((res: AxiosResponse) => {
         if (res.data.isMuted == false)
           setMessageList((prev) => [...prev, res.data]);
+          setErrMsg("");
       })
       .catch((err: AxiosError) => {
-        console.log("error while sending message");
+        if (err.response?.status === 403)
+          setErrMsg("You are muted");
       });
     setMessage("");
   };
 
   useEffect(() => {
     socket?.on("on-new-message", (newMessage: TMessage) => {
+      console.log(newMessage);
       if (newMessage.roomId === chat.id) {
         setMessageList((prev) => {
           return [...prev, newMessage];
@@ -81,6 +86,7 @@ function Chat({ chat }: TChatProps) {
     axiosPrivate
       .get(`/rooms/history/${chat.id}`)
       .then((res: AxiosResponse) => {
+        console.log(res.data);
         setMessageList(
           res.data.map((message: TMessage) => ({
             content: message.content,
@@ -90,7 +96,7 @@ function Chat({ chat }: TChatProps) {
         );
       })
       .catch((err: AxiosError) => {
-        console.log("error");
+        console.log("error", err);
       });
     return () => {
       setMessageList([]);
@@ -108,11 +114,12 @@ function Chat({ chat }: TChatProps) {
     }
   }, [messageList]);
 
-  const renderMessage = (msg: TMessage) => {
+  const renderMessage = (msg: TMessage, idx: number, array: TMessage[]) => {
     const sender = chatHistory
       .find((chat) => chat.id == chat.id)
       ?.participants.find((user) => user.id == msg.senderId);
     const isMe = sender?.name === user.username;
+    console.log(sender);
     const senderName = isMe ? (
       <div className="sender">You</div>
     ) : (
@@ -123,9 +130,16 @@ function Chat({ chat }: TChatProps) {
       <MessageLine
         key={nanoid()}
         style={{
-          justifyContent: isMe ? "flex-end" : "flex-start",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: isMe ? "flex-end" : "flex-start",
+          boxSizing: "border-box",
         }}>
-        <div style={{ color: COLORS.primary }}>{senderName}</div>
+        {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
+          <div style={{ color: COLORS.primary }}>{senderName}</div>
+        ) : (
+          <></>
+        )}
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
@@ -151,22 +165,26 @@ function Chat({ chat }: TChatProps) {
 
   return (
     <ChatBody>
-      {openManager && <LeftSideChat chat={chat} />}
+      <MediaQuery minWidth={mediaSize.laptop + 1}>
+        {!chat.isDm && openManager && <LeftSideChat chat={chat} />}
+      </MediaQuery>
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
             <ChatIcon src={getImageBase64(chat.avatar)} />
             <ChatTitle>{displayName(chat, user)}</ChatTitle>
-            {!chat.isDm && (
-              <FaUserFriends
-                onClick={() => setOpenManager(!openManager)}
-                style={{ color: COLORS.secondary }}
-                size={22}
-              />
-            )}
+            <MediaQuery minWidth={mediaSize.laptop + 1}>
+              {!chat.isDm && (
+                <FaUserFriends
+                  onClick={() => setOpenManager(!openManager)}
+                  style={{ color: COLORS.secondary }}
+                  size={22}
+                />
+              )}
+            </MediaQuery>
           </ChatMiddle>
           <div style={{ display: "flex" }}>
-            {isOwner() && (
+            {!chat.isDm && isOwner() && (
               <Popup
                 trigger={
                   <div>
@@ -196,8 +214,8 @@ function Chat({ chat }: TChatProps) {
           </div>
         </ChatTop>
         <ChatMessageContainer ref={messageBoxRef}>
-          {messageList.map((val) => {
-            return renderMessage(val);
+          {messageList.map((val, idx, array) => {
+            return renderMessage(val, idx, array);
           })}
         </ChatMessageContainer>
         <ChatForm onSubmit={sendMessage} autoComplete="off">
@@ -209,10 +227,11 @@ function Chat({ chat }: TChatProps) {
             }}
             type="text"
           />
-          <p style={{ color: message.length <= 256 ? COLORS.primary : "red" }}>
-            {message.length + "/256"}
-          </p>
         </ChatForm>
+        <p style={{ color: message.length <= 256 ? COLORS.primary : "red" }}>
+          {message.length + "/256"}
+        </p>
+        {errMsg.length > 0 ? <p style={{color: "red"}}>{errMsg}</p> : <></>}
       </ChatTabContainer>
     </ChatBody>
   );

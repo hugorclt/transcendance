@@ -14,10 +14,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Game } from 'src/game/resources/Game/Game';
 import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
-import { LobbyState } from '@prisma/client';
 import { Queue } from './utils/Queue';
-import { EType } from 'shared/enum';
-import { IFrame } from 'shared/gameInterfaces';
+import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -36,19 +34,27 @@ export class LobbiesGateway
   private _soloChampionsQ: Queue<LobbyWithMembersEntity>;
   private _duoChampionsQ: Queue<LobbyWithMembersEntity>;
 
+  dequeue(lobby: LobbyWithMembersEntity) {
+    if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
+      this._soloChampionsQ.dequeue();
+    } else if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 4) {
+      this._duoChampionsQ.dequeue();
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 2) {
+      this._soloClassicQ.dequeue();
+    } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 4) {
+      this._duoClassicQ.dequeue();
+    }
+  }
+
   matchmaking(lobby: LobbyWithMembersEntity): LobbyWithMembersEntity {
     var queue;
     if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 2) {
-      //soloQ champions
       queue = this._soloChampionsQ;
     } else if (lobby.mode === 'CHAMPIONS' && lobby.nbPlayers === 4) {
-      //duoQ champions
       queue = this._duoChampionsQ;
     } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 2) {
-      //soloQ Classic
       queue = this._soloClassicQ;
     } else if (lobby.mode === 'CLASSIC' && lobby.nbPlayers === 4) {
-      //duo Q classic
       queue = this._duoClassicQ;
     }
     if (queue.size() === 0) {
@@ -84,6 +90,12 @@ export class LobbiesGateway
     client.disconnect();
   }
 
+  async spectateGame(user: ReturnUserEntity, lobbyId: string) {
+    const game = this._games.get(lobbyId);
+    if (!game) return;
+    await this.joinUserToLobby(user.id, lobbyId);
+  }
+
   async readyToStart(lobby: LobbyWithMembersEntity) {
     const game = new Game(lobby);
     this._games.set(lobby.id, game);
@@ -102,9 +114,20 @@ export class LobbiesGateway
 
   @SubscribeMessage('get-game-info')
   async onStartGame(client: AuthSocket) {
-    const lobbyId = await this.getLobby(client);
+    const lobbyId = this.getLobbyIdFromClient(client);
     const game = this._games.get(lobbyId);
     this.io.to(client.userId).emit('game-info', game.exportGameInfo());
+  }
+
+  getLobbyIdFromClient(client: AuthSocket): string {
+    const lobbyId = Array.from(this.io.adapter.sids.get(client.id)).find(
+      (id) => {
+        if (id != client.id && id != client.userId) {
+          return id;
+        }
+      },
+    );
+    return lobbyId;
   }
 
   getPlayerInfoFromClient(client: AuthSocket): LobbyEventEntity {
@@ -137,13 +160,13 @@ export class LobbiesGateway
   @SubscribeMessage('up-move')
   async onUpMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    playerInfo.player.paddle.moveUp();
+    if (playerInfo.game.mode != 'CLASSIC') playerInfo.player.paddle.moveUp();
   }
 
   @SubscribeMessage('down-move')
   async ondownMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    playerInfo.player.paddle.moveDown();
+    if (playerInfo.game.mode != 'CLASSIC') playerInfo.player.paddle.moveDown();
   }
 
   /* ------------------------------- helper func ------------------------------ */
@@ -185,6 +208,11 @@ export class LobbiesGateway
     if (!socketId) return;
     const socket = this.io.sockets.get(socketId);
     await socket.join(lobbyId);
+  }
+
+  deleteRoom(lobbyId: string) {
+    this.io.in(lobbyId).socketsLeave(lobbyId);
+    this._games.delete(lobbyId);
   }
 
   emitToLobby(lobbyId: string, eventName: string, eventData: any) {

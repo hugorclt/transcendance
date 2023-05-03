@@ -3,7 +3,7 @@ import { screenSize } from "../../mediaSize";
 
 export const NavBarSelectContainer = styled.div`
   position: absolute;
-  z-index: 10;
+  z-index: 20;
   height: 100px;
   display: flex;
   align-items: center;

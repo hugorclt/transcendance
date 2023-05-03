@@ -18,11 +18,16 @@ import {
   CreateRoomCheckBox,
   CreateRoomForm,
   CreateRoomFriends,
+  CreateRoomFriendsCards,
+  CreateRoomFriendsCardsContainer,
   CreateRoomLabel,
   CreateRoomScroll,
   CreateRoomTitle,
 } from "../ChatHistoryStyle";
 import { RoomModalOpenContext } from "../../../../views/SideBarPage/RoomModalOpenContext";
+import { AiOutlinePlusSquare } from "react-icons/ai";
+import { COLORS } from "../../../../colors";
+import { MdAdminPanelSettings } from "react-icons/md";
 
 type ParticipantState = {
   userId: string;
@@ -38,7 +43,6 @@ function CreateRoom() {
   const [friendList] = useAtom(friendAtom);
   const [chat, setChat] = useAtom(conversationAtom);
   const axiosPrivate = useAxiosPrivate();
-  const [user, setUser] = useAtom(userAtom);
 
   const handleCheck = () => {
     setPrivate(!isPrivate);
@@ -67,17 +71,33 @@ function CreateRoom() {
     setOpen(false);
   };
 
-  function handleAddFriends(id: string) {
+  function handleAddAdmin(id: string) {
+    const index = users.findIndex((user) => user.userId == id);
+    if (index == -1) {
+      setUsers((prev) => [...prev, { userId: id, role: "ADMIN" }]);
+    } else {
+      if (users[index].role == "ADMIN") {
+        const updatedUsers = users.filter((user) => user.userId !== id);
+        setUsers(updatedUsers);
+      } else {
+        const updatedUsers = [...users];
+        updatedUsers[index].role = "ADMIN";
+        setUsers(updatedUsers);
+      }
+    }
+  }
+
+  function handleAddUser(id: string) {
     const index = users.findIndex((user) => user.userId == id);
     if (index == -1) {
       setUsers((prev) => [...prev, { userId: id, role: "BASIC" }]);
     } else {
       if (users[index].role == "BASIC") {
-        const updatedUsers = [...users];
-        updatedUsers[index].role = "ADMIN";
+        const updatedUsers = users.filter((user) => user.userId !== id);
         setUsers(updatedUsers);
       } else {
-        const updatedUsers = users.filter((user) => user.userId !== id);
+        const updatedUsers = [...users];
+        updatedUsers[index].role = "BASIC";
         setUsers(updatedUsers);
       }
     }
@@ -85,9 +105,9 @@ function CreateRoom() {
 
   function chooseColor(id: string) {
     if (users.find((user) => user.userId == id)?.role == "BASIC")
-      return "admin";
+      return COLORS.border;
     else if (users.find((user) => user.userId == id)?.role == "ADMIN")
-      return "callout";
+      return COLORS.secondary;
     return "";
   }
 
@@ -97,11 +117,33 @@ function CreateRoom() {
         <CreateRoomScroll>
           {friendList.map((val, index) => {
             return (
-              <div key={index} onClick={() => handleAddFriends(val.id)}>
-                <h4 key={index} className={chooseColor(val.id)}>
-                  {val.username}
-                </h4>
-              </div>
+              <CreateRoomFriendsCardsContainer
+                key={index}
+                style={{ backgroundColor: chooseColor(val.id) }}
+              >
+                <CreateRoomFriendsCards>
+                  <h4 key={index}>{val.username}</h4>
+                  <div>
+                    <AiOutlinePlusSquare
+                      onClick={() => handleAddUser(val.id)}
+                      size={32}
+                      color={COLORS.primary}
+                      style={{ marginRight: "8px", cursor: "pointer" }}
+                    />
+                    <MdAdminPanelSettings
+                      onClick={() => handleAddAdmin(val.id)}
+                      size={32}
+                      color={COLORS.primary}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </div>
+                </CreateRoomFriendsCards>
+                <p>
+                  {chooseColor(val.id) == COLORS.secondary
+                    ? "invite as an administrator"
+                    : ""}
+                </p>
+              </CreateRoomFriendsCardsContainer>
             );
           })}
         </CreateRoomScroll>
@@ -115,7 +157,8 @@ function CreateRoom() {
             type="text"
             required
             autoComplete="new-password"
-            placeholder="Room Name"></StyledInput>
+            placeholder="Room Name"
+          ></StyledInput>
           <StyledInput
             name="password"
             value={password}
@@ -123,13 +166,15 @@ function CreateRoom() {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             autoComplete="new-password"
-            placeholder="Password"></StyledInput>
+            placeholder="Password"
+          ></StyledInput>
           <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
           <CreateRoomCheckBox
             name="checkbox"
             checked={isPrivate}
             onChange={handleCheck}
-            type="checkbox"></CreateRoomCheckBox>
+            type="checkbox"
+          ></CreateRoomCheckBox>
           <CreateRoomButtonBox>
             <StyledButton type="submit" value="Create Room" />
           </CreateRoomButtonBox>

@@ -100,9 +100,9 @@ export interface TMatch {
 
 export interface TEndGame {
   winnerScore: number;
-  winners: TUser[];
+  winners: string[];
   loserScore: number;
-  losers: TUser[];
+  losers: string[];
   xp: 0;
   money: 0;
 }

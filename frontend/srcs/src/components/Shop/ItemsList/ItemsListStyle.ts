@@ -18,6 +18,7 @@ export const ShopTopBarContainer = styled.div`
 
 export const SliderShopContainer = styled.div`
   width: fit-content;
+  margin: 4px;
 `
 
 export const ShopTopBarFilter = styled.div`
@@ -37,12 +38,13 @@ export const ShopTopBarSelect = styled.select`
   border-radius: 8px;
   color: ${COLORS.primary};
   padding: 8px;
+  margin: 4px;
+
 `;
 
 export const CardsContainer = styled.div`
   width:100%;
   height:100%;
-  margin: 8px;
   overflow-y: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(304px, max-content));

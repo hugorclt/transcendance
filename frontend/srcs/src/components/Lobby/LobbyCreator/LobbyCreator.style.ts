@@ -13,7 +13,7 @@ export const GameModeContainer = styled.div`
 
 export const ButtonNoStyle = styled.button`
   border: none;
-  background-color: ${COLORS.background};
+  background-color: inherit;
 `;
 
 export const GameModeCardsBody = styled.div`
@@ -28,8 +28,7 @@ export const GameModeButtonBody = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 15%;
-  margin-top: 10%;
+  height: 30%;
   justify-content: center;
   align-items: center;
 
@@ -67,3 +66,23 @@ export const GameModeHero = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const LobbyFlex = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+`
+
+export const MoneyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+`
+
+export const XpContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+
+`

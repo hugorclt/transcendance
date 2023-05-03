@@ -12,7 +12,6 @@ import { EType } from 'shared/enum';
 export class Game {
   private _id: string;
   private _players: Array<Player>;
-  private _spectators: Array<string>;
   private _field: Field;
   private _ball: Ball;
   private _lastTimestamp: number = 0;
@@ -20,6 +19,7 @@ export class Game {
   private _movingObjects: Array<IObject>;
   private _collisions: Array<TCollision>;
   private _score: TScore;
+  private _mode: string;
 
   private _init_ball(config: any) {
     const ball = config.ball;
@@ -49,7 +49,6 @@ export class Game {
 
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     lobby.members.forEach((member) => {
-      console.log('creating player with paddle: ', member.paddleType);
       this._players.push(
         new Player(member.userId, member.team, member.paddleType, config),
       );
@@ -61,7 +60,6 @@ export class Game {
 
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
-    this._spectators = new Array<string>();
     this._objects = new Array<IObject>();
     this._movingObjects = new Array<IObject>();
     this._collisions = new Array<TCollision>();
@@ -70,12 +68,8 @@ export class Game {
       team2: 0,
     };
     this._id = lobby.id;
-
-    console.log('creating game: ', lobby);
-
+    this._mode = lobby.mode;
     const config = maps.find((map) => map.name == lobby.map);
-
-    console.log('detected config: ', config.name);
     this._init_ball(config);
     this._init_field(config);
     this._init_players(config, lobby);
@@ -151,5 +145,8 @@ export class Game {
   }
   public get collisions() {
     return this._collisions;
+  }
+  public get mode() {
+    return this._mode;
   }
 }

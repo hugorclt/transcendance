@@ -38,7 +38,7 @@ function ItemsList() {
         <MediaQuery minWidth={mediaSize.tablet + 1}>
           <SliderShopContainer>
             <SliderMenu
-              items={["ALL", "PADDLE", "TRAILS", "GOAL"]}
+              items={["ALL", "PADDLE"]}
               setState={setFilter}
               state={filter}
               flex={"flex-start"}
@@ -50,8 +50,6 @@ function ItemsList() {
           <ShopTopBarSelect onChange={(e) => setFilter(e.target.value)}>
             <option value="ALL">ALL</option>
             <option value="PADDLE">PADDLE</option>
-            <option value="TRAILS">TRAILS</option>
-            <option value="GOAL">GOAL</option>
           </ShopTopBarSelect>
         </MediaQuery>
 
@@ -81,6 +79,8 @@ function ItemsList() {
                 price={item.price}
                 image={item.image}
                 type={item.type}
+                owned={item.owned}
+                setData={setData}
               />
             );
           })}

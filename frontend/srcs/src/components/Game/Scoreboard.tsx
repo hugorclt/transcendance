@@ -49,7 +49,7 @@ useEffect(() => {
       <div
         style={{
           position: "absolute",
-          zIndex: "1",
+          zIndex: "30",
           fontFamily: "scoreboard",
           color: "white",
           fontSize: "21px",

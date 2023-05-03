@@ -24,8 +24,8 @@ export class ItemsController {
 
   @Get()
   @ApiOkResponse({ type: ItemEntity, isArray: true })
-  findAll() {
-    return this.itemsService.findAll();
+  findAll(@Request() req) {
+    return this.itemsService.findAll(req.user.sub);
   }
 
   @Post("/buy")

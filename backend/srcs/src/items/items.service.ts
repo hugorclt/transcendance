@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
@@ -14,8 +15,24 @@ import { EItem } from '@prisma/client';
 export class ItemsService {
   constructor(private prisma: PrismaService, private socket: LobbiesGateway) {}
 
-  async findAll() {
-    return await this.prisma.item.findMany({});
+  async findAll(userId: string) {
+    const items = await this.prisma.item.findMany({});
+    const userItems = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        items: true,
+      }
+    })
+
+    return items.map((item) => {
+      console.log(item);
+      return {
+        ...item,
+        owned: userItems.items.some((userItem) => userItem.id == item.id) ? true : false,
+      }
+    })
   }
 
   async findItem(userId: string, itemId: string) {
@@ -53,6 +70,24 @@ export class ItemsService {
 
     const alreadyHave = await this.findItem(userId, item.id);
     if (alreadyHave) throw new ConflictException();
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      }
+    })
+    if (item.price > user.balance) throw new UnauthorizedException();
+
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        balance: {
+          decrement: item.price,
+        }
+      }
+    })
 
     await this.prisma.item.update({
       where: {

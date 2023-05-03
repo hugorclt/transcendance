@@ -61,14 +61,37 @@ export class SocialsGateway
     return this.io.sockets.get(socketId);
   }
 
-  sendMessageToRoom(message: CreateMessageDto) {
+  async sendMessageToRoom(message: CreateMessageDto, participants: Participant[]) {
     const client = this.getSocketFromUserId(message.senderId);
     if (!client) return;
-    client.to(message.roomId).emit('on-new-message', message);
-    this.emitToUser(message.roomId, 'on-chat-update', {
-      id: message.roomId,
-      lastMessage: message.content,
+    participants.forEach(async participant => {
+      const test = await this.checkIfUserBlocked(participant.userId, message.senderId);
+        console.log(test)
+        if (!(test)) {
+          client.to(participant.userId).emit('on-new-message', message);
+          this.emitToUser(participant.userId, 'on-chat-update', {
+            id: message.roomId,
+            lastMessage: message.content,
+          });
+        }
     });
+  }
+
+  async checkIfUserBlocked(userId: string, userBlockedId: string) {
+    const userTo = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        isBloqued: true,
+      },
+    });
+    const isBloqued = userTo.isBloqued.some(
+      (blocked) => blocked.id == userBlockedId,
+    );
+    console.log(isBloqued);
+    if (isBloqued) return true;
+    return false;
   }
 
   removeFriend(removerId: string, friendRemoved: string) {
@@ -127,6 +150,7 @@ export class SocialsGateway
   emitRoomCreated(ownerId: string, room: ReturnRoomEntity) {
     const socket = this.getSocketFromUserId(ownerId);
     if (!socket) return;
+    console.log(ownerId);
     socket.to(room.id).emit('on-chat-update', room);
   }
 }

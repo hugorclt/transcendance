@@ -14,7 +14,7 @@ import { InvitationsService } from 'src/invitations/invitations.service';
 import { LobbyMembersService } from './members/lobby-members.service';
 import { LobbyMemberEntity } from './members/entities/lobby-member.entity';
 import { LobbiesGateway } from './lobbies.gateway';
-import { EMap, EPaddle, LobbyState } from '@prisma/client';
+import { EMap, EPaddle, LobbyState, Status } from '@prisma/client';
 import { maps } from 'src/game/resources/utils/config/maps';
 import { SocialsGateway } from 'src/socials/socials.gateway';
 import { MatchesService } from 'src/matches/matches.service';
@@ -77,6 +77,61 @@ export class LobbiesService {
     return lobby;
   }
 
+  async spectate(
+    userId: string,
+    senderId: string,
+  ): Promise<LobbyWithMembersEntity> {
+    const user = await this.canUserJoinLobbies(senderId);
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        state: LobbyState.GAME,
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+    if (!lobby) {
+      throw new NotFoundException('Cannot spectate this game, game not found');
+    }
+    await this.lobbiesGateway.spectateGame(user, lobby.id);
+    return lobby;
+  }
+
+  async cancel(userId: string): Promise<LobbyWithMembersEntity> {
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        state: LobbyState.MATCHMAKING,
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+    if (!lobby) throw new NotFoundException('Lobby not found');
+    const member = lobby.members.find((member) => member.userId === userId);
+    if (member.userId != lobby.ownerId) {
+      const updatedMember = await this.lobbyMembersService.update(member.id, {
+        ready: false,
+      });
+      this.lobbiesGateway.emitToLobby(
+        lobby.id,
+        'on-member-update',
+        updatedMember,
+      );
+    }
+    this.lobbiesGateway.dequeue(lobby);
+    return await this.updateLobbyState(lobby.id, 'FULL');
+  }
+
   async findAll(): Promise<LobbyEntity[]> {
     return await this.prisma.lobby.findMany({});
   }
@@ -125,7 +180,6 @@ export class LobbiesService {
 
   //A PROTEGER
   async delete(id: string): Promise<LobbyEntity> {
-    console.log('getting users from lobby: ', id);
     const users = await this.prisma.user.findMany({
       where: {
         lobbyMember: {
@@ -140,12 +194,10 @@ export class LobbiesService {
         await this.usersService.updateStatus(user.id, 'CONNECTED');
       }),
     );
-    console.log('updating lobby by deleting members');
     const lobby = await this.prisma.lobby.update({
       where: { id },
       data: { members: { deleteMany: {} } },
     });
-    console.log('deleting lobby where id: ', id);
     return await this.prisma.lobby.delete({ where: { id } });
   }
 
@@ -325,8 +377,6 @@ export class LobbiesService {
       );
     }
     const member = lobby.members.find((member) => member.userId == userId);
-    if (member.ready)
-      throw new MethodNotAllowedException('Cannot change team, you are ready');
     const opponentTeamSize = lobby.members.filter(
       (el) => el.team != member.team,
     ).length;
@@ -382,10 +432,15 @@ export class LobbiesService {
     if (ownerTeam) {
       await Promise.all(
         ownerTeamMembers.map(async (member) => {
-          await this.lobbyMembersService.update(member.id, {
-            team: !member.team,
-            ready: false,
-          });
+          if (member.userId != lobby.ownerId)
+            await this.lobbyMembersService.update(member.id, {
+              team: !member.team,
+              ready: false,
+            });
+          else
+            await this.lobbyMembersService.update(member.id, {
+              team: !member.team,
+            });
         }),
       );
     }
@@ -497,6 +552,33 @@ export class LobbiesService {
     this.lobbiesGateway.emitToLobby(lobbyId, 'on-member-update', member);
   }
 
+  async selectMap(lobbyId: string) {
+    const newVote = new Map<string, number>();
+    const members = await this.prisma.lobby.findUnique({
+      where: {
+        id: lobbyId,
+      },
+      include: {
+        members: true,
+      },
+    });
+    members.members.forEach((member) => {
+      const count = newVote.get(member.vote) || 0;
+      newVote.set(member.vote, count + 1);
+    });
+
+    await this.prisma.lobby.update({
+      where: {
+        id: lobbyId,
+      },
+      data: {
+        map: [...newVote.entries()].reduce((a, e) =>
+          e[1] > a[1] ? e : a,
+        )[0] as EMap,
+      },
+    });
+  }
+
   async startGame(lobbyId: string, userId: string) {
     var lobby = await this.prisma.lobby.findFirst({
       where: {
@@ -534,18 +616,24 @@ export class LobbiesService {
         LobbyState.SELECTION,
       );
       await this.lobbiesGateway.timer(lobby.id, 'time-to-choose', 15);
+      // await this.selectMap(lobbyId);
     }
     var lobbyWithMembers = await this.updateLobbyState(
       lobby.id,
       LobbyState.GAME,
     );
+    await Promise.all(
+      lobbyWithMembers.members.map(async (member) => {
+        await this.usersService.updateStatus(member.userId, Status.GAME);
+      }),
+    );
+
     await this.lobbiesGateway.readyToStart(lobbyWithMembers);
     /* ------------------------------ interval loop ----------------------------- */
     const interval = setInterval(async () => {
       const frame = this.lobbiesGateway.generateFrame(lobby.id);
       if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
         clearInterval(interval);
-        this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', undefined);
         var winners;
         var losers;
         var winnerScore;
@@ -592,6 +680,9 @@ export class LobbiesService {
             nbWin: {
               increment: 1,
             },
+            nbGoal: {
+              increment: winnerScore,
+            },
           },
         });
         const loserStats = await this.prisma.stat.updateMany({
@@ -604,12 +695,70 @@ export class LobbiesService {
             nbGame: {
               increment: 1,
             },
+            nbGoal: {
+              increment: loserScore,
+            },
           },
         });
+        lobbyWithMembers.members.forEach(async (member) => {
+          this.lobbiesGateway.emitToLobby(member.userId, 'end-game', {
+            winnerScore: winnerScore,
+            loserScore: loserScore,
+            losers: losers,
+            winners: winners,
+            money: await this.calculateMoney(member.userId, winners),
+            xp: await this.calculateXp(member.userId, winners),
+          });
+        });
+        this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', {
+          winnerScore: winnerScore,
+          loserScore: loserScore,
+          losers: losers,
+          winners: winners,
+        });
         await this.delete(lobby.id);
+        this.lobbiesGateway.deleteRoom(lobby.id);
         return;
       }
     }, 1000 / 60);
+  }
+
+  async calculateXp(userId: string, winnerTeam: string[]) {
+    const isWinner = winnerTeam.includes(userId);
+    var xp = 10 + Math.floor(Math.random() * 10);
+    if (isWinner) {
+      xp += 30;
+    }
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        xp: {
+          increment: xp,
+        },
+      },
+    });
+    return xp;
+  }
+
+  async calculateMoney(userId: string, winnerTeam: string[]) {
+    const isWinner = winnerTeam.includes(userId);
+    var money = 100 + Math.floor(Math.random() * 10);
+    if (isWinner) {
+      money += 300;
+    }
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        balance: {
+          increment: money,
+        },
+      },
+    });
+    return money;
   }
 
   async paddleSelected(userId: string, lobbyId: string, paddleName: string) {
@@ -662,10 +811,20 @@ export class LobbiesService {
     });
   }
 
-  async getMap() {
-    return maps.map((map) => {
-      return { name: map.name, img: map.miniature };
+  async getMap(lobbyId: string) {
+    const lobby = await this.prisma.lobby.findUnique({
+      where: {
+        id: lobbyId,
+      },
     });
+    if (!lobby) throw new NotFoundException('No such lobby');
+    return maps
+      .map((map) => {
+        if (map.mode == lobby.mode) {
+          return { name: map.name, img: map.miniature };
+        }
+      })
+      .filter((map) => map !== undefined);
   }
 
   async voteMap(userId: string, lobbyId: string, mapName: string) {

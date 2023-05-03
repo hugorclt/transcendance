@@ -31,6 +31,10 @@ function PlayButton() {
       if (!notReady) {
         setReadyToStart(true);
       }
+    } else {
+      if (readyToStart) {
+        setReadyToStart(false);
+      }
     }
   }, [lobby, user]);
 

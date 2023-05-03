@@ -9,7 +9,7 @@ export const maps = [
     name: 'SPACE',
     mode: 'CHAMPIONS',
     mapRef: EMap.SPACE,
-    miniature: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
+    miniature: generateBase64Image('/app/assets/maps/planet.jpeg'),
     width: 16,
     height: 9,
     depth: 35,

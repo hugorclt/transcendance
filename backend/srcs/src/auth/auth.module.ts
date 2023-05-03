@@ -20,7 +20,7 @@ import { LobbiesModule } from 'src/lobbies/lobbies.module';
     JwtModule.register({
       secret: process.env['AT_SECRET'],
       signOptions: {
-        expiresIn: '20s',
+        expiresIn: '10s',
       },
     }),
     SocialsModule,

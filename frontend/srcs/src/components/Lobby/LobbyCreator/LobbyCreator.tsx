@@ -7,31 +7,102 @@ import {
   GameModeContainer,
   GameModeContainerMobile,
   GameModeHero,
+  LobbyFlex,
+  MoneyContainer,
+  XpContainer,
 } from "./LobbyCreator.style";
 import { useAtom } from "jotai";
 import MediaQuery from "react-responsive";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { ButtonNoStyle } from "./LobbyCreator.style";
-import { lobbyAtom } from "../../../services/store";
+import { endGameAtom, lobbyAtom, userAtom } from "../../../services/store";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useLobbyCreatorContext } from "../../../views/LobbyPage/LobbyCreatorProvider";
 import HeptaButton from "../../common/Button/HeptaButton/HeptaButton";
 import { COLORS } from "../../../colors";
 import { mediaSize } from "../../../mediaSize";
+import Popup from "reactjs-popup";
+import { PopUpBox } from "../../SideBar/FriendsList/FriendsCards/FriendsCardsStyle";
+import { EndGameStatInfoContainer } from "../../../views/LobbyPage/LobbyPage.style";
+import { TbCurrencyShekel } from "react-icons/tb";
+import { FaLevelUpAlt } from "react-icons/fa";
 
 const dataGameMode = [
   {
     name: "Classic",
-    description: "Le Pong originel, berceau du gaming",
-    img: "",
+    description:
+      "Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s.",
+    img: "../../../../public/planet-modified.jpeg",
   },
 
   {
     name: "Champions",
-    description: "Pong comme vous ne l'aviez jamais imagine",
-    img: "",
+    description:
+      "Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay",
+    img: "../../../../public/planet.jpeg",
   },
 ];
+
+const createModalEnd = () => {
+  const [endGameInfo, setEndGameInfo] = useAtom(endGameAtom);
+  const [open, setOpen] = useState(true);
+  const [user, setUser] = useAtom(userAtom);
+
+  if (endGameInfo.winners.length != 0) {
+    const clickFinish = () => {
+      setOpen(false);
+      setEndGameInfo({
+        winnerScore: 0,
+        winners: [],
+        loserScore: 0,
+        losers: [],
+        xp: 0,
+        money: 0,
+      });
+    };
+
+    return (
+      <>
+        <Popup modal open={open} onClose={clickFinish}>
+          <PopUpBox>
+            <EndGameStatInfoContainer>
+              {endGameInfo.xp && (
+                <h3 className="game-winner">
+                  {endGameInfo.winners.includes(user.id)
+                    ? "You Won!"
+                    : "You loose!"}
+                </h3>
+              )}
+              <h3>
+                Team1{" "}
+                <span>
+                  {endGameInfo.winnerScore} - {endGameInfo.loserScore}
+                </span>{" "}
+                Team2
+              </h3>
+              <LobbyFlex>
+                {endGameInfo.xp && (
+                  <XpContainer>
+                    <FaLevelUpAlt size={30} color={COLORS.secondary} />
+                    <h3>+{endGameInfo.xp}</h3>
+                  </XpContainer>
+                )}
+                {endGameInfo.money && (
+                  <MoneyContainer>
+                    <TbCurrencyShekel size={42} color={COLORS.secondary} />
+                    <h3>+{endGameInfo.money}</h3>
+                  </MoneyContainer>
+                )}
+              </LobbyFlex>
+              <button onClick={clickFinish}>Continue</button>
+            </EndGameStatInfoContainer>
+          </PopUpBox>
+        </Popup>
+      </>
+    );
+  }
+  return <></>;
+};
 
 function LobbyCreator() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
@@ -80,18 +151,19 @@ function LobbyCreator() {
 
   return (
     <>
-      {/* desktop - tabel */}
+      {createModalEnd()}
+      {/* desktop - tablet */}
       <MediaQuery minWidth={mediaSize.tablet + 1}>
         <GameModeContainer>
           <GameModeCardsBody>
             <GameModeCard
               mode="Classic"
               description="Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s."
-              img={""}
+              img={"../../../../public/planet-modified.jpeg"}
             />
             <GameModeCard
               mode="Champions"
-              description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay"
+              description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers"
               img={"../../../../public/planet.jpeg"}
             />
           </GameModeCardsBody>
@@ -110,7 +182,7 @@ function LobbyCreator() {
       </MediaQuery>
 
       {/* mobile */}
-      <MediaQuery maxWidth={mediaSize.mobile}>
+      <MediaQuery maxWidth={mediaSize.tablet}>
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
@@ -120,7 +192,7 @@ function LobbyCreator() {
             <GameModeCard
               mode={dataGameMode[slider].name}
               description={dataGameMode[slider].description}
-              img={""}
+              img={"../../../../public/planet.jpeg"}
             />
             <ButtonNoStyle
               onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>

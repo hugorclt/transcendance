@@ -60,26 +60,7 @@ function FriendNotifications() {
   const notifyFriend = (invitation: any) =>
     toast(
       <>
-        <p>
-          <strong>{invitation.userFromUsername}</strong> has sent you a friend
-          request
-        </p>
-        <div className="flex justify-around">
-          <button
-            className="text-green-800"
-            onClick={() => {
-              acceptFriendRequest(invitation.userFromId, invitation.userId);
-            }}>
-            Accept
-          </button>
-          <button
-            className="text-red-800"
-            onClick={() => {
-              declineInvitation(invitation.id);
-            }}>
-            Refuse
-          </button>
-        </div>
+        <p>Notifications received</p>
       </>
     );
 
@@ -87,25 +68,7 @@ function FriendNotifications() {
   const notifyLobby = (invitation: any) =>
     toast(
       <>
-        <p>
-          <strong>{invitation.userFromUsername}</strong> invited you to a lobby
-        </p>
-        <div className="flex justify-around">
-          <button
-            className="text-green-800"
-            onClick={() => {
-              acceptLobbyRequest(invitation.lobbyId, invitation.userId);
-            }}>
-            Accept
-          </button>
-          <button
-            className="text-red-800"
-            onClick={() => {
-              declineInvitation(invitation.id);
-            }}>
-            Refuse
-          </button>
-        </div>
+        <p>Notifications received</p>
       </>
     );
 

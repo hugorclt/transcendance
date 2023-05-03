@@ -35,6 +35,12 @@ export class StatsController {
     }
   }
 
+  @Get('leaderboards')
+  @ApiOkResponse({ type: StatEntity, isArray: true })
+  async getLeaderboards() {
+    return this.statsService.getLeaderboards();
+  }
+
   @Get()
   @ApiOkResponse({ type: StatEntity, isArray: true })
   async findAll(): Promise<StatEntity[]> {

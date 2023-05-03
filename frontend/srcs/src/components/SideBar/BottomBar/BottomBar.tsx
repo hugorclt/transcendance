@@ -18,6 +18,8 @@ import Settings from "../../Settings/Settings";
 import { ButtonNoStyle } from "../../Lobby/LobbyCreator/LobbyCreator.style";
 import { PopUpBox } from "../FriendsList/FriendsCards/FriendsCardsStyle";
 import NotificationsPanel from "./Notifications/Notifications";
+import { SettingsContainer } from "../../Settings/Settings.style";
+import { RxCross2 } from "react-icons/rx";
 
 function BottomBar() {
   const navigate = useNavigate();
@@ -27,6 +29,7 @@ function BottomBar() {
   const [notifs, setNotif] = useAtom(notifAtom);
   const socket = useContext(SocketContext);
   const [user, setUser] = useAtom(userAtom);
+  const [open, setOpen] = useState(false);
 
   function logout() {
     axios
@@ -68,31 +71,32 @@ function BottomBar() {
               <MdNotificationsActive
                 className="buzzing"
                 size={26}
-                style={{ color: COLORS.secondary }}
+                style={{ color: COLORS.secondary, cursor: "pointer" }}
               />
             ) : (
               <MdNotificationsNone
                 size={26}
-                style={{ color: COLORS.secondary }}
+                style={{ color: COLORS.secondary, cursor: "pointer" }}
               />
             )}
           </ButtonNoStyle>
-        }>
+        }
+      >
         <NotificationsPanel />
       </Popup>
-      <Popup
-        modal
-        trigger={
-          <ButtonNoStyle>
-            <MdSettings size={26} style={{ color: COLORS.secondary }} />
-          </ButtonNoStyle>
-        }>
-        <Settings />
+      <ButtonNoStyle onClick={() => setOpen(true)}>
+        <MdSettings size={26} style={{ color: COLORS.secondary, cursor: "pointer" }} />
+      </ButtonNoStyle>
+      <Popup modal open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+        <SettingsContainer>
+          <RxCross2 style={{cursor: "pointer"}} size={17} color={COLORS.secondary} onClick={() => setOpen(false)} />
+          <Settings />
+        </SettingsContainer>
       </Popup>
       <MdLogout
         onClick={logout}
         size={26}
-        style={{ color: COLORS.secondary }}
+        style={{ color: COLORS.secondary, cursor: "pointer" }}
       />
     </BottomBarContainer>
   );

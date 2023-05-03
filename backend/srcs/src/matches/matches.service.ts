@@ -71,6 +71,19 @@ export class MatchesService {
     });
   }
 
+  async findMatchByUserId(id: string): Promise<MatchEntity[]> {
+    const matches = await this.prisma.match.findMany({
+      where: {
+        OR: [{ winners: { some: { id } } }, { losers: { some: { id } } }],
+      },
+      include: {
+        winners: true,
+        losers: true,
+      },
+    });
+    return matches;
+  }
+
   async delete(id: string): Promise<MatchEntity> {
     const match = await this.prisma.match.delete({
       where: { id },

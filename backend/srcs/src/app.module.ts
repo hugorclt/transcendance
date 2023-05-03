@@ -24,7 +24,12 @@ import { join } from 'path';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    JwtModule.register({ secret: process.env['AT_SECRET'] }),
+    JwtModule.register({
+      secret: process.env['AT_SECRET'],
+      signOptions: {
+        expiresIn: '10s',
+      },
+    }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'assets'),
     }),

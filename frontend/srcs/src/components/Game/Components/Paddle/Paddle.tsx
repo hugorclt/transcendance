@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Mesh, Vector3 } from "three";
-import { COLORS } from "../../../../colors";
+import { Mesh } from "three";
 import { LobbySocketContext } from "../../../../services/Lobby/LobbySocketContext";
 import { useFrame } from "@react-three/fiber";
 import useKeyboard from "../../../../hooks/useKeyboard";
-import { PerspectiveCamera } from "@react-three/drei";
 import { useAtom } from "jotai";
 import { userAtom } from "../../../../services/store";
-import { IPlayer, Object3D } from "../Assets/interfaces";
+import { Object3D } from "../Assets/interfaces";
 import { createMeshComponent } from "../Assets/meshGenerator";
-import { useLayoutEffect } from "react";
 
 type PlayerProps = {
   id: string;
@@ -30,9 +27,18 @@ function Paddle(props: PlayerProps) {
     side2 = props.team ? "right-move" : "left-move";
   }
 
-  useFrame(({ mouse }) => {
-    keyMap["KeyA"] && socket?.emit(side1);
-    keyMap["KeyD"] && socket?.emit(side2);
+  useFrame(() => {
+    if (keyMap["KeyA"]) {
+      console.log("A pressed");
+      socket?.emit(side1);
+    }
+    if (keyMap["KeyD"]) {
+      console.log("D pressed");
+      console.log(socket);
+      socket?.emit(side2);
+    }
+    // keyMap["KeyA"] && socket?.emit(side1);
+    // keyMap["KeyD"] && socket?.emit(side2);
     keyMap["KeyW"] && socket?.emit("up-move");
     keyMap["KeyS"] && socket?.emit("down-move");
   });

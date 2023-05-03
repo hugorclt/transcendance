@@ -5,6 +5,18 @@ import { item } from './seedHelper';
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.item.deleteMany({
+    where: {},
+  });
+  await prisma.user.deleteMany({
+    where: {},
+  });
+  await prisma.lobby.deleteMany({
+    where: {},
+  });
+  await prisma.lobbyMember.deleteMany({
+    where: {},
+  });
   await Promise.all(
     item.map(async (item) => {
       await prisma.item.create({
@@ -17,16 +29,6 @@ async function main() {
     where: {
       name: 'Base Paddle',
     },
-  });
-
-  await prisma.user.deleteMany({
-    where: {},
-  });
-  await prisma.lobby.deleteMany({
-    where: {},
-  });
-  await prisma.lobbyMember.deleteMany({
-    where: {},
   });
 
   const dominique = await prisma.user.create({
@@ -76,6 +78,7 @@ async function main() {
       username: 'Hugo',
       email: 'hugo@example.com',
       password: await bcrypt.hash('password', 10),
+      balance: 10000,
       preferences: {
         create: {
           visibility: 'VISIBLE',

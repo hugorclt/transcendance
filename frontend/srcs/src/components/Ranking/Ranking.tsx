@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { COLORS } from "../../colors";
 import {
   RankingBody,
@@ -13,15 +13,10 @@ import MediaQuery from "react-responsive";
 import { nanoid } from "nanoid";
 import { IoMdArrowDropup, IoMdArrowDropdown } from "react-icons/io";
 import { ShopTopBarSelect } from "../Shop/ItemsList/ItemsListStyle";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { AxiosError, AxiosResponse } from "axios";
 
-const stats = ["WIN", "GOALS", "TOUCH"];
-
-const data = [
-  { name: "dylan", stats: ["8", "2", "3"] },
-  { name: "hugo", stats: ["2", "7", "4"] },
-  { name: "dume", stats: ["5", "6", "7"] },
-  { name: "Ryad", stats: ["9", "5", "2"] },
-];
+const stats = ["WIN", "GOALS"];
 
 function Ranking() {
   const [select, setSelect] = useState("WIN");
@@ -29,11 +24,25 @@ function Ranking() {
   const isTabletOrMobile = useMediaQuery({
     query: `(max-width: ${screenSize.laptop})`,
   });
+  const axiosPrivate = useAxiosPrivate();
+  const [data, setData] = useState<any[]>([]);
+  const [errMsg, setErrMsg] = useState("");
 
   const getCategory = (user) => {
     const indexOf = stats.indexOf(select);
     return [+user.stats[indexOf]];
   };
+
+  useEffect(() => {
+    axiosPrivate
+      .get("stats/leaderboards")
+      .then((res: AxiosResponse) => {
+        setData(res.data);
+      })
+      .catch((err: AxiosError) => {
+        setErrMsg("Error while loading stats");
+      });
+  }, []);
 
   const renderRow = () => {
     if (asc == true)
@@ -78,13 +87,21 @@ function Ranking() {
                   setSelect(stat);
                 }}
                 key={nanoid()}
-              >
+                style={{ cursor: "pointer" }}>
                 <h4>{stat}</h4>
                 {stat == select ? (
                   asc == true ? (
-                    <IoMdArrowDropup color={COLORS.primary} size={22} />
+                    <IoMdArrowDropup
+                      style={{ cursor: "pointer" }}
+                      color={COLORS.primary}
+                      size={22}
+                    />
                   ) : (
-                    <IoMdArrowDropdown color={COLORS.primary} size={22} />
+                    <IoMdArrowDropdown
+                      style={{ cursor: "pointer" }}
+                      color={COLORS.primary}
+                      size={22}
+                    />
                   )
                 ) : (
                   <></>
@@ -99,8 +116,7 @@ function Ranking() {
           <TableData>
             <ShopTopBarSelect
               value={select}
-              onChange={(e) => setSelect(e.target.value)}
-            >
+              onChange={(e) => setSelect(e.target.value)}>
               {stats.map((stat) => {
                 return <option key={nanoid()}>{stat}</option>;
               })}
@@ -109,6 +125,7 @@ function Ranking() {
         </TableRow>
       </MediaQuery>
       <RankingBody>{renderRow()}</RankingBody>
+      {errMsg.length > 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
     </RankingTable>
   );
 }

@@ -25,9 +25,9 @@ import { KickLobbyMemberDto } from './members/dto/kick-lobby-member.dto';
 @ApiTags('lobbies')
 export class LobbiesController {
   constructor(private readonly lobbiesService: LobbiesService) {}
-  @Get('map')
+  @Post('get-maps')
   async getMap(@Request() req) {
-    return await this.lobbiesService.getMap();
+    return await this.lobbiesService.getMap(req.body.lobbyId);
   }
 
   @Post('get-votes')
@@ -56,17 +56,17 @@ export class LobbiesController {
     return await this.lobbiesService.findAll();
   }
 
+  @Get('cancel')
+  async cancel(@Request() req: any): Promise<LobbyWithMembersEntity> {
+    console.log('received request to cancel from id: ', req.user.sub);
+    return await this.lobbiesService.cancel(req.user.sub);
+  }
+
   @Get('current-lobby')
   @ApiOkResponse({ type: LobbyWithMembersEntity })
   async findLobbyForUser(@Request() req: any): Promise<LobbyWithMembersEntity> {
     const lobby = await this.lobbiesService.findLobbyForUser(req.user.sub);
     return lobby;
-  }
-
-  @Get(':id')
-  @ApiOkResponse({ type: LobbyEntity })
-  async findOne(@Param('id') id: string): Promise<LobbyEntity> {
-    return await this.lobbiesService.findOne(id);
   }
 
   @Post('join')
@@ -98,6 +98,14 @@ export class LobbiesController {
       req.user.sub,
       kickLobbyMemberDto.playerId,
     );
+  }
+
+  @Get(':id/spectate')
+  async spectate(
+    @Param('id') id: string,
+    @Request() req: any,
+  ): Promise<LobbyWithMembersEntity> {
+    return await this.lobbiesService.spectate(id, req.user.sub);
   }
 
   @Get(':id/participants')
@@ -142,6 +150,11 @@ export class LobbiesController {
   @ApiOkResponse({ type: LobbyWithMembersEntity })
   async play(@Param('id') id: string, @Request() req: any) {
     return await this.lobbiesService.startGame(id, req.user.sub);
+  }
+  @Get(':id')
+  @ApiOkResponse({ type: LobbyEntity })
+  async findOne(@Param('id') id: string): Promise<LobbyEntity> {
+    return await this.lobbiesService.findOne(id);
   }
 
   @Patch(':id')
