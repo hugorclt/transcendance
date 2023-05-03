@@ -566,15 +566,23 @@ export class LobbiesService {
       const count = newVote.get(member.vote) || 0;
       newVote.set(member.vote, count + 1);
     });
+    newVote.delete(null);
+    
+    var mapSelected;
+    if (newVote.size != 0) {
+      mapSelected = [...newVote.entries()].reduce((a, e) =>
+        e[1] > a[1] ? e : a,
+      )[0] as EMap;
+    } else {
+      mapSelected = EMap.SPACE;
+    }
 
     await this.prisma.lobby.update({
       where: {
         id: lobbyId,
       },
       data: {
-        map: [...newVote.entries()].reduce((a, e) =>
-          e[1] > a[1] ? e : a,
-        )[0] as EMap,
+        map: mapSelected,
       },
     });
   }
@@ -616,7 +624,7 @@ export class LobbiesService {
         LobbyState.SELECTION,
       );
       await this.lobbiesGateway.timer(lobby.id, 'time-to-choose', 15);
-      // await this.selectMap(lobbyId);
+      await this.selectMap(lobbyId);
     }
     var lobbyWithMembers = await this.updateLobbyState(
       lobby.id,
