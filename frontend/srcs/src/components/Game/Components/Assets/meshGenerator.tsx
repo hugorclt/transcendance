@@ -66,7 +66,7 @@ export function createMeshComponent(
     const texture = useTexture(object.texture);
     texture.wrapS = RepeatWrapping;
     texture.wrapT = RepeatWrapping;
-    texture.repeat.set(2, 2);
+    texture.repeat.set(4, 4);
 
     materialProps.map = texture;
   }
@@ -116,15 +116,34 @@ export function createMeshComponent(
         materialProps.emissiveIntensity = 10;
         materialProps.toneMapped = false;
       } else {
-        materialProps.roughness = 0.5;
-        materialProps.metalness = 0.5;
-        materialProps.toneMapped = true;
+        materialProps.map = useTexture("/lava.jpg");
+        // materialProps.emissiveMap = useTexture('/laval.jpg');
+        materialProps.roughness = 0;
+        materialProps.metalness = 0;
+        materialProps.toneMapped = false;
+        materialProps.emissiveIntensity = 1000;
       }
+
+      const settings = {};
+      const length = object.velocity?.z ? object.velocity.z / 10 + 1 : 1;
+
       return (
-        <mesh ref={ref} position={position} args={[]}>
-          <sphereGeometry args={[object.width, 32, 32]} />
-          <meshStandardMaterial {...materialProps} />
-        </mesh>
+        <Trail
+          width={object.width * 10} // Width of the line
+          color={"orange"} // Color of the line
+          length={length} // Length of the line
+          decay={1} // How fast the line fades away
+          local={false} // Wether to use the target's world or local positions
+          stride={0} // Min distance between previous and current point
+          interval={1} // Number of frames to wait before next calculation
+          target={undefined} // Optional target. This object will produce the trail.
+          attenuation={(width) => width} // A function to define the width in each point along it.
+        >
+          <mesh ref={ref} position={position} args={[]} castShadow={true}>
+            <sphereGeometry args={[object.width, 32, 16]} />
+            <meshStandardMaterial {...materialProps} />
+          </mesh>
+        </Trail>
       );
 
     /*================================ WALL ==============================*/
@@ -149,7 +168,7 @@ export function createMeshComponent(
         materialProps.color = "white";
       }
       return (
-        <mesh position={position}>
+        <mesh position={position} receiveShadow={true}>
           <boxGeometry args={[object.width, object.height, object.depth]} />
           <meshStandardMaterial {...materialProps} />
         </mesh>
