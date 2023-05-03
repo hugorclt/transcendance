@@ -70,7 +70,7 @@ function Paddle(props: PlayerProps) {
       {createMeshComponent(
         props.paddle,
         playerRef,
-        props.mode == "CHAMPIONS" ? isActive : false
+        props.mode === "CHAMPIONS" ? isActive : false
       )}
     </>
   );
