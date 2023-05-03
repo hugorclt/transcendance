@@ -72,7 +72,7 @@ function Game() {
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
-          {gameInfo.mode === "CLASSIC" ? (
+          {gameInfo.mode === "CLASSIC" && isSpec === false ? (
             <group rotation={[0, Math.PI / 2, 0]}>
               <>
                 <PerspectiveCamera position={[0, 70, 0]} makeDefault={true} />
@@ -81,8 +81,7 @@ function Game() {
           ) : (
             isSpec && (
               <>
-                <PerspectiveCamera position={[0, 100, 0]} makeDefault={true} />
-                {/* <PerspectiveCamera position={[0, 10, 0]} makeDefault={true} /> */}
+                <PerspectiveCamera position={[0, 70, 0]} makeDefault={true} />
                 <OrbitControls />
               </>
             )
