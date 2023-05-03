@@ -14,6 +14,7 @@ import BlueFlame from "../effects/BlueFlame";
 import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 import { Object3D } from "./Assets/interfaces";
 import { createMeshComponent } from "./Assets/meshGenerator";
+import { useState } from "react";
 
 type BallProps = {
   ball: Object3D;
@@ -22,12 +23,13 @@ type BallProps = {
 const Ball = (props: BallProps) => {
   const ballRef = useRef<Mesh>(null!);
   const socket = useContext(LobbySocketContext);
+  const lastReceivedVelocity = useRef<Vector3>(new Vector3(0, 0, 0));
+  const [velocity, setVelocity] = useState<Vector3>(new Vector3(0, 0, 0));
 
   useFrame(({ clock }) => {
     if (ballRef.current) {
-      ballRef.current.rotation.x += 0.01;
-      ballRef.current.rotation.y += 0.01;
-      ballRef.current.rotation.z += 0.01;
+      ballRef.current.rotation.x += velocity.z / 100;
+      ballRef.current.rotation.z += velocity.x / 100;
 
     }
   });
@@ -37,6 +39,13 @@ const Ball = (props: BallProps) => {
       ballRef.current.position.x = data.ball.position.x;
       ballRef.current.position.y = data.ball.position.y;
       ballRef.current.position.z = data.ball.position.z;
+
+      const newVelocity = new Vector3(data.ball.velocity.x, data.ball.velocity.y, data.ball.velocity.z);
+
+      if (!lastReceivedVelocity.current.equals(newVelocity)) {
+        setVelocity(newVelocity);
+        lastReceivedVelocity.current.copy(newVelocity);
+      }
     });
 
     return () => {

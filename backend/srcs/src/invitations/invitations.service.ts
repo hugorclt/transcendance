@@ -29,16 +29,13 @@ export class InvitationsService {
     sender: any,
   ): Promise<InvitationExtendedEntity> {
     var invitation;
-    //TODO: check if already pending invitation for same user,
-    // check if already friends
-    // check if user exists
     const alreadyExist = await this.prisma.invitation.findFirst({
       where: {
         type: createInvitationDto.type,
         userId: createInvitationDto.userId,
         userFromId: sender.sub,
-      }
-    })
+      },
+    });
     if (alreadyExist) throw new ConflictException();
     if (createInvitationDto.type == 'FRIEND') {
       if (createInvitationDto.username == sender.username)
@@ -81,13 +78,13 @@ export class InvitationsService {
     if (
       await this.usersService.checkIfUserBlocked(
         createInvitationDto.userId,
-        sender,
+        sender.sub,
       )
     )
       throw new NotFoundException();
     if (
       await this.usersService.checkIfUserBlocked(
-        sender,
+        sender.sub,
         createInvitationDto.userId,
       )
     )
@@ -97,7 +94,7 @@ export class InvitationsService {
         type: createInvitationDto.type,
         userId: createInvitationDto.userId,
         lobbyId: lobby.id,
-        userFromId: sender,
+        userFromId: sender.sub,
       },
       include: {
         userFrom: true,
@@ -133,11 +130,11 @@ export class InvitationsService {
 
   async createMany(
     invitationDtoList: CreateInvitationDto[],
-    senderId: string,
+    sender: any,
   ): Promise<InvitationEntity[]> {
     const invitations = await Promise.all(
       invitationDtoList.map(async (invitation) => {
-        return await this.create(invitation, senderId);
+        return await this.create(invitation, sender);
       }),
     );
     return invitations;

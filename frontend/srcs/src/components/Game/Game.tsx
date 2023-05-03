@@ -80,6 +80,7 @@ function Game() {
         </>
       )}
       <Skybox />
+
     </Suspense>
   );
 }

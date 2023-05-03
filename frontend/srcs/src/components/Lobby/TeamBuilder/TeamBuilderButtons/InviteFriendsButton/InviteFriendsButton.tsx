@@ -39,11 +39,18 @@ function InviteFriendsButton() {
     });
     axiosPrivate
       .post("/invitations/createMany", invitations)
-      .then((res: AxiosResponse) => {})
+      .then((res: AxiosResponse) => {
+        setInvitedFriends([]);
+      })
       .catch((error: AxiosError) => {
         console.log("error creating invitations");
       });
   };
+
+  function chooseColor(id: string) {
+    if (invitedFriends.find((friend) => friend == id)) return COLORS.secondary;
+    else return COLORS.darkergrey;
+  }
 
   return (
     <InviteFriendButtonContainer>
@@ -66,8 +73,10 @@ function InviteFriendsButton() {
               {friendList.map((val, index) => {
                 return (
                   <InviteFriendCard
+                    key={index}
                     friend={val}
                     onClick={() => handleAddFriends(val.id)}
+                    style={{ backgroundColor: chooseColor(val.id) }}
                   />
                 );
               })}
