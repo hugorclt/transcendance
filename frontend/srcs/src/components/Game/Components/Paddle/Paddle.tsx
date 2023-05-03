@@ -12,6 +12,7 @@ type PlayerProps = {
   id: string;
   team: boolean;
   paddle: Object3D;
+  mode: string;
 };
 
 function Paddle(props: PlayerProps) {
@@ -37,8 +38,8 @@ function Paddle(props: PlayerProps) {
       console.log(socket);
       socket?.emit(side2);
     }
-    // keyMap["KeyA"] && socket?.emit(side1);
-    // keyMap["KeyD"] && socket?.emit(side2);
+    keyMap["KeyA"] && socket?.emit(side1);
+    keyMap["KeyD"] && socket?.emit(side2);
     keyMap["KeyW"] && socket?.emit("up-move");
     keyMap["KeyS"] && socket?.emit("down-move");
   });
@@ -63,7 +64,15 @@ function Paddle(props: PlayerProps) {
     };
   }, [socket]);
 
-  return <>{createMeshComponent(props.paddle, playerRef, isActive)}</>;
+  return (
+    <>
+      {createMeshComponent(
+        props.paddle,
+        playerRef,
+        props.mode == "CHAMPIONS" ? isActive : false
+      )}
+    </>
+  );
 }
 
 export default Paddle;

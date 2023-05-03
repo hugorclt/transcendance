@@ -68,19 +68,24 @@ function Game() {
         <>
           <Ball ball={gameInfo.ball} />
           <Walls walls={gameInfo.field.walls} />
-          <Paddles players={gameInfo.players} />
+          <Paddles mode={gameInfo.mode} players={gameInfo.players} />
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
-          {isSpec && (
+          {gameInfo.mode == "CLASSIC" ? (
             <>
-              <PerspectiveCamera position={[0, 10, 0]} />
-              <OrbitControls />
+              <PerspectiveCamera position={[0, 0, 0]} />
             </>
+          ) : (
+            isSpec && (
+              <>
+                <PerspectiveCamera position={[0, 10, 0]} />
+                <OrbitControls />
+              </>
+            )
           )}
         </>
       )}
       <Skybox />
-
     </Suspense>
   );
 }

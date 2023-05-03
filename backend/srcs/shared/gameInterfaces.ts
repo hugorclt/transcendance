@@ -32,6 +32,7 @@ export interface IField {
 }
 
 export interface IGameInfo {
+  mode: string;
   field: IField;
   ball: Object3D;
   players: IPlayer[];

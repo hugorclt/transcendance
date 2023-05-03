@@ -30,7 +30,6 @@ export class LobbiesService {
     private readonly lobbiesGateway: LobbiesGateway,
     private readonly socialGateway: SocialsGateway,
     private readonly matchesService: MatchesService,
-    private readonly statsService: StatsService,
   ) {}
 
   async create(

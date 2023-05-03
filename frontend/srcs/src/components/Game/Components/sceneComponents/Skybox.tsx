@@ -17,7 +17,7 @@ function Skybox() {
         new THREE.MeshBasicMaterial({ map: base, side: THREE.BackSide })
       }
     >
-      <sphereGeometry args={[1000, 32, 32]} />
+      <sphereGeometry args={[200, 32, 32]} />
     </mesh>
   );
 }
