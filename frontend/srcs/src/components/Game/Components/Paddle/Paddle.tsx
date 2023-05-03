@@ -30,15 +30,7 @@ function Paddle(props: PlayerProps) {
 
   if (props.mode !== 'CLASSIC') {
     useFrame(() => {
-      // if (keyMap["KeyA"]) {
-      //   console.log("A pressed");
-      //   socket?.emit(side1);
-      // }
-      // if (keyMap["KeyD"]) {
-      //   console.log("D pressed");
-      //   console.log(socket);
-      //   socket?.emit(side2);
-      // }
+
       keyMap["KeyA"] && socket?.emit(side1);
       keyMap["KeyD"] && socket?.emit(side2);
       keyMap["KeyW"] && socket?.emit("up-move");
