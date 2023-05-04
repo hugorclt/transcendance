@@ -6,17 +6,12 @@ export const InviteFriendCardContainer = styled.div`
   height: 50px;
   display: flex;
   cursor: pointer;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: start;
   border-radius: 8px;
   padding: 8px;
 
   &:hover {
     background-color: ${COLORS.secondary};
-  }
-
-  .div {
-    display: flex;
-    flex-direction: column;
   }
 `;

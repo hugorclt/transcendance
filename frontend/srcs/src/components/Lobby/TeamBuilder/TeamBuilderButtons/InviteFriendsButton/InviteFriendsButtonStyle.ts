@@ -12,14 +12,22 @@ export const ModalBox = styled.div`
   padding: 8px;
   border-radius: 5px;
   border: 1px solid ${COLORS.border};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const StyledButton = styled.input`
+export const StyledButton = styled.button`
   padding: 4px;
   background-color: ${COLORS.secondary};
   color: ${COLORS.primary};
   border: none;
   border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+  }
 `;
 
 export const InviteFriendsList = styled.div`

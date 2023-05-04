@@ -3,7 +3,6 @@ import React, { FormEvent, useState } from "react";
 import Popup from "reactjs-popup";
 import { COLORS } from "../../../../../colors";
 import { friendAtom, lobbyAtom } from "../../../../../services/store";
-import { TFriend } from "../../../../../services/type";
 import InviteFriendCard from "./InviteFriendCard/InviteFriendCard";
 import {
   InviteFriendButtonContainer,
@@ -45,6 +44,7 @@ function InviteFriendsButton() {
       .catch((error: AxiosError) => {
         console.log("error creating invitations");
       });
+    setOpen(false);
   };
 
   function chooseColor(id: string) {
@@ -54,15 +54,16 @@ function InviteFriendsButton() {
 
   return (
     <InviteFriendButtonContainer>
+      <RoundIconButton
+        onClick={() => setOpen(true)}
+        size={22}
+        Icon={AddFriendIcon}
+        disabled={lobby.state == "FULL" ? true : false}
+      />
       <Popup
-        trigger={
-          <RoundIconButton
-            onClick={() => setOpen(true)}
-            size={22}
-            Icon={AddFriendIcon}
-            disabled={lobby.state == "FULL" ? true : false}
-          />
-        }
+        onClose={() => {
+          setOpen(false);
+        }}
         modal
         open={open}
         nested
@@ -82,7 +83,9 @@ function InviteFriendsButton() {
               })}
             </InviteFriendsListScroll>
           </InviteFriendsList>
-          <StyledButton onClick={handleSubmit} type="submit" value="Invite" />
+          <StyledButton onClick={handleSubmit} type="submit">
+            <h5>Invite</h5>
+          </StyledButton>
         </ModalBox>
       </Popup>
     </InviteFriendButtonContainer>
