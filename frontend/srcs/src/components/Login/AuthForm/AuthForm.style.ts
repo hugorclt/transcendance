@@ -54,6 +54,7 @@ export const FormSelector = styled.form`
 `;
 
 export const SocialContainer = styled.div`
+  cursor: pointer;
   background-color: ${COLORS.grey};
   display: flex;
   justify-content: center;

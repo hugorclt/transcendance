@@ -78,24 +78,20 @@ export class AuthService {
     googleTokenDto: GoogleTokenDto,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    //----- CHECK AUTHENTICITY OF GOOGLE TOKENID -----
     const { tokens } = await googleClient.getToken(googleTokenDto.token);
     const ticket = await this.checkGoogleToken(tokens.id_token);
     const payload = ticket.getPayload();
     try {
       const user = await this.usersService.findOneGoogleUser(payload.email);
-
-      return this.login(user, res);
+      return await this.login(user, res);
     } catch (err) {
-      console.log(payload); 
-
       const user = await this.usersService.createGoogle({
         email: payload.email,
         username: payload.name,
         password: 'none',
         type: Type.GOOGLE,
       });
-      return this.login(user, res);
+      return await this.login(user, res);
     }
   }
 
@@ -272,11 +268,11 @@ export class AuthService {
       const responseData = await lastValueFrom(
         this.httpService
           .post(
-            process.env['API42_POST_URL'],
+            process.env['VITE_42URL'],
             {
               grant_type: 'authorization_code',
-              client_id: process.env['API42_ID'],
-              client_secret: process.env['API42_SECRET'],
+              client_id: process.env['APP_42UID'],
+              client_secret: process.env['APP_42SECRET'],
               code: code,
               redirect_uri: process.env['API42_CALLBACK'],
             },

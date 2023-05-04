@@ -7,8 +7,6 @@ import UserPreferencesProvider from "./UserPreferencesProvider";
 import UserProvider from "./UserProvider";
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoading, setIsLoading] = useState(true);
-
   return (
     <UserProvider>
       <UserPreferencesProvider>

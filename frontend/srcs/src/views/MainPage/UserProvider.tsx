@@ -41,7 +41,7 @@ function UserProvider({ children }: { children: ReactNode }) {
     };
   }, [socket]);
 
-  return <>{isLoaded ? children : <h1>Loading...</h1>}</>;
+  return <>{isLoaded == true ? children : <h1>Loading...</h1>}</>;
 }
 
 export default UserProvider;

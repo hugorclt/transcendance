@@ -65,7 +65,6 @@ function GoogleAuth() {
   };
 
   var onSuccess = async (credentialResponse) => {
-    console.log(credentialResponse);
     await axios
       .post("/auth/google/login", {
         token: credentialResponse.code,
@@ -90,8 +89,8 @@ function GoogleAuth() {
 
   //----- Rendering -----
   return (
-    <SocialContainer>
-      <button onClick={() => login()}>
+    <SocialContainer onClick={() => login()}>
+      <button>
         <BsGoogle size={24} color={COLORS.lightgrey} />
       </button>
       <SubmitNote />
