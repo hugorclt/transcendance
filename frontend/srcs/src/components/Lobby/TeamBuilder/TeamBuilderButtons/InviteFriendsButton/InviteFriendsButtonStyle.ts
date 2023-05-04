@@ -50,7 +50,19 @@ export const InviteFriendsListScroll = styled.div`
   background-color: ${COLORS.darkergrey};
   border-radius: 8px;
   padding: 16px;
-  height: 300px;
+  max-height: 300px;
+
+  h4 {
+    padding: 8px;
+  }
+`;
+
+export const InviteChatListScroll = styled.div`
+  overflow-y: auto;
+  background-color: ${COLORS.darkergrey};
+  border-radius: 8px;
+  padding: 16px;
+  max-height: 300px;
 
   h4 {
     padding: 8px;
