@@ -11,14 +11,15 @@ export const ProfilBoxLeft = styled.div`
   flex-direction: column;
   width: 50%;
   position: relative;
+  justify-content: center;
 `;
 
-export const ProfilBoxName = styled.h3`
+export const ProfilBoxName = styled.h4`
   font-weight: bold;
   color: ${COLORS.primary};
   width: fit-content;
   position: relative;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
   white-space: nowrap;
 `;
 
