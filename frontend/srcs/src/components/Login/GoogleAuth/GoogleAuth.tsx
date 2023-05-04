@@ -42,8 +42,7 @@ function GoogleAuth() {
               display: isVisible,
               color: "green",
             } as CSSProperties
-          }
-        >
+          }>
           Login Success!
         </p>
       );
@@ -56,8 +55,7 @@ function GoogleAuth() {
               display: isVisible,
               color: "red",
             } as CSSProperties
-          }
-        >
+          }>
           {errMsg}
         </p>
       );
@@ -65,7 +63,6 @@ function GoogleAuth() {
   };
 
   var onSuccess = async (credentialResponse) => {
-    console.log(credentialResponse);
     await axios
       .post("/auth/google/login", {
         token: credentialResponse.code,
@@ -73,15 +70,12 @@ function GoogleAuth() {
       .then((response: AxiosResponse) => {
         setSuccess(true);
         setIsVisible("block");
-        const username = response?.data.username;
         const accessToken = response?.data.access_token;
         setUser((prev) => ({
           ...prev,
-          username: username,
           accessToken: accessToken,
         }));
-        navigate(from, { replace: true });
-        navigate(from, { replace: true });
+        navigate("/", { replace: true });
       })
       .catch((error: AxiosError) => {
         console.log(error);
@@ -90,8 +84,8 @@ function GoogleAuth() {
 
   //----- Rendering -----
   return (
-    <SocialContainer>
-      <button onClick={() => login()}>
+    <SocialContainer onClick={() => login()}>
+      <button>
         <BsGoogle size={24} color={COLORS.lightgrey} />
       </button>
       <SubmitNote />

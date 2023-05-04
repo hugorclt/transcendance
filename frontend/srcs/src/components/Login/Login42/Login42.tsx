@@ -22,11 +22,9 @@ function Login42() {
           code: code,
         })
         .then((response: AxiosResponse) => {
-          const username = response?.data.username;
           const accessToken = response?.data.access_token;
           setUser((prev) => ({
             ...prev,
-            username: username,
             accessToken: accessToken,
           }));
           navigate(from, { replace: true });
