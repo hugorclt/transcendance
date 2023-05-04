@@ -19,6 +19,7 @@ import { LobbiesService } from 'src/lobbies/lobbies.service';
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
   process.env['GOOGLE_CLIENT_SECRET'],
+  'postmessage'
 );
 
 @Injectable()
@@ -78,12 +79,16 @@ export class AuthService {
     @Response({ passthrough: true }) res,
   ): Promise<any> {
     //----- CHECK AUTHENTICITY OF GOOGLE TOKENID -----
-    const ticket = await this.checkGoogleToken(googleTokenDto.token);
+    const { tokens } = await googleClient.getToken(googleTokenDto.token);
+    const ticket = await this.checkGoogleToken(tokens.id_token);
     const payload = ticket.getPayload();
     try {
       const user = await this.usersService.findOneGoogleUser(payload.email);
+
       return this.login(user, res);
     } catch (err) {
+      console.log(payload); 
+
       const user = await this.usersService.createGoogle({
         email: payload.email,
         username: payload.name,

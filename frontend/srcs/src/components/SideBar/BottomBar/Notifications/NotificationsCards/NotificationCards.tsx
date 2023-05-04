@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import React from "react";
+import React, { useState } from "react";
 import { COLORS } from "../../../../../colors";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import {
@@ -24,6 +24,7 @@ function NotificationCards({
   const [friend, setFriendList] = useAtom(friendAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const [notif, setNotifs] = useAtom(notifAtom);
+  const [errMsg, setErrMsg] = useState("");
 
   const accept = () => {
     if (type == "LOBBY") {
@@ -33,7 +34,8 @@ function NotificationCards({
           setLobby((prev) => ({ ...prev, ...response.data }));
         })
         .catch((error: AxiosError) => {
-          console.log("error joining lobby: ", JSON.stringify(error.cause));
+          if (error.response?.status === 405) {}
+          setErrMsg("Lobby not joinable or you are already in a lobby.");
         });
     } else {
       axiosPrivate
@@ -72,14 +74,19 @@ function NotificationCards({
         <strong>{username}</strong> {desc}
       </p>
       <NotifButtonContainer>
-        <button onClick={accept} style={{ color: COLORS.green }}>
+        <button
+          onClick={accept}
+          style={{ color: COLORS.green, cursor: "pointer" }}>
           Accept
         </button>
-        <button onClick={refuse} style={{ color: COLORS.secondary }}>
+        <button
+          onClick={refuse}
+          style={{ color: COLORS.secondary, cursor: "pointer" }}>
           Decline
         </button>
       </NotifButtonContainer>
       <hr />
+      {errMsg.length > 0 ? <p style={{color: "red"}}>{errMsg}</p> : <></>}
     </NotifContainer>
   );
 }
