@@ -19,7 +19,7 @@ import { LobbiesService } from 'src/lobbies/lobbies.service';
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
   process.env['GOOGLE_CLIENT_SECRET'],
-  'postmessage'
+  'postmessage',
 );
 
 @Injectable()
@@ -289,7 +289,6 @@ export class AuthService {
             }),
           ),
       );
-      return responseData;
     } catch (error) {
       return null;
     }
