@@ -9,13 +9,13 @@ import { axiosPrivate } from "../../../services/axios.js";
 import { useEffect, useState } from "react";
 import { AxiosError, AxiosResponse } from "axios";
 
-const renderCards = () => {
+const renderCards = (user_id: string) => {
   const [match, setMatch] = useState<TMatch[]>([]);
   const [user, setuser] = useAtom(userAtom);
 
   useEffect(() => {
     axiosPrivate
-      .get(`/matches/user/${user.id}`)
+      .get(`/matches/user/${user_id}`)
       .then((response) => {
         setMatch(response.data);
       })
@@ -64,14 +64,14 @@ const renderCards = () => {
   });
 };
 
-export function BotProfile(props) {
+export function BotProfile({ user_id }) {
   return (
     <BotProfileContainer>
       <FirstCardContainer>
         <h2>Match History</h2>
       </FirstCardContainer>
       <FirstCard />
-      {renderCards()}
+      {renderCards(user_id)}
     </BotProfileContainer>
   );
 }

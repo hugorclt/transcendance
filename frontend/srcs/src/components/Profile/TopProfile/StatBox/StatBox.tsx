@@ -15,9 +15,9 @@ import { AiFillTrophy } from "react-icons/ai";
 import { IoLogoGameControllerB } from "react-icons/io";
 import { FaCrown } from "react-icons/fa";
 import { COLORS } from "../../../../colors.js";
+import { TProfileBoxProps } from "../ProfileBox/ProfileBox.js";
 
-export function StatBox({ username }) {
-  const [user, setUser] = useAtom(userAtom);
+export function StatBox({ user }: TProfileBoxProps) {
   const axiosPrivate = useAxiosPrivate();
   const [stats, setStats] = useState<TStat>({
     id: "",
@@ -26,10 +26,6 @@ export function StatBox({ username }) {
     nbGame: 0,
     nbWin: 0,
   });
-
-  let actual: string;
-  if (user.username == username) actual = user.username;
-  else actual = username;
 
   useEffect(() => {
     axiosPrivate
@@ -45,7 +41,7 @@ export function StatBox({ username }) {
   return (
     <StatBoxContainer>
       <IdContainer>
-        <div>ID = {stats.id} </div>
+        <div>ID = {user.id} </div>
       </IdContainer>
       <LvlBoxContainer>
         <FaCrown size={42} color={COLORS.white} />
