@@ -174,6 +174,7 @@ function LobbyCreator() {
               onClick={createLobby}
               text={renderButtonText()}
               textSize={"1em"}
+              disabled={selectedMode ? false : true}
               color={selectedMode ? COLORS.secondary : COLORS.grey}
             />
             {errMsg && <p className="text-red-500">{errMsg}</p>}
@@ -206,6 +207,7 @@ function LobbyCreator() {
               onClick={createLobby}
               text={renderButtonText()}
               textSize={"1em"}
+              disabled={selectedMode ? false : true}
               color={selectedMode ? COLORS.secondary : COLORS.grey}
             />
             {errMsg && <p className="text-red-500">{errMsg}</p>}
