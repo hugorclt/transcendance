@@ -268,7 +268,7 @@ export class AuthService {
       const responseData = await lastValueFrom(
         this.httpService
           .post(
-            process.env['VITE_42URL'],
+            "https://api.intra.42.fr/oauth/token",
             {
               grant_type: 'authorization_code',
               client_id: process.env['APP_42UID'],
@@ -289,6 +289,7 @@ export class AuthService {
             }),
           ),
       );
+      return responseData;
     } catch (error) {
       return null;
     }
