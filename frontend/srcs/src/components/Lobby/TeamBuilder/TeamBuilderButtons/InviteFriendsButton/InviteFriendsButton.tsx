@@ -77,7 +77,6 @@ function InviteFriendsButton() {
     const invitations = invitationList.filter(
       (invit) => invit.userId !== user.id
     );
-    console.log("Invitation List: ", invitations);
     axiosPrivate
       .post("/invitations/createMany", invitations)
       .then((res: AxiosResponse) => {
