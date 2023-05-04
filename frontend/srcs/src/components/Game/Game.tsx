@@ -15,6 +15,7 @@ import {
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Group, Vector3 } from "three";
 import { SpaceDust } from "./Components/Assets/custom/SpaceDust";
+import { Sparks } from "./Components/Assets/custom/Sparks";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -72,9 +73,7 @@ function Game() {
           <Walls walls={gameInfo.field.walls} />
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
           <SpaceDust count={1000}/>
-          {/* <SparkStorm count={100} colors={"orange"}/> */}
-          {/* <CollisionDisk gameInfo={gameInfo} /> */}
-          {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
+          
           {gameInfo.mode === "CLASSIC" && isSpec === false ? (
             <group rotation={[0, Math.PI / 2, 0]}>
               <>
@@ -91,7 +90,7 @@ function Game() {
           )}
         </>
       )}
-      <Skybox />
+      <Skybox/>
     </Suspense>
   );
 }

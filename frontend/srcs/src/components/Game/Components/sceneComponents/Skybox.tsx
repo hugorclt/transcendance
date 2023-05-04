@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import * as THREE from "three";
 
 function Skybox() {
-  const base = useLoader(THREE.TextureLoader, "/grey.jpg");
+  const base = useLoader(THREE.TextureLoader, "/map_grey.jpg");
   const sphereRef = useRef<THREE.Mesh>(null!);
 
   useFrame(() => {
