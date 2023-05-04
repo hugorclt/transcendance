@@ -110,7 +110,7 @@ export class Game {
     const field = this._field.exportFieldInfo();
     const ball = this._ball.exportInfo();
     const players = this._players.map((player) => player.exportPlayerInfo());
-    return { field: field, ball: ball, players: players };
+    return { mode: this._mode, field: field, ball: ball, players: players };
   }
 
   gameLoop(deltaTime: number) {

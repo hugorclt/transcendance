@@ -5,8 +5,8 @@ import { TInviteFriendCardsProps } from "./InviteFriendCardType";
 function InviteFriendCard({ friend, ...buttonProps }: TInviteFriendCardsProps) {
   return (
     <InviteFriendCardContainer {...buttonProps}>
-      <h2>{friend.username.toLocaleUpperCase()}</h2>
-      <h5>{friend.status.toLocaleUpperCase()}</h5>
+      <h3>{friend.username.toLocaleUpperCase()}</h3>
+      <p>{friend.status.toLocaleUpperCase()}</p>
     </InviteFriendCardContainer>
   );
 }

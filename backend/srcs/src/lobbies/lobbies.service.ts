@@ -30,7 +30,6 @@ export class LobbiesService {
     private readonly lobbiesGateway: LobbiesGateway,
     private readonly socialGateway: SocialsGateway,
     private readonly matchesService: MatchesService,
-    private readonly statsService: StatsService,
   ) {}
 
   async create(
@@ -192,6 +191,9 @@ export class LobbiesService {
     await Promise.all(
       users.map(async (user) => {
         await this.usersService.updateStatus(user.id, 'CONNECTED');
+        this.lobbiesGateway.emitToLobby(id, 'user-left-lobby', {
+          userId: user.id,
+        });
       }),
     );
     const lobby = await this.prisma.lobby.update({
@@ -567,7 +569,7 @@ export class LobbiesService {
       newVote.set(member.vote, count + 1);
     });
     newVote.delete(null);
-    
+
     var mapSelected;
     if (newVote.size != 0) {
       mapSelected = [...newVote.entries()].reduce((a, e) =>

@@ -2,8 +2,6 @@ import { EType } from "../../../../shared/enum";
 
 /*================================ INTERFACE ==============================*/
 
-
-
 export type TCollision = {
   type: EType;
   position: {
@@ -49,10 +47,11 @@ export interface IField {
 }
 
 export interface IGameInfo {
+  mode: string;
   field: IField;
   ball: Object3D;
   players: IPlayer[];
-} 
+}
 
 export interface IFrame {
   timestamp: number;
@@ -61,10 +60,7 @@ export interface IFrame {
   collisions: TCollision[];
 }
 
-
 /*================================ VALIDATION ==============================*/
-
-
 
 function validateObject3D(obj: any): obj is Object3D {
   return (
@@ -94,7 +90,8 @@ function validatePlayer(obj: any): obj is IPlayer {
   );
 }
 
-function validateField(obj: any): obj is IField { // Updated to IField
+function validateField(obj: any): obj is IField {
+  // Updated to IField
   return (
     obj &&
     Array.isArray(obj.walls) &&
@@ -143,10 +140,7 @@ function validateIFrame(obj: any): obj is IFrame {
   );
 }
 
-
 /*================================ PARSING ==============================*/
-
-
 
 // export function parseGameData(json: string): IGameInfo | null {
 //   const parsedData = JSON.parse(json);
@@ -167,4 +161,3 @@ function validateIFrame(obj: any): obj is IFrame {
 //     return null;
 //   }
 // }
-

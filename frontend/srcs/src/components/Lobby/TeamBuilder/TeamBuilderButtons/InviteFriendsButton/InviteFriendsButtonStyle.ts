@@ -12,14 +12,22 @@ export const ModalBox = styled.div`
   padding: 8px;
   border-radius: 5px;
   border: 1px solid ${COLORS.border};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const StyledButton = styled.input`
+export const StyledButton = styled.button`
   padding: 4px;
   background-color: ${COLORS.secondary};
   color: ${COLORS.primary};
   border: none;
   border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+  }
 `;
 
 export const InviteFriendsList = styled.div`
@@ -42,7 +50,19 @@ export const InviteFriendsListScroll = styled.div`
   background-color: ${COLORS.darkergrey};
   border-radius: 8px;
   padding: 16px;
-  height: 300px;
+  max-height: 300px;
+
+  h4 {
+    padding: 8px;
+  }
+`;
+
+export const InviteChatListScroll = styled.div`
+  overflow-y: auto;
+  background-color: ${COLORS.darkergrey};
+  border-radius: 8px;
+  padding: 16px;
+  max-height: 300px;
 
   h4 {
     padding: 8px;

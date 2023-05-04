@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { COLORS } from "../../../../../../colors";
 
-export const InviteFriendCardContainer = styled.div`
+export const InviteChatCardContainer = styled.div`
   width: 200px;
   height: 50px;
   display: flex;

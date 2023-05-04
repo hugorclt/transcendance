@@ -3,7 +3,7 @@ import { Vector3 } from "three";
 import { COLORS } from "../../../colors";
 import Paddle from "./Paddle/Paddle";
 
-function Paddles({ players }) {
+function Paddles({ mode, players }) {
   return (
     <>
       {players.map((player: any, index: any) => {
@@ -13,6 +13,7 @@ function Paddles({ players }) {
             id={player.id}
             team={player.team}
             paddle={player.paddle}
+            mode={mode}
           />
         );
       })}

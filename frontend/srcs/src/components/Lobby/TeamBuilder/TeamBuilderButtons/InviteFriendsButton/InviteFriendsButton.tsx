@@ -2,10 +2,14 @@ import { useAtom } from "jotai";
 import React, { FormEvent, useState } from "react";
 import Popup from "reactjs-popup";
 import { COLORS } from "../../../../../colors";
-import { friendAtom, lobbyAtom } from "../../../../../services/store";
-import { TFriend } from "../../../../../services/type";
+import {
+  conversationAtom,
+  friendAtom,
+  lobbyAtom,
+} from "../../../../../services/store";
 import InviteFriendCard from "./InviteFriendCard/InviteFriendCard";
 import {
+  InviteChatListScroll,
   InviteFriendButtonContainer,
   InviteFriendsList,
   InviteFriendsListScroll,
@@ -16,12 +20,14 @@ import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import RoundIconButton from "../../../../common/Button/IconButton/RoundIconButton";
 import AddFriendIcon from "../../../../../assets/icons/AddFriendIcon";
+import InviteChatCard from "./InviteChatCard/InviteChatCard";
 
 function InviteFriendsButton() {
   const [open, setOpen] = useState(false);
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [friendList, setFriendList] = useAtom(friendAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const [chat, setChat] = useAtom(conversationAtom);
   const axiosPrivate = useAxiosPrivate();
 
   function handleAddFriends(name: string) {
@@ -45,6 +51,7 @@ function InviteFriendsButton() {
       .catch((error: AxiosError) => {
         console.log("error creating invitations");
       });
+    setOpen(false);
   };
 
   function chooseColor(id: string) {
@@ -54,15 +61,16 @@ function InviteFriendsButton() {
 
   return (
     <InviteFriendButtonContainer>
+      <RoundIconButton
+        onClick={() => setOpen(true)}
+        size={22}
+        Icon={AddFriendIcon}
+        disabled={lobby.state == "FULL" ? true : false}
+      />
       <Popup
-        trigger={
-          <RoundIconButton
-            onClick={() => setOpen(true)}
-            size={22}
-            Icon={AddFriendIcon}
-            disabled={lobby.state == "FULL" ? true : false}
-          />
-        }
+        onClose={() => {
+          setOpen(false);
+        }}
         modal
         open={open}
         nested
@@ -82,7 +90,25 @@ function InviteFriendsButton() {
               })}
             </InviteFriendsListScroll>
           </InviteFriendsList>
-          <StyledButton onClick={handleSubmit} type="submit" value="Invite" />
+          <InviteFriendsList>
+            <InviteChatListScroll>
+              {chat.map((val, index) => {
+                return (
+                  !val.isDm && (
+                    <InviteChatCard
+                      key={index}
+                      chat={val}
+                      onClick={() => handleAddFriends(val.id)}
+                      style={{ backgroundColor: chooseColor(val.id) }}
+                    />
+                  )
+                );
+              })}
+            </InviteChatListScroll>
+          </InviteFriendsList>
+          <StyledButton onClick={handleSubmit} type="submit">
+            <h5>Invite</h5>
+          </StyledButton>
         </ModalBox>
       </Popup>
     </InviteFriendButtonContainer>

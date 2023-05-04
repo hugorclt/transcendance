@@ -4,6 +4,7 @@ import useRefreshToken from "../../hooks/useRefreshToken";
 import Loading from "../../components/common/Loading/Loading";
 import { useAtom } from "jotai";
 import { userAtom } from "../store";
+import { AxiosError } from "axios";
 
 function PersistLogin() {
   const [isLoading, setIsLoading] = useState(true);
@@ -14,8 +15,8 @@ function PersistLogin() {
     const verifyRefreshToken = async () => {
       try {
         await refresh();
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
