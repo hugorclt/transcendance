@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
-import { lobbyAtom } from "../../../../../services/store";
+import { lobbyAtom, userAtom } from "../../../../../services/store";
 import { ChangeTeamButtonContainer } from "./ChangeTeamButton.style";
 import RoundIconButton from "../../../../common/Button/IconButton/RoundIconButton";
 import SwitchIcon from "../../../../../assets/icons/SwitchIcon";
@@ -10,16 +10,20 @@ import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../../../mediaSize";
 
 function ChangeTeamButton() {
+  const [user, setUser] = useAtom(userAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const [disabled, setDisabled] = useState(!lobby.private);
   const axiosPrivate = useAxiosPrivate();
   useEffect(() => {
     if (lobby.private) {
-      //detect if opponent team is full
-      //=> yes
-      //setDisabled(true);
-      //else
-      setDisabled(false);
+      const userMember = lobby.members.find(
+        (member) => member.userId == user.id
+      );
+      const opponentTeam = lobby.members
+        .flatMap((member) => member.team != userMember?.team)
+        .filter((member) => member != undefined);
+      if (opponentTeam.length == lobby.nbPlayers / 2) setDisabled(true);
+      else setDisabled(false);
     } else {
       setDisabled(true);
     }
