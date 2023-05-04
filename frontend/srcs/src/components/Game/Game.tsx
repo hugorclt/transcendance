@@ -13,6 +13,8 @@ import {
   userAtom,
 } from "../../services/store";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { Group, Vector3 } from "three";
+import { SpaceDust } from "./Components/Assets/custom/SpaceDust";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -66,19 +68,23 @@ function Game() {
         <></>
       ) : (
         <>
-          <Ball ball={gameInfo.ball} />
+          <Ball ball={gameInfo.ball}/>
           <Walls walls={gameInfo.field.walls} />
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
+          <SpaceDust count={1000}/>
+          {/* <SparkStorm count={100} colors={"orange"}/> */}
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
-          {gameInfo.mode == "CLASSIC" ? (
-            <>
-              <PerspectiveCamera position={[0, 0, 0]} />
-            </>
+          {gameInfo.mode === "CLASSIC" && isSpec === false ? (
+            <group rotation={[0, Math.PI / 2, 0]}>
+              <>
+                <PerspectiveCamera position={[0, 70, 0]} makeDefault={true} />
+              </>
+            </group>
           ) : (
             isSpec && (
               <>
-                <PerspectiveCamera position={[0, 10, 0]} />
+                <PerspectiveCamera position={[0, 70, 0]} makeDefault={true} />
                 <OrbitControls />
               </>
             )

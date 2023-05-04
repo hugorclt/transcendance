@@ -4,6 +4,7 @@ import { COLORS } from "../../colors";
 import Game from "./Game";
 import MyEffects from "./Effects";
 import Scoreboard from "./Scoreboard";
+import { SpaceDust } from "./Components/Assets/custom/SpaceDust";
 
 const GameScreen = () => {
   const screenRef = useRef<any>();

@@ -28,21 +28,22 @@ function Paddle(props: PlayerProps) {
     side2 = props.team ? "right-move" : "left-move";
   }
 
-  useFrame(() => {
-    if (keyMap["KeyA"]) {
-      console.log("A pressed");
-      socket?.emit(side1);
-    }
-    if (keyMap["KeyD"]) {
-      console.log("D pressed");
-      console.log(socket);
-      socket?.emit(side2);
-    }
-    keyMap["KeyA"] && socket?.emit(side1);
-    keyMap["KeyD"] && socket?.emit(side2);
-    keyMap["KeyW"] && socket?.emit("up-move");
-    keyMap["KeyS"] && socket?.emit("down-move");
-  });
+  if (props.mode !== 'CLASSIC') {
+    useFrame(() => {
+
+      keyMap["KeyA"] && socket?.emit(side1);
+      keyMap["KeyD"] && socket?.emit(side2);
+      keyMap["KeyW"] && socket?.emit("up-move");
+      keyMap["KeyS"] && socket?.emit("down-move");
+    });
+  } else {
+    useFrame(() => {
+
+      keyMap["KeyW"] && socket?.emit("left-move");
+      keyMap["KeyS"] && socket?.emit("right-move");
+    });
+  }
+
 
   useEffect(() => {
     socket?.on("frame", (data) => {
@@ -69,7 +70,7 @@ function Paddle(props: PlayerProps) {
       {createMeshComponent(
         props.paddle,
         playerRef,
-        props.mode == "CHAMPIONS" ? isActive : false
+        props.mode === "CHAMPIONS" ? isActive : false
       )}
     </>
   );
