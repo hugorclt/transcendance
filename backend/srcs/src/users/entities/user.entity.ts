@@ -32,4 +32,10 @@ export class UserEntity implements User {
 
     @ApiProperty()
     xp: number;
+
+    @ApiProperty()
+    secret2fa: string;
+
+    @ApiProperty()
+    is2fa: boolean;
 }

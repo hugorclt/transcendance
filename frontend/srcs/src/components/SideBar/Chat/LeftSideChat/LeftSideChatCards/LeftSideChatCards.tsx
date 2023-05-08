@@ -63,12 +63,18 @@ function LeftSideChatCards(props: {
           position="left center"
           arrowStyle={{ color: COLORS.background }}
           trigger={
-            <FriendsPopUpButton>
-              <BsThreeDotsVertical
-                style={{ opacity: "50%", color: COLORS.primary }}
-                size={22}
-              />
-            </FriendsPopUpButton>
+            <>
+              {user.username == props.name ? (
+                <></>
+              ) : (
+                <FriendsPopUpButton>
+                  <BsThreeDotsVertical
+                    style={{ opacity: "50%", color: COLORS.primary }}
+                    size={22}
+                  />
+                </FriendsPopUpButton>
+              )}
+            </>
           }>
           <PopUpBox>
             <InsidePopUpButton onClick={handleClick}>
@@ -76,7 +82,11 @@ function LeftSideChatCards(props: {
             </InsidePopUpButton>
             <InsidePopUpButton>Block user</InsidePopUpButton>
             {props.isAdmin ? (
-              <AdminInteraction userId={props.userId} roomId={props.roomId} mute={props.mute} />
+              <AdminInteraction
+                userId={props.userId}
+                roomId={props.roomId}
+                mute={props.mute}
+              />
             ) : (
               ""
             )}

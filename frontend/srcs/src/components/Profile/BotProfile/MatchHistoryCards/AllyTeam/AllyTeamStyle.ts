@@ -22,6 +22,7 @@ export const AllyListContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 80%;
+    box-sizing: border-box;
     height: 100%;
     background: #2596be;
     align-items: right;

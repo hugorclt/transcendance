@@ -72,6 +72,7 @@ function Game() {
           <Walls walls={gameInfo.field.walls} />
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
           <SpaceDust count={1000}/>
+          
           {/* <SparkStorm count={100} colors={"orange"}/> */}
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}

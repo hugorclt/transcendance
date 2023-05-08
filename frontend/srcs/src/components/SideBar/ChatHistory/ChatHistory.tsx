@@ -20,7 +20,7 @@ import SliderMenu from "../../common/SliderMenu/SliderMenu";
 import { RxCross2 } from "react-icons/rx";
 
 function ChatHistory() {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useContext(RoomModalOpenContext);
   const [isCreate, setIsCreate] = useState("CREATE");
   const [chatHistory, setChatHistory] = useAtom(conversationAtom);
   const [user] = useAtom(userAtom);

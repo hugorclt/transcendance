@@ -22,14 +22,6 @@ function ChatProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     socket?.on("on-chat-update", (newChat) => {
       setChat((prev) => updateArray(prev, newChat));
-
-      //TODO:Set orange pastille on new chat not read
-      setChat((prev) =>
-        prev.map((chat) => {
-          if (chat.isActive == true) chat.isRead = true;
-          return chat;
-        })
-      );
     });
 
     socket?.on("on-chat-delete", (chatToDel) => {

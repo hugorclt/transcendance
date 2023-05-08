@@ -19,6 +19,7 @@ export const userAtom = atom<TUser>({
   avatar: "",
   exp: 0,
   balance: 0,
+  is2fa: false,
 });
 
 export const searchUserAtom = atom<string>("");

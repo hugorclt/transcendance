@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import { exclude } from '../utils/exclude';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { LoginTicket, OAuth2Client } from 'google-auth-library';
+import { LoginTicket, OAuth2Client, TokenPayload } from 'google-auth-library';
 import { LobbyState, Type } from '@prisma/client';
 import { Api42CodeDto, Api42LogDto } from './dto/api42-log.dto';
 import { HttpService } from '@nestjs/axios';
@@ -15,6 +15,8 @@ import { catchError, lastValueFrom, map, throwError } from 'rxjs';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Api42TokenEntity } from './entities/api42-token.entity';
 import { LobbiesService } from 'src/lobbies/lobbies.service';
+import { authenticator } from 'otplib';
+import { toDataURL } from 'qrcode';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -141,6 +143,47 @@ export class AuthService {
     }
     await this.usersService.updateStatus(user.id, status);
     await this.updateRefreshHash(user.id, tokens.refresh_token);
+
+    if (user.is2fa) {
+      return { id: user.id, is2fa: true, username: user.username };
+    } else {
+      return { access_token: tokens.access_token, is2fa: false };
+    }
+  }
+
+  async loginWith2FA(
+    userId: string,
+    username: string,
+    code: string,
+    @Response({ passthrough: true }) res,
+  ) {
+    const isCodeValid = await this.isAuth2FaValid(userId, code);
+    if (!isCodeValid) throw new UnauthorizedException();
+    const userLogged = await this.usersService.findOne(userId);
+    const tokens = await this.getTokens(userId, username)
+    res.cookie('jwt', tokens.refresh_token, {
+      expires: true,
+      maxAge: 7 * 24 * 3600000,
+      httpOnly: true,
+    });
+    const lobby = await this.prisma.lobby.findFirst({
+      where: {
+        members: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+    });
+    let status;
+    if (lobby) {
+      if (lobby.state && lobby.state == 'GAME') status = 'GAME';
+      else status = 'LOBBY';
+    } else {
+      status = 'CONNECTED';
+    }
+    await this.usersService.updateStatus(userId, status);
+    await this.updateRefreshHash(userId, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
 
@@ -229,6 +272,65 @@ export class AuthService {
     return ticket;
   }
 
+  /* ----------------------------------- 2fa ---------------------------------- */
+
+  async generate2FaSecret(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    const secret = authenticator.generateSecret();
+    const otpauthurl = authenticator.keyuri(
+      user.email,
+      'Pongs Champion',
+      secret,
+    );
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        secret2fa: secret,
+      },
+    });
+    return {
+      secret,
+      otpauthurl,
+    };
+  }
+
+  async toUrl(otpauthurl: string) {
+    return await toDataURL(otpauthurl);
+  }
+
+  async turnOn2Fa(userId: string, code: string) {
+    await this.isAuth2FaValid(userId, code);
+    await this.usersService.set2fa(userId, true);
+  }
+
+  async turnOff2Fa(userId: string) {
+    await this.usersService.set2fa(userId, false);
+  }
+
+  async isAuth2FaValid(userId: string, code: string) {
+    console.log(userId, code);
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    const isValid = authenticator.verify({
+      token: code,
+      secret: user.secret2fa,
+    });
+
+    if (!isValid) throw new UnauthorizedException('Invalid Code');
+
+    return isValid;
+  }
+
   // --------------------  42 UTILS ------------------------
   async get42User(tokenEntity: Api42TokenEntity): Promise<Api42LogDto | null> {
     const headersRequest = {
@@ -268,7 +370,7 @@ export class AuthService {
       const responseData = await lastValueFrom(
         this.httpService
           .post(
-            "https://api.intra.42.fr/oauth/token",
+            'https://api.intra.42.fr/oauth/token',
             {
               grant_type: 'authorization_code',
               client_id: process.env['APP_42UID'],

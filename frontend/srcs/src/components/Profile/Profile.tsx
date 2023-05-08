@@ -20,15 +20,15 @@ export function Profile({ username }) {
     avatar: "",
     exp: 0,
     balance: 0,
+    is2fa: false,
   });
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let actual: string;
-    console.log(username);
     if (!username) actual = user.username;
     else actual = username;
+    console.log(username);
     axiosPrivate
       .get(`/users/user/${actual}`)
       .then((response: AxiosResponse) => {
@@ -38,7 +38,7 @@ export function Profile({ username }) {
       .catch((error: AxiosError) => {
         console.log(error.message);
       });
-  }, []);
+  }, [username]);
 
   return (
     <>

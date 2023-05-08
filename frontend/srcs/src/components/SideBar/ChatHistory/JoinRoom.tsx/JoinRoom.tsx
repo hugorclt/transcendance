@@ -14,6 +14,7 @@ import {
   CreateRoomLabel,
   CreateRoomTitle,
 } from "../ChatHistoryStyle";
+import { RoomModalOpenContext } from "../../../../views/SideBarPage/RoomModalOpenContext";
 
 function JoinRoom() {
   const [name, setName] = useState("");
@@ -21,6 +22,7 @@ function JoinRoom() {
   const axiosPrivate = useAxiosPrivate();
   const [conv, setConv] = useAtom(conversationAtom);
   const [errMsg, setErrMsg] = useState("");
+  const { open, setOpen } = useContext(RoomModalOpenContext);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -57,7 +59,7 @@ function JoinRoom() {
           autoComplete="new-password"
           placeholder="Password"></StyledInput>
         <CreateRoomButtonBox>
-          <StyledButton type="submit" value="Join room" />
+          <StyledButton onClick={() => setOpen(false)} type="submit" value="Join room" />
         </CreateRoomButtonBox>
       </CreateRoomForm>
       {errMsg.length != 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
