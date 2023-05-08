@@ -13,7 +13,6 @@ import {
   userAtom,
 } from "../../services/store";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import { Group, Vector3 } from "three";
 import { SpaceDust } from "./Components/Assets/custom/SpaceDust";
 
 function Game() {
@@ -68,11 +67,11 @@ function Game() {
         <></>
       ) : (
         <>
-          <Ball ball={gameInfo.ball}/>
+          <Ball ball={gameInfo.ball} />
           <Walls walls={gameInfo.field.walls} />
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
-          <SpaceDust count={1000}/>
-          
+          <SpaceDust count={1000} />
+
           {/* <SparkStorm count={100} colors={"orange"}/> */}
           {/* <CollisionDisk gameInfo={gameInfo} /> */}
           {/* <hemisphereLight args={["#ffff", 0.6]} /> */}

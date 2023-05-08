@@ -6,7 +6,6 @@ import { IObject } from '../interfaces/IObject';
 import { TCollision, TScore } from '../types';
 import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 import { maps } from '../utils/config/maps';
-import { goalCollide } from '../utils/collisions/goalCollide';
 import { EType } from 'shared/enum';
 
 export class Game {
@@ -16,7 +15,6 @@ export class Game {
   private _ball: Ball;
   private _lastTimestamp: number = 0;
   private _objects: Array<IObject>;
-  private _movingObjects: Array<IObject>;
   private _collisions: Array<TCollision>;
   private _score: TScore;
   private _mode: string;
@@ -61,7 +59,6 @@ export class Game {
   public constructor(lobby: LobbyWithMembersEntity) {
     this._players = new Array<Player>();
     this._objects = new Array<IObject>();
-    this._movingObjects = new Array<IObject>();
     this._collisions = new Array<TCollision>();
     this._score = {
       team1: 0,
