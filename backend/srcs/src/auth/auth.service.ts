@@ -151,7 +151,7 @@ export class AuthService {
     code: string,
     @Response({ passthrough: true }) res,
   ) {
-    console.log(user, code)
+    console.log(user, code);
     const isCodeValid = await this.isAuth2FaValid(user.sub, code);
     if (!isCodeValid) throw new UnauthorizedException();
     const userLogged = await this.usersService.findOne(user.sub);
@@ -323,6 +323,10 @@ export class AuthService {
   async turnOn2Fa(userId: string, code: string) {
     await this.isAuth2FaValid(userId, code);
     await this.usersService.set2fa(userId, true);
+  }
+
+  async turnOff2Fa(userId: string) {
+    await this.usersService.set2fa(userId, false);
   }
 
   async isAuth2FaValid(userId: string, code: string) {

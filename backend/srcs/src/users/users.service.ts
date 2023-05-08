@@ -81,7 +81,7 @@ export class UsersService {
         id: userId,
       },
       data: {
-        is2fa: true,
+        is2fa: value,
       }
     })
   }

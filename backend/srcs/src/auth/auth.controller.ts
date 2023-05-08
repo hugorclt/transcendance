@@ -53,6 +53,13 @@ export class AuthController {
     return await this.authService.turnOn2Fa(req.user.sub, body.code);
   }
 
+  @Get('2fa/turn-off')
+  @UseGuards(AccessAuthGard)
+  async turnOff2Fa(@Request() req) {
+    console.log("yesiam");
+    return await this.authService.turnOff2Fa(req.user.sub);
+  }
+
   @Post('2fa/authenticate')
   @UseGuards(JwtAccess)
   async authenticate(

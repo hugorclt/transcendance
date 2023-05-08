@@ -8,7 +8,7 @@ import { userAtom } from "../../../services/store";
 
 function F2A() {
   const axiosPrivate = useAxiosPrivate();
-  const [is2fa, setIs2fa] = useState(false);
+  const [is2fa, setIs2fa] = useState<any>(false);
   const [qrCode, setQrCode] = useState("");
   const [msg, setMsg] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -22,8 +22,17 @@ function F2A() {
   }, []);
 
   const change2Fa = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIs2fa((prev) => !prev)
     if (e.target.checked == false)
-      axiosPrivate.post("/users/set2fa", { activated: false });
+      axiosPrivate.get("/auth/2fa/turn-off").then(() => {
+        setQrCode("");
+        setErrMsg("");
+        setMsg("");
+        setUser((prev) => ({
+          ...prev,
+          is2fa: false,
+        }));
+      });
     else
       axiosPrivate
         .get("/auth/generate")
@@ -57,8 +66,9 @@ function F2A() {
       <Fa2Container>
         <p>Enable Google Authenticator 2FA</p>
         <input
+          checked={is2fa}
           onChange={(e) => change2Fa(e)}
-          defaultChecked={is2fa}
+          // defaultChecked={is2fa}
           type="checkbox"
         />
       </Fa2Container>
