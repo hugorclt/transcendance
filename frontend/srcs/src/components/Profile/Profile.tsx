@@ -20,13 +20,12 @@ export function Profile({ username }) {
     avatar: "",
     exp: 0,
     balance: 0,
+    is2fa: false,
   });
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let actual: string;
-    console.log(username);
     if (!username) actual = user.username;
     else actual = username;
     axiosPrivate
