@@ -30,7 +30,7 @@ function ProfilePage(props) {
             placeholder="Username"></input>
         </form>
       </div>
-      <ProfileLayout username={user} />;
+      <ProfileLayout username={user} />
     </>
   );
 }

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const BotProfileContainer = styled.div`
   width: 100%;
-  height: 70%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
