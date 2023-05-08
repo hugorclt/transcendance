@@ -39,8 +39,7 @@ function LoginForm() {
               visibility: isVisible,
               color: "green",
             } as CSSProperties
-          }
-        >
+          }>
           Login Success!
         </p>
       );
@@ -53,8 +52,7 @@ function LoginForm() {
               visibility: isVisible,
               color: "red",
             } as CSSProperties
-          }
-        >
+          }>
           {errMsg}
         </p>
       );
@@ -70,17 +68,22 @@ function LoginForm() {
         password: password,
       })
       .then((response: AxiosResponse) => {
-        setSuccess(true);
-        setIsVisible("visible");
-        const accessToken = response?.data?.access_token;
-        setUser((prev) => ({
-          ...prev,
-          username: username,
-          accessToken: accessToken,
-        }));
-        setUsername("");
-        setPassword("");
-        navigate(from, { replace: true });
+        if (response.data.is2fa == true) {
+          console.log("cc");
+          navigate("/login/2fa", { replace: true });
+        } else {
+          setSuccess(true);
+          setIsVisible("visible");
+          const accessToken = response?.data?.access_token;
+          setUser((prev) => ({
+            ...prev,
+            username: username,
+            accessToken: accessToken,
+          }));
+          setUsername("");
+          setPassword("");
+          navigate(from, { replace: true });
+        }
       })
       .catch((error: AxiosError) => {
         if (!error?.response) {

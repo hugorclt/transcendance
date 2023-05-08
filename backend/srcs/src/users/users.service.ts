@@ -63,7 +63,27 @@ export class UsersService {
         },
       },
     });
-    return exclude(user, ['password', 'type', 'refreshToken']);
+    return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
+  }
+
+  async is2fa(userId: string) : Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      }
+    })
+    return user.is2fa;
+  }
+
+  async set2fa(userId: string, value: boolean) {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        is2fa: true,
+      }
+    })
   }
 
   async createGoogle(
@@ -94,7 +114,7 @@ export class UsersService {
         },
       },
     });
-    return exclude(user, ['password', 'type', 'refreshToken']);
+    return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
   }
 
   async create42(create42UserDto: Create42UserDto): Promise<ReturnUserEntity> {
@@ -123,13 +143,13 @@ export class UsersService {
         },
       },
     });
-    return exclude(user, ['password', 'type', 'refreshToken']);
+    return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
   }
 
   async findAll(): Promise<ReturnUserEntity[]> {
     const users: UserEntity[] = await this.prisma.user.findMany({});
     if (users)
-      return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
+      return users.map((x) => exclude(x, ['password', 'type', 'refreshToken', 'secret2fa']));
     throw new NotFoundException();
   }
 
@@ -137,7 +157,7 @@ export class UsersService {
     const user: UserEntity = await this.prisma.user.findUnique({
       where: { id },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException();
   }
 
@@ -145,7 +165,7 @@ export class UsersService {
     const user: UserEntity = await this.prisma.user.findUnique({
       where: { username },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException();
   }
 
@@ -161,7 +181,7 @@ export class UsersService {
     const user: UserEntity = await this.prisma.user.findUnique({
       where: { email },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException();
   }
 
@@ -172,7 +192,7 @@ export class UsersService {
         type: Type.GOOGLE,
       },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException();
   }
 
@@ -183,7 +203,7 @@ export class UsersService {
         type: Type.API42,
       },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException();
   }
 
@@ -192,7 +212,7 @@ export class UsersService {
       where: { status: Status.CONNECTED },
     });
     if (users)
-      return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
+      return users.map((x) => exclude(x, ['password', 'type', 'refreshToken', 'secret2fa']))
     throw new NotFoundException();
   }
 
@@ -201,7 +221,7 @@ export class UsersService {
       where: { id },
       data: updateUserDto,
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException();
   }
 
@@ -242,7 +262,7 @@ export class UsersService {
         id: userUpdate.id,
       });
     }
-    return exclude(userUpdate, ['password', 'type', 'refreshToken']);
+    return exclude(userUpdate, ['password', 'type', 'refreshToken', 'secret2fa']);
   }
 
   async updateVisibility(
@@ -279,7 +299,7 @@ export class UsersService {
       status: sentStatus,
       id: user.id,
     });
-    return exclude(user, ['password', 'type', 'refreshToken']);
+    return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
   }
 
   async unBlockUser(userId: string, toUnblockName: string) {
@@ -342,7 +362,7 @@ export class UsersService {
       where: { id },
       data: { refreshToken },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException('User not found');
   }
 
@@ -350,7 +370,7 @@ export class UsersService {
     const user: UserEntity = await this.prisma.user.delete({
       where: { id },
     });
-    if (user) return exclude(user, ['password', 'type', 'refreshToken']);
+    if (user) return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
     throw new NotFoundException('User not found');
   }
 
@@ -435,7 +455,7 @@ export class UsersService {
         id: user.id,
       },
     );
-    return exclude(user, ['password', 'type', 'refreshToken']);
+    return exclude(user, ['password', 'type', 'refreshToken', 'secret2fa']);
   }
 
   async updateUsername(userId: string, newUsername: string) {
@@ -507,7 +527,7 @@ export class UsersService {
       usernameToRemove,
     );
     this.socialsGateway.removeFriend(removed.id, remover.username);
-    return exclude(removed, ['password', 'type', 'refreshToken']);
+    return exclude(removed, ['password', 'type', 'refreshToken', 'secret2fa']);
   }
 
   async removeOneRelation(remover: any, removed: any) {
@@ -557,7 +577,7 @@ export class UsersService {
     const users = await this.prisma.user.findMany({
       where: { username: { in: userId } },
     });
-    return users.map((x) => exclude(x, ['password', 'type', 'refreshToken']));
+    return users.map((x) => exclude(x, ['password', 'type', 'refreshToken', 'secret2fa']));
   }
 
   async checkIfUserBlocked(userId: string, userBlockedId: string) {

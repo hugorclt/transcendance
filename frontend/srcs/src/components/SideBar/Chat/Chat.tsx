@@ -220,6 +220,7 @@ function Chat({ chat }: TChatProps) {
         </ChatMessageContainer>
         <ChatForm onSubmit={sendMessage} autoComplete="off">
           <ChatInput
+            autoFocus={true}
             placeholder="send a message here..."
             value={message}
             onChange={(e) => {

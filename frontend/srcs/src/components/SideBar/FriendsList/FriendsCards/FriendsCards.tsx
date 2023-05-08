@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   FriendsCardsAvatar,
@@ -31,11 +31,12 @@ function FriendsCards({ friend }: TFriendCardsProps) {
   const [friendList, setFriendList] = useAtom(friendAtom);
   const [chat, setChat] = useAtom(conversationAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const ref = useRef<any>();
 
   const handleRemove = () => {
     axiosPrivate
       .post("/users/friends/remove", { usernameToRemove: friend.username })
-      .then((res: AxiosResponse) => console.log("user succesfully removed"))
+      .then((res: AxiosResponse) => {})
       .catch((err: AxiosError) => console.log("failed to remove", err));
   };
 
@@ -50,6 +51,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       })
       .then((res: AxiosResponse) => {
         setChat((prev) => updateArray(prev, res.data));
+        closeTooltip();
       })
       .catch((err: AxiosError) => {
         console.log("error while creating the room");
@@ -78,6 +80,8 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       });
   };
 
+  const closeTooltip = () => ref.current!.close();
+
   return (
     <FriendsCardsBox>
       <LeftFriendsCardsBox>
@@ -96,30 +100,41 @@ function FriendsCards({ friend }: TFriendCardsProps) {
           </FriendsCardsStatus>
         </MiddleFriendsCardsBox>
       </LeftFriendsCardsBox>
+
       <Popup
+        ref={ref}
         position="left center"
         arrowStyle={{ color: COLORS.background }}
         trigger={
-          <FriendsPopUpButton>
+          <FriendsPopUpButton >
             <BsThreeDotsVertical
-              style={{ opacity: "50%", color: COLORS.primary }}
+              style={{
+                opacity: "50%",
+                color: COLORS.primary,
+                cursor: "pointer",
+              }}
               size={22}
             />
           </FriendsPopUpButton>
-        }
-      >
+        }>
         <PopUpBox>
-          <InsidePopUpButton onClick={handleChat}>
+          <InsidePopUpButton style={{ cursor: "pointer" }} onClick={handleChat}>
             Send message
           </InsidePopUpButton>
-          <InsidePopUpButton onClick={handleBlock}>
+          <InsidePopUpButton
+            style={{ cursor: "pointer" }}
+            onClick={handleBlock}>
             Block friends
           </InsidePopUpButton>
-          <InsidePopUpButton onClick={handleRemove}>
+          <InsidePopUpButton
+            style={{ cursor: "pointer" }}
+            onClick={handleRemove}>
             Remove friends
           </InsidePopUpButton>
           {friend.status == "GAME" && (
-            <InsidePopUpButton onClick={spectateGame}>
+            <InsidePopUpButton
+              style={{ cursor: "pointer" }}
+              onClick={spectateGame}>
               Spectate
             </InsidePopUpButton>
           )}

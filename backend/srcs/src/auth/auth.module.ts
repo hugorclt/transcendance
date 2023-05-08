@@ -11,6 +11,7 @@ import { accessStrategy } from './utils/access-strategy';
 import { HttpModule } from '@nestjs/axios';
 import { SocialsModule } from 'src/socials/socials.module';
 import { LobbiesModule } from 'src/lobbies/lobbies.module';
+import { jwtStrategy } from './utils/jwt-strategy';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { LobbiesModule } from 'src/lobbies/lobbies.module';
     LocalStrategy,
     refreshStrategy,
     accessStrategy,
+    jwtStrategy,
   ],
 })
 export class AuthModule {}

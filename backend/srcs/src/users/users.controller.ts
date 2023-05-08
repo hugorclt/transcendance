@@ -62,6 +62,16 @@ export class UsersController {
     return await this.usersService.findConnected();
   }
 
+  @Get('is2fa')
+  async is2fa(@Request() req): Promise<boolean> {
+    return await this.usersService.is2fa(req.user.sub);
+  }
+
+  @Post('set2fa')
+  async set2fa(@Request() req) {
+    return await this.usersService.set2fa(req.user.sub, req.body.activated);
+  }
+
   @Get('me')
   @ApiOkResponse({ type: ReturnUserEntity })
   async findInfo(@Request() req): Promise<ReturnUserEntity> {

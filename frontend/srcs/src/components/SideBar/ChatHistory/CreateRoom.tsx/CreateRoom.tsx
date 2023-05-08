@@ -176,7 +176,7 @@ function CreateRoom() {
             type="checkbox"
           ></CreateRoomCheckBox>
           <CreateRoomButtonBox>
-            <StyledButton type="submit" value="Create Room" />
+            <StyledButton onClick={() => setOpen(false)} type="submit" value="Create Room" />
           </CreateRoomButtonBox>
         </CreateRoomForm>
       </CreateRoomBox>

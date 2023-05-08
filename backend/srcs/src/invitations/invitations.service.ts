@@ -108,8 +108,15 @@ export class InvitationsService {
     sender: any,
   ): Promise<InvitationEntity> {
     const receiver = await this.prisma.user.findUnique({
-      where: { username: createInvitationDto.username },
+      where: {
+        username: createInvitationDto.username 
+      },
+      include: {
+        friends: true,
+      }
     });
+    const alreadyFriends = receiver.friends.some((friend) => friend.id == sender.sub)
+    if (alreadyFriends) throw new ConflictException("already friends");
     if (!receiver) throw new NotFoundException('user not found');
     if (await this.usersService.checkIfUserBlocked(receiver.id, sender.sub))
       throw new NotFoundException();

@@ -1,10 +1,10 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { userAtom } from "../../../services/store";
 import { getImageBase64 } from "../../../services/utils/getImageBase64";
-import { PhotoContainer } from "../Settings.style";
+import { Fa2Container, PhotoContainer } from "../Settings.style";
 
 function General() {
   const axiosPrivate = useAxiosPrivate();
@@ -70,7 +70,12 @@ function General() {
       <p>Import a new Profile Picture </p>
       <PhotoContainer src={photo == "" ? getImageBase64(user.avatar) : photo} />
       <form onSubmit={handlePicture}>
-        <input  style={{ cursor: "pointer" }} onChange={handleFileChange} name="picture" type="file" />
+        <input
+          style={{ cursor: "pointer" }}
+          onChange={handleFileChange}
+          name="picture"
+          type="file"
+        />
         <button style={{ cursor: "pointer" }}>Upload picture</button>
       </form>
       <p>Change username: </p>

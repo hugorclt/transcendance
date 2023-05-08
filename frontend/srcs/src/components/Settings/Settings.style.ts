@@ -35,7 +35,7 @@ export const SettingsRight = styled.div`
   padding: 12px;
   width: 100%;
   box-sizing: border-box;
-  
+
   form {
     display: flex;
     align-items: center;
@@ -67,3 +67,7 @@ export const PhotoContainer = styled.img`
   border-radius: 125px;
   margin: 8px;
 `;
+
+export const Fa2Container = styled.div`
+  display: flex;
+`

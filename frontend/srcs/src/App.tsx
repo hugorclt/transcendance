@@ -17,6 +17,7 @@ import LobbyPage from "./views/LobbyPage/LobbyPage";
 import GamePage from "./views/GamePage/GamePage";
 import ProvideSockets from "./services/Auth/ProvideSockets";
 import RequireInGameStatus from "./services/Status/RequireInGameStatus";
+import Login2FA from "./components/Login/Login2FA/Login2FA";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/login/42" element={<Login42 />} />
         </Route>
+        <Route path="/login/2fa" element={<Login2FA />} />
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
           <Route element={<ProvideSockets />}>
