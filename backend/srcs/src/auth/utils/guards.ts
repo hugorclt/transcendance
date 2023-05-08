@@ -20,7 +20,4 @@ export class Auth42Guard extends AuthGuard('42') {
 export class AccessAuthGard extends AuthGuard('access') {}
 
 @Injectable()
-export class JwtAccess extends AuthGuard('jwtAccess') {}
-
-@Injectable()
 export class RefreshAuthGard extends AuthGuard('refresh') {}

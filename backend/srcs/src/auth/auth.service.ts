@@ -143,40 +143,24 @@ export class AuthService {
     }
     await this.usersService.updateStatus(user.id, status);
     await this.updateRefreshHash(user.id, tokens.refresh_token);
-    return { access_token: tokens.access_token, is2fa: user.is2fa };
+
+    if (user.is2fa) {
+      return { id: user.id, is2fa: true, username: user.username };
+    } else {
+      return { access_token: tokens.access_token, is2fa: false };
+    }
   }
 
   async loginWith2FA(
-    user: any,
+    userId: string,
+    username: string,
     code: string,
     @Response({ passthrough: true }) res,
   ) {
-    console.log(user, code);
-    const isCodeValid = await this.isAuth2FaValid(user.sub, code);
+    const isCodeValid = await this.isAuth2FaValid(userId, code);
     if (!isCodeValid) throw new UnauthorizedException();
-    const userLogged = await this.usersService.findOne(user.sub);
-    const at = await this.jwtService.signAsync({
-      sub: user.sub,
-      username: userLogged.username,
-      isTwoFactorAuthenticationEnabled: !!userLogged.is2fa,
-      isTwoFactorAuthenticated: true,
-    });
-    const rt = await this.jwtService.signAsync(
-      {
-        sub: user.sub,
-        username: userLogged.username,
-        isTwoFactorAuthenticationEnabled: !!userLogged.is2fa,
-        isTwoFactorAuthenticated: true,
-      },
-      {
-        secret: process.env['RT_SECRET'],
-        expiresIn: 7 * 24 * 3600000,
-      },
-    );
-    const tokens = {
-      access_token: at,
-      refresh_token: rt,
-    };
+    const userLogged = await this.usersService.findOne(userId);
+    const tokens = await this.getTokens(userId, username)
     res.cookie('jwt', tokens.refresh_token, {
       expires: true,
       maxAge: 7 * 24 * 3600000,
@@ -186,7 +170,7 @@ export class AuthService {
       where: {
         members: {
           some: {
-            userId: user.sub,
+            userId: userId,
           },
         },
       },
@@ -198,8 +182,8 @@ export class AuthService {
     } else {
       status = 'CONNECTED';
     }
-    await this.usersService.updateStatus(user.sub, status);
-    await this.updateRefreshHash(user.sub, tokens.refresh_token);
+    await this.usersService.updateStatus(userId, status);
+    await this.updateRefreshHash(userId, tokens.refresh_token);
     return { access_token: tokens.access_token };
   }
 

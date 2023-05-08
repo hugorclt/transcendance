@@ -69,7 +69,10 @@ function LoginForm() {
       })
       .then((response: AxiosResponse) => {
         if (response.data.is2fa == true) {
-          console.log("cc");
+          setUser((prev) => ({
+            ...prev,
+            ...response.data,
+          }));
           navigate("/login/2fa", { replace: true });
         } else {
           setSuccess(true);

@@ -20,7 +20,7 @@ function Login2FA() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     axiosPrivate
-      .post("auth/2fa/authenticate", {code: code})
+      .post("auth/2fa/authenticate", {userId: user.id, code: code, username: user.username})
       .then((res: AxiosResponse) => {
         setCode("");
         const accessToken = res?.data?.access_token;

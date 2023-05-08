@@ -13,7 +13,6 @@ import {
   AccessAuthGard,
   RefreshAuthGard,
   LocalAuthGuard,
-  JwtAccess,
 } from './utils/guards';
 import { AuthService } from './auth.service';
 import { Body } from '@nestjs/common';
@@ -56,18 +55,13 @@ export class AuthController {
   @Get('2fa/turn-off')
   @UseGuards(AccessAuthGard)
   async turnOff2Fa(@Request() req) {
-    console.log("yesiam");
+    console.log('yesiam');
     return await this.authService.turnOff2Fa(req.user.sub);
   }
 
   @Post('2fa/authenticate')
-  @UseGuards(JwtAccess)
-  async authenticate(
-    @Req() req,
-    @Body() body,
-    @Response({ passthrough: true }) res,
-  ) {
-    return await this.authService.loginWith2FA(req.user, body.code, res);
+  async authenticate(@Body() body, @Response({ passthrough: true }) res) {
+    return await this.authService.loginWith2FA(body.userId,body.username, body.code, res);
   }
 
   @Post('google/login')
