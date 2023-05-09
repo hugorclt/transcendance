@@ -32,7 +32,9 @@ function ChatHistory() {
         <BiMessageRoundedAdd
           size={22}
           style={{ color: COLORS.secondary, cursor: "pointer" }}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true);
+          }}
         />
         <Popup modal open={open} onClose={() => setOpen(false)}>
           <ModalBoxCreateRoom>

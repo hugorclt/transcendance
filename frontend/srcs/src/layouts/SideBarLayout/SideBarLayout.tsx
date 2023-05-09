@@ -11,12 +11,17 @@ import {
 function SideBarLayout() {
   return (
     <>
-      <MediaQuery maxWidth={mediaSize.desktop - 1}>
+      <MediaQuery minWidth={mediaSize.laptop + 1} maxWidth={mediaSize.desktop - 1}>
         <SideBarDrawerContainer>
           <SideBarDrawer />
         </SideBarDrawerContainer>
       </MediaQuery>
       <MediaQuery minWidth={mediaSize.desktop}>
+        <SideBarContainer>
+          <SideBar />
+        </SideBarContainer>
+      </MediaQuery>
+      <MediaQuery maxWidth={mediaSize.laptop}>
         <SideBarContainer>
           <SideBar />
         </SideBarContainer>
