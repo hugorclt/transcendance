@@ -45,7 +45,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
 
           {openSideBar && (
             <SideBarMobileContainer>
-              <SideBar />
+              <SideBarPage />
             </SideBarMobileContainer>
           )}
         </MainLayoutContainer>
