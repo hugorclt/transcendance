@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ProfileLayout } from "../../layouts/ProfileLayout/ProfileLayout";
 import { useParams } from "react-router";
-import { nanoid } from "nanoid";
 import { COLORS } from "../../colors";
 
 function ProfilePage(props) {
