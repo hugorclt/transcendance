@@ -3,7 +3,7 @@ import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import Ball from "./Components/Ball";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
-import Skybox from "./Components/sceneComponents/Skybox";
+import Skybox from "./Components/Skybox/Skybox";
 import { useNavigate } from "react-router";
 import { useAtom } from "jotai";
 import {
