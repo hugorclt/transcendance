@@ -9,8 +9,6 @@ import {
   useRef,
 } from "react";
 import { Mesh, Vector2, Vector3 } from "three";
-import { useForwardRaycast } from "../../../hooks/useForwardRaycast";
-import BlueFlame from "../effects/BlueFlame";
 import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 import { Object3D } from "./Assets/interfaces";
 import { createMeshComponent } from "./Assets/meshGenerator";
@@ -30,7 +28,6 @@ const Ball = (props: BallProps) => {
     if (ballRef.current) {
       ballRef.current.rotation.x += velocity.z / 100;
       ballRef.current.rotation.z += velocity.x / 100;
-
     }
   });
 
@@ -40,7 +37,11 @@ const Ball = (props: BallProps) => {
       ballRef.current.position.y = data.ball.position.y;
       ballRef.current.position.z = data.ball.position.z;
 
-      const newVelocity = new Vector3(data.ball.velocity.x, data.ball.velocity.y, data.ball.velocity.z);
+      const newVelocity = new Vector3(
+        data.ball.velocity.x,
+        data.ball.velocity.y,
+        data.ball.velocity.z
+      );
 
       if (!lastReceivedVelocity.current.equals(newVelocity)) {
         setVelocity(newVelocity);
