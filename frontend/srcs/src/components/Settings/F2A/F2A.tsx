@@ -22,7 +22,7 @@ function F2A() {
   }, []);
 
   const change2Fa = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIs2fa((prev) => !prev)
+    setIs2fa((prev) => !prev);
     if (e.target.checked == false)
       axiosPrivate.get("/auth/2fa/turn-off").then(() => {
         setQrCode("");
@@ -37,7 +37,6 @@ function F2A() {
       axiosPrivate
         .get("/auth/generate")
         .then((res: AxiosResponse) => {
-          console.log(res.data);
           setQrCode(res.data);
         })
         .catch((err: AxiosError) => {});
@@ -80,7 +79,8 @@ function F2A() {
             <input
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="Code"></input>
+              placeholder="Code"
+            ></input>
           </form>
           {errMsg.length > 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
         </>

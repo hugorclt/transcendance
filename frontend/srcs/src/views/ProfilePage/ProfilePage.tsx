@@ -15,19 +15,22 @@ function ProfilePage(props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(tempUsername);
     setUsername(tempUsername);
     setTempUsername("");
   };
 
   return (
     <>
-      <div style={{padding: "8px", backgroundColor: COLORS.background}}>
-        <form style={{display: "flex", alignItems: "center"}} onSubmit={handleSubmit}>
-          <p style={{marginRight: "8px"}}>Search user:</p>
+      <div style={{ padding: "8px", backgroundColor: COLORS.background }}>
+        <form
+          style={{ display: "flex", alignItems: "center" }}
+          onSubmit={handleSubmit}
+        >
+          <p style={{ marginRight: "8px" }}>Search user:</p>
           <input
             onChange={(e) => setTempUsername(e.target.value)}
-            placeholder="Username"></input>
+            placeholder="Username"
+          ></input>
         </form>
       </div>
       <ProfileLayout username={user} />

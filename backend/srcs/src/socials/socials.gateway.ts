@@ -61,19 +61,24 @@ export class SocialsGateway
     return this.io.sockets.get(socketId);
   }
 
-  async sendMessageToRoom(message: CreateMessageDto, participants: Participant[]) {
+  async sendMessageToRoom(
+    message: CreateMessageDto,
+    participants: Participant[],
+  ) {
     const client = this.getSocketFromUserId(message.senderId);
     if (!client) return;
-    participants.forEach(async participant => {
-      const test = await this.checkIfUserBlocked(participant.userId, message.senderId);
-        console.log(test)
-        if (!(test)) {
-          client.to(participant.userId).emit('on-new-message', message);
-          this.emitToUser(participant.userId, 'on-chat-update', {
-            id: message.roomId,
-            lastMessage: message.content,
-          });
-        }
+    participants.forEach(async (participant) => {
+      const test = await this.checkIfUserBlocked(
+        participant.userId,
+        message.senderId,
+      );
+      if (!test) {
+        client.to(participant.userId).emit('on-new-message', message);
+        this.emitToUser(participant.userId, 'on-chat-update', {
+          id: message.roomId,
+          lastMessage: message.content,
+        });
+      }
     });
   }
 
@@ -89,7 +94,6 @@ export class SocialsGateway
     const isBloqued = userTo.isBloqued.some(
       (blocked) => blocked.id == userBlockedId,
     );
-    console.log(isBloqued);
     if (isBloqued) return true;
     return false;
   }

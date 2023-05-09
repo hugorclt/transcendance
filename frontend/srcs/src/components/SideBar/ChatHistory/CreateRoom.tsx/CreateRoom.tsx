@@ -60,7 +60,6 @@ function CreateRoom() {
         isDm: false,
       })
       .then((res: AxiosResponse) => {
-        console.log("Room succesfully created\n", res.data);
         setChat((prev) => updateArray(prev, res.data));
       })
       .catch((err: AxiosError) => {
@@ -176,7 +175,11 @@ function CreateRoom() {
             type="checkbox"
           ></CreateRoomCheckBox>
           <CreateRoomButtonBox>
-            <StyledButton onClick={() => setOpen(false)} type="submit" value="Create Room" />
+            <StyledButton
+              onClick={() => setOpen(false)}
+              type="submit"
+              value="Create Room"
+            />
           </CreateRoomButtonBox>
         </CreateRoomForm>
       </CreateRoomBox>

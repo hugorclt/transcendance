@@ -72,7 +72,6 @@ function FriendsCards({ friend }: TFriendCardsProps) {
     axiosPrivate
       .get(`/lobbies/${friend.id}/spectate`)
       .then((response: AxiosResponse) => {
-        console.log(JSON.stringify(response.data));
         setLobby((prev) => ({ ...prev, ...response.data }));
       })
       .catch((error: AxiosError) => {
@@ -106,7 +105,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
         position="left center"
         arrowStyle={{ color: COLORS.background }}
         trigger={
-          <FriendsPopUpButton >
+          <FriendsPopUpButton>
             <BsThreeDotsVertical
               style={{
                 opacity: "50%",
@@ -116,25 +115,29 @@ function FriendsCards({ friend }: TFriendCardsProps) {
               size={22}
             />
           </FriendsPopUpButton>
-        }>
+        }
+      >
         <PopUpBox>
           <InsidePopUpButton style={{ cursor: "pointer" }} onClick={handleChat}>
             Send message
           </InsidePopUpButton>
           <InsidePopUpButton
             style={{ cursor: "pointer" }}
-            onClick={handleBlock}>
+            onClick={handleBlock}
+          >
             Block friends
           </InsidePopUpButton>
           <InsidePopUpButton
             style={{ cursor: "pointer" }}
-            onClick={handleRemove}>
+            onClick={handleRemove}
+          >
             Remove friends
           </InsidePopUpButton>
           {friend.status == "GAME" && (
             <InsidePopUpButton
               style={{ cursor: "pointer" }}
-              onClick={spectateGame}>
+              onClick={spectateGame}
+            >
               Spectate
             </InsidePopUpButton>
           )}

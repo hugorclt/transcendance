@@ -73,7 +73,6 @@ export class RoomsController {
     @Request() req,
     @Body() managerRoomDto: ManagerRoomDto,
   ): Promise<string> {
-    console.log(managerRoomDto);
     await this.roomsService.kickFromRoom(req.user.sub, managerRoomDto);
     return 'success';
   }

@@ -21,14 +21,11 @@ export class SocketIoAdapter extends IoAdapter {
       cors,
     };
 
-    console.log('Configuring SocketIO with custom cors');
-
     const server = super.createIOServer(port, optionsWithCors);
 
     const jwtService = this.app.get(JwtService);
     const usersService = this.app.get(UsersService);
 
-    console.log('Registering Socket.io middleware');
     server.of('lobbies').use(WSAuthMiddleware(jwtService, usersService));
     server.of('socials').use(WSAuthMiddleware(jwtService, usersService));
     server.of('game').use(WSAuthMiddleware(jwtService, usersService));

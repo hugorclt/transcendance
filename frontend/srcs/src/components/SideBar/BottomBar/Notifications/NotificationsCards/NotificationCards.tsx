@@ -34,14 +34,14 @@ function NotificationCards({
           setLobby((prev) => ({ ...prev, ...response.data }));
         })
         .catch((error: AxiosError) => {
-          if (error.response?.status === 405) {}
+          if (error.response?.status === 405) {
+          }
           setErrMsg("Lobby not joinable or you are already in a lobby.");
         });
     } else {
       axiosPrivate
         .post("/users/friends/add", { userFromId: userFromId, userId: userId })
         .then((response: AxiosResponse) => {
-          console.log("added friend: ", JSON.stringify(response.data));
           //TODO ERROR
           setFriendList((prev) => updateArray(prev, response.data));
         })
@@ -76,17 +76,19 @@ function NotificationCards({
       <NotifButtonContainer>
         <button
           onClick={accept}
-          style={{ color: COLORS.green, cursor: "pointer" }}>
+          style={{ color: COLORS.green, cursor: "pointer" }}
+        >
           Accept
         </button>
         <button
           onClick={refuse}
-          style={{ color: COLORS.secondary, cursor: "pointer" }}>
+          style={{ color: COLORS.secondary, cursor: "pointer" }}
+        >
           Decline
         </button>
       </NotifButtonContainer>
       <hr />
-      {errMsg.length > 0 ? <p style={{color: "red"}}>{errMsg}</p> : <></>}
+      {errMsg.length > 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
     </NotifContainer>
   );
 }
