@@ -44,11 +44,12 @@ function PlayerCard({ team, member }: PlayerCardProps) {
     <PlayerCardContainer>
       <PlayerCardLeftBorder color={team == false ? COLORS.red : COLORS.blue} />
       <PlayerInfoContainer>
-        <PlayerCardAvatar />
         <PlayerNameContainer>
           <h4>{member?.user?.username}</h4>
         </PlayerNameContainer>
-        {user.id == lobby.ownerId && <button onClick={kickPlayer}>KICK</button>}
+        {user.id == lobby.ownerId && member?.userId != lobby.ownerId && (
+          <button onClick={kickPlayer}>KICK</button>
+        )}
         <h4>{member.ready ? "READY" : "..."}</h4>
       </PlayerInfoContainer>
     </PlayerCardContainer>
