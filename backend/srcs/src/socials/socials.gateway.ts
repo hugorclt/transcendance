@@ -154,7 +154,6 @@ export class SocialsGateway
   emitRoomCreated(ownerId: string, room: ReturnRoomEntity) {
     const socket = this.getSocketFromUserId(ownerId);
     if (!socket) return;
-    console.log(ownerId);
     socket.to(room.id).emit('on-chat-update', room);
   }
 }
