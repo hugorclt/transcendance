@@ -100,7 +100,6 @@ export class LobbiesGateway
     const game = new Game(lobby);
     this._games.set(lobby.id, game);
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
-    await this.timer(lobby.id, 'game-start-timer', 5);
     game.start();
   }
 

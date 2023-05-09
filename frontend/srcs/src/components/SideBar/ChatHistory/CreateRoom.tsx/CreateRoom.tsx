@@ -56,7 +56,7 @@ function CreateRoom() {
       setErrMsg("Can't create a room with a name under 3 character");
       return;
     } else if (name.length > 11) {
-      setErrMsg("Can't create a room with a name longer than 12 character");
+      setErrMsg("Can't create a room with a name longer than 11 character");
       return;
     }
     axiosPrivate
