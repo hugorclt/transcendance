@@ -43,6 +43,7 @@ function CreateRoom() {
   const [friendList] = useAtom(friendAtom);
   const [chat, setChat] = useAtom(conversationAtom);
   const axiosPrivate = useAxiosPrivate();
+  const [errMsg, setErrMsg] = useState("");
 
   const handleCheck = () => {
     setPrivate(!isPrivate);
@@ -51,6 +52,13 @@ function CreateRoom() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (name.length < 3) {
+      setErrMsg("Can't create a room with a name under 3 character");
+      return;
+    } else if (name.length > 11) {
+      setErrMsg("Can't create a room with a name longer than 12 character");
+      return;
+    }
     axiosPrivate
       .post("/rooms/create", {
         name: name,
@@ -119,8 +127,7 @@ function CreateRoom() {
             return (
               <CreateRoomFriendsCardsContainer
                 key={index}
-                style={{ backgroundColor: chooseColor(val.id) }}
-              >
+                style={{ backgroundColor: chooseColor(val.id) }}>
                 <CreateRoomFriendsCards>
                   <h4 key={index}>{val.username}</h4>
                   <div>
@@ -157,8 +164,7 @@ function CreateRoom() {
             type="text"
             required
             autoComplete="new-password"
-            placeholder="Room Name"
-          ></StyledInput>
+            placeholder="Room Name"></StyledInput>
           <StyledInput
             name="password"
             value={password}
@@ -166,19 +172,22 @@ function CreateRoom() {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             autoComplete="new-password"
-            placeholder="Password"
-          ></StyledInput>
+            placeholder="Password"></StyledInput>
           <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
           <CreateRoomCheckBox
             name="checkbox"
             checked={isPrivate}
             onChange={handleCheck}
-            type="checkbox"
-          ></CreateRoomCheckBox>
+            type="checkbox"></CreateRoomCheckBox>
           <CreateRoomButtonBox>
-            <StyledButton onClick={() => setOpen(false)} type="submit" value="Create Room" />
+            <StyledButton
+              onClick={() => setOpen(false)}
+              type="submit"
+              value="Create Room"
+            />
           </CreateRoomButtonBox>
         </CreateRoomForm>
+        {errMsg.length > 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
       </CreateRoomBox>
     </>
   );
