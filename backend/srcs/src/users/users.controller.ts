@@ -3,17 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseGuards,
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
   ReturnUserEntity,
   ReturnUserEntityWithPreferences,
@@ -27,12 +23,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 @UseGuards(AccessAuthGard)
-@ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: ReturnUserEntity })
   async create(
     @Body() createUserDto: CreateUserDto,
   ): Promise<ReturnUserEntity> {
@@ -45,19 +39,16 @@ export class UsersController {
   }
 
   @Get()
-  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findAll(): Promise<ReturnUserEntity[]> {
     return await this.usersService.findAll();
   }
 
   @Get('/friends')
-  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async getUserFriends(@Request() req): Promise<ReturnUserEntity[]> {
     return await this.usersService.getUserFriends(req.user.sub);
   }
 
   @Get('connected')
-  @ApiOkResponse({ type: ReturnUserEntity, isArray: true })
   async findConnected(): Promise<ReturnUserEntity[]> {
     return await this.usersService.findConnected();
   }
@@ -73,20 +64,17 @@ export class UsersController {
   }
 
   @Get('me')
-  @ApiOkResponse({ type: ReturnUserEntity })
   async findInfo(@Request() req): Promise<ReturnUserEntity> {
     return await this.usersService.findOne(req.user.sub);
   }
 
   @Get('status')
-  @ApiOkResponse({ type: ReturnUserEntity })
   async findStatus(@Request() req): Promise<ReturnUserEntity> {
     const user = await this.usersService.findOne(req.user.sub);
     return user;
   }
 
   @Post('me/visibility')
-  @ApiOkResponse({ type: ReturnUserEntityWithPreferences, isArray: true })
   async updateVisibility(
     @Request() req,
   ): Promise<ReturnUserEntityWithPreferences> {
@@ -97,7 +85,6 @@ export class UsersController {
   }
 
   @Get('me/preferences')
-  @ApiOkResponse({ type: UserPreferencesEntity })
   async getUserPreferences(@Request() req): Promise<UserPreferencesEntity> {
     const preferences = await this.usersService.getUserPreferences(
       req.user.sub,
@@ -106,7 +93,6 @@ export class UsersController {
   }
 
   @Get('user/:username')
-  @ApiOkResponse({ type: ReturnUserEntity })
   async getUserByUsername(
     @Param('username') username: string,
   ): Promise<ReturnUserEntity> {
@@ -114,34 +100,16 @@ export class UsersController {
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: ReturnUserEntity })
   async findOne(@Param('id') id: string): Promise<ReturnUserEntity> {
     return await this.usersService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiOkResponse({ type: ReturnUserEntity })
-  async update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<ReturnUserEntity> {
-    return await this.usersService.update(id, updateUserDto);
-  }
-
-  @Delete(':id')
-  @ApiOkResponse({ type: ReturnUserEntity })
-  async remove(@Param('id') id: string): Promise<ReturnUserEntity> {
-    return await this.usersService.remove(id);
-  }
-
   @Post('/friends/add')
-  @ApiOkResponse()
   async addFriend(@Request() req: any, @Body() addFriendDto: addFriendDto) {
     return await this.usersService.addFriend(addFriendDto);
   }
 
   @Post('/friends/remove')
-  @ApiOkResponse({ type: ReturnUserEntity })
   async removeFriends(
     @Request() req,
     @Body() removeFriendsDto: RemoveFriendsDto,

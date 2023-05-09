@@ -11,26 +11,21 @@ import {
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ReturnRoomEntity, RoomEntity } from './entities/room.entity';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { JoinRoomDto } from './dto/join-room-dto';
-import { SearchRoomDto } from './dto/search-room-dto';
 import { ReturnMessageEntity } from './messages/entities/return-message-entity';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
-import { Message } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('rooms')
-@ApiTags('rooms')
 @UseGuards(AccessAuthGard)
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @Post('/create')
-  @ApiCreatedResponse({ type: RoomEntity })
   async create(
     @Request() req,
     @Body() createRoomDto: CreateRoomDto,
@@ -39,7 +34,6 @@ export class RoomsController {
   }
 
   @Get('/history')
-  @ApiCreatedResponse({ type: [RoomEntity] })
   async findHistory(@Request() req): Promise<ReturnRoomEntity[]> {
     return await this.roomsService.findHistory(req.user.sub);
   }
