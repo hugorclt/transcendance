@@ -43,10 +43,10 @@ export function Profile({ username }) {
   return (
     <>
       {loading == true && (
-        <ProfileContainer>
+        <>
           <TopProfile user={user1} />
           <BotProfile user_id={user1.id} />
-        </ProfileContainer>
+        </>
       )}
     </>
   );
