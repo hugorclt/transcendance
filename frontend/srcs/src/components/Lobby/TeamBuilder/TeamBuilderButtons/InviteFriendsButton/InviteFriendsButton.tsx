@@ -115,6 +115,7 @@ function InviteFriendsButton() {
         nested
       >
         <ModalBox>
+          <h2>Friends</h2>
           <InviteFriendsList>
             <InviteFriendsListScroll>
               {friendList.map((val, index) => {
@@ -129,6 +130,7 @@ function InviteFriendsButton() {
               })}
             </InviteFriendsListScroll>
           </InviteFriendsList>
+          <h2>Conversations</h2>
           <InviteFriendsList>
             <InviteChatListScroll>
               {chat.map((val, index) => {
