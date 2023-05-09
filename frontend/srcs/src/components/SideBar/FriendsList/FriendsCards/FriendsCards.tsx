@@ -25,6 +25,7 @@ import {
   lobbyAtom,
 } from "../../../../services/store";
 import { updateArray } from "../../../../services/utils/updateArray";
+import { useNavigate } from "react-router";
 
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
@@ -32,6 +33,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
   const [chat, setChat] = useAtom(conversationAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const ref = useRef<any>();
+  const navigate = useNavigate();
 
   const handleRemove = () => {
     axiosPrivate
@@ -78,6 +80,11 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       .catch((error: AxiosError) => {
         console.log(JSON.stringify(error.message));
       });
+  };
+
+  const viewProfil = () => {
+    navigate(`/profile/${friend.username}`, { replace: true });
+    closeTooltip();
   };
 
   const closeTooltip = () => ref.current!.close();
@@ -130,6 +137,11 @@ function FriendsCards({ friend }: TFriendCardsProps) {
             style={{ cursor: "pointer" }}
             onClick={handleRemove}>
             Remove friends
+          </InsidePopUpButton>
+          <InsidePopUpButton
+            style={{ cursor: "pointer" }}
+            onClick={viewProfil}>
+            Profile
           </InsidePopUpButton>
           {friend.status == "GAME" && (
             <InsidePopUpButton
