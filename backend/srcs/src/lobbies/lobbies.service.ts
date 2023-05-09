@@ -131,10 +131,6 @@ export class LobbiesService {
     return await this.updateLobbyState(lobby.id, 'FULL');
   }
 
-  async findAll(): Promise<LobbyEntity[]> {
-    return await this.prisma.lobby.findMany({});
-  }
-
   async findOne(id: string): Promise<LobbyEntity> {
     const lobby = await this.prisma.lobby.findUnique({ where: { id } });
     if (!lobby) throw new NotFoundException('Lobby not found');
@@ -166,7 +162,6 @@ export class LobbiesService {
     return lobby;
   }
 
-  //A PROTEGER
   async update(
     id: string,
     updateLobbyDto: UpdateLobbyDto,
@@ -177,7 +172,6 @@ export class LobbiesService {
     });
   }
 
-  //A PROTEGER
   async delete(id: string): Promise<LobbyEntity> {
     const users = await this.prisma.user.findMany({
       where: {
@@ -202,8 +196,6 @@ export class LobbiesService {
     });
     return await this.prisma.lobby.delete({ where: { id } });
   }
-
-  //====================== JOIN / LEAVE LOBBY ===========================
 
   async joinLobby(userId: string, joinLobbyDto: JoinLobbyDto) {
     if (userId != joinLobbyDto.userId) return; //A COMPLETER ?
@@ -284,7 +276,6 @@ export class LobbiesService {
     return await this.findLobbyWithMembers(updateLobby.id);
   }
 
-  /* ---------------- Update Lobby State (Backend Originated) ---------------- */
   async updateLobbyState(
     lobbyId: string,
     state: LobbyState,
@@ -606,7 +597,6 @@ export class LobbiesService {
       throw new MethodNotAllowedException(
         'Cannot start game, players are not ready',
       );
-    /* ------------------------------- matchmaking ------------------------------ */
     if (lobby.private === false) {
       const lobbyMatch = this.lobbiesGateway.matchmaking(lobby);
       if (!lobbyMatch) {
@@ -639,7 +629,6 @@ export class LobbiesService {
     );
 
     await this.lobbiesGateway.readyToStart(lobbyWithMembers);
-    /* ------------------------------ interval loop ----------------------------- */
     const interval = setInterval(async () => {
       const frame = this.lobbiesGateway.generateFrame(lobby.id);
       if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
@@ -878,25 +867,6 @@ export class LobbiesService {
     return lobby.members.map((member) => member.vote);
   }
 
-  //========================== LOBBY INFOS ===============================
-  async findLobbyParticipants(lobbyId: string): Promise<LobbyMemberEntity[]> {
-    return await this.lobbyMembersService.findLobbyMembers(lobbyId);
-  }
-
-  async findLobbyBanned(lobbyId: string): Promise<ReturnUserEntity[]> {
-    const bannedMembers = await this.prisma.user.findMany({
-      where: {
-        lobbyMember: {
-          some: {
-            id: lobbyId,
-          },
-        },
-      },
-    });
-    return bannedMembers;
-  }
-
-  //============================ HELPER FUNCTIONS =============================
   async isUserLobbyOwner(userId: string, lobbyId: string): Promise<boolean> {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -932,12 +902,10 @@ export class LobbiesService {
   }
 
   async canUserJoinLobbies(userId: string): Promise<ReturnUserEntity> {
-    //user exists?
     const user = await this.usersService.findOne(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    //user is not already in a lobby
     const lobby = await this.prisma.lobby.findFirst({
       where: {
         members: {

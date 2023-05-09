@@ -3,15 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
   Request,
 } from '@nestjs/common';
 import { InvitationsService } from './invitations.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
-import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { AccessAuthGard } from 'src/auth/utils/guards';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -21,7 +17,6 @@ import {
 
 @Controller('invitations')
 @UseGuards(AccessAuthGard)
-@ApiTags('invitations')
 export class InvitationsController {
   constructor(private readonly invitationsService: InvitationsService) {}
 
@@ -44,7 +39,6 @@ export class InvitationsController {
     @Request() req: any,
     @Body() invitationDtoList: CreateInvitationDto[],
   ): Promise<InvitationEntity[]> {
-    console.log(invitationDtoList);
     const invitations = await this.invitationsService.createMany(
       invitationDtoList,
       req.user,
@@ -69,26 +63,5 @@ export class InvitationsController {
   @ApiOkResponse({ type: InvitationEntity, isArray: true })
   async findAll(@Request() req) {
     return await this.invitationsService.findForUser(req.user.sub);
-  }
-
-  @Get(':id')
-  @ApiOkResponse({ type: InvitationEntity })
-  async findOne(@Param('id') id: string): Promise<InvitationEntity> {
-    return await this.invitationsService.findOne(id);
-  }
-
-  @Patch(':id')
-  @ApiOkResponse({ type: InvitationEntity })
-  async update(
-    @Param('id') id: string,
-    @Body() updateInvitationDto: UpdateInvitationDto,
-  ): Promise<InvitationEntity> {
-    return await this.invitationsService.update(id, updateInvitationDto);
-  }
-
-  @Delete(':id')
-  @ApiOkResponse({ type: InvitationEntity })
-  async remove(@Param('id') id: string): Promise<InvitationEntity> {
-    return await this.invitationsService.remove(id);
   }
 }

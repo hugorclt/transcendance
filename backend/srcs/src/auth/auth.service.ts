@@ -314,7 +314,6 @@ export class AuthService {
   }
 
   async isAuth2FaValid(userId: string, code: string) {
-    console.log(userId, code);
     const user = await this.prisma.user.findUnique({
       where: {
         id: userId,

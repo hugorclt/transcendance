@@ -4,9 +4,7 @@ import {
   Post,
   Req,
   Request,
-  Res,
   Response,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -16,14 +14,11 @@ import {
 } from './utils/guards';
 import { AuthService } from './auth.service';
 import { Body } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { LocalRegisterDto } from './dto/log-user.dto';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { UsersService } from 'src/users/users.service';
-import * as EResponse from 'express';
 
 @Controller('auth')
-@ApiTags('login')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -60,7 +55,12 @@ export class AuthController {
 
   @Post('2fa/authenticate')
   async authenticate(@Body() body, @Response({ passthrough: true }) res) {
-    return await this.authService.loginWith2FA(body.userId,body.username, body.code, res);
+    return await this.authService.loginWith2FA(
+      body.userId,
+      body.username,
+      body.code,
+      res,
+    );
   }
 
   @Post('google/login')
@@ -76,7 +76,10 @@ export class AuthController {
     @Body() body,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    return await this.authService.handle42Login({ code: body.code, id: body.id}, res);
+    return await this.authService.handle42Login(
+      { code: body.code, id: body.id },
+      res,
+    );
   }
 
   @Post('login')

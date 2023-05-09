@@ -58,19 +58,4 @@ export class StatsController {
   async findOne(@Param('id') id: string): Promise<StatEntity> {
     return this.statsService.findOne(id);
   }
-
-  @Patch(':id')
-  @ApiOkResponse({ type: StatEntity })
-  async update(
-    @Param('id') id: string,
-    @Body() updateStatDto: UpdateStatDto,
-  ): Promise<StatEntity> {
-    return this.statsService.update(id, updateStatDto);
-  }
-
-  @Delete(':id')
-  @ApiOkResponse({ type: StatEntity })
-  delete(@Param('id') id: string): Promise<StatEntity> {
-    return this.statsService.delete(id);
-  }
 }
