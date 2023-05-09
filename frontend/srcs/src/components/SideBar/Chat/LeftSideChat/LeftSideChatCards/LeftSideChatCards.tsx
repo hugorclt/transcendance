@@ -63,18 +63,16 @@ function LeftSideChatCards(props: {
           position="left center"
           arrowStyle={{ color: COLORS.background }}
           trigger={
-            <>
+            <FriendsPopUpButton>
               {user.username == props.name ? (
                 <></>
               ) : (
-                <FriendsPopUpButton>
-                  <BsThreeDotsVertical
-                    style={{ opacity: "50%", color: COLORS.primary }}
-                    size={22}
-                  />
-                </FriendsPopUpButton>
+                <BsThreeDotsVertical
+                  style={{ color: COLORS.primary }}
+                  size={22}
+                />
               )}
-            </>
+            </FriendsPopUpButton>
           }>
           <PopUpBox>
             <InsidePopUpButton onClick={handleClick}>
