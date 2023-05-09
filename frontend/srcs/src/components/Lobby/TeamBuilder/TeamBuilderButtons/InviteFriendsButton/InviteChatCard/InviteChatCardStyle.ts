@@ -10,7 +10,6 @@ export const InviteChatCardContainer = styled.div`
   justify-content: start;
   border-radius: 8px;
   padding: 8px;
-  box-sizing: border-box;
 
   &:hover {
     background-color: ${COLORS.secondary};
