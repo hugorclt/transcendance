@@ -2,8 +2,12 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import React, { useRef } from "react";
 import * as THREE from "three";
 
-function Skybox() {
-  const base = useLoader(THREE.TextureLoader, "/map_grey.jpg");
+interface SkyboxProps {
+  map: string;
+}
+
+function Skybox({map} : SkyboxProps) {
+  const base = useLoader(THREE.TextureLoader, map);
   const sphereRef = useRef<THREE.Mesh>(null!);
 
   useFrame(() => {
@@ -22,4 +26,4 @@ function Skybox() {
   );
 }
 
-export default Skybox;
+export default Skybox
