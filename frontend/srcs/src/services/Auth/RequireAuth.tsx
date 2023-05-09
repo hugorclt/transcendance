@@ -7,6 +7,7 @@ function RequireAuth() {
   const [user, setUser] = useAtom(userAtom);
   const location = useLocation();
 
+  console.log("guards", user?.accessToken);
   return user?.accessToken ? (
     <Outlet />
   ) : (

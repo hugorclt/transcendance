@@ -73,6 +73,7 @@ function LoginForm() {
             ...prev,
             ...response.data,
           }));
+          console.log(response.data);
           navigate("/login/2fa", { replace: true });
         } else {
           setSuccess(true);

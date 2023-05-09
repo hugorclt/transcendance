@@ -55,7 +55,6 @@ export class AuthController {
   @Get('2fa/turn-off')
   @UseGuards(AccessAuthGard)
   async turnOff2Fa(@Request() req) {
-    console.log('yesiam');
     return await this.authService.turnOff2Fa(req.user.sub);
   }
 
