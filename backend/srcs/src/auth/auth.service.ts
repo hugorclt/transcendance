@@ -120,11 +120,6 @@ export class AuthService {
   /* ---------------------------------- login --------------------------------- */
   async login(user: any, @Response({ passthrough: true }) res) {
     const tokens = await this.getTokens(user.id, user.username);
-    res.cookie('jwt', tokens.refresh_token, {
-      expires: true,
-      maxAge: 7 * 24 * 3600000,
-      httpOnly: true,
-    });
     const lobby = await this.prisma.lobby.findFirst({
       where: {
         members: {
@@ -142,11 +137,16 @@ export class AuthService {
       status = 'CONNECTED';
     }
     await this.usersService.updateStatus(user.id, status);
-    await this.updateRefreshHash(user.id, tokens.refresh_token);
 
     if (user.is2fa) {
       return { id: user.id, is2fa: true, username: user.username };
     } else {
+      res.cookie('jwt', tokens.refresh_token, {
+        expires: true,
+        maxAge: 7 * 24 * 3600000,
+        httpOnly: true,
+      });
+      await this.updateRefreshHash(user.id, tokens.refresh_token);
       return { access_token: tokens.access_token, is2fa: false };
     }
   }
@@ -160,7 +160,7 @@ export class AuthService {
     const isCodeValid = await this.isAuth2FaValid(userId, code);
     if (!isCodeValid) throw new UnauthorizedException();
     const userLogged = await this.usersService.findOne(userId);
-    const tokens = await this.getTokens(userId, username)
+    const tokens = await this.getTokens(userId, username);
     res.cookie('jwt', tokens.refresh_token, {
       expires: true,
       maxAge: 7 * 24 * 3600000,

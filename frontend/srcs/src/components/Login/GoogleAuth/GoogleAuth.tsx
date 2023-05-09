@@ -68,14 +68,22 @@ function GoogleAuth() {
         token: credentialResponse.code,
       })
       .then((response: AxiosResponse) => {
-        setSuccess(true);
-        setIsVisible("block");
-        const accessToken = response?.data.access_token;
-        setUser((prev) => ({
-          ...prev,
-          accessToken: accessToken,
-        }));
-        navigate("/", { replace: true });
+        if (response.data.is2fa == true) {
+          setUser((prev) => ({
+            ...prev,
+            ...response.data,
+          }));
+          navigate("/login/2fa", { replace: true });
+        } else {
+          setSuccess(true);
+          setIsVisible("block");
+          const accessToken = response?.data.access_token;
+          setUser((prev) => ({
+            ...prev,
+            accessToken: accessToken,
+          }));
+          navigate("/", { replace: true });
+        }
       })
       .catch((error: AxiosError) => {
         console.log(error);

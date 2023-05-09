@@ -3,16 +3,15 @@ import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useAtom } from "jotai";
 import { userAtom } from "../store";
 
-function RequireAuth() {
+function RequireId() {
   const [user, setUser] = useAtom(userAtom);
   const location = useLocation();
 
-  console.log("guards", user?.accessToken);
-  return user?.accessToken ? (
+  return user?.id ? (
     <Outlet />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
   );
 }
 
-export default RequireAuth;
+export default RequireId;

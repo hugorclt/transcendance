@@ -36,10 +36,14 @@ function BottomBar() {
       .get("/auth/logout")
       .then((response: AxiosResponse) => {
         setUser((prev) => ({
-          ...prev,
-          accessToken: "",
+          id: "",
           username: "",
-          status: "DISCONNECTED",
+          accessToken: "",
+          status: "",
+          avatar: "",
+          exp: 0,
+          balance: 0,
+          is2fa: false,
         }));
         socket?.emit("logout", response.data);
         navigate("/login", { replace: true });
