@@ -20,14 +20,23 @@ function Login42() {
       axios
         .post("/auth/42/login", {
           code: code,
+          id: user.id,
         })
         .then((response: AxiosResponse) => {
-          const accessToken = response?.data.access_token;
-          setUser((prev) => ({
-            ...prev,
-            accessToken: accessToken,
-          }));
-          navigate(from, { replace: true });
+          if (response.data.is2fa == true) {
+            setUser((prev) => ({
+              ...prev,
+              ...response.data,
+            }));
+            navigate("/login/2fa", { replace: true });
+          } else {
+            const accessToken = response?.data.access_token;
+            setUser((prev) => ({
+              ...prev,
+              accessToken: accessToken,
+            }));
+            navigate(from, { replace: true });
+          }
         })
         .catch((err: AxiosError) => {
           navigate("/login", { replace: true });

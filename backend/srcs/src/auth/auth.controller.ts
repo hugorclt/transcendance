@@ -74,10 +74,10 @@ export class AuthController {
 
   @Post('42/login')
   async handle42Login(
-    @Body('code') code,
+    @Body() body,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    return await this.authService.handle42Login({ code: code }, res);
+    return await this.authService.handle42Login({ code: body.code, id: body.id}, res);
   }
 
   @Post('login')
