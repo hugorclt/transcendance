@@ -15,13 +15,11 @@ const PADDLE_COLORS = {
     emissive: "white",
     emissiveIntensity: 4,
   },
-
   [EType.BASIC_PADDLE]: {
     color: "#fffff",
     emissive: "white",
     emissiveIntensity: 4,
   },
-
   [EType.RED_PADDLE]: {
     color: "#f69090",
     emissive: "red",
