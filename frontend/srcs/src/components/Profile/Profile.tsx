@@ -20,13 +20,12 @@ export function Profile({ username }) {
     avatar: "",
     exp: 0,
     balance: 0,
+    is2fa: false,
   });
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let actual: string;
-    console.log(username);
     if (!username) actual = user.username;
     else actual = username;
     axiosPrivate
@@ -38,15 +37,15 @@ export function Profile({ username }) {
       .catch((error: AxiosError) => {
         console.log(error.message);
       });
-  }, []);
+  }, [username]);
 
   return (
     <>
       {loading == true && (
-        <ProfileContainer>
+        <>
           <TopProfile user={user1} />
           <BotProfile user_id={user1.id} />
-        </ProfileContainer>
+        </>
       )}
     </>
   );

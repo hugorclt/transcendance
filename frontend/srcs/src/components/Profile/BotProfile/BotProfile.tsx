@@ -22,7 +22,7 @@ const renderCards = (user_id: string) => {
       .catch((error) => {
         console.error("This is not really sympathique");
       });
-  }, []);
+  }, [user_id]);
 
   const getResult = (match: TMatch): string => {
     if (match.losers.find((loser) => user.id == loser.id)) return "DEFEAT";
@@ -71,7 +71,7 @@ export function BotProfile({ user_id }) {
         <h2>Match History</h2>
       </FirstCardContainer>
       <FirstCard />
-      {renderCards(user_id)}
+      <div style={{width: "100%", flexGrow: "1" , overflowY: "auto"}}>{renderCards(user_id)}</div>
     </BotProfileContainer>
   );
 }

@@ -4,7 +4,6 @@ import { COLORS } from "../../colors";
 import Game from "./Game";
 import MyEffects from "./Effects";
 import Scoreboard from "./Scoreboard";
-import { SpaceDust } from "./Components/Assets/custom/SpaceDust";
 
 const GameScreen = () => {
   const screenRef = useRef<any>();
@@ -18,7 +17,8 @@ const GameScreen = () => {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-        }}>
+        }}
+      >
         <Scoreboard />
       </div>
       <div style={{ width: "100vw", height: "100vh" }}>
@@ -26,7 +26,8 @@ const GameScreen = () => {
           ref={screenRef}
           tabIndex={0}
           style={{ background: COLORS.background }}
-          linear>
+          linear
+        >
           <Game />
           <MyEffects />
         </Canvas>

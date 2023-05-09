@@ -24,9 +24,7 @@ export class WsCatchAllFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost) {
     const socket: AuthSocket = host.switchToWs().getClient();
 
-    //If the original exception was a WsBadRequestException
     if (exception instanceof BadRequestException) {
-      console.log('BadRequest exception');
       const exceptionData = exception.getResponse();
 
       const WsException = new WsBadRequestException(
@@ -36,9 +34,7 @@ export class WsCatchAllFilter implements ExceptionFilter {
       return;
     }
 
-    //If the original exception was a WsUnauthorizedException
     if (exception instanceof UnauthorizedException) {
-      console.log('Unauthorized exception');
       const exceptionData = exception.getResponse();
 
       const WsException = new WsUnauthorizedException(
@@ -48,9 +44,7 @@ export class WsCatchAllFilter implements ExceptionFilter {
       return;
     }
 
-    //If the original exception was a WsForbiddenException
     if (exception instanceof ForbiddenException) {
-      console.log('Forbidden exception');
       const exceptionData = exception.getResponse();
 
       const WsException = new WsForbiddenException(
@@ -60,9 +54,7 @@ export class WsCatchAllFilter implements ExceptionFilter {
       return;
     }
 
-    //If the original exception was a WsNotFoundException
     if (exception instanceof NotFoundException) {
-      console.log('NotFound exception');
       const exceptionData = exception.getResponse();
 
       const WsException = new WsNotFoundException(
@@ -72,9 +64,7 @@ export class WsCatchAllFilter implements ExceptionFilter {
       return;
     }
 
-    //If the original exception was a WsConflictException
     if (exception instanceof ConflictException) {
-      console.log('conflict exception');
       const exceptionData = exception.getResponse();
 
       const WsException = new WsConflictException(
@@ -85,7 +75,6 @@ export class WsCatchAllFilter implements ExceptionFilter {
     }
 
     if (exception instanceof HttpException) {
-      console.log('Error type not detected');
       const exceptionData = exception.getResponse();
 
       const WsException = new WsConflictException(

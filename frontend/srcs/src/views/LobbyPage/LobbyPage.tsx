@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import TeamBuilderLayout from "../../layouts/LobbyLayout/TeamBuilderLayout/TeamBuilderLayout";
 import { useAtom } from "jotai";
-import { endGameAtom, lobbyAtom, userAtom } from "../../services/store";
+import { lobbyAtom } from "../../services/store";
 import LobbyCreatorLayout from "../../layouts/LobbyLayout/LobbyCreatorLayout/LobbyCreatorLayout";
 import LobbyCreatorProvider from "./LobbyCreatorProvider";
 import Selector from "../../components/Lobby/Selector/Selector";
-import { TEndGame } from "../../services/type";
-import Popup from "reactjs-popup";
-import { PopUpBox } from "../../components/SideBar/FriendsList/FriendsCards/FriendsCardsStyle";
-import { EndGameStatInfoContainer } from "./LobbyPage.style";
 import MatchMakingLayout from "../../layouts/LobbyLayout/MatchMakingLayout/MatchMakingLayout";
 
 function LobbyPage() {
@@ -19,7 +15,7 @@ function LobbyPage() {
   } else if (lobby.state == "SELECTION") {
     return <Selector />;
   } else if (lobby.state == "MATCHMAKING") {
-    return <MatchMakingLayout />
+    return <MatchMakingLayout />;
   } else {
     return (
       <LobbyCreatorProvider>

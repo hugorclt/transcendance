@@ -3,7 +3,7 @@ import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 import Ball from "./Components/Ball";
 import Walls from "./Components/Walls";
 import Paddles from "./Components/Paddles";
-import Skybox from "./Components/sceneComponents/Skybox";
+import Skybox from "./Components/Skybox/Skybox";
 import { useNavigate } from "react-router";
 import { useAtom } from "jotai";
 import {
@@ -13,7 +13,6 @@ import {
   userAtom,
 } from "../../services/store";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import { Group, Vector3 } from "three";
 import { SpaceDust } from "./Components/Assets/custom/SpaceDust";
 import { Sparks } from "./Components/Assets/custom/Sparks";
 
@@ -69,11 +68,10 @@ function Game() {
         <></>
       ) : (
         <>
-          <Ball ball={gameInfo.ball}/>
+          <Ball ball={gameInfo.ball} />
           <Walls walls={gameInfo.field.walls} />
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
-          <SpaceDust count={1000}/>
-          
+          <SpaceDust count={1000} />
           {gameInfo.mode === "CLASSIC" && isSpec === false ? (
             <group rotation={[0, Math.PI / 2, 0]}>
               <>

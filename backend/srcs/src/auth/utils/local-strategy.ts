@@ -14,8 +14,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const localLogDto: LocalLogDto = { username, password };
     const user = await this.authService.validateUser(localLogDto);
 
+    
     if (!user) {
       throw new UnauthorizedException();
+    }
+    if (user.is2fa == true) {
+      return {...user, is2fa: true}
     }
     return user;
   }

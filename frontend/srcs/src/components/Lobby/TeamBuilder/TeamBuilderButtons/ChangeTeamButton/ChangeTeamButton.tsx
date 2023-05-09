@@ -20,14 +20,19 @@ function ChangeTeamButton() {
         (member) => member.userId == user.id
       );
       const opponentTeam = lobby.members
-        .flatMap((member) => member.team != userMember?.team)
+        .flatMap((member) => {
+          if (member.team != userMember?.team) return member;
+        })
         .filter((member) => member != undefined);
-      if (opponentTeam.length == lobby.nbPlayers / 2) setDisabled(true);
-      else setDisabled(false);
+      if (opponentTeam.length == lobby.nbPlayers / 2) {
+        setDisabled(true);
+      } else {
+        setDisabled(false);
+      }
     } else {
       setDisabled(true);
     }
-  }, [lobby.private]);
+  }, [lobby]);
 
   const changeTeam = (e: React.SyntheticEvent) => {
     e.preventDefault();

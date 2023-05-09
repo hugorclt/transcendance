@@ -23,16 +23,17 @@ export class ItemsService {
       },
       include: {
         items: true,
-      }
-    })
+      },
+    });
 
     return items.map((item) => {
-      console.log(item);
       return {
         ...item,
-        owned: userItems.items.some((userItem) => userItem.id == item.id) ? true : false,
-      }
-    })
+        owned: userItems.items.some((userItem) => userItem.id == item.id)
+          ? true
+          : false,
+      };
+    });
   }
 
   async findItem(userId: string, itemId: string) {
@@ -74,8 +75,8 @@ export class ItemsService {
     const user = await this.prisma.user.findUnique({
       where: {
         id: userId,
-      }
-    })
+      },
+    });
     if (item.price > user.balance) throw new UnauthorizedException();
 
     await this.prisma.user.update({
@@ -85,9 +86,9 @@ export class ItemsService {
       data: {
         balance: {
           decrement: item.price,
-        }
-      }
-    })
+        },
+      },
+    });
 
     await this.prisma.item.update({
       where: {
@@ -112,7 +113,7 @@ export class ItemsService {
             id: userId,
           },
         },
-        type: EItem.PADDLE
+        type: EItem.PADDLE,
       },
     });
   }

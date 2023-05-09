@@ -21,7 +21,9 @@ import { BiVolumeMute } from "react-icons/bi";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import AdminInteraction from "./AdminInteraction";
 import { useAtom } from "jotai";
-import { userAtom } from "../../../../../services/store";
+import { friendAtom, userAtom } from "../../../../../services/store";
+import { useNavigate } from "react-router";
+import { AxiosResponse } from "axios";
 
 function LeftSideChatCards(props: {
   roomId: string;
@@ -35,6 +37,8 @@ function LeftSideChatCards(props: {
   const [user, setUser] = useAtom(userAtom);
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const [friendList, setFriendList] = useAtom(friendAtom);
 
   function displayRole(role: string) {
     if (role == "ADMIN")
@@ -45,6 +49,20 @@ function LeftSideChatCards(props: {
 
   const handleClick = () => {
     socket?.emit("friend-request", props.name);
+  };
+
+  const handleProfil = () => {
+    navigate(`/profile/${props.name}`, { replace: true });
+  };
+
+  const handleBlock = () => {
+    axiosPrivate
+      .post("/users/block", {
+        id: props.userId,
+      })
+      .then((res: AxiosResponse) => {
+        setFriendList((prev) => prev.filter((user) => user.id != props.userId));
+      });
   };
 
   return (
@@ -64,19 +82,32 @@ function LeftSideChatCards(props: {
           arrowStyle={{ color: COLORS.background }}
           trigger={
             <FriendsPopUpButton>
-              <BsThreeDotsVertical
-                style={{ opacity: "50%", color: COLORS.primary }}
-                size={22}
-              />
+              {user.username == props.name ? (
+                <></>
+              ) : (
+                <BsThreeDotsVertical
+                  style={{ color: COLORS.primary }}
+                  size={22}
+                />
+              )}
             </FriendsPopUpButton>
           }>
           <PopUpBox>
             <InsidePopUpButton onClick={handleClick}>
               Add to friends
             </InsidePopUpButton>
-            <InsidePopUpButton>Block user</InsidePopUpButton>
+            <InsidePopUpButton onClick={handleBlock}>
+              Block user
+            </InsidePopUpButton>
+            <InsidePopUpButton onClick={handleProfil}>
+              View profile
+            </InsidePopUpButton>
             {props.isAdmin ? (
-              <AdminInteraction userId={props.userId} roomId={props.roomId} mute={props.mute} />
+              <AdminInteraction
+                userId={props.userId}
+                roomId={props.roomId}
+                mute={props.mute}
+              />
             ) : (
               ""
             )}

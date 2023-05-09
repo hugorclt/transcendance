@@ -18,7 +18,6 @@ function PlayButton() {
       .get(`lobbies/${lobby.id}/play`)
       .then((response: AxiosResponse) => {
         setReadyToStart(false);
-        //navigate?
       })
       .catch((error: AxiosError) => {
         console.log("error starting game", JSON.stringify(error.message));
@@ -30,6 +29,8 @@ function PlayButton() {
       const notReady = lobby.members.find((member) => member.ready == false);
       if (!notReady) {
         setReadyToStart(true);
+      } else {
+        setReadyToStart(false);
       }
     } else {
       if (readyToStart) {

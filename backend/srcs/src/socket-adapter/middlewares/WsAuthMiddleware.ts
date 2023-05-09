@@ -19,14 +19,12 @@ const WSAuthMiddleware = (
         authSocket.username = user.username;
         next();
       } else {
-        console.log('middleware error: User not found');
         next({
           name: 'Unauthorized',
           message: 'Socket Unauthorized',
         });
       }
     } catch (error) {
-      console.log('middleware error: ', error);
       next({
         name: 'Unauthorized',
         message: 'Socket Unauthorized',

@@ -24,17 +24,17 @@ function LeftSideChat({ chat }: TChatProps) {
   return (
     <ChatManagerBox>
       <h4>PARTICIPANTS</h4>
-      {chat?.participants.map((user: TParticipant) => {
+      {chat?.participants.map((userRoom: TParticipant) => {
         return (
           <LeftSideChatCards
             key={nanoid()}
             roomId={chat.id}
-            userId={user.id}
-            name={user.name}
-            status={user.status}
-            role={user.role}
+            userId={userRoom.id}
+            name={userRoom.name}
+            status={userRoom.status}
+            role={userRoom.role}
             isAdmin={isAdmin}
-            mute={user.mute}
+            mute={userRoom.mute}
           />
         );
       })}

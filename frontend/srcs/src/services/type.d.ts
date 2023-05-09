@@ -8,6 +8,7 @@ export interface TUser {
   avatar: string;
   exp: number;
   balance: number;
+  is2fa: boolean;
 }
 
 export interface TUserPreferences {

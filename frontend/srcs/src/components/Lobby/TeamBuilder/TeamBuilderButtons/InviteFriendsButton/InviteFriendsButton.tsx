@@ -6,6 +6,7 @@ import {
   conversationAtom,
   friendAtom,
   lobbyAtom,
+  userAtom,
 } from "../../../../../services/store";
 import InviteFriendCard from "./InviteFriendCard/InviteFriendCard";
 import {
@@ -21,10 +22,19 @@ import { AxiosError, AxiosResponse } from "axios";
 import RoundIconButton from "../../../../common/Button/IconButton/RoundIconButton";
 import AddFriendIcon from "../../../../../assets/icons/AddFriendIcon";
 import InviteChatCard from "./InviteChatCard/InviteChatCard";
+import { TConversation } from "../../../../../services/type";
+
+type TInvitation = {
+  type: string;
+  userId: string;
+  lobbyId: string;
+};
 
 function InviteFriendsButton() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useAtom(userAtom);
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
+  const [invitedChat, setInvitedChat] = useState<TConversation[]>([]);
   const [friendList, setFriendList] = useAtom(friendAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const [chat, setChat] = useAtom(conversationAtom);
@@ -38,11 +48,35 @@ function InviteFriendsButton() {
     }
   }
 
+  function handleAddChat(chatRoom: any) {
+    if (!invitedChat.includes(chatRoom)) {
+      setInvitedChat((prev) => [...prev, chatRoom]);
+    } else {
+      setInvitedChat((prev) => prev.filter((el) => el !== chatRoom));
+    }
+  }
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const invitations = invitedFriends.map((user) => {
-      return { type: "LOBBY", userId: user, lobbyId: lobby.id };
+    const invitationList = new Array<TInvitation>();
+    invitedFriends.forEach((user) => {
+      if (invitationList.find((invit) => invit.userId === user)) return;
+      invitationList.push({ type: "LOBBY", userId: user, lobbyId: lobby.id });
     });
+    invitedChat.forEach((chat) => {
+      chat.participants.forEach((participant) => {
+        if (invitationList.find((invit) => invit.userId === participant.id))
+          return;
+        invitationList.push({
+          type: "LOBBY",
+          userId: participant.id,
+          lobbyId: lobby.id,
+        });
+      });
+    });
+    const invitations = invitationList.filter(
+      (invit) => invit.userId !== user.id
+    );
     axiosPrivate
       .post("/invitations/createMany", invitations)
       .then((res: AxiosResponse) => {
@@ -56,6 +90,11 @@ function InviteFriendsButton() {
 
   function chooseColor(id: string) {
     if (invitedFriends.find((friend) => friend == id)) return COLORS.secondary;
+    else return COLORS.darkergrey;
+  }
+
+  function chooseChatColor(id: string) {
+    if (invitedChat.find((chat) => chat.id == id)) return COLORS.secondary;
     else return COLORS.darkergrey;
   }
 
@@ -76,6 +115,7 @@ function InviteFriendsButton() {
         nested
       >
         <ModalBox>
+          <h2>Friends</h2>
           <InviteFriendsList>
             <InviteFriendsListScroll>
               {friendList.map((val, index) => {
@@ -90,6 +130,7 @@ function InviteFriendsButton() {
               })}
             </InviteFriendsListScroll>
           </InviteFriendsList>
+          <h2>Conversations</h2>
           <InviteFriendsList>
             <InviteChatListScroll>
               {chat.map((val, index) => {
@@ -98,15 +139,21 @@ function InviteFriendsButton() {
                     <InviteChatCard
                       key={index}
                       chat={val}
-                      onClick={() => handleAddFriends(val.id)}
-                      style={{ backgroundColor: chooseColor(val.id) }}
+                      onClick={() => handleAddChat(val)}
+                      style={{ backgroundColor: chooseChatColor(val.id) }}
                     />
                   )
                 );
               })}
             </InviteChatListScroll>
           </InviteFriendsList>
-          <StyledButton onClick={handleSubmit} type="submit">
+          <StyledButton
+            onClick={handleSubmit}
+            className={
+              invitedChat.length || invitedFriends.length ? "" : "disabled"
+            }
+            type="submit"
+          >
             <h5>Invite</h5>
           </StyledButton>
         </ModalBox>

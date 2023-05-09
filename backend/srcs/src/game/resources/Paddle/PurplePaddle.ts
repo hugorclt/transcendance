@@ -5,8 +5,8 @@ import { baseCollide } from '../utils/collisions/baseColide';
 import { IPaddle } from './IPaddle';
 
 export class PurplePaddle extends IPaddle {
-    public collide(ball: Ball): TCollision {
-        const collision = baseCollide(ball, this._hitBox);
-        return { ...collision, type: EType.PURPLE_PADDLE };
-    }
+  // public collide(ball: Ball): TCollision {
+  //     const collision = baseCollide(ball, this._hitBox);
+  //     return { ...collision, type: EType.PURPLE_PADDLE };
+  // }
 }

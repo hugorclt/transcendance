@@ -6,6 +6,11 @@ export class Api42CodeDto {
   @IsString()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
 }
 
 export class Api42LogDto {

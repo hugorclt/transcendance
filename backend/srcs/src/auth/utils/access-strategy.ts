@@ -21,6 +21,7 @@ export class accessStrategy extends PassportStrategy(Strategy, 'access') {
     if (payload === null) {
       throw new UnauthorizedException();
     }
+
     return payload;
   }
 }

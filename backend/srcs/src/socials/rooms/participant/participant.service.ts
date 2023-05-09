@@ -8,12 +8,6 @@ import { UpdateParticipantDto } from './dto/update-participant.dto';
 export class ParticipantService {
   constructor(private prisma: PrismaService) {}
 
-  create(createParticipantDto: CreateParticipantDto) {
-    // return this.prisma.participant.create({
-      // data: createParticipantDto,
-    // });
-  }
-
   findAll() {
     return this.prisma.participant.findMany();
   }
@@ -22,14 +16,6 @@ export class ParticipantService {
     return this.prisma.participant.findUnique({
       where: { id },
     });
-  }
-
-  update(id: number, updateParticipantDto: UpdateParticipantDto) {
-    return 'rien';
-  }
-
-  remove(id: number) {
-    return 'rien';
   }
 
   async createParticipantFromRoom(
@@ -45,7 +31,7 @@ export class ParticipantService {
           role: participant.role,
           name: user.username,
           status: user.status,
-          mute: participant.mute
+          mute: participant.mute,
         };
       }),
     );

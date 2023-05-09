@@ -13,7 +13,6 @@ function NotificationsProvider({ children }: { children: ReactNode }) {
   /* ------------------------------ first render ------------------------------ */
   useEffect(() => {
     axiosPrivate.get("/invitations").then((res) => {
-      console.log(res.data);
       setNotif(res.data);
     });
   }, []);
@@ -25,7 +24,7 @@ function NotificationsProvider({ children }: { children: ReactNode }) {
     });
 
     socket?.on("delete-notifs", (id) => {
-      setNotif((prev) => prev.filter((notif) => notif.id !== id))
+      setNotif((prev) => prev.filter((notif) => notif.id !== id));
     });
 
     return () => {

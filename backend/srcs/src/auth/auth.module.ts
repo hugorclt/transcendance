@@ -7,10 +7,10 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './utils/local-strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { refreshStrategy } from './utils/refresh-strategy';
-import { accessStrategy } from './utils/access-strategy';
 import { HttpModule } from '@nestjs/axios';
 import { SocialsModule } from 'src/socials/socials.module';
 import { LobbiesModule } from 'src/lobbies/lobbies.module';
+import { accessStrategy } from './utils/access-strategy';
 
 @Module({
   imports: [

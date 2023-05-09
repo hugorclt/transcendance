@@ -3,7 +3,6 @@ import { ChatBarContainer, ProfilBoxContainer } from "./SideBar.style";
 import ProfilBox from "./ProfileBox/ProfilBox";
 import FriendsTopBar from "./FriendsList/FriendsTopBar/FriendsTopBar";
 import FriendsList from "./FriendsList/FriendsList";
-import FriendNotifications from "./FriendsList/FriendNotifications/FriendsNotifications";
 import ChatHistory from "./ChatHistory/ChatHistory";
 import BottomBar from "./BottomBar/BottomBar";
 import ChatBox from "./Chat/ChatBox";
@@ -27,7 +26,6 @@ function SideBar() {
       </ProfilBoxContainer>
       <FriendsTopBar />
       <FriendsList />
-      <FriendNotifications />
       <ChatHistory />
       <BottomBar />
       <ChatBox />

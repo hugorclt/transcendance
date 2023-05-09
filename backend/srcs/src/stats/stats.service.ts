@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateStatDto } from './dto/create-stat.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
 import { StatEntity } from './entities/stat.entity';

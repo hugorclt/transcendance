@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   Request,
   Response,
   UseGuards,
@@ -13,13 +14,11 @@ import {
 } from './utils/guards';
 import { AuthService } from './auth.service';
 import { Body } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { LocalRegisterDto } from './dto/log-user.dto';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
 import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
-@ApiTags('login')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -32,6 +31,38 @@ export class AuthController {
     return await this.usersService.findOne(req.user.sub);
   }
 
+  @Get('generate')
+  @UseGuards(AccessAuthGard)
+  async register(@Req() req) {
+    const { otpauthurl } = await this.authService.generate2FaSecret(
+      req.user.sub,
+    );
+
+    return await this.authService.toUrl(otpauthurl);
+  }
+
+  @Post('2fa/turn-on')
+  @UseGuards(AccessAuthGard)
+  async turnOn2Fa(@Request() req, @Body() body) {
+    return await this.authService.turnOn2Fa(req.user.sub, body.code);
+  }
+
+  @Get('2fa/turn-off')
+  @UseGuards(AccessAuthGard)
+  async turnOff2Fa(@Request() req) {
+    return await this.authService.turnOff2Fa(req.user.sub);
+  }
+
+  @Post('2fa/authenticate')
+  async authenticate(@Body() body, @Response({ passthrough: true }) res) {
+    return await this.authService.loginWith2FA(
+      body.userId,
+      body.username,
+      body.code,
+      res,
+    );
+  }
+
   @Post('google/login')
   async googleLogin(
     @Body('token') token,
@@ -42,10 +73,13 @@ export class AuthController {
 
   @Post('42/login')
   async handle42Login(
-    @Body('code') code,
+    @Body() body,
     @Response({ passthrough: true }) res,
   ): Promise<any> {
-    return await this.authService.handle42Login({ code: code }, res);
+    return await this.authService.handle42Login(
+      { code: body.code, id: body.id },
+      res,
+    );
   }
 
   @Post('login')

@@ -110,10 +110,8 @@ export class RoomsService {
     const ret = await Promise.all(
       messages.flatMap(async (message) => {
         if (await this.checkIfUserBlocked(userId, message.senderId)) {
-          console.log("oui");
           return;
         }
-        console.log("non");
         return {
           content: message.content,
           senderId: message.senderId,
@@ -266,7 +264,8 @@ export class RoomsService {
     });
     if (!room) throw new NotFoundException();
     const sender = room.participants.find((user) => user.userId == senderId);
-    if (sender.mute.getTime() > new Date().getTime()) throw new ForbiddenException();
+    if (sender.mute.getTime() > new Date().getTime())
+      throw new ForbiddenException();
     const message = await this.messageService.create({
       content: newMessage.content,
       senderId,

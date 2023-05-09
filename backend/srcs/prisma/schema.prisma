@@ -18,6 +18,8 @@ model User {
   type             Type          @default(LOCAL)
   status           Status?       @default(DISCONNECTED)
   balance          Int?          @default(0)
+  is2fa            Boolean       @default(false)
+  secret2fa        String        @default("")
   preferences      Preference?
   sender           Message[]
   participant      Participant[]

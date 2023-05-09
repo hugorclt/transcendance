@@ -22,6 +22,7 @@ export const EnnemyListContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 80%;
+    box-sizing: border-box;
     height: 100%;
     background: #DB504F;
     align-items: left;

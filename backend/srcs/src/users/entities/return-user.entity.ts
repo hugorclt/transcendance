@@ -24,6 +24,9 @@ export class ReturnUserEntity {
 
   @ApiProperty({ required: false })
   xp: number;
+
+  @ApiProperty()
+  is2fa: boolean;
 }
 
 export class ReturnUserEntityWithPreferences extends ReturnUserEntity {

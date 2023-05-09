@@ -47,14 +47,12 @@ function MapSelector() {
     axiosPrivate
       .post("/lobbies/get-votes", { lobbyId: lobby.id })
       .then((res: AxiosResponse) => {
-        console.log(res.data);
         computeVote(res.data);
       });
   }, []);
 
   useEffect(() => {
     socket?.on("on-vote", (vote) => {
-      console.log(vote);
       computeVote(vote);
     });
     return () => {

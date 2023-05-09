@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { COLORS } from "../../../../../colors";
+import { screenSize } from "../../../../../mediaSize";
 
 export const InviteFriendButtonContainer = styled.div`
   width: 20px;
@@ -24,7 +25,14 @@ export const StyledButton = styled.button`
   color: ${COLORS.primary};
   border: none;
   border-radius: 5px;
+  margin: 8px;
   cursor: pointer;
+  pointer-events: all;
+
+  &.disabled {
+    pointer-events: none;
+    background-color: ${COLORS.darkergrey};
+  }
 
   &:hover {
   }
@@ -34,7 +42,15 @@ export const InviteFriendsList = styled.div`
   padding: 8px;
   display: flex;
   flex-direction: column;
-
+  @media (max-width: ${screenSize.tablet}) {
+    min-width: 200px;
+  }
+  @media (${screenSize.tablet} < width < ${screenSize.laptop}) {
+    min-width: 350px;
+  }
+  @media (min-width: ${screenSize.laptop}) {
+    min-width: 500px;
+  }
   p {
     color: ${COLORS.primary};
   }
@@ -51,6 +67,19 @@ export const InviteFriendsListScroll = styled.div`
   border-radius: 8px;
   padding: 16px;
   max-height: 300px;
+  min-height: 100px;
+  @media (max-width: ${screenSize.tablet}) {
+    max-height: 200px;
+    min-height: 100px;
+  }
+  @media (${screenSize.tablet} < width < ${screenSize.laptop}) {
+    max-height: 300px;
+    min-height: 100px;
+  }
+  @media (min-width: ${screenSize.laptop}) {
+    max-height: 400px;
+    min-height: 100px;
+  }
 
   h4 {
     padding: 8px;
@@ -62,7 +91,18 @@ export const InviteChatListScroll = styled.div`
   background-color: ${COLORS.darkergrey};
   border-radius: 8px;
   padding: 16px;
-  max-height: 300px;
+  @media (max-width: ${screenSize.tablet}) {
+    max-height: 200px;
+    min-height: 100px;
+  }
+  @media (${screenSize.tablet} < width < ${screenSize.laptop}) {
+    max-height: 300px;
+    min-height: 100px;
+  }
+  @media (min-width: ${screenSize.laptop}) {
+    max-height: 400px;
+    min-height: 100px;
+  }
 
   h4 {
     padding: 8px;

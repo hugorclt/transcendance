@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   FriendsCardsAvatar,
@@ -25,17 +25,20 @@ import {
   lobbyAtom,
 } from "../../../../services/store";
 import { updateArray } from "../../../../services/utils/updateArray";
+import { useNavigate } from "react-router";
 
 function FriendsCards({ friend }: TFriendCardsProps) {
   const axiosPrivate = useAxiosPrivate();
   const [friendList, setFriendList] = useAtom(friendAtom);
   const [chat, setChat] = useAtom(conversationAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const ref = useRef<any>();
+  const navigate = useNavigate();
 
   const handleRemove = () => {
     axiosPrivate
       .post("/users/friends/remove", { usernameToRemove: friend.username })
-      .then((res: AxiosResponse) => console.log("user succesfully removed"))
+      .then((res: AxiosResponse) => {})
       .catch((err: AxiosError) => console.log("failed to remove", err));
   };
 
@@ -50,6 +53,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       })
       .then((res: AxiosResponse) => {
         setChat((prev) => updateArray(prev, res.data));
+        closeTooltip();
       })
       .catch((err: AxiosError) => {
         console.log("error while creating the room");
@@ -70,13 +74,19 @@ function FriendsCards({ friend }: TFriendCardsProps) {
     axiosPrivate
       .get(`/lobbies/${friend.id}/spectate`)
       .then((response: AxiosResponse) => {
-        console.log(JSON.stringify(response.data));
         setLobby((prev) => ({ ...prev, ...response.data }));
       })
       .catch((error: AxiosError) => {
         console.log(JSON.stringify(error.message));
       });
   };
+
+  const viewProfil = () => {
+    navigate(`/profile/${friend.username}`, { replace: true });
+    closeTooltip();
+  };
+
+  const closeTooltip = () => ref.current!.close();
 
   return (
     <FriendsCardsBox>
@@ -96,30 +106,50 @@ function FriendsCards({ friend }: TFriendCardsProps) {
           </FriendsCardsStatus>
         </MiddleFriendsCardsBox>
       </LeftFriendsCardsBox>
+
       <Popup
+        ref={ref}
         position="left center"
         arrowStyle={{ color: COLORS.background }}
         trigger={
           <FriendsPopUpButton>
             <BsThreeDotsVertical
-              style={{ opacity: "50%", color: COLORS.primary }}
+              style={{
+                opacity: "50%",
+                color: COLORS.primary,
+                cursor: "pointer",
+              }}
               size={22}
             />
           </FriendsPopUpButton>
         }
       >
         <PopUpBox>
-          <InsidePopUpButton onClick={handleChat}>
+          <InsidePopUpButton style={{ cursor: "pointer" }} onClick={handleChat}>
             Send message
           </InsidePopUpButton>
-          <InsidePopUpButton onClick={handleBlock}>
+          <InsidePopUpButton
+            style={{ cursor: "pointer" }}
+            onClick={handleBlock}
+          >
             Block friends
           </InsidePopUpButton>
-          <InsidePopUpButton onClick={handleRemove}>
+          <InsidePopUpButton
+            style={{ cursor: "pointer" }}
+            onClick={handleRemove}
+          >
             Remove friends
           </InsidePopUpButton>
+          <InsidePopUpButton
+            style={{ cursor: "pointer" }}
+            onClick={viewProfil}>
+            Profile
+          </InsidePopUpButton>
           {friend.status == "GAME" && (
-            <InsidePopUpButton onClick={spectateGame}>
+            <InsidePopUpButton
+              style={{ cursor: "pointer" }}
+              onClick={spectateGame}
+            >
               Spectate
             </InsidePopUpButton>
           )}

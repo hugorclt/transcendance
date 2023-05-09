@@ -24,14 +24,6 @@ export class MessagesService {
     });
   }
 
-  update(id: number, updateMessageDto: UpdateMessageDto) {
-    return 'rien';
-  }
-
-  remove(id: number) {
-    return 'rien';
-  }
-
   async getLastMessage(roomId: string) {
     return await this.prisma.message.findFirst({
       where: {
