@@ -143,6 +143,12 @@ export class LobbiesGateway
     return { lobbyId: lobbyId, game: game, player: player };
   }
 
+  @SubscribeMessage('super')
+  async onSuper(client: AuthSocket) {
+    const playerInfo = this.getPlayerInfoFromClient(client);
+    playerInfo.player.paddle.goSuper();
+  }
+
   @SubscribeMessage('left-move')
   async onLeftMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
