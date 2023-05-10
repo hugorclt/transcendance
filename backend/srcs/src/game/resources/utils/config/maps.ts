@@ -16,7 +16,7 @@ export const maps = [
     walls: [
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 1,
         height: 9,
         depth: 35,
@@ -24,7 +24,7 @@ export const maps = [
       },
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 1,
         height: 9,
         depth: 35,
@@ -32,7 +32,7 @@ export const maps = [
       },
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 16,
         height: 1,
         depth: 35,
@@ -40,7 +40,7 @@ export const maps = [
       },
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 16,
         height: 1,
         depth: 35,

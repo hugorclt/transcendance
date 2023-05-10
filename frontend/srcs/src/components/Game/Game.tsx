@@ -71,7 +71,7 @@ function Game() {
           <Ball ball={gameInfo.ball} />
           <Walls walls={gameInfo.field.walls} />
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
-          <SpaceDust count={1000} />
+          {/* <SpaceDust count={1000} /> */}
           {gameInfo.mode === "CLASSIC" && isSpec === false ? (
             <group rotation={[0, Math.PI / 2, 0]}>
               <>
@@ -88,7 +88,7 @@ function Game() {
           )}
         </>
       )}
-      <Skybox map="./black.jpg"/>
+      <Skybox map="./retrowave.jpg"/>
     </Suspense>
   );
 }

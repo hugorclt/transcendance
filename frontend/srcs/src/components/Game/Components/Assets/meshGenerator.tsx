@@ -141,7 +141,8 @@ export function createMeshComponent(
             gridWidth={gridWidth}
             gridLength={gridLength}
             rotation={rotation}
-            cellColor={"#FE7AF1"}
+            // cellColor={"#FE7AF1"}
+            cellColor={"#72FE18"}
           />
         </mesh>
       );
