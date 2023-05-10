@@ -33,6 +33,10 @@ export function basePaddleCollide(ball: Ball, paddle: HitBox) {
     deltaY = (paddle.position.y - yPos) / (paddle.height / 2);
     thetaY = -45 * deltaY;
   }
+
+  thetaX = ball.speedZ > 0 ? -thetaX : thetaX;
+  thetaY = ball.speedZ > 0 ? thetaY : -thetaY;
+
   //apply both rotations on normal vector [0,0,norm or -norm depending on direction]
   //convert to radians
   thetaX = (thetaX * Math.PI) / 180;
