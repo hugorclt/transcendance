@@ -75,7 +75,6 @@ function ChatCards({ conversation }: ChatCardsProps) {
               ? conversation.lastMessage.substring(0, 15) + "..."
               : conversation.lastMessage}
           </p>
-          {!conversation.isRead && <RoundNewChat></RoundNewChat>}
         </ChatCardsMiddle>
       </div>
       <ChatCardsEnd>

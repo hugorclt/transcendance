@@ -1,14 +1,6 @@
-import { Trail } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { Bloom } from "@react-three/postprocessing";
-import {
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
-import { Mesh, Vector2, Vector3 } from "three";
+import { useContext, useEffect, useRef } from "react";
+import { Mesh, Vector3 } from "three";
 import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 import { Object3D } from "./Assets/interfaces";
 import { createMeshComponent } from "./Assets/meshGenerator";
@@ -21,8 +13,7 @@ type BallProps = {
 const Ball = (props: BallProps) => {
   const ballRef = useRef<Mesh>(null!);
   const socket = useContext(LobbySocketContext);
-  const lastReceivedVelocity = useRef<Vector3>(new Vector3(0, 0, 0));
-  const [velocity, setVelocity] = useState<Vector3>(new Vector3(0, 0, 0));
+  var velocity;
 
   useFrame(({ clock }) => {
     if (ballRef.current) {
@@ -33,20 +24,16 @@ const Ball = (props: BallProps) => {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
+      console.log(data.ball.position);
       ballRef.current.position.x = data.ball.position.x;
       ballRef.current.position.y = data.ball.position.y;
       ballRef.current.position.z = data.ball.position.z;
 
-      const newVelocity = new Vector3(
+      velocity = new Vector3(
         data.ball.velocity.x,
         data.ball.velocity.y,
         data.ball.velocity.z
       );
-
-      if (!lastReceivedVelocity.current.equals(newVelocity)) {
-        setVelocity(newVelocity);
-        lastReceivedVelocity.current.copy(newVelocity);
-      }
     });
 
     return () => {
