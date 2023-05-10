@@ -44,6 +44,9 @@ export function basePaddleCollide(ball: Ball, paddle: HitBox) {
     '}',
   );
   //apply both rotations on normal vector [0,0,norm or -norm depending on direction]
+  //convert to radians
+  thetaX = (thetaX * Math.PI) / 180;
+  thetaY = (thetaY * Math.PI) / 180;
   if (ball.speedZ < 0) var { x2, y2, z2 } = rotateX(thetaY, 0, 0, norm);
   else var { x2, y2, z2 } = rotateX(thetaY, 0, 0, -norm);
   let newSpeed = rotateY(thetaX, x2, y2, z2);
