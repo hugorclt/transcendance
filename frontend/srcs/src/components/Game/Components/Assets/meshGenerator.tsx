@@ -95,7 +95,7 @@ export function createMeshComponent(
             <PerspectiveCamera
               makeDefault={true}
               position={[position.x, position.y, position.z]}
-              fov={90}
+              fov={70}
             />
           )}
         </mesh>
