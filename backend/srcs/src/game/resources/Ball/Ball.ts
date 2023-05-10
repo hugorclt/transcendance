@@ -25,12 +25,12 @@ export class Ball extends IObject {
       texture: texture,
       type: type,
     });
-    this._initialSpeed = speed;
-    this._speed = speed;
+    this._initialSpeed = new Vector3(speed.x, speed.y, speed.z);
+    this._speed = new Vector3(speed.x, speed.y, speed.z);
   }
 
   public set speed(value: Vector3) {
-    this._speed = value;
+    this._speed = new Vector3(value.x, value.y, value.z);
   }
 
   public set speedX(value: number) {
@@ -82,7 +82,7 @@ export class Ball extends IObject {
   }
 
   public exportInfo(): Object3D {
-    return({
+    return {
       type: this.type,
       texture: this.texture,
       width: this.getWidth(),
@@ -96,13 +96,13 @@ export class Ball extends IObject {
       velocity: {
         x: this.speedX,
         y: this.speedY,
-        z: this.speedZ
-      }
-    })
+        z: this.speedZ,
+      },
+    };
   }
 
   public exportFrame(): Object3D {
-    return({
+    return {
       type: this.type,
       width: this.getWidth(),
       height: this.getHeight(),
@@ -115,8 +115,8 @@ export class Ball extends IObject {
       velocity: {
         x: this.speedX,
         y: this.speedY,
-        z: this.speedZ
-      }
-    })
+        z: this.speedZ,
+      },
+    };
   }
 }

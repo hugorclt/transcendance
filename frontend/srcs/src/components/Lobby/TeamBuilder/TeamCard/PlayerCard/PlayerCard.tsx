@@ -8,7 +8,6 @@ import { lobbyAtom } from "../../../../../services/store";
 import { TLobbyMember } from "../../../../../services/type";
 import {
   KickButton,
-  PlayerCardAvatar,
   PlayerCardContainer,
   PlayerCardLeftBorder,
   PlayerInfoContainer,
