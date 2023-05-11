@@ -20,24 +20,24 @@ export const item = [
     price: 1500,
     type: EItem.PADDLE,
   },
-  {
-    name: 'Blue Paddle',
-    image: generateBase64Image('/app/assets/paddle/blue-paddle.gif'),
-    price: 1500,
-    type: EItem.PADDLE,
-  },
+  // {
+  //   name: 'Blue Paddle',
+  //   image: generateBase64Image('/app/assets/paddle/blue-paddle.gif'),
+  //   price: 1500,
+  //   type: EItem.PADDLE,
+  // },
   {
     name: 'Orange Paddle',
     image: generateBase64Image('/app/assets/paddle/orange-paddle.gif'),
     price: 1500,
     type: EItem.PADDLE,
   },
-  {
-    name: 'Green Paddle',
-    image: generateBase64Image('/app/assets/paddle/green-paddle.gif'),
-    price: 1500,
-    type: EItem.PADDLE,
-  },
+  // {
+  //   name: 'Green Paddle',
+  //   image: generateBase64Image('/app/assets/paddle/green-paddle.gif'),
+  //   price: 1500,
+  //   type: EItem.PADDLE,
+  // },
   {
     name: 'Purple Paddle',
     image: generateBase64Image('/app/assets/paddle/purple-paddle.gif'),
