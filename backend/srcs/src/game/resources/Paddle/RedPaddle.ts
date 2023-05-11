@@ -7,9 +7,6 @@ import { CreateObjectDto } from '../interfaces/IObject';
 import { superCollide } from '../utils/collisions/superCollide';
 
 export class RedPaddle extends IPaddle {
-  
-  private specialCharge: number;
-  private superUnleashed: boolean;
 
   constructor(data: CreateObjectDto) {
     super(data);

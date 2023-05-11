@@ -23,6 +23,7 @@ export interface IPlayer {
   id: string;
   team: boolean;
   paddle: Object3D;
+  charge?: number;
 }
 
 export interface IField {
