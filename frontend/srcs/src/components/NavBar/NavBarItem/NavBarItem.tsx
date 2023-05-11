@@ -9,10 +9,6 @@ interface TNavBarItemProps {
 export function NavBarItem({ value, path, central }: TNavBarItemProps) {
   const location = useLocation();
 
-  console.log("location: ", location.pathname, " path: ", path);
-  if (location.pathname == path) {
-    console.log("equals");
-  }
   return (
     <NavBarItemStyle>
       <NavBarLink to={path}>
