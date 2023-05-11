@@ -19,6 +19,19 @@ import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { COLORS } from "../../../../colors";
 import { getImageBase64 } from "../../../../services/utils/getImageBase64";
+import { TConversation, TUser } from "../../../../services/type";
+
+export const getImageFromConversation = (conversation : TConversation, user: TUser) => {
+  if (conversation.isDm == true) {
+    if (conversation.participants[0].id == user.id) {
+      return (getImageBase64(conversation.participants[1].avatar))
+    } else {
+      return (getImageBase64(conversation.participants[0].avatar))
+    }
+  } else {
+    return getImageBase64(conversation.avatar)
+  }
+}
 
 function ChatCards({ conversation }: ChatCardsProps) {
   const [chat, setChat] = useAtom(conversationAtom);
@@ -67,7 +80,7 @@ function ChatCards({ conversation }: ChatCardsProps) {
   return (
     <ChatCardsBox onMouseEnter={openCross} onMouseLeave={closeCross}>
       <div onClick={addChatToTab} style={{ display: "flex", width: "90%" }}>
-        <ChatCardsRoundedAvatar src={getImageBase64(conversation.avatar)} />
+        <ChatCardsRoundedAvatar src={getImageFromConversation(conversation, user)} />
         <ChatCardsMiddle>
           <h5>{displayName(conversation, user)}</h5>
           <p>
