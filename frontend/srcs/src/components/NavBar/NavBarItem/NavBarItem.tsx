@@ -1,39 +1,30 @@
-import { NavBarLink, NavBarItemStyle } from "./NavBarStyle";
-import { useState, useEffect } from "react";
-import { COLORS } from "../../../colors";
-import { useAtom } from "jotai";
-import { selectedPageAtom } from "../../../services/store";
+import { NavBarLink, NavBarItemStyle, NavBarItemText } from "./NavBarStyle";
 import { useLocation } from "react-router";
 interface TNavBarItemProps {
+  central?: boolean;
   value: string;
   path: string;
 }
 
-export function NavBarItem({ value, path  }: TNavBarItemProps) {
-  const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
-  const [color, setColor] = useState(
-    selectedPage === path ? COLORS.secondary : COLORS.white
-  );
+export function NavBarItem({ value, path, central }: TNavBarItemProps) {
   const location = useLocation();
 
-  useEffect(() => {
-    setColor(selectedPage === path ? COLORS.secondary : COLORS.white);
-  }, [selectedPage]);
-
-  useEffect(() => {
-    setSelectedPage(location.pathname);
-  }, [location]);
-
-  const handleClick = () => {
-    if (selectedPage != path) {
-      setSelectedPage(path);
-    }
-  };
-
+  console.log("location: ", location.pathname, " path: ", path);
+  if (location.pathname == path) {
+    console.log("equals");
+  }
   return (
     <NavBarItemStyle>
-      <NavBarLink onClick={handleClick} color={color} to={path}>
-        <h2>{value}</h2>
+      <NavBarLink to={path}>
+        {central ? (
+          <h1>{value}</h1>
+        ) : (
+          <NavBarItemText
+            className={location.pathname == path ? "selected" : ""}
+          >
+            {value}
+          </NavBarItemText>
+        )}
       </NavBarLink>
     </NavBarItemStyle>
   );

@@ -62,10 +62,6 @@ export interface TParticipant {
   mute: Date;
 }
 
-export interface TSelectedPage {
-  selectedPage: number;
-}
-
 export interface TStat {
   id: string;
   xp: number;
