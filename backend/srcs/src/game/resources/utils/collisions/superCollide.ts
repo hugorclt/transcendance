@@ -14,4 +14,7 @@ export function superCollide(ball: Ball, hitbox: HitBox) {
   const zBigBoost = oldVelocity.z > 0 ? oldVelocity.z + 10 : oldVelocity.z - 10;
   ball.speed.z = zBigBoost;
   console.log("theZBigBoost", zBigBoost);
+  setTimeout(() => {
+    ball.isNormal = false;
+  }, 2000);
 }
