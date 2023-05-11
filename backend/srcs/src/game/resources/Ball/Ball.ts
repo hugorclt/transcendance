@@ -140,6 +140,7 @@ export class Ball extends IObject {
       width: this.getWidth(),
       height: this.getHeight(),
       depth: this.getDepth(),
+      isNormal: this.isNormal,
       position: {
         x: this._hitBox.position.x,
         y: this._hitBox.position.y,

@@ -7,6 +7,7 @@ export interface Object3D {
   width: number;
   height: number;
   depth: number;
+  isNormal?: boolean;
   position: {
     x: number;
     y: number;
