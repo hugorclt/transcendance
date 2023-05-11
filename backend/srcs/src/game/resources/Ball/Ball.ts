@@ -8,6 +8,7 @@ export class Ball extends IObject {
   private _speed: Vector3;
   private _initialSpeed: Vector3;
   private _prevPosition: Vector3;
+  private _oldVelocity: Vector3;
 
   public constructor(
     width: number,
@@ -29,6 +30,7 @@ export class Ball extends IObject {
     this._initialSpeed = new Vector3(speed.x, speed.y, speed.z);
     this._speed = new Vector3(speed.x, speed.y, speed.z);
     this._prevPosition = new Vector3(position.x, position.y, position.z);
+    this._oldVelocity = new Vector3(speed.x, speed.y, speed.z);
   }
 
   public set speed(value: Vector3) {
@@ -45,6 +47,10 @@ export class Ball extends IObject {
 
   public set speedZ(value: number) {
     this._speed.z = value;
+  }
+
+  public setOldVelocity(value: Vector3) {
+    this._oldVelocity = value;
   }
 
   public get speed(): Vector3 {
@@ -65,6 +71,10 @@ export class Ball extends IObject {
 
   public get prevPosition(): Vector3 {
     return this._prevPosition;
+  }
+
+  public getOldVelocity(): Vector3 {
+    return this._oldVelocity;
   }
 
   public resetSpeed() {

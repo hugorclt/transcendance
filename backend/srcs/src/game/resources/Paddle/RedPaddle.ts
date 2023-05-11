@@ -4,6 +4,7 @@ import { TCollision } from '../types';
 import { baseCollide, basePaddleCollide } from '../utils/collisions/baseColide';
 import { IPaddle } from './IPaddle';
 import { CreateObjectDto } from '../interfaces/IObject';
+import { superCollide } from '../utils/collisions/superCollide.ts';
 
 export class RedPaddle extends IPaddle {
   
@@ -12,7 +13,7 @@ export class RedPaddle extends IPaddle {
 
   constructor(data: CreateObjectDto) {
     super(data);
-    this.superUnleashed = true;
+    this.superUnleashed = false;
     this.specialCharge = 0;
   }
 
@@ -22,6 +23,7 @@ export class RedPaddle extends IPaddle {
     if (this.superUnleashed && this.specialCharge == 3){
       this.specialCharge = 0;
       this.superUnleashed = false;
+      superCollide(ball, this._hitBox);
     }
     else {
       collision = basePaddleCollide(ball, this._hitBox);
