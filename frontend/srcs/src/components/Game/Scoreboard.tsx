@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import Heptahedre from "../common/Heptahedre/Heptahedre";
 import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
+import { useAtom } from "jotai";
+import { userAtom } from "../../services/store";
 
 function Score({ value, blink }) {
   return (
@@ -20,15 +22,17 @@ function Scoreboard() {
   const socket = useContext(LobbySocketContext);
   const [team1score, setTeam1score] = useState(0);
   const [team2score, setTeam2score] = useState(0);
+  const [charge, setCharge] = useState(0);
+  const [user, setUser] = useAtom(userAtom);
 
-useEffect(() => {
-  if (scoreChanged === true) {
-    const blinkTimeout = setTimeout(() => {
-      setScoreChanged(false);
-    }, 0);
-    return () => clearTimeout(blinkTimeout);
-  }
-});
+  useEffect(() => {
+    if (scoreChanged === true) {
+      const blinkTimeout = setTimeout(() => {
+        setScoreChanged(false);
+      }, 0);
+      return () => clearTimeout(blinkTimeout);
+    }
+  });
 
   useEffect(() => {
     socket?.on("frame", (frame) => {
@@ -37,11 +41,13 @@ useEffect(() => {
         setTeam2score(frame.score.team2);
         setScoreChanged(true);
       }
+      const player = frame.players.find((paddle) => paddle.id == user.id);
+      setCharge(player.charge);
     });
 
     return () => {
       socket?.off("frame");
-    }
+    };
   }, [socket]);
 
   return (
@@ -62,6 +68,31 @@ useEffect(() => {
         <Score value={team1score} blink={scoreChanged} /> -{" "}
         <Score value={team2score} blink={scoreChanged} />
         &nbsp;&nbsp;&nbsp;Team 2
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                width: "15px",
+                height: "10px",
+                margin: "5px",
+                backgroundColor: charge >= 1 ? "skyblue" : "grey",
+              }}></div>
+            <div
+              style={{
+                width: "15px",
+                height: "10px",
+                margin: "5px",
+                backgroundColor: charge >= 2 ? "skyblue" : "grey",
+              }}></div>
+            <div
+              style={{
+                width: "15px",
+                height: "10px",
+                margin: "5px",
+                backgroundColor: charge >= 3 ? "skyblue" : "grey",
+              }}></div>
+          </div>
+        </div>
       </div>
       <Heptahedre />
     </>

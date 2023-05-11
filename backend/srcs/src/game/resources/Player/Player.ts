@@ -111,6 +111,7 @@ export class Player {
       id: this._id,
       team: this._team,
       paddle: this._paddle.exportFrame(),
+      charge: this._paddle.getCharge(),
     };
   }
 }

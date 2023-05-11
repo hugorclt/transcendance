@@ -5,9 +5,15 @@ import { TCollision } from '../types';
 import { baseCollide, basePaddleCollide } from '../utils/collisions/baseColide';
 
 export abstract class IPaddle extends IObject {
+  protected specialCharge: number;
+  protected superUnleashed: boolean;
   public collide(ball: Ball): TCollision {
     const collision = basePaddleCollide(ball, this._hitBox);
     return { ...collision, type: EType.PADDLE };
+  }
+
+  public getCharge() {
+    return this.specialCharge;
   }
 
   public goSuper() {}
