@@ -14,7 +14,7 @@ export class RedPaddle extends IPaddle {
   constructor(data: CreateObjectDto) {
     super(data);
     this.superUnleashed = false;
-    this.specialCharge = 0;
+    this.specialCharge = 3;
   }
 
 
