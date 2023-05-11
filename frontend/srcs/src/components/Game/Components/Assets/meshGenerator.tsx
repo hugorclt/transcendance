@@ -15,13 +15,11 @@ const PADDLE_COLORS = {
     emissive: "white",
     emissiveIntensity: 4,
   },
-
   [EType.BASIC_PADDLE]: {
     color: "#fffff",
     emissive: "white",
     emissiveIntensity: 4,
   },
-
   [EType.RED_PADDLE]: {
     color: "#f69090",
     emissive: "red",
@@ -96,8 +94,8 @@ export function createMeshComponent(
           {isActive && (
             <PerspectiveCamera
               makeDefault={true}
-              position={[position.x, position.y + 10, position.z]}
-              fov={75}
+              position={[position.x, position.y + 5, position.z]}
+              fov={70}
             />
           )}
         </mesh>
@@ -143,7 +141,8 @@ export function createMeshComponent(
             gridWidth={gridWidth}
             gridLength={gridLength}
             rotation={rotation}
-            cellColor={"#FE7AF1"}
+            // cellColor={"#FE7AF1"}
+            cellColor={"#72FE18"}
           />
         </mesh>
       );

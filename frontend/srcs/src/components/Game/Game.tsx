@@ -14,6 +14,7 @@ import {
 } from "../../services/store";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { SpaceDust } from "./Components/Assets/custom/SpaceDust";
+import { Sparks } from "./Components/Assets/custom/Sparks";
 
 function Game() {
   const socket = useContext(LobbySocketContext);
@@ -41,7 +42,7 @@ function Game() {
     socket?.on("end-game", (data) => {
       setUser((prev) => {
         return {
-          ...prev,
+        ...prev,
           exp: prev.exp + data.xp,
           balance: prev.balance + data.money,
         };
@@ -70,11 +71,7 @@ function Game() {
           <Ball ball={gameInfo.ball} />
           <Walls walls={gameInfo.field.walls} />
           <Paddles mode={gameInfo.mode} players={gameInfo.players} />
-          <SpaceDust count={1000} />
-
-          {/* <SparkStorm count={100} colors={"orange"}/> */}
-          {/* <CollisionDisk gameInfo={gameInfo} /> */}
-          {/* <hemisphereLight args={["#ffff", 0.6]} /> */}
+          {/* <SpaceDust count={1000} /> */}
           {gameInfo.mode === "CLASSIC" && isSpec === false ? (
             <group rotation={[0, Math.PI / 2, 0]}>
               <>
@@ -91,7 +88,7 @@ function Game() {
           )}
         </>
       )}
-      <Skybox />
+      <Skybox map="./retrowave.jpg"/>
     </Suspense>
   );
 }

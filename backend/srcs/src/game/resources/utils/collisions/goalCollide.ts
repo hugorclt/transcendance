@@ -9,6 +9,7 @@ export function goalCollide(ball: Ball, object: HitBox) {
     ball.getPosition().y,
   );
   ball.resetPosition();
+  console.log('goal collide');
 
   return {
     position: position,

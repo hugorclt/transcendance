@@ -34,16 +34,15 @@ export class Field {
     this._goals.push(
       new Goal({
         ...config.goals,
-        position: new Vector3(0, 0, config.depth / 2 + config.goals.depth),
+        position: new Vector3(0, 0, config.depth / 2 + 2 * config.goals.depth),
       }),
     );
     this._goals.push(
       new Goal({
         ...config.goals,
-        position: new Vector3(0, 0, -config.depth / 2 - config.goals.depth),
+        position: new Vector3(0, 0, -config.depth / 2 - 2 * config.goals.depth),
       }),
     );
-
   }
 
   public exportFieldInfo(): IField {

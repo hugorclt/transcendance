@@ -4,15 +4,11 @@ import { COLORS } from "../../../colors";
 import { TMainButtonProps } from "./TMainButton";
 import { MainButtonTextContainer } from "./MainButton.style";
 import { useNavigate } from "react-router";
-import { useAtom } from "jotai";
-import { selectedPageAtom } from "../../../services/store";
 
 function MainButton({ children }: TMainButtonProps) {
   const navigate = useNavigate();
-  const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
 
   const handleClick = () => {
-    setSelectedPage("/");
     navigate("/");
   };
 
@@ -23,7 +19,8 @@ function MainButton({ children }: TMainButtonProps) {
         height="auto"
         viewBox="0 0 341 103"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg">
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
           onClick={handleClick}
           fillRule="evenodd"

@@ -16,7 +16,7 @@ export const maps = [
     walls: [
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 1,
         height: 9,
         depth: 35,
@@ -24,7 +24,7 @@ export const maps = [
       },
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 1,
         height: 9,
         depth: 35,
@@ -32,7 +32,7 @@ export const maps = [
       },
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 16,
         height: 1,
         depth: 35,
@@ -40,13 +40,14 @@ export const maps = [
       },
       {
         texture: null,
-        type: EType.BOX,
+        type: EType.GRID,
         width: 16,
         height: 1,
         depth: 35,
         position: new Vector3(0, 4.5, 0),
       },
     ],
+
     objects: [
       {
         texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
@@ -93,8 +94,8 @@ export const maps = [
     goals: {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
       type: EType.BOX,
-      width: 16,
-      height: 9,
+      width: 50,
+      height: 50,
       depth: 1,
     },
     paddle: {
@@ -144,12 +145,12 @@ export const maps = [
       height: 0.5,
       depth: 0.5,
       position: new Vector3(0, 0, 0),
-      velocity: new Vector3(0, 0, 20),
+      velocity: new Vector3(0, 0, 4),
     },
     goals: {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
       type: EType.BOX,
-      width: 16,
+      width: 50,
       height: 1,
       depth: 1,
     },
