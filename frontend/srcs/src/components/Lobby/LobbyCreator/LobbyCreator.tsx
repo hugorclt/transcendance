@@ -32,7 +32,8 @@ const dataGameMode = [
     name: "Classic",
     description:
       "Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s.",
-    img: "../../../../public/planet-modified.jpeg",
+    img: "../../../../public/pong.png",
+    left: true,
   },
 
   {
@@ -40,6 +41,7 @@ const dataGameMode = [
     description:
       "Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay",
     img: "../../../../public/planet.jpeg",
+    left: false,
   },
 ];
 
@@ -159,12 +161,14 @@ function LobbyCreator() {
             <GameModeCard
               mode="Classic"
               description="Pong Classic is a game mode that recreates the classic arcade game Pong, which was first released in the early 1970s."
-              img={"../../../../public/planet-modified.jpeg"}
+              img={"../../../../public/pong.png"}
+              left={true}
             />
             <GameModeCard
               mode="Champions"
               description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers"
-              img={"../../../../public/planet.jpeg"}
+              img={"../../../../public/map_planet.jpeg"}
+              left={false}
             />
           </GameModeCardsBody>
           <GameModeButtonBody>
@@ -193,7 +197,8 @@ function LobbyCreator() {
             <GameModeCard
               mode={dataGameMode[slider].name}
               description={dataGameMode[slider].description}
-              img={"../../../../public/planet.jpeg"}
+              img={dataGameMode[slider].img}
+              left={dataGameMode[slider].left}
             />
             <ButtonNoStyle
               onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>

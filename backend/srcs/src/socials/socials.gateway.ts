@@ -36,6 +36,21 @@ export class SocialsGateway
   }
 
   async handleConnection(client: AuthSocket) {
+    const user = await this.prisma.user.update({
+      where: {
+        id: client.userId,
+      },
+      data: {
+        status: 'CONNECTED',
+      },
+      include: {
+        friends: true,
+      },
+    });
+    await this.emitToList(user.friends, 'on-friend-update', {
+      id: user.id,
+      status: user.status,
+    });
     const rooms = await this.prisma.room.findMany({
       where: {
         participants: {
@@ -54,7 +69,23 @@ export class SocialsGateway
     await client.join(client.userId);
   }
 
-  async handleDisconnect(client: AuthSocket) {}
+  async handleDisconnect(client: AuthSocket) {
+    const user = await this.prisma.user.update({
+      where: {
+        id: client.userId,
+      },
+      data: {
+        status: 'DISCONNECTED',
+      },
+      include: {
+        friends: true,
+      },
+    });
+    await this.emitToList(user.friends, 'on-friend-update', {
+      id: user.id,
+      status: user.status,
+    });
+  }
 
   getSocketFromUserId(userId: string): Socket {
     const socketId = this.io.adapter.rooms.get(userId).values().next().value;

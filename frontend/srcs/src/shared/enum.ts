@@ -11,6 +11,7 @@ export enum EPaddle {
 export enum EMap {
   CLASSIC,
   SPACE,
+  RETROWAVE,
 }
 
 export enum EMode {

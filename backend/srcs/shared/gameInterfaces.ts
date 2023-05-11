@@ -29,6 +29,7 @@ export interface IField {
   walls: Object3D[];
   objects: Object3D[];
   goals: Object3D[];
+  skybox: string;
 }
 
 export interface IGameInfo {

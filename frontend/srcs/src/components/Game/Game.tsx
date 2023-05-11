@@ -86,9 +86,9 @@ function Game() {
               </>
             )
           )}
+          <Skybox map={gameInfo.field.skybox} />
         </>
       )}
-      <Skybox map="./retrowave.jpg" />
     </Suspense>
   );
 }
