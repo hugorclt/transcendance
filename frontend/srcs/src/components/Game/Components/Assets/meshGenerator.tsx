@@ -1,6 +1,6 @@
 import { RepeatWrapping, Vector3 } from "three";
 import { Object3D } from "./interfaces";
-import { Grid } from "@react-three/drei";
+import { Grid, OrbitControls } from "@react-three/drei";
 import { Mesh } from "three";
 import { EType } from "../../../../shared/enum";
 import { PerspectiveCamera } from "@react-three/drei";
@@ -8,6 +8,7 @@ import { Trail } from "@react-three/drei";
 import { GridCustom } from "./custom/GridCustom";
 import { Euler } from "three";
 import { useTexture } from "@react-three/drei";
+import useKeyboard from "../../../../hooks/useKeyboard";
 
 const PADDLE_COLORS = {
   [EType.CLASSIC_PADDLE]: {
@@ -52,6 +53,7 @@ export function createMeshComponent(
   ref: React.RefObject<Mesh> | null,
   isActive: boolean | false
 ) {
+  const keyMap = useKeyboard();
   const position = new Vector3(
     object.position.x,
     object.position.y,
@@ -81,24 +83,33 @@ export function createMeshComponent(
       const colorConfig = PADDLE_COLORS[object.type];
 
       return (
-        <mesh ref={ref} position={position}>
-          <boxGeometry args={[object.width, object.height, object.depth]} />
-          <meshToonMaterial
-            color={colorConfig.color}
-            emissive={colorConfig.emissive}
-            emissiveIntensity={colorConfig.emissiveIntensity}
-            opacity={1}
-            transparent={false}
-            toneMapped={false}
-          />
+        <>
           {isActive && (
-            <PerspectiveCamera
-              makeDefault={true}
-              position={[position.x, position.y + 5, position.z]}
-              fov={70}
-            />
+            <>
+              <PerspectiveCamera
+                makeDefault={true}
+                position={[
+                  position.x,
+                  position.y + 5,
+                  position.z > 0 ? position.z + 15 : position.z - 15,
+                ]}
+                fov={70}
+              />
+              <OrbitControls />
+            </>
           )}
-        </mesh>
+          <mesh ref={ref} position={position}>
+            <boxGeometry args={[object.width, object.height, object.depth]} />
+            <meshToonMaterial
+              color={colorConfig.color}
+              emissive={colorConfig.emissive}
+              emissiveIntensity={colorConfig.emissiveIntensity}
+              opacity={1}
+              transparent={false}
+              toneMapped={false}
+            />
+          </mesh>
+        </>
       );
 
     /*================================ BALL ==============================*/
