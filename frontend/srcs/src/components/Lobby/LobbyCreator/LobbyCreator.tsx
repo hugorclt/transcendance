@@ -164,7 +164,7 @@ function LobbyCreator() {
             <GameModeCard
               mode="Champions"
               description="Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers"
-              img={"../../../../public/planet.jpeg"}
+              img={"../../../../public/map_planet.jpeg"}
             />
           </GameModeCardsBody>
           <GameModeButtonBody>
@@ -193,7 +193,7 @@ function LobbyCreator() {
             <GameModeCard
               mode={dataGameMode[slider].name}
               description={dataGameMode[slider].description}
-              img={"../../../../public/planet.jpeg"}
+              img={"../../../../public/map_planet.jpeg"}
             />
             <ButtonNoStyle
               onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
