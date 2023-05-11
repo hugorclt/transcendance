@@ -42,7 +42,7 @@ function Game() {
     socket?.on("end-game", (data) => {
       setUser((prev) => {
         return {
-        ...prev,
+          ...prev,
           exp: prev.exp + data.xp,
           balance: prev.balance + data.money,
         };
@@ -86,9 +86,9 @@ function Game() {
               </>
             )
           )}
+          <Skybox map={gameInfo.field.skybox} />
         </>
       )}
-      <Skybox map="./retrowave.jpg"/>
     </Suspense>
   );
 }

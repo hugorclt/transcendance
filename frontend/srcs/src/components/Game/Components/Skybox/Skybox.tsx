@@ -1,13 +1,14 @@
 import { useFrame, useLoader } from "@react-three/fiber";
 import React, { useRef } from "react";
 import * as THREE from "three";
+import { getImageBase64 } from "../../../../services/utils/getImageBase64";
 
 interface SkyboxProps {
   map: string;
 }
 
 function Skybox({map} : SkyboxProps) {
-  const base = useLoader(THREE.TextureLoader, map);
+  const base = useLoader(THREE.TextureLoader, getImageBase64(map));
   const sphereRef = useRef<THREE.Mesh>(null!);
 
   useFrame(() => {
