@@ -20,28 +20,30 @@ function Scoreboard() {
   const socket = useContext(LobbySocketContext);
   const [team1score, setTeam1score] = useState(0);
   const [team2score, setTeam2score] = useState(0);
+  const [charge, setCharge] = useState(0);
 
-useEffect(() => {
-  if (scoreChanged === true) {
-    const blinkTimeout = setTimeout(() => {
-      setScoreChanged(false);
-    }, 0);
-    return () => clearTimeout(blinkTimeout);
-  }
-});
+  useEffect(() => {
+    if (scoreChanged === true) {
+      const blinkTimeout = setTimeout(() => {
+        setScoreChanged(false);
+      }, 0);
+      return () => clearTimeout(blinkTimeout);
+    }
+  });
 
   useEffect(() => {
     socket?.on("frame", (frame) => {
       if (team1score != frame.score.team1 || team2score != frame.score.team2) {
         setTeam1score(frame.score.team1);
         setTeam2score(frame.score.team2);
+        setCharge(frame.charge);
         setScoreChanged(true);
       }
     });
 
     return () => {
       socket?.off("frame");
-    }
+    };
   }, [socket]);
 
   return (
@@ -58,10 +60,30 @@ useEffect(() => {
           left: "50%",
           transform: "translate(-50%, -50%)",
         }}>
-        Team 1&nbsp;&nbsp;&nbsp;
+        <div>
+          Team 1&nbsp;&nbsp;&nbsp;
+          <div
+            style={{
+              width: "10px",
+              height: "5px",
+              backgroundColor: charge >= 1 ? "blue" : "grey",
+            }}></div>
+          <div
+            style={{
+              width: "10px",
+              height: "5px",
+              backgroundColor: charge >= 2 ? "blue" : "grey",
+            }}></div>
+          <div
+            style={{
+              width: "10px",
+              height: "5px",
+              backgroundColor: charge >= 3 ? "blue" : "grey",
+            }}></div>
+        </div>
         <Score value={team1score} blink={scoreChanged} /> -{" "}
         <Score value={team2score} blink={scoreChanged} />
-        &nbsp;&nbsp;&nbsp;Team 2
+        <div>&nbsp;&nbsp;&nbsp;Team 2</div>
       </div>
       <Heptahedre />
     </>

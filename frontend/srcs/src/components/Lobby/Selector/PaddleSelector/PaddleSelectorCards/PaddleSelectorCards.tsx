@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { SelectorCardsContainer } from "./PaddleSelector.style";
-import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 
 function PaddleSelectorCards({ name, img, isSelected }) {
   return (
@@ -11,6 +10,7 @@ function PaddleSelectorCards({ name, img, isSelected }) {
         backgroundSize: "cover",
         boxShadow: isSelected ? "0px 0px 8px 0px #DB504A" : "",
         transition: "all 250ms ease-in",
+        filter: name == "Base Paddle" ? "grayscale(100%)" : "",
       }}>
       </SelectorCardsContainer>
   );
