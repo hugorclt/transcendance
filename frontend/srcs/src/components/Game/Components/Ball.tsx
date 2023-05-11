@@ -36,7 +36,8 @@ const Ball = (props: BallProps) => {
         data.ball.velocity.y,
         data.ball.velocity.z
       );
-      setTrail(data.superPowerTouch);
+      if (data.superPowerTouch)
+        setTrail(data.superPowerTouch);
     });
 
     return () => {
