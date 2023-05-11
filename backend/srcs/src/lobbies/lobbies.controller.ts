@@ -45,7 +45,6 @@ export class LobbiesController {
 
   @Get('cancel')
   async cancel(@Request() req: any): Promise<LobbyWithMembersEntity> {
-    console.log('received request to cancel from id: ', req.user.sub);
     return await this.lobbiesService.cancel(req.user.sub);
   }
 

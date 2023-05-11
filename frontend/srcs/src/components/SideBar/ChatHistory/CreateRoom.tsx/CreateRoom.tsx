@@ -68,7 +68,6 @@ function CreateRoom() {
         isDm: false,
       })
       .then((res: AxiosResponse) => {
-        console.log("Room succesfully created\n", res.data);
         setChat((prev) => updateArray(prev, res.data));
       })
       .catch((err: AxiosError) => {

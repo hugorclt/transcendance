@@ -27,6 +27,12 @@ export const StyledButton = styled.button`
   border-radius: 5px;
   margin: 8px;
   cursor: pointer;
+  pointer-events: all;
+
+  &.disabled {
+    pointer-events: none;
+    background-color: ${COLORS.darkergrey};
+  }
 
   &:hover {
   }

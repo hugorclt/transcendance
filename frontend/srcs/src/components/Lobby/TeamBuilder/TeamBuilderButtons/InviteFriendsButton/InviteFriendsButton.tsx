@@ -147,7 +147,13 @@ function InviteFriendsButton() {
               })}
             </InviteChatListScroll>
           </InviteFriendsList>
-          <StyledButton onClick={handleSubmit} type="submit">
+          <StyledButton
+            onClick={handleSubmit}
+            className={
+              invitedChat.length || invitedFriends.length ? "" : "disabled"
+            }
+            type="submit"
+          >
             <h5>Invite</h5>
           </StyledButton>
         </ModalBox>

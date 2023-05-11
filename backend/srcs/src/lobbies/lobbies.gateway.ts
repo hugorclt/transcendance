@@ -101,7 +101,6 @@ export class LobbiesGateway
     this._games.set(lobby.id, game);
     this.emitToLobby(lobby.id, 'redirect-to-game', undefined);
     game.start();
-    console.log('game just started');
   }
 
   generateFrame(lobbyId: string) {
@@ -187,7 +186,7 @@ export class LobbiesGateway
     const interval = setInterval(() => {
       this.emitToLobby(lobbyId, eventName, seconds--);
     }, 1000);
-    await delay((seconds * 1000) + 2000);
+    await delay(seconds * 1000 + 2000);
     clearInterval(interval);
   }
 

@@ -7,6 +7,7 @@ import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import { lobbyAtom } from "../../../../../services/store";
 import { TLobbyMember } from "../../../../../services/type";
 import {
+  KickButton,
   PlayerCardAvatar,
   PlayerCardContainer,
   PlayerCardLeftBorder,
@@ -44,11 +45,12 @@ function PlayerCard({ team, member }: PlayerCardProps) {
     <PlayerCardContainer>
       <PlayerCardLeftBorder color={team == false ? COLORS.red : COLORS.blue} />
       <PlayerInfoContainer>
-        <PlayerCardAvatar />
         <PlayerNameContainer>
           <h4>{member?.user?.username}</h4>
         </PlayerNameContainer>
-        {user.id == lobby.ownerId && <button onClick={kickPlayer}>KICK</button>}
+        {user.id == lobby.ownerId && member?.userId != lobby.ownerId && (
+          <KickButton onClick={kickPlayer}>KICK</KickButton>
+        )}
         <h4>{member.ready ? "READY" : "..."}</h4>
       </PlayerInfoContainer>
     </PlayerCardContainer>

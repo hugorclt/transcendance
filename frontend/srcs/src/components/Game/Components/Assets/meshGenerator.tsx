@@ -71,11 +71,7 @@ export function createMeshComponent(
     materialProps.map = texture;
   }
 
-  // console.log(object.type);
-
   switch (object.type) {
-    /*================================ PADDLE ==============================*/
-
     case EType.BASIC_PADDLE:
     case EType.CLASSIC_PADDLE:
     case EType.PADDLE:
@@ -128,10 +124,10 @@ export function createMeshComponent(
       const length = object.velocity?.z ? object.velocity.z / 10 + 1 : 1;
 
       return (
-          <mesh ref={ref} position={position} args={[]} castShadow={true}>
-            <sphereGeometry args={[object.width, 32, 16]} />
-            <meshStandardMaterial {...materialProps} />
-          </mesh>
+        <mesh ref={ref} position={position} args={[]} castShadow={true}>
+          <sphereGeometry args={[object.width, 32, 16]} />
+          <meshStandardMaterial {...materialProps} />
+        </mesh>
       );
 
     /*================================ WALL ==============================*/

@@ -46,3 +46,17 @@ export const PlayerInfoContainer = styled.div`
   display: flex;
   height: 100%;
 `;
+
+export const KickButton = styled.div`
+  cursor: pointer;
+  border-radius: 20px;
+  @media (max-width: ${screenSize.laptop}) {
+    padding: 4px;
+  }
+  @media (min-width: ${screenSize.laptop}) {
+    padding: 8px;
+  }
+  color: ${COLORS.primary};
+  font-weight: bold;
+  background-color: ${COLORS.secondary};
+`;

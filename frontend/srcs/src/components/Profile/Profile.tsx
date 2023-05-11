@@ -28,7 +28,6 @@ export function Profile({ username }) {
     let actual: string;
     if (!username) actual = user.username;
     else actual = username;
-    console.log(username);
     axiosPrivate
       .get(`/users/user/${actual}`)
       .then((response: AxiosResponse) => {

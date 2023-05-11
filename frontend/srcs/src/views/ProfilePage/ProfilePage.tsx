@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ProfileLayout } from "../../layouts/ProfileLayout/ProfileLayout";
 import { useParams } from "react-router";
-import { nanoid } from "nanoid";
 import { COLORS } from "../../colors";
 import { ProfileContainer } from "../../components/Profile/ProfileStyle";
 
@@ -16,7 +15,6 @@ function ProfilePage(props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(tempUsername);
     setUsername(tempUsername);
     setTempUsername("");
   };
@@ -27,11 +25,13 @@ function ProfilePage(props) {
         <div style={{ padding: "8px", backgroundColor: COLORS.background }}>
           <form
             style={{ display: "flex", alignItems: "center" }}
-            onSubmit={handleSubmit}>
+            onSubmit={handleSubmit}
+          >
             <p style={{ marginRight: "8px" }}>Search user:</p>
             <input
               onChange={(e) => setTempUsername(e.target.value)}
-              placeholder="Username"></input>
+              placeholder="Username"
+            ></input>
           </form>
         </div>
         <ProfileLayout username={user} />
