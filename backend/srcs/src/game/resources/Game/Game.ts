@@ -8,6 +8,7 @@ import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 import { maps } from '../utils/config/maps';
 import { EType } from 'shared/enum';
 import { Vector3 } from '../utils/Vector3';
+import { HitBox } from '../utils/HitBox';
 
 export class Game {
   private _id: string;
@@ -92,7 +93,9 @@ export class Game {
   detectTunneling() {
     const posT = this._ball.getPosition();
     const posTold = this._ball.prevPosition;
+    const possibleContact = new Array<IObject>();
 
+    //on cree la hitbox de la trajectoire du centre de la balle
     var xMin, yMin, zMin, xMax, yMax, zMax;
     xMin = Math.min(posT.x, posTold.x);
     yMin = Math.min(posT.y, posTold.y);
@@ -100,12 +103,34 @@ export class Game {
     xMax = Math.max(posT.x, posTold.x);
     yMax = Math.max(posT.y, posTold.y);
     zMax = Math.max(posT.z, posTold.z);
+    const ballTrajectory = new HitBox(
+      xMax - xMin,
+      yMax - yMin,
+      zMax - zMin,
+      new Vector3((xMax + xMin) / 2, (yMax + yMin) / 2, (zMax + zMin) / 2), //A VERIFIER
+    );
 
     var directors = new Vector3(
       posT.x - posTold.x,
       posT.y - posTold.y,
       posT.z - posTold.z,
     );
+    //on trouve tous les objets dont la hitbox coincide au moins en un point avec celle de la trajectoire
+    this._objects.forEach((object) => {
+      if (ballTrajectory.intersect(object.hitBox)) {
+        possibleContact.push(object);
+      }
+    });
+    //pour chaque objet avec lesquels la position est possible, on verifie si contatc ou non
+    possibleContact.forEach((object) => {
+      //detect intersections between trajectory and each face of the object
+      object.getIntersections(posTold, directors).forEach((intersection) => {});
+      //if 1 intersection found => store point + object
+      //if more chose first (t param) => store point + object
+    });
+
+    //for each intersection, if more than 1 , chose first (t param);
+    // correct ball position according to the object collided
   }
 
   processMovements(deltaTime: number) {
