@@ -200,6 +200,7 @@ enum EItem {
 enum EMap {
   CLASSIC
   SPACE
+  RETROWAVE
 }
 
 enum EMode {

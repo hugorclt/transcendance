@@ -24,7 +24,6 @@ const Ball = (props: BallProps) => {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-      console.log(data.ball.position);
       ballRef.current.position.x = data.ball.position.x;
       ballRef.current.position.y = data.ball.position.y;
       ballRef.current.position.z = data.ball.position.z;

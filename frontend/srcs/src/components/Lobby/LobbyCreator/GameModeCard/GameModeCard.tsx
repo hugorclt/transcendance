@@ -16,6 +16,7 @@ interface Props {
   mode: string;
   description: string;
   img: string;
+  left: boolean
 }
 
 function GameModeCard(props: Props) {
@@ -35,7 +36,7 @@ function GameModeCard(props: Props) {
   };
 
   return (
-    <GameModeCardsContainer style={{ backgroundImage: `url(${props.img})` }}>
+    <GameModeCardsContainer style={{ backgroundImage: `url(${props.img})`, backgroundPosition: "center", backgroundSize: props.left ? "cover" : ""}}>
       <GameModeCardsUpper>
         <GameModeCardsMain>
           <GameModeCardsButton
