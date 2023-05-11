@@ -35,6 +35,8 @@ function Paddle(props: PlayerProps) {
       keyMap["KeyD"] && socket?.emit(side2);
       keyMap["KeyW"] && socket?.emit("up-move");
       keyMap["KeyS"] && socket?.emit("down-move");
+
+      keyMap["KeyR"] &&socket?.emit("super");
     });
   } else {
     useFrame(() => {

@@ -118,7 +118,7 @@ export function createMeshComponent(
       if (!object.texture) {
         materialProps.color = "white";
         materialProps.emissive = "blue";
-        materialProps.emissiveIntensity = 10;
+        materialProps.emissiveIntensity = 3;
         materialProps.toneMapped = false;
       } else {
         materialProps.map = useTexture("/moon.jpg");
@@ -127,6 +127,13 @@ export function createMeshComponent(
         materialProps.metalness = 0;
         materialProps.toneMapped = false;
         materialProps.emissiveIntensity = 1;
+      }
+
+      if (isActive) {
+        materialProps.color = "red";
+        materialProps.emissive = "red";
+        materialProps.emissiveIntensity = 10;
+        materialProps.toneMapped = false;
       }
 
       const settings = {};
