@@ -7,6 +7,7 @@ import { TCollision, TScore } from '../types';
 import { IFrame, IGameInfo } from 'shared/gameInterfaces';
 import { maps } from '../utils/config/maps';
 import { EType } from 'shared/enum';
+import { Vector3 } from '../utils/Vector3';
 
 export class Game {
   private _id: string;
@@ -78,6 +79,35 @@ export class Game {
     this._lastTimestamp = Date.now();
   }
 
+  isPointOnLine(point: Vector3, origin: Vector3, directors: Vector3): boolean {
+    let eqX, eqY, eqZ;
+
+    eqX = (point.x - origin.x) / directors.x;
+    eqY = (point.y - origin.y) / directors.y;
+    eqZ = (point.z - origin.z) / directors.z;
+
+    return eqX == eqY && eqX == eqZ;
+  }
+
+  detectTunneling() {
+    const posT = this._ball.getPosition();
+    const posTold = this._ball.prevPosition;
+
+    var xMin, yMin, zMin, xMax, yMax, zMax;
+    xMin = Math.min(posT.x, posTold.x);
+    yMin = Math.min(posT.y, posTold.y);
+    zMin = Math.min(posT.z, posTold.z);
+    xMax = Math.max(posT.x, posTold.x);
+    yMax = Math.max(posT.y, posTold.y);
+    zMax = Math.max(posT.z, posTold.z);
+
+    var directors = new Vector3(
+      posT.x - posTold.x,
+      posT.y - posTold.y,
+      posT.z - posTold.z,
+    );
+  }
+
   processMovements(deltaTime: number) {
     this._ball.update(deltaTime);
   }
@@ -113,6 +143,7 @@ export class Game {
   gameLoop(deltaTime: number) {
     this._collisions.length = 0;
     this.processMovements(deltaTime);
+    this.detectTunneling();
     this.detectAndApplyCollisions();
     this.detectGoal();
   }

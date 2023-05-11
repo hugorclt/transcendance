@@ -10,6 +10,7 @@ export abstract class IPaddle extends IObject {
     return { ...collision, type: EType.PADDLE };
   }
 
+  public goSuper() {}
   public moveLeft() {
     this.moveX(-0.2);
   }

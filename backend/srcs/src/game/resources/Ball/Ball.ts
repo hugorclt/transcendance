@@ -7,6 +7,8 @@ import { Object3D } from 'shared/gameInterfaces';
 export class Ball extends IObject {
   private _speed: Vector3;
   private _initialSpeed: Vector3;
+  private _prevPosition: Vector3;
+  private _oldVelocity: Vector3;
 
   public constructor(
     width: number,
@@ -27,6 +29,8 @@ export class Ball extends IObject {
     });
     this._initialSpeed = new Vector3(speed.x, speed.y, speed.z);
     this._speed = new Vector3(speed.x, speed.y, speed.z);
+    this._prevPosition = new Vector3(position.x, position.y, position.z);
+    this._oldVelocity = new Vector3(speed.x, speed.y, speed.z);
   }
 
   public set speed(value: Vector3) {
@@ -45,6 +49,10 @@ export class Ball extends IObject {
     this._speed.z = value;
   }
 
+  public set oldVelocity(value: Vector3) {
+    this._oldVelocity = value;
+  }
+
   public get speed(): Vector3 {
     return this._speed;
   }
@@ -61,12 +69,27 @@ export class Ball extends IObject {
     return this._speed.z;
   }
 
+  public get prevPosition(): Vector3 {
+    return this._prevPosition;
+  }
+
+  public get oldVelocity(): Vector3 {
+    return this._oldVelocity;
+  }
+
   public resetSpeed() {
-    this._speed = this._initialSpeed;
+    this._speed = new Vector3(
+      this._initialSpeed.x,
+      this._initialSpeed.y,
+      Math.floor(Math.random() * 1) - 1 > 0
+        ? this._initialSpeed.z
+        : -this._initialSpeed.z,
+    );
   }
 
   public update(deltaTime: number) {
     const position = this.getPosition();
+    this._prevPosition = new Vector3(position.x, position.y, position.z);
     position.x += this._speed.x * deltaTime;
     position.y += this._speed.y * deltaTime;
     position.z += this._speed.z * deltaTime;
