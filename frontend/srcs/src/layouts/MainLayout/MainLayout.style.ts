@@ -18,6 +18,7 @@ export const MainLayoutContainer = styled.div`
 export const MainContainer = styled.main`
   flex-grow: 1;
   display: flex;
+  width: 100%;
   flex-direction: column;
 `;
 
@@ -25,7 +26,7 @@ export const PageContainer = styled.div`
   background-color: ${COLORS.darkergrey};
   flex-grow: 1;
   width: 100%;
-  //padding: 16px;
+  /* padding: 16px; */
   min-width: 280px;
   box-sizing: border-box;
 `;

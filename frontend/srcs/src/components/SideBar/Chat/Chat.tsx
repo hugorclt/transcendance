@@ -38,6 +38,7 @@ import ChatManager from "./ChatManager/ChatManager";
 import { getImageBase64 } from "../../../services/utils/getImageBase64";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../mediaSize";
+import { getImageFromConversation } from "../ChatHistory/ChatCards/ChatCards";
 
 function Chat({ chat }: TChatProps) {
   const [message, setMessage] = useState<string>("");
@@ -170,7 +171,7 @@ function Chat({ chat }: TChatProps) {
       <ChatTabContainer>
         <ChatTop>
           <ChatMiddle>
-            <ChatIcon src={getImageBase64(chat.avatar)} />
+            <ChatIcon src={getImageFromConversation(chat, user)} />
             <ChatTitle>{displayName(chat, user)}</ChatTitle>
             <MediaQuery minWidth={mediaSize.laptop + 1}>
               {!chat.isDm && (

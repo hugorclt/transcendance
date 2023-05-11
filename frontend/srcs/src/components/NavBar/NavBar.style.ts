@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { screenSize } from "../../mediaSize";
+import { COLORS } from "../../colors";
 
 export const NavBarSelectContainer = styled.div`
   position: absolute;
@@ -23,6 +24,4 @@ export const NavBarContainer = styled.div`
   padding: 32px;
   display: flex;
   align-items: center;
-
-
 `;

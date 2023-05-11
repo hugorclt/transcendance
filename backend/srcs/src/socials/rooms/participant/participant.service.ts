@@ -32,6 +32,7 @@ export class ParticipantService {
           name: user.username,
           status: user.status,
           mute: participant.mute,
+          avatar: user.avatar,
         };
       }),
     );

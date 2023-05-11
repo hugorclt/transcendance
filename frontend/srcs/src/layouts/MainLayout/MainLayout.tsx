@@ -11,10 +11,8 @@ import {
   SideBarMobileContainer,
 } from "./MainLayout.style";
 import SideBarPage from "../../views/SideBarPage/SideBarPage";
-import Heptahedre from "../../components/common/Heptahedre/Heptahedre";
 import NavBar from "../../components/NavBar/NavBar";
 import { useAtom } from "jotai";
-import SideBar from "../../components/SideBar/SideBar";
 import { sideBarAtom } from "../../services/store";
 
 const MainLayout = ({ children }: { children: ReactNode }) => {

@@ -1,9 +1,5 @@
 import React from "react";
-import Heptahedre from "../../components/common/Heptahedre/Heptahedre";
-import {
-  ItemsContainer,
-  MiddleItemContainer,
-} from "./NavBarLayout.style";
+import { ItemsContainer, MiddleItemContainer } from "./NavBarLayout.style";
 import MainButton from "../../components/NavBar/MainButton/MainButton";
 import NavBarItem from "../../components/NavBar/NavBarItem/NavBarItem";
 
@@ -17,7 +13,8 @@ function NavBarLayout() {
 
       <MiddleItemContainer>
         <MainButton>
-          <h1>PLAY</h1>
+          {/* <h1>PLAY</h1> */}
+          <NavBarItem central={true} path="/" value={"PLAY"} />
         </MainButton>
       </MiddleItemContainer>
 

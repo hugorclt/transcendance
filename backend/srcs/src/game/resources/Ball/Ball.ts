@@ -62,7 +62,13 @@ export class Ball extends IObject {
   }
 
   public resetSpeed() {
-    this._speed = this._initialSpeed;
+    this._speed = new Vector3(
+      this._initialSpeed.x,
+      this._initialSpeed.y,
+      Math.floor(Math.random() * 1) - 1 > 0
+        ? this._initialSpeed.z
+        : -this._initialSpeed.z,
+    );
   }
 
   public update(deltaTime: number) {

@@ -8,18 +8,19 @@ import {
 import { CiMenuBurger } from "react-icons/ci";
 import { COLORS } from "../../colors";
 import SideBar from "../SideBar/SideBar";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useAtom } from "jotai";
 import { sideBarAtom } from "../../services/store";
 
 function NavBar() {
   const [sideBar, setSideBar] = useAtom(sideBarAtom);
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
       <NavBarSelectContainer>
-        <NavBarSelect onChange={(e) => navigate(e.target.value)}>
+        <NavBarSelect defaultValue={location.pathname} onChange={(e) => navigate(e.target.value)}>
           <option value="/">PLAY</option>
           <option value="/shop">SHOP</option>
           <option value="/profile">PROFIL</option>
