@@ -3,6 +3,15 @@ import { HitBox } from '../HitBox';
 import { Vector3 } from '../Vector3';
 
 export function basePaddleCollide(ball: Ball, paddle: HitBox) {
+
+  if (ball.isNormal == false) {
+    let speedNormal = new Vector3(0,0,0);
+    speedNormal.x = ball.oldVelocity.x,
+    speedNormal.y = ball.oldVelocity.y,
+    speedNormal.z = ball.oldVelocity.z,
+    ball.speed = speedNormal;
+    ball.isNormal = true;
+  }
   const xPos = ball.getPosition().x;
   const yPos = ball.getPosition().y;
 
