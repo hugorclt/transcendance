@@ -4,7 +4,7 @@ import { TCollision } from '../types';
 import { baseCollide, basePaddleCollide } from '../utils/collisions/baseColide';
 import { IPaddle } from './IPaddle';
 import { CreateObjectDto } from '../interfaces/IObject';
-import { superCollide } from '../utils/collisions/superCollide.ts';
+import { superCollide } from '../utils/collisions/superCollide';
 
 export class RedPaddle extends IPaddle {
   
@@ -29,6 +29,7 @@ export class RedPaddle extends IPaddle {
       collision = basePaddleCollide(ball, this._hitBox);
       if (this.specialCharge < 3) {
         this.specialCharge++;
+        console.log("special charge : ", this.specialCharge);
       }
     }
     return {...collision, type: EType.RED_PADDLE};

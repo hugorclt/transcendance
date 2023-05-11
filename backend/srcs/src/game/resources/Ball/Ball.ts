@@ -49,7 +49,7 @@ export class Ball extends IObject {
     this._speed.z = value;
   }
 
-  public setOldVelocity(value: Vector3) {
+  public set oldVelocity(value: Vector3) {
     this._oldVelocity = value;
   }
 
@@ -73,7 +73,7 @@ export class Ball extends IObject {
     return this._prevPosition;
   }
 
-  public getOldVelocity(): Vector3 {
+  public get oldVelocity(): Vector3 {
     return this._oldVelocity;
   }
 

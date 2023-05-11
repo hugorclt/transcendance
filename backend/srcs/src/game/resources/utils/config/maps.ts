@@ -188,7 +188,7 @@ export const maps = [
       height: 0.5,
       depth: 0.5,
       position: new Vector3(0, 0, 0),
-      velocity: new Vector3(1, 1, 3),
+      velocity: new Vector3(0, 0, 3),
     },
     goals: {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
