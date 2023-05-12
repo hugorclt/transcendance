@@ -37,29 +37,6 @@ const Ball = (props: BallProps) => {
         data.ball.velocity.y,
         data.ball.velocity.z
       );
-      if (data.ball.isNormal != undefined && data.ball.isNormal == false) {
-        const playerPlusZ = data.players.find(
-          (player) => player.paddle.position.z >= 0
-        );
-        const playerMinusZ = data.players.find(
-          (player) => player.paddle.position.z <= 0
-        );
-        if (data.ball.position.z > 1) {
-          if (playerPlusZ.paddle.type == EType.RED_PADDLE) setTrail(0xf69090);
-          if (playerPlusZ.paddle.type == EType.ORANGE_PADDLE)
-            setTrail(0xff6a00);
-          if (playerPlusZ.paddle.type == EType.PURPLE_PADDLE)
-            setTrail(0xbd0af4);
-        } else {
-          if (playerMinusZ.paddle.type == EType.RED_PADDLE) setTrail(0xf69090);
-          if (playerMinusZ.paddle.type == EType.ORANGE_PADDLE)
-            setTrail(0xff6a00);
-          if (playerMinusZ.paddle.type == EType.PURPLE_PADDLE)
-            setTrail(0xbd0af4);
-        }
-      } else {
-        setTrail(0xfffff);
-      }
     });
 
     return () => {
