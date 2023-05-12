@@ -30,26 +30,9 @@ export const GameModeCardsContainer = styled.div`
 
 export const GameModeCardsUpper = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: space-between;
-  /* background-color: ${COLORS.grey}; */
+  justify-content: center;
   width: 100%;
-  height: 50%;
-`;
-
-export const GameModeCardsTitleBox = styled.p`
-  display: flex;
-  /* height: 15%; */
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 16px;
-`;
-
-export const GameModeCardsMain = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  height: 100%;
 `;
 
 export const GameModeCardsButton = styled.button`
@@ -64,11 +47,7 @@ export const GameModeCardsButton = styled.button`
 
 export const GameModeCardsBottom = styled.div`
   width: 100%;
-  height: 30%;
   box-sizing: border-box;
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: column;
   padding: 16px;
 
   h3 {
@@ -80,10 +59,3 @@ export const GameModeCardsBottom = styled.div`
   }
 `;
 
-export const GameModeCardsGameTitle = styled.h1`
-  /* background-color: ${COLORS.grey}; */
-`;
-
-export const GameModeCardsText = styled.p`
-  color: ${COLORS.background};
-`;
