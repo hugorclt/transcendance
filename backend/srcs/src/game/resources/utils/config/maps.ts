@@ -89,7 +89,7 @@ export const maps = [
       height: 0.5,
       depth: 0.5,
       position: new Vector3(0, 0, 0),
-      velocity: new Vector3(0, 0, 12),
+      velocity: new Vector3(0, 0, 8),
     },
     goals: {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
@@ -188,7 +188,7 @@ export const maps = [
       height: 0.5,
       depth: 0.5,
       position: new Vector3(0, 0, 0),
-      velocity: new Vector3(0, 0, 12),
+      velocity: new Vector3(0, 0, 8),
     },
     goals: {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
@@ -244,7 +244,7 @@ export const maps = [
       height: 0.5,
       depth: 0.5,
       position: new Vector3(0, 0, 0),
-      velocity: new Vector3(0, 0, 50),
+      velocity: new Vector3(0, 0, 8),
     },
     goals: {
       texture: generateBase64Image('/app/assets/paddle/red-paddle.gif'),
