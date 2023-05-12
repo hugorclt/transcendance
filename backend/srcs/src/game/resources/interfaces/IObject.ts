@@ -4,6 +4,7 @@ import { TCollision } from '../types';
 import { HitBox } from '../utils/HitBox';
 import { Vector3 } from '../utils/Vector3';
 import { Object3D } from 'shared/gameInterfaces';
+import { urlToHttpOptions } from 'url';
 
 export type CreateObjectDto = {
   width: number;
@@ -60,7 +61,12 @@ export abstract class IObject {
   public getPosition() {
     return this._hitBox.position;
   }
-  public getIntersections(origin: Vector3, directors: Vector3) {
+  public getFirstIntersection(
+    origin: Vector3,
+    end: Vector3,
+    directors: Vector3,
+  ) {
+    let intersection = undefined;
     //equation parametrique d'une droite de point origin(X,Y,Z) et de directeur(X,Y,Z)
     //l'equation parametrique est:
     // x = originX + directorX * t
@@ -87,13 +93,66 @@ export abstract class IObject {
       //il faut maintenant trouver le point d'intersection entre la droite et chaque face,
       //_______a * x________________________  +  __________b * y____________________  +  ________ c * z ____________________  + __d___ = 0
       //face.a * (origin.x + directors.x * t) + face.b * (origin.y + directors.y * t) + face.c * (origin.z + directors.z * t) + face.d = 0
+      // soit t = (face.a * origin.x + face.b * origin.y + face.c * origin.z + face.d) / (- face.a * directors.x - face.b * directors.y - face.c * directors.z)
+      let t =
+        (face.a * origin.x + face.b * origin.y + face.c * origin.z + face.d) /
+        (-face.a * directors.x - face.b * directors.y - face.c * directors.z);
+      // avec t on peut definir les coordonnees (x,y,z) du point d'intersection
+      // x = originX + directorX * t
+      // y = originY + directorY * t
+      // z = originZ + directorZ * t
+      let inter = new Vector3(
+        origin.x + directors.x * t,
+        origin.y + directors.y * t,
+        origin.z + directors.z * t,
+      );
       //si le point appartient a la hitbox && que le point fait partie du segment de droite
-      //alors il y a eu collision entre l'objet et la face
-      //on enregistre alors la face en question et le point d'intersection
+      if (
+        this.isPointInside(inter) &&
+        this.isPointOnSegment(origin, end, directors, t)
+      ) {
+        //alors il y a eu collision entre l'objet et la face
+        //on enregistre alors le t et le point d'intersection\
+        if (intersection == undefined) {
+          intersection = { t: t, p: inter };
+        } else if (intersection != undefined && t < intersection.t) {
+          intersection = { t: t, p: inter };
+        }
+      }
     });
-    return faces;
+
+    return intersection;
   }
 
+  public isPointOnSegment(
+    origin: Vector3,
+    end: Vector3,
+    directors: Vector3,
+    t: number,
+  ): boolean {
+    if (t < 0) return false;
+    const tEnd = (end.x - origin.x) / directors.x;
+
+    if (tEnd < t) {
+      return false;
+    }
+    return true;
+  }
+
+  public isPointInside(p: Vector3): boolean {
+    const hb = this._hitBox;
+    if (
+      p.x <= hb.maxX &&
+      p.x >= hb.minX &&
+      p.y <= hb.maxY &&
+      p.y >= hb.minY &&
+      p.z <= hb.maxZ &&
+      p.z >= hb.minZ
+    ) {
+      return true;
+    }
+    return false;
+  }
   /* --------------------------------- setters -------------------------------- */
   public setPosition(position: Vector3) {
     this._hitBox.position = position;

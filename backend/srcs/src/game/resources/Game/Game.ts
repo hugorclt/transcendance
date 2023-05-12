@@ -90,10 +90,10 @@ export class Game {
     return eqX == eqY && eqX == eqZ;
   }
 
-  detectTunneling() {
+  detectTunneling(): void {
     const posT = this._ball.getPosition();
     const posTold = this._ball.prevPosition;
-    const possibleContact = new Array<IObject>();
+    let intersection = undefined;
 
     //on cree la hitbox de la trajectoire du centre de la balle
     var xMin, yMin, zMin, xMax, yMax, zMax;
@@ -118,19 +118,29 @@ export class Game {
     //on trouve tous les objets dont la hitbox coincide au moins en un point avec celle de la trajectoire
     this._objects.forEach((object) => {
       if (ballTrajectory.intersect(object.hitBox)) {
-        possibleContact.push(object);
+        //pour chaque objet avec lesquels la collision est possible, on verifie si contact ou non
+        let objectIntersection = object.getFirstIntersection(
+          posTold,
+          posT,
+          directors,
+        );
+        if (intersection == undefined && objectIntersection != undefined) {
+          intersection = objectIntersection;
+        } else if (
+          objectIntersection != undefined &&
+          intersection != undefined &&
+          objectIntersection.t < intersection.t
+        ) {
+          intersection = objectIntersection;
+        }
       }
     });
-    //pour chaque objet avec lesquels la position est possible, on verifie si contatc ou non
-    possibleContact.forEach((object) => {
-      //detect intersections between trajectory and each face of the object
-      object.getIntersections(posTold, directors).forEach((intersection) => {});
-      //if 1 intersection found => store point + object
-      //if more chose first (t param) => store point + object
-    });
-
-    //for each intersection, if more than 1 , chose first (t param);
-    // correct ball position according to the object collided
+    //On replace la balle au point d'intersection le plus proche de sa position precedente
+    if (intersection != undefined) {
+      this._ball.setPosition(
+        new Vector3(intersection.p.x, intersection.p.y, intersection.p.z),
+      );
+    }
   }
 
   processMovements(deltaTime: number) {
