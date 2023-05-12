@@ -631,7 +631,7 @@ export class LobbiesService {
     await this.lobbiesGateway.readyToStart(lobbyWithMembers);
     const interval = setInterval(async () => {
       const frame = this.lobbiesGateway.generateFrame(lobby.id);
-      if (frame.score.team1 >= 2 || frame.score.team2 >= 2) {
+      if (frame.score.team1 >= 7 || frame.score.team2 >= 7) {
         clearInterval(interval);
         var winners;
         var losers;

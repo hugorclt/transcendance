@@ -19,7 +19,6 @@ export const GameModeCardsContainer = styled.div`
   @media (min-width: ${screenSize.tablet}) {
     width: 40%;
     min-height: 200px;
-    /* min-height: 400px; */
   }
 
   @media (max-width: ${screenSize.tablet}) {
