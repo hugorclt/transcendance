@@ -31,7 +31,6 @@ export class refreshStrategy extends PassportStrategy(Strategy, 'refresh') {
       throw new UnauthorizedException();
     }
 
-    const sub = payload.sub;
     return {
       ...payload,
       refreshToken,

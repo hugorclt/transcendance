@@ -1,4 +1,9 @@
-import { Injectable, Response, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  MethodNotAllowedException,
+  Response,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { LocalLogDto, LocalRegisterDto } from './dto/log-user.dto';
 import { GoogleTokenDto, GoogleLogDto } from './dto/google-log.dto';
@@ -17,6 +22,7 @@ import { Api42TokenEntity } from './entities/api42-token.entity';
 import { LobbiesService } from 'src/lobbies/lobbies.service';
 import { authenticator } from 'otplib';
 import { toDataURL } from 'qrcode';
+import { createHash } from 'crypto';
 
 const googleClient = new OAuth2Client(
   process.env['GOOGLE_CLIENT_ID'],
@@ -119,6 +125,17 @@ export class AuthService {
 
   /* ---------------------------------- login --------------------------------- */
   async login(user: any, @Response({ passthrough: true }) res) {
+    const userConnected = await this.prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (userConnected.status != 'DISCONNECTED') {
+      await this.logout(userConnected.id);
+      throw new MethodNotAllowedException(
+        'You are already connected somewhere',
+      );
+    }
     const tokens = await this.getTokens(user.id, user.username);
     const lobby = await this.prisma.lobby.findFirst({
       where: {
@@ -200,7 +217,11 @@ export class AuthService {
     });
     //should disconnect from lobby
     const lobby = await this.lobbiesService.findLobbyForUser(userId);
-    if (lobby)
+    if (
+      lobby &&
+      lobby.state != LobbyState.GAME &&
+      lobby.state != LobbyState.SELECTION
+    )
       await this.lobbiesService.leaveLobby({
         userId: userId,
         lobbyId: lobby.id,
@@ -221,8 +242,9 @@ export class AuthService {
     });
     if (!user || !user.refreshToken)
       throw new UnauthorizedException('Access Denied');
-
-    const rtMatches = await bcrypt.compare(rt, user.refreshToken);
+    const hash = createHash('sha256').update(rt).digest('hex');
+    const rtMatches = await bcrypt.compare(hash, user.refreshToken);
+    console.log(rtMatches);
     if (!rtMatches) throw new UnauthorizedException('Access Denied');
 
     const newAt = await this.jwtService.signAsync({
@@ -259,8 +281,9 @@ export class AuthService {
   }
 
   async updateRefreshHash(userId: string, rt: string) {
-    const hash = await bcrypt.hash(rt, 10);
-    await this.usersService.updateRefreshToken(userId, hash);
+    const hash = createHash('sha256').update(rt).digest('hex');
+    const newHash = await bcrypt.hash(hash, 10);
+    await this.usersService.updateRefreshToken(userId, newHash);
   }
 
   async checkGoogleToken(token: string): Promise<LoginTicket> {

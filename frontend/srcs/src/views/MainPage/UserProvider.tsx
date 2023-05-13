@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { userAtom } from "../../services/store";
+import { userAtom, userDefaultValue } from "../../services/store";
 import { SocketContext } from "../../services/Auth/SocketContext";
 
 function UserProvider({ children }: { children: ReactNode }) {
@@ -33,6 +33,10 @@ function UserProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     socket?.on("on-self-status-update", (newStatus) => {
       setUser((prev) => ({ ...prev, status: newStatus }));
+      if (newStatus === "DISCONNECTED") {
+        setUser(userDefaultValue);
+        navigate("/login", { state: { from: location }, replace: true });
+      }
     });
 
     return () => {
