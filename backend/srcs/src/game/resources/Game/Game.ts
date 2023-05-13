@@ -168,6 +168,28 @@ export class Game {
     }
   }
 
+  detectAndApplySuperPowers() {
+    this._collisions.forEach((collision) => {
+      //PURPLE PADDLE
+      if (collision.type == EType.PURPLE_PADDLE){
+        if (collision.direction.z > 0){
+          this._players.forEach((player) => {
+            if (player.team == true){
+              player.getConfused();
+            }
+          })
+        }
+        else {
+          this._players.forEach((player) => {
+            if (player.team == false){
+              player.getConfused();
+            }
+          })
+        }
+      }
+    })
+  }
+
   exportGameInfo(): IGameInfo {
     const field = this._field.exportFieldInfo();
     const ball = this._ball.exportInfo();
@@ -180,6 +202,8 @@ export class Game {
     this.processMovements(deltaTime);
     this.detectTunneling();
     this.detectAndApplyCollisions();
+    if (this._mode == "CHAMPIONS")
+      this.detectAndApplySuperPowers();
     this.detectGoal();
   }
 
