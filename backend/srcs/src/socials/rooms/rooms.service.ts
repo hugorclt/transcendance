@@ -6,8 +6,8 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { ParticipantService } from './participant/participant.service';
 import { Message, Participant, Role, Room, User } from '@prisma/client';
@@ -19,7 +19,7 @@ import { ReturnMessageEntity } from './messages/entities/return-message-entity';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { ManagerRoomDto } from './dto/manager-room-dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { defaultAvatar } from 'src/utils/base64';
+import { defaultAvatar } from '../../utils/base64';
 
 @Injectable()
 export class RoomsService {

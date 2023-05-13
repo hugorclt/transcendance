@@ -10,11 +10,11 @@ import {
 } from '@nestjs/websockets';
 import { Namespace, Socket } from 'socket.io';
 import { Injectable, UseFilters } from '@nestjs/common';
-import { WsCatchAllFilter } from 'src/exceptions/ws-exceptions/ws-catch-all-filter';
+import { WsCatchAllFilter } from '../exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
 import { Participant, Role, Room, User } from '@prisma/client';
-import { WsNotFoundException } from 'src/exceptions/ws-exceptions/ws-exceptions';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { WsNotFoundException } from '../exceptions/ws-exceptions/ws-exceptions';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateMessageDto } from './rooms/messages/dto/create-message.dto';
 import { ReturnRoomEntity } from './rooms/entities/room.entity';
 
