@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ProfileContainer } from "./ProfileStyle";
 import { TopProfile } from "./TopProfile/TopProfile";
 import { BotProfile } from "./BotProfile/BotProfile";
-import { nanoid } from "nanoid";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { userAtom } from "../../services/store";
+import { userAtom, userDefaultValue } from "../../services/store";
 import { useAtom } from "jotai";
 import { TUser } from "../../services/type";
 import { AxiosError, AxiosResponse } from "axios";
@@ -12,16 +10,7 @@ import { AxiosError, AxiosResponse } from "axios";
 export function Profile({ username }) {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useAtom(userAtom);
-  const [user1, setUser1] = useState<TUser>({
-    id: "",
-    username: "",
-    accessToken: "",
-    status: "",
-    avatar: "",
-    exp: 0,
-    balance: 0,
-    is2fa: false,
-  });
+  const [user1, setUser1] = useState<TUser>(userDefaultValue);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

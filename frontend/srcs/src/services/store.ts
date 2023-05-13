@@ -11,7 +11,7 @@ import {
   TUserPreferences,
 } from "./type";
 
-export const userAtom = atom<TUser>({
+export const userDefaultValue = {
   id: "",
   username: "",
   accessToken: "",
@@ -20,7 +20,8 @@ export const userAtom = atom<TUser>({
   exp: 0,
   balance: 0,
   is2fa: false,
-});
+};
+export const userAtom = atom<TUser>(userDefaultValue);
 
 export const searchUserAtom = atom<string>("");
 

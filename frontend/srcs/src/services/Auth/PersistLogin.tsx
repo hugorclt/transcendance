@@ -4,7 +4,6 @@ import useRefreshToken from "../../hooks/useRefreshToken";
 import Loading from "../../components/common/Loading/Loading";
 import { useAtom } from "jotai";
 import { userAtom } from "../store";
-import { AxiosError } from "axios";
 
 function PersistLogin() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +21,6 @@ function PersistLogin() {
       }
     };
 
-    //On component mount we run this function only if our accesToken is not set.
     !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
