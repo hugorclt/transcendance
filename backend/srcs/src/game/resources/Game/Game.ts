@@ -42,9 +42,10 @@ export class Game {
     this._field.goals.forEach((goal) => {
       this._objects.push(goal);
     });
-    this._field.objects.forEach((object) => {
-      this._objects.push(object);
-    });
+    //not sure 'bout that
+    // this._field.objects.forEach((object) => {
+    //   this._objects.push(object);
+    // });
   }
 
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {

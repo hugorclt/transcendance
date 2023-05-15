@@ -20,6 +20,22 @@ export class Field {
     this._init_objects(config);
   }
 
+  public getLeftWall() {
+    return this._walls[0];
+  }
+
+  public getRightWall() {
+    return this._walls[1];
+  }
+
+  public getTopWall() {
+    return this._walls[3];
+  }
+
+  public getBotWall() {
+    return this._walls[2];
+  }
+
   private _init_walls(config: any) {
     config.walls.forEach((wall) => {
       this._walls.push(new Wall(wall));
@@ -51,7 +67,12 @@ export class Field {
     const walls = this._walls.map((wall) => wall.exportInfo());
     const objects = this._objects.map((object) => object.exportInfo());
     const goals = this._goals.map((goal) => goal.exportInfo());
-    return { walls: walls, objects: objects, goals: goals, skybox: this._skybox };
+    return {
+      walls: walls,
+      objects: objects,
+      goals: goals,
+      skybox: this._skybox,
+    };
   }
 
   public get walls(): Array<Wall> {

@@ -152,25 +152,41 @@ export class LobbiesGateway
   @SubscribeMessage('left-move')
   async onLeftMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
+    const position = playerInfo.player.paddle.getPosition();
+    const wallLeft = playerInfo.game.field.getLeftWall();
+    if (position.x - 0.2 <= wallLeft.hitBox.maxX) return;
     playerInfo.player.paddle.moveLeft();
   }
 
   @SubscribeMessage('right-move')
   async onRightMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
+    const position = playerInfo.player.paddle.getPosition();
+    const wallRight = playerInfo.game.field.getRightWall();
+    if (position.x + 0.2 >= wallRight.hitBox.minX) return;
     playerInfo.player.paddle.moveRight();
   }
 
   @SubscribeMessage('up-move')
   async onUpMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    if (playerInfo.game.mode != 'CLASSIC') playerInfo.player.paddle.moveUp();
+    if (playerInfo.game.mode != 'CLASSIC') {
+      const position = playerInfo.player.paddle.getPosition();
+      const wallUp = playerInfo.game.field.getTopWall();
+      if (position.y + 0.2 >= wallUp.hitBox.minY) return;
+      playerInfo.player.paddle.moveUp();
+    }
   }
 
   @SubscribeMessage('down-move')
   async ondownMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    if (playerInfo.game.mode != 'CLASSIC') playerInfo.player.paddle.moveDown();
+    if (playerInfo.game.mode != 'CLASSIC') {
+      const position = playerInfo.player.paddle.getPosition();
+      const wallBot = playerInfo.game.field.getBotWall();
+      if (position.x - 0.2 <= wallBot.hitBox.maxY) return;
+      playerInfo.player.paddle.moveDown();
+    }
   }
 
   /* ------------------------------- helper func ------------------------------ */
