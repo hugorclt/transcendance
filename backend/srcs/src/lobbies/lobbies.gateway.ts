@@ -16,6 +16,8 @@ import { LobbyWithMembersEntity } from './entities/lobby.entity';
 import { LobbyEventEntity } from './entities/lobby-event.entity';
 import { Queue } from './utils/Queue';
 import { ReturnUserEntity } from 'src/users/entities/return-user.entity';
+import { HitBox } from 'src/game/resources/utils/HitBox';
+import { Vector3 } from 'src/game/resources/utils/Vector3';
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({
@@ -152,9 +154,33 @@ export class LobbiesGateway
   @SubscribeMessage('left-move')
   async onLeftMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    const position = playerInfo.player.paddle.getPosition();
-    const wallLeft = playerInfo.game.field.getLeftWall();
-    if (position.x - 0.2 <= wallLeft.hitBox.maxX) return;
+    //first way basic way
+    // const position = playerInfo.player.paddle.getPosition();
+    // const wallLeft = playerInfo.game.field.getLeftWall();
+    // if (position.x - 0.2 <= wallLeft.hitBox.maxX) return;
+
+    //second way more advanced
+    const gameObject = playerInfo.game.getObject();
+    const playerHitbox = playerInfo.player.paddle.hitBox;
+    const isCollided = gameObject.map((object) => {
+      if (playerInfo.player.paddle == object) return false;
+      if (playerInfo.game.ball == object) return false;
+      const newHitbox = new HitBox(
+        playerHitbox.width,
+        playerHitbox.height,
+        playerHitbox.depth,
+        new Vector3(
+          playerHitbox.getPosition().x - 0.2,
+          playerHitbox.getPosition().y,
+          playerHitbox.getPosition().z,
+        ),
+      );
+      if (object.hitBox.intersect(newHitbox)) {
+        return true;
+      }
+      return false
+    });
+    if (isCollided.includes(true)) return ;
     playerInfo.player.paddle.moveLeft();
   }
 

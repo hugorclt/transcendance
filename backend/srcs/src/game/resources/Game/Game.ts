@@ -34,6 +34,10 @@ export class Game {
     );
   }
 
+  public getObject() {
+    return this._objects;
+  }
+
   private _init_field(config: any) {
     this._field = new Field(config);
     this._field.walls.forEach((wall) => {
@@ -42,10 +46,9 @@ export class Game {
     this._field.goals.forEach((goal) => {
       this._objects.push(goal);
     });
-    //not sure 'bout that
-    // this._field.objects.forEach((object) => {
-    //   this._objects.push(object);
-    // });
+    this._field.objects.forEach((object) => {
+      this._objects.push(object);
+    });
   }
 
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {

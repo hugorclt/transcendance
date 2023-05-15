@@ -58,6 +58,10 @@ export class HitBox {
   public get maxZ(): number {
     return this._maxZ;
   }
+
+  public getPosition() {
+    return this._position;
+  }
   /* --------------------------------- Setters -------------------------------- */
   public set width(value: number) {
     this._width = value;
