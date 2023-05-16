@@ -4,7 +4,6 @@ import { userAtom } from "../store";
 import { useAtom } from "jotai";
 
 async function initializeSocket(token: string) {
-  console.log("initializing socket");
   try {
     const socket = await io("http://localhost:3000/socials", {
       auth: {

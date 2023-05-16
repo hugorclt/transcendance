@@ -78,7 +78,6 @@ export class AuthService {
         type: Type.API42,
       });
       const test = this.login(user, res);
-      console.log(test);
       return test;
     }
   }
@@ -390,7 +389,6 @@ export class AuthService {
       'Content-Type': 'application/json',
     };
     try {
-      console.log('code: ', code);
       const responseData = await lastValueFrom(
         this.httpService
           .post(
@@ -406,20 +404,17 @@ export class AuthService {
           )
           .pipe(
             map((response: AxiosResponse) => {
-              console.log(response.data);
               return response.data;
             }),
           )
           .pipe(
             catchError((error: AxiosError) => {
-              console.log(JSON.stringify(error.message));
               return throwError(() => new Error('test'));
             }),
           ),
       );
       return responseData;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }

@@ -12,6 +12,7 @@ import { mediaSize } from "../../../../../mediaSize";
 function ChangeTeamButton() {
   const [user, setUser] = useAtom(userAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const [disabled, setDisabled] = useState(!lobby.private);
   const axiosPrivate = useAxiosPrivate();
   useEffect(() => {
@@ -38,9 +39,11 @@ function ChangeTeamButton() {
     e.preventDefault();
     axiosPrivate
       .get(`http://localhost:3000/lobbies/${lobby.id}/changeTeam`)
-      .then((response: AxiosResponse) => {})
+      .then((response: AxiosResponse) => {
+        setErrMsg("");
+      })
       .catch((error: AxiosError) => {
-        console.log(JSON.stringify(error?.response?.data));
+        setErrMsg("Cannot change team");
       });
   };
 

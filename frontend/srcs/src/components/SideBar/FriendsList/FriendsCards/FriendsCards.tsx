@@ -32,14 +32,17 @@ function FriendsCards({ friend }: TFriendCardsProps) {
   const [friendList, setFriendList] = useAtom(friendAtom);
   const [chat, setChat] = useAtom(conversationAtom);
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const ref = useRef<any>();
   const navigate = useNavigate();
 
   const handleRemove = () => {
     axiosPrivate
       .post("/users/friends/remove", { usernameToRemove: friend.username })
-      .then((res: AxiosResponse) => {})
-      .catch((err: AxiosError) => console.log("failed to remove", err));
+      .then((res: AxiosResponse) => {
+        setErrMsg("");
+      })
+      .catch((err: AxiosError) => setErrMsg("Failed to remove"));
   };
 
   const handleChat = () => {
@@ -53,10 +56,11 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       })
       .then((res: AxiosResponse) => {
         setChat((prev) => updateArray(prev, res.data));
+        setErrMsg("");
         closeTooltip();
       })
       .catch((err: AxiosError) => {
-        console.log("error while creating the room");
+        setErrMsg("Error while creating the room");
       });
   };
 
@@ -75,9 +79,10 @@ function FriendsCards({ friend }: TFriendCardsProps) {
       .get(`/lobbies/${friend.id}/spectate`)
       .then((response: AxiosResponse) => {
         setLobby((prev) => ({ ...prev, ...response.data }));
+        setErrMsg("");
       })
       .catch((error: AxiosError) => {
-        console.log(JSON.stringify(error.message));
+        setErrMsg("Cannot spectate");
       });
   };
 
@@ -140,9 +145,7 @@ function FriendsCards({ friend }: TFriendCardsProps) {
           >
             Remove friends
           </InsidePopUpButton>
-          <InsidePopUpButton
-            style={{ cursor: "pointer" }}
-            onClick={viewProfil}>
+          <InsidePopUpButton style={{ cursor: "pointer" }} onClick={viewProfil}>
             Profile
           </InsidePopUpButton>
           {friend.status == "GAME" && (

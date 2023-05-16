@@ -32,21 +32,20 @@ function NotificationCards({
         .post("/lobbies/join", { lobbyId: lobbyId, userId: userId })
         .then((response: AxiosResponse) => {
           setLobby((prev) => ({ ...prev, ...response.data }));
+          setErrMsg("");
         })
         .catch((error: AxiosError) => {
-          if (error.response?.status === 405) {
-          }
           setErrMsg("Lobby not joinable or you are already in a lobby.");
         });
     } else {
       axiosPrivate
         .post("/users/friends/add", { userFromId: userFromId, userId: userId })
         .then((response: AxiosResponse) => {
-          //TODO ERROR
           setFriendList((prev) => updateArray(prev, response.data));
+          setErrMsg("");
         })
         .catch((error: AxiosError) => {
-          console.log("error adding friend: ", JSON.stringify(error.cause));
+          setErrMsg("Error adding friend");
         });
     }
   };
@@ -55,16 +54,10 @@ function NotificationCards({
     axiosPrivate
       .post("/invitations/decline", { invitationId: id })
       .then((response: AxiosResponse) => {
-        console.log(
-          "success declining invitation: ",
-          JSON.stringify(response.data)
-        );
+        setErrMsg("");
       })
       .catch((error: AxiosError) => {
-        console.log(
-          "error declining invitation: ",
-          JSON.stringify(error.cause)
-        );
+        setErrMsg("Error declining invitation");
       });
   };
 

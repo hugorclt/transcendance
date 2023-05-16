@@ -446,7 +446,6 @@ export class RoomsService {
   }
 
   async setAdmin(userId: string, roomId: string, targetId: string) {
-    console.log(targetId);
     await this.checkManagerState(userId, { roomId, targetId });
     const newRoom = await this.prisma.room.update({
       where: {
@@ -468,7 +467,6 @@ export class RoomsService {
         participants: true,
       },
     });
-    console.log(newRoom);
 
     this.socialGateway.emitToUser(roomId, 'on-chat-update', {
       id: roomId,

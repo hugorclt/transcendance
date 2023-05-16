@@ -38,7 +38,6 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
-    console.log(defaultAvatar.avatar)
     const user: UserEntity = await this.prisma.user.create({
       data: {
         username: createUserDto.username,

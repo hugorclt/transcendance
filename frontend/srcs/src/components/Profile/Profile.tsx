@@ -10,6 +10,7 @@ import { AxiosError, AxiosResponse } from "axios";
 export function Profile({ username }) {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useAtom(userAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const [user1, setUser1] = useState<TUser>(userDefaultValue);
   const [loading, setLoading] = useState(false);
 
@@ -22,9 +23,10 @@ export function Profile({ username }) {
       .then((response: AxiosResponse) => {
         setUser1(response.data);
         setLoading(true);
+        setErrMsg("");
       })
       .catch((error: AxiosError) => {
-        console.log(error.message);
+        setErrMsg("Cannot get profile");
       });
   }, [username]);
 

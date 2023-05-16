@@ -8,14 +8,7 @@ function MatchMakingLayout() {
   const axiosPrivate = useAxiosPrivate();
 
   const cancel = () => {
-    axiosPrivate
-      .get("/lobbies/cancel")
-      .then((response: AxiosResponse) => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch((error: AxiosError) => {
-        console.log(JSON.stringify(error.message));
-      });
+    axiosPrivate.get("/lobbies/cancel");
   };
 
   return (

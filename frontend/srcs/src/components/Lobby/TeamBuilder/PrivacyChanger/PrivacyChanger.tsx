@@ -8,6 +8,7 @@ import { AxiosError, AxiosResponse } from "axios";
 function PrivacyChanger() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const [user, setUser] = useAtom(userAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const [privacy, setPrivacy] = useState(
     lobby.private ? "PRIVATE" : "MATCHMAKING"
   );
@@ -25,12 +26,11 @@ function PrivacyChanger() {
     if (privacy != (lobby.private ? "PRIVATE" : "MATCHMAKING")) {
       axiosPrivate
         .get(`lobbies/${lobby.id}/changePrivacy`)
-        .then((response: AxiosResponse) => {})
+        .then((response: AxiosResponse) => {
+          setErrMsg("");
+        })
         .catch((error: AxiosError) => {
-          console.log(
-            "error changing privacy: ",
-            JSON.stringify(error.message)
-          );
+          setErrMsg("Error changing privacy mode");
         });
     }
     if (user.id != lobby.ownerId) {

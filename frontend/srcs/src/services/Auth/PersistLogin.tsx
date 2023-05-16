@@ -9,14 +9,16 @@ function PersistLogin() {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
   const [user, setUser] = useAtom(userAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
       try {
         await refresh();
       } catch (error) {
-        console.log(error);
+        setErrMsg("Error refreshing");
       } finally {
+        setErrMsg("");
         setIsLoading(false);
       }
     };

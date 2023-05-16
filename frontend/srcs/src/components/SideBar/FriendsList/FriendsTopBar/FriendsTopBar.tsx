@@ -10,7 +10,6 @@ import {
   RightFriendsTopBarBox,
 } from "./FriendsTopBarStyle";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import { searchUserAtom } from "../../../../services/store";
 
@@ -23,12 +22,7 @@ function FriendsTopBar() {
 
   const handleSubmit = () => {
     setOpenInvite(false);
-    axiosPrivate
-      .post("/invitations", { type: "FRIEND", username: username })
-      .then((response: AxiosResponse) => {})
-      .catch((error: AxiosError) => {
-        console.log("error: ", JSON.stringify(error.message));
-      });
+    axiosPrivate.post("/invitations", { type: "FRIEND", username: username });
     setUsername("");
   };
 
