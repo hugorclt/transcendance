@@ -60,10 +60,10 @@ export class Player {
           type: EType.PURPLE_PADDLE,
         });
         break;
-      case EPaddle.GREEN:
-        this._paddle = new GreenPaddle({
+      case EPaddle.ORANGE:
+        this._paddle = new OrangePaddle({
           ...paddleConfig,
-          type: EType.GREEN_PADDLE,
+          type: EType.ORANGE_PADDLE,
         });
         break;
     }
