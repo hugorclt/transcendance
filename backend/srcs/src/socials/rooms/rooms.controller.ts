@@ -133,4 +133,13 @@ export class RoomsController {
       updatePasswordDto,
     );
   }
+
+  @Post('set-admin')
+  async setAdmin(@Request() req, @Body() body) {
+    return await this.roomsService.setAdmin(
+      req.user.sub,
+      req.body.roomId,
+      req.body.targetId,
+    )
+  }
 }

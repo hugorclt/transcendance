@@ -426,10 +426,10 @@ export class RoomsService {
 
   async updatePassword(userId: string, updatePasswordDto: UpdatePasswordDto) {
     if (!(await this.isOwner(userId, updatePasswordDto.roomId)))
-    throw new ForbiddenException();
+      throw new ForbiddenException();
     if (!updatePasswordDto.password) {
-      updatePasswordDto.password = "";
-      updatePasswordDto.confirm = "";
+      updatePasswordDto.password = '';
+      updatePasswordDto.confirm = '';
     }
     if (updatePasswordDto.password != updatePasswordDto.confirm)
       throw new BadRequestException();
@@ -442,6 +442,39 @@ export class RoomsService {
       data: {
         password: hash,
       },
+    });
+  }
+
+  async setAdmin(userId: string, roomId: string, targetId: string) {
+    console.log(targetId);
+    await this.checkManagerState(userId, { roomId, targetId });
+    const newRoom = await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        participants: {
+          updateMany: {
+            where: {
+              userId: targetId,
+            },
+            data: {
+              role: Role.ADMIN,
+            },
+          },
+        },
+      },
+      include: {
+        participants: true,
+      },
+    });
+    console.log(newRoom);
+
+    this.socialGateway.emitToUser(roomId, 'on-chat-update', {
+      id: roomId,
+      participants: await this.participantService.createParticipantFromRoom(
+        newRoom,
+      ),
     });
   }
 
@@ -546,6 +579,7 @@ export class RoomsService {
       lastMessage: lastMessage == undefined ? '' : lastMessage.content,
       isDm: room.isDm,
       isRead: false,
+      owner: room.ownerId,
       participants: await this.participantService.createParticipantFromRoom(
         room,
       ),

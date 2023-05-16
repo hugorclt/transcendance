@@ -131,8 +131,7 @@ function Chat({ chat }: TChatProps) {
           flexDirection: "column",
           alignItems: isMe ? "flex-end" : "flex-start",
           boxSizing: "border-box",
-        }}
-      >
+        }}>
         {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
           <div style={{ color: COLORS.primary }}>{senderName}</div>
         ) : (
@@ -141,13 +140,11 @@ function Chat({ chat }: TChatProps) {
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}
-        >
+          }}>
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}
-          >
+            }}>
             {msg.content}
           </MessageContent>
         </MessageBox>
@@ -184,22 +181,23 @@ function Chat({ chat }: TChatProps) {
             </MediaQuery>
           </ChatMiddle>
           <div style={{ display: "flex" }}>
-            {!chat.isDm && isOwner() && (
-              <Popup
-                trigger={
-                  <div>
-                    <IoIosSettings
-                      size={22}
-                      style={{ color: COLORS.secondary }}
-                    />
-                  </div>
-                }
-                modal
-                nested
-              >
-                <ChatManager chat={chat} />
-              </Popup>
-            )}
+            <MediaQuery minWidth={mediaSize.laptop + 1}>
+              {!chat.isDm && isOwner() && (
+                <Popup
+                  trigger={
+                    <div>
+                      <IoIosSettings
+                        size={22}
+                        style={{ color: COLORS.secondary }}
+                      />
+                    </div>
+                  }
+                  modal
+                  nested>
+                  <ChatManager chat={chat} />
+                </Popup>
+              )}
+            </MediaQuery>
             <AiOutlineClose
               onClick={() => {
                 setChat((prev) =>

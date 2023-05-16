@@ -50,7 +50,7 @@ function Game() {
     });
     return () => {
       socket?.off("game-info");
-      socket?.off("game-end");
+      socket?.off("end-game");
     };
   }, [socket]);
 

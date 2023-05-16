@@ -12,7 +12,7 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../../services/Auth/SocketContext";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { notifAtom, userAtom } from "../../../services/store";
+import { conversationAtom, notifAtom, userAtom } from "../../../services/store";
 import Popup from "reactjs-popup";
 import Settings from "../../Settings/Settings";
 import { ButtonNoStyle } from "../../Lobby/LobbyCreator/LobbyCreator.style";
@@ -20,6 +20,7 @@ import { PopUpBox } from "../FriendsList/FriendsCards/FriendsCardsStyle";
 import NotificationsPanel from "./Notifications/Notifications";
 import { SettingsContainer } from "../../Settings/Settings.style";
 import { RxCross2 } from "react-icons/rx";
+import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 
 function BottomBar() {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ function BottomBar() {
   const socket = useContext(SocketContext);
   const [user, setUser] = useAtom(userAtom);
   const [open, setOpen] = useState(false);
+  const [conversation, setConversation] = useAtom(conversationAtom);
+  const gameSocket = useContext(LobbySocketContext);
 
   function logout() {
     axios
@@ -45,7 +48,10 @@ function BottomBar() {
           balance: 0,
           is2fa: false,
         }));
+        setConversation([]);
         socket?.emit("logout", response.data);
+        socket?.disconnect();
+        gameSocket?.disconnect();
         navigate("/login", { replace: true });
       })
       .catch((error: AxiosError) => {
