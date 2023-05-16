@@ -36,6 +36,7 @@ export class SocialsGateway
   }
 
   async handleConnection(client: AuthSocket) {
+    console.log('client connected: ', client.username);
     const user = await this.prisma.user.update({
       where: {
         id: client.userId,
@@ -62,8 +63,8 @@ export class SocialsGateway
     });
     if (!rooms) return;
     await Promise.all(
-      rooms.map((room) => {
-        client.join(room.id);
+      rooms.map(async (room) => {
+        await client.join(room.id);
       }),
     );
     await client.join(client.userId);

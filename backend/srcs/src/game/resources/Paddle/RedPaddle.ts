@@ -7,36 +7,32 @@ import { CreateObjectDto } from '../interfaces/IObject';
 import { superCollide } from '../utils/collisions/superCollide';
 
 export class RedPaddle extends IPaddle {
-
   constructor(data: CreateObjectDto) {
     super(data);
     this._superUnleashed = false;
     this._specialCharge = 3;
   }
 
-
-  public collide(ball: Ball) : TCollision {
+  public collide(ball: Ball): TCollision {
     let collision;
     let type;
 
-    if (this._confused){
+    if (this._confused) {
       this._confused = false;
     }
-    if (this._superUnleashed && this._specialCharge == 3){
+    if (this._superUnleashed && this._specialCharge == 3) {
       this._specialCharge = 0;
       this._superUnleashed = false;
       superCollide(ball, this._hitBox);
       type = EType.RED_PADDLE;
-    }
-    else {
+    } else {
       collision = basePaddleCollide(ball, this._hitBox);
       if (this._specialCharge < 3) {
         this._specialCharge++;
-        console.log("special charge : ", this._specialCharge);
       }
       type = EType.PADDLE;
     }
-    return {...collision, type: type};
+    return { ...collision, type: type };
   }
 
   public goSuper() {
@@ -49,4 +45,4 @@ export class RedPaddle extends IPaddle {
   public getSpecialCharge() {
     return this._specialCharge;
   }
-}   
+}

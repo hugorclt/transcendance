@@ -244,7 +244,6 @@ export class AuthService {
       throw new UnauthorizedException('Access Denied');
     const hash = createHash('sha256').update(rt).digest('hex');
     const rtMatches = await bcrypt.compare(hash, user.refreshToken);
-    console.log(rtMatches);
     if (!rtMatches) throw new UnauthorizedException('Access Denied');
 
     const newAt = await this.jwtService.signAsync({

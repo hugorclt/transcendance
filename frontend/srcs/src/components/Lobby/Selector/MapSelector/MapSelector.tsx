@@ -26,7 +26,6 @@ function MapSelector() {
   };
 
   const handleVote = (mapName: string) => {
-    console.log(mapName);
     axiosPrivate
       .post("/lobbies/vote", { lobbyId: lobby.id, mapName: mapName })
       .then((res: AxiosResponse) => {
@@ -54,7 +53,6 @@ function MapSelector() {
 
   useEffect(() => {
     socket?.on("on-vote", (vote) => {
-      console.log(vote);
       computeVote(vote);
     });
     return () => {

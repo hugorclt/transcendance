@@ -10,7 +10,6 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     const response = ctx.getResponse<Response>();
     const message = exception.message.replace(/\n/g, '');
 
-    console.log('Prisma Client Exception Filter');
     switch (exception.code) {
       //===== UNIQUE CONSTRAINTS VIOLATION =====
       case 'P2002': {

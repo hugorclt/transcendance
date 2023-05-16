@@ -28,12 +28,9 @@ function Game() {
 
   useEffect(() => {
     socket?.on("game-info", (data) => {
-      console.log("received game info: ", data);
       setGameInfo(data);
       const check = data.players.some((player) => player.id == user.id);
-      console.log("check: ", check);
       if (!check) {
-        console.log("spectator mode");
         setIsSpec(true);
       }
       setIsLoading(false);
@@ -58,7 +55,6 @@ function Game() {
   }, [socket]);
 
   useEffect(() => {
-    console.log("get-game-info");
     socket?.emit("get-game-info");
   }, []);
 

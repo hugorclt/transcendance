@@ -39,7 +39,8 @@ function LoginForm() {
               visibility: isVisible,
               color: "green",
             } as CSSProperties
-          }>
+          }
+        >
           Login Success!
         </p>
       );
@@ -52,7 +53,8 @@ function LoginForm() {
               visibility: isVisible,
               color: "red",
             } as CSSProperties
-          }>
+          }
+        >
           {errMsg}
         </p>
       );
@@ -73,7 +75,6 @@ function LoginForm() {
             ...prev,
             ...response.data,
           }));
-          console.log(response.data);
           navigate("/login/2fa", { replace: true });
         } else {
           setSuccess(true);
