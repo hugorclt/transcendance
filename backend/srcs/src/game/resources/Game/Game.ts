@@ -52,9 +52,21 @@ export class Game {
   }
 
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
+    let sideTeamA = -1;
+    let sideTeamB = -1
     lobby.members.forEach((member) => {
+      let placement = 0;
+      if (lobby.nbPlayers == 4) {
+        if (member.team == true) {
+          placement = sideTeamA;
+          sideTeamA = 1;
+        } else {
+          placement = sideTeamB;
+          sideTeamB = 1;
+        }
+      }
       this._players.push(
-        new Player(member.userId, member.team, member.paddleType, config),
+        new Player(member.userId, member.team, member.paddleType, config, placement),
       );
     });
     this._players.forEach((player) => {

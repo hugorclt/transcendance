@@ -77,7 +77,9 @@ export class AuthService {
         password: 'none',
         type: Type.API42,
       });
-      return this.login(user, res);
+      const test = this.login(user, res);
+      console.log(test);
+      return test;
     }
   }
 
@@ -403,17 +405,20 @@ export class AuthService {
           )
           .pipe(
             map((response: AxiosResponse) => {
+              console.log(response.data);
               return response.data;
             }),
           )
           .pipe(
             catchError((error: AxiosError) => {
+              console.log(error);
               return throwError(() => new Error('test'));
             }),
           ),
       );
       return responseData;
     } catch (error) {
+      console.log(error);
       return null;
     }
   }

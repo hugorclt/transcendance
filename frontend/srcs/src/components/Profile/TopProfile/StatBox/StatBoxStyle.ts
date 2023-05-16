@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { COLORS } from "../../../../colors";
 
 export const StatBoxContainer = styled.div`
   width: 50%;
   height: 100%;
   display: flex;
   flex-direction: row;
-  background-color: #292929;
+  background-color: ${COLORS.background};
   text-align: center;
   vertical-align: middle;
   color: white;

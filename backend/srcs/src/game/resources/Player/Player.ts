@@ -22,6 +22,7 @@ export class Player {
     team: boolean,
     paddleType: EPaddle,
     config: any,
+    placement: number,
   ) {
     this._id = id;
     this._team = team;
@@ -29,7 +30,7 @@ export class Player {
     const paddleConfig = {
       ...config.paddle,
       position: new Vector3(
-        0,
+        placement * config.width / 4,
         0,
         team ? config.depth / 2 : -(config.depth / 2),
       ),

@@ -426,7 +426,11 @@ export class RoomsService {
 
   async updatePassword(userId: string, updatePasswordDto: UpdatePasswordDto) {
     if (!(await this.isOwner(userId, updatePasswordDto.roomId)))
-      throw new ForbiddenException();
+    throw new ForbiddenException();
+    if (!updatePasswordDto.password) {
+      updatePasswordDto.password = "";
+      updatePasswordDto.confirm = "";
+    }
     if (updatePasswordDto.password != updatePasswordDto.confirm)
       throw new BadRequestException();
     const salt = await bcrypt.genSalt();
