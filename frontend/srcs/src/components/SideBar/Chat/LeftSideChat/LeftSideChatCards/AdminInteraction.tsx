@@ -35,6 +35,15 @@ function AdminInteraction(props: TAdminInteractionProps) {
       })
       .then(() => {});
   };
+
+  const handleAdmin = () => {
+    axiosPrivate
+      .post("rooms/set-admin", {
+        targetId: props.userId,
+        roomId: props.roomId,
+      })
+      .then(() => {});
+  };
   return (
     <>
       <InsidePopUpButton onClick={handleMute}>
@@ -55,6 +64,7 @@ function AdminInteraction(props: TAdminInteractionProps) {
       </SliderContainer>
       <InsidePopUpButton onClick={handleKick}>Kick user</InsidePopUpButton>
       <InsidePopUpButton onClick={handleBan}>Ban user</InsidePopUpButton>
+      <InsidePopUpButton onClick={handleAdmin}>Set admin</InsidePopUpButton>
     </>
   );
 }

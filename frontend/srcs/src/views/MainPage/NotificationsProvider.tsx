@@ -28,7 +28,7 @@ function NotificationsProvider({ children }: { children: ReactNode }) {
     });
 
     return () => {
-      socket?.off("on-notifs-update");
+      socket?.off("delete-notifs");
       socket?.off("new-notifs");
     };
   }, [socket]);

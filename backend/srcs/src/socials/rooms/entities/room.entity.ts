@@ -52,6 +52,9 @@ export class ReturnRoomEntity {
     lastMessage: string;
 
     @ApiProperty()
+    owner: string;
+
+    @ApiProperty()
     participants: ReturnParticipantEntity[];
 
     @ApiProperty()

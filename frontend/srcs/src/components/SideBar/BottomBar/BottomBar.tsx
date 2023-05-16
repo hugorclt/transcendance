@@ -12,7 +12,7 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../../services/Auth/SocketContext";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { notifAtom, userAtom } from "../../../services/store";
+import { conversationAtom, notifAtom, userAtom } from "../../../services/store";
 import Popup from "reactjs-popup";
 import Settings from "../../Settings/Settings";
 import { ButtonNoStyle } from "../../Lobby/LobbyCreator/LobbyCreator.style";
@@ -30,6 +30,7 @@ function BottomBar() {
   const socket = useContext(SocketContext);
   const [user, setUser] = useAtom(userAtom);
   const [open, setOpen] = useState(false);
+  const [conversation, setConversation] = useAtom(conversationAtom);
 
   function logout() {
     axios
@@ -45,7 +46,9 @@ function BottomBar() {
           balance: 0,
           is2fa: false,
         }));
+        setConversation([]);
         socket?.emit("logout", response.data);
+        socket?.disconnect();
         navigate("/login", { replace: true });
       })
       .catch((error: AxiosError) => {

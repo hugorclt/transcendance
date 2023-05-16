@@ -12,6 +12,8 @@ function ChatBox() {
   const [chat, setChat] = useAtom(conversationAtom);
 
   function selectActiveChat() {
+    console.log(chat);
+    if (chat.length == 0 || chat == undefined) return <></>;
     const index = chat.findIndex((elem) => elem.isActive == true);
     if (index > -1) {
       return (
