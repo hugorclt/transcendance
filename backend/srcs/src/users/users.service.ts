@@ -38,6 +38,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<ReturnUserEntity> {
+    console.log(defaultAvatar.avatar)
     const user: UserEntity = await this.prisma.user.create({
       data: {
         username: createUserDto.username,
@@ -94,6 +95,7 @@ export class UsersService {
         username: createGoogleUserDto.username,
         email: createGoogleUserDto.email,
         password: createGoogleUserDto.password,
+        avatar: defaultAvatar.avatar,
         type: createGoogleUserDto.type,
         preferences: {
           create: { visibility: 'VISIBLE' },
@@ -122,6 +124,7 @@ export class UsersService {
       data: {
         username: create42UserDto.username,
         email: create42UserDto.email,
+        avatar: defaultAvatar.avatar,
         password: create42UserDto.password,
         type: create42UserDto.type,
         preferences: {
