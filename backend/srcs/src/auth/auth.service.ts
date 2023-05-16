@@ -390,6 +390,7 @@ export class AuthService {
       'Content-Type': 'application/json',
     };
     try {
+      console.log('code: ', code);
       const responseData = await lastValueFrom(
         this.httpService
           .post(
@@ -411,7 +412,7 @@ export class AuthService {
           )
           .pipe(
             catchError((error: AxiosError) => {
-              console.log(error);
+              console.log(JSON.stringify(error.message));
               return throwError(() => new Error('test'));
             }),
           ),
