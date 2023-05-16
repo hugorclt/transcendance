@@ -14,12 +14,18 @@ import { useAtom } from "jotai";
 import { sideBarAtom } from "../../services/store";
 
 function SideBar() {
-  const [sideBar, setSideBar] = useAtom(sideBarAtom)
+  const [sideBar, setSideBar] = useAtom(sideBarAtom);
 
   return (
     <ChatBarContainer>
       <MediaQuery maxWidth={mediaSize.laptop}>
-        <AiOutlineArrowRight onClick={() => setSideBar(false)} style={{margin: "16px 16px -10px 16px", cursor: "pointer"}} color={COLORS.secondary} size={24}/>
+        <div onClick={() => setSideBar(false)} style={{ cursor: "pointer" }}>
+          <AiOutlineArrowRight
+            style={{ margin: "16px 16px -10px 16px" }}
+            color={COLORS.secondary}
+            size={24}
+          />
+        </div>
       </MediaQuery>
       <ProfilBoxContainer>
         <ProfilBox />
