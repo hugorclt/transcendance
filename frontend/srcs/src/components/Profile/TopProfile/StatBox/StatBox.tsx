@@ -40,9 +40,6 @@ export function StatBox({ user }: TProfileBoxProps) {
 
   return (
     <StatBoxContainer>
-      <IdContainer>
-        <div>ID = {user.id} </div>
-      </IdContainer>
       <LvlBoxContainer>
         <FaCrown size={42} color={COLORS.white} />
         <div>LVL = {stats.lvl}</div>
