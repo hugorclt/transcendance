@@ -96,7 +96,9 @@ const createModalEnd = () => {
                   </MoneyContainer>
                 )}
               </LobbyFlex>
-              <button onClick={clickFinish}>Continue</button>
+              <button style={{ cursor: "pointer" }} onClick={clickFinish}>
+                Continue
+              </button>
             </EndGameStatInfoContainer>
           </PopUpBox>
         </Popup>
@@ -191,7 +193,8 @@ function LobbyCreator() {
         <GameModeContainerMobile>
           <GameModeHero>
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
+            >
               <MdKeyboardArrowLeft size={32} color={COLORS.primary} />
             </ButtonNoStyle>
             <GameModeCard
@@ -201,7 +204,8 @@ function LobbyCreator() {
               left={dataGameMode[slider].left}
             />
             <ButtonNoStyle
-              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}>
+              onClick={() => setSlider((prev) => (prev == 0 ? 1 : 0))}
+            >
               <MdKeyboardArrowRight size={32} color={COLORS.primary} />
             </ButtonNoStyle>
           </GameModeHero>

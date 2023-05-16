@@ -53,18 +53,6 @@ export class Player {
           type: EType.RED_PADDLE,
         });
         break;
-      case EPaddle.BLUE:
-        this._paddle = new BluePaddle({
-          ...paddleConfig,
-          type: EType.BLUE_PADDLE,
-        });
-        break;
-      case EPaddle.ORANGE:
-        this._paddle = new OrangePaddle({
-          ...paddleConfig,
-          type: EType.ORANGE_PADDLE,
-        });
-        break;
       case EPaddle.PURPLE:
         this._paddle = new PurplePaddle({
           ...paddleConfig,
@@ -96,6 +84,10 @@ export class Player {
 
   public get paddle(): IPaddle {
     return this._paddle;
+  }
+
+  public getConfused() {
+    this._paddle.confused = true;
   }
 
   public exportPlayerInfo(): IPlayer {
