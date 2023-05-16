@@ -8,12 +8,10 @@ export class UpdatePasswordDto {
   roomId: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   @IsString()
   password: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   @IsString()
   confirm: string;
 }

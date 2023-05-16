@@ -71,10 +71,13 @@ function ChatSettings({ chat }: TChatProps) {
         password: newPassword,
         confirm: confirmPassword,
       })
-      .then((res: AxiosResponse) => {})
+      .then((res: AxiosResponse) => {
+        setNewPassword("");
+        setConfirmPassword("");
+      })
       .catch((err: AxiosError) => {
         if (err.code == "ERR_BAD_REQUEST")
-          setErrMsg("Error password doesn't match");
+          setErrMsg("Error while settings the password");
         else setErrMsg("Error while changing password please retry");
       });
   };
@@ -106,13 +109,11 @@ function ChatSettings({ chat }: TChatProps) {
           <input
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            required
             type="text"
             placeholder="New password"></input>
           <input
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            required
             type="text"
             placeholder="Confirm password"></input>
           <button>Change Password</button>
