@@ -76,7 +76,6 @@ export class Game {
       );
     });
     this._players.forEach((player) => {
-      console.log(player.paddle);
       this._objects.push(player.paddle);
     });
   }

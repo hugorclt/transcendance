@@ -36,7 +36,6 @@ export class SocialsGateway
   }
 
   async handleConnection(client: AuthSocket) {
-    console.log('client connected: ', client.username);
     const user = await this.prisma.user.update({
       where: {
         id: client.userId,
