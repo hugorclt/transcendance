@@ -10,7 +10,7 @@ export abstract class IPaddle extends IObject {
   protected _confused: boolean = false;
 
   public collide(ball: Ball): TCollision {
-    if (this._confused){
+    if (this._confused) {
       this._confused = false;
     }
     const collision = basePaddleCollide(ball, this._hitBox);
@@ -24,6 +24,11 @@ export abstract class IPaddle extends IObject {
   public set confused(b: boolean) {
     this._confused = true;
   }
+
+  public get confused() {
+    return this._confused;
+  }
+
   public goSuper() {}
 
   public moveLeft() {
