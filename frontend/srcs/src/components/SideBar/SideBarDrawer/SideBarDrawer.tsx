@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import SideBar from "../SideBar";
 import { ButtonSlider, DrawerContainer } from "./SideBarDrawer.style";
-import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { COLORS } from "../../../colors";
 
 function SideBarDrawer() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const animateDrawer = () => {
     return isOpen ? "drawer-open" : "";
   };

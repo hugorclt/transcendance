@@ -28,24 +28,23 @@ function Paddle(props: PlayerProps) {
     side2 = props.team ? "right-move" : "left-move";
   }
 
-  if (props.mode !== 'CLASSIC') {
+  if (props.mode !== "CLASSIC") {
     useFrame(() => {
+      if (!keyMap["undefined"]) {
+        keyMap["KeyA"] && socket?.emit(side1);
+        keyMap["KeyD"] && socket?.emit(side2);
+        keyMap["KeyW"] && socket?.emit("up-move");
+        keyMap["KeyS"] && socket?.emit("down-move");
 
-      keyMap["KeyA"] && socket?.emit(side1);
-      keyMap["KeyD"] && socket?.emit(side2);
-      keyMap["KeyW"] && socket?.emit("up-move");
-      keyMap["KeyS"] && socket?.emit("down-move");
-
-      keyMap["KeyR"] &&socket?.emit("super");
+        keyMap["KeyR"] && socket?.emit("super");
+      }
     });
   } else {
     useFrame(() => {
-
       keyMap["KeyW"] && socket?.emit("left-move");
       keyMap["KeyS"] && socket?.emit("right-move");
     });
   }
-
 
   useEffect(() => {
     socket?.on("frame", (data) => {

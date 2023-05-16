@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ChangeEventHandler } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import {
   ExperienceBar,
   ProfilBoxLink,

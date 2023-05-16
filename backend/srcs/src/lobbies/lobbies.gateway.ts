@@ -154,10 +154,6 @@ export class LobbiesGateway
   @SubscribeMessage('left-move')
   async onLeftMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    //first way basic way
-    // const position = playerInfo.player.paddle.getPosition();
-    // const wallLeft = playerInfo.game.field.getLeftWall();
-    // if (position.x - 0.2 <= wallLeft.hitBox.maxX) return;
 
     //second way more advanced
     const gameObject = playerInfo.game.getObject();
@@ -178,41 +174,91 @@ export class LobbiesGateway
       if (object.hitBox.intersect(newHitbox)) {
         return true;
       }
-      return false
+      return false;
     });
-    if (isCollided.includes(true)) return ;
+    if (isCollided.includes(true)) return;
     playerInfo.player.paddle.moveLeft();
   }
 
   @SubscribeMessage('right-move')
   async onRightMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    const position = playerInfo.player.paddle.getPosition();
-    const wallRight = playerInfo.game.field.getRightWall();
-    if (position.x + 0.2 >= wallRight.hitBox.minX) return;
+    const gameObject = playerInfo.game.getObject();
+    const playerHitbox = playerInfo.player.paddle.hitBox;
+    const isCollided = gameObject.map((object) => {
+      if (playerInfo.player.paddle == object) return false;
+      if (playerInfo.game.ball == object) return false;
+      const newHitbox = new HitBox(
+        playerHitbox.width,
+        playerHitbox.height,
+        playerHitbox.depth,
+        new Vector3(
+          playerHitbox.getPosition().x + 0.2,
+          playerHitbox.getPosition().y,
+          playerHitbox.getPosition().z,
+        ),
+      );
+      if (object.hitBox.intersect(newHitbox)) {
+        return true;
+      }
+      return false;
+    });
+    if (isCollided.includes(true)) return;
     playerInfo.player.paddle.moveRight();
   }
 
   @SubscribeMessage('up-move')
   async onUpMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    if (playerInfo.game.mode != 'CLASSIC') {
-      const position = playerInfo.player.paddle.getPosition();
-      const wallUp = playerInfo.game.field.getTopWall();
-      if (position.y + 0.2 >= wallUp.hitBox.minY) return;
-      playerInfo.player.paddle.moveUp();
-    }
+    const gameObject = playerInfo.game.getObject();
+    const playerHitbox = playerInfo.player.paddle.hitBox;
+    const isCollided = gameObject.map((object) => {
+      if (playerInfo.player.paddle == object) return false;
+      if (playerInfo.game.ball == object) return false;
+      const newHitbox = new HitBox(
+        playerHitbox.width,
+        playerHitbox.height,
+        playerHitbox.depth,
+        new Vector3(
+          playerHitbox.getPosition().x,
+          playerHitbox.getPosition().y + 0.2,
+          playerHitbox.getPosition().z,
+        ),
+      );
+      if (object.hitBox.intersect(newHitbox)) {
+        return true;
+      }
+      return false;
+    });
+    if (isCollided.includes(true)) return;
+    playerInfo.player.paddle.moveUp();
   }
 
   @SubscribeMessage('down-move')
   async ondownMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
-    if (playerInfo.game.mode != 'CLASSIC') {
-      const position = playerInfo.player.paddle.getPosition();
-      const wallBot = playerInfo.game.field.getBotWall();
-      if (position.x - 0.2 <= wallBot.hitBox.maxY) return;
-      playerInfo.player.paddle.moveDown();
-    }
+    const gameObject = playerInfo.game.getObject();
+    const playerHitbox = playerInfo.player.paddle.hitBox;
+    const isCollided = gameObject.map((object) => {
+      if (playerInfo.player.paddle == object) return false;
+      if (playerInfo.game.ball == object) return false;
+      const newHitbox = new HitBox(
+        playerHitbox.width,
+        playerHitbox.height,
+        playerHitbox.depth,
+        new Vector3(
+          playerHitbox.getPosition().x,
+          playerHitbox.getPosition().y - 0.2,
+          playerHitbox.getPosition().z,
+        ),
+      );
+      if (object.hitBox.intersect(newHitbox)) {
+        return true;
+      }
+      return false;
+    });
+    if (isCollided.includes(true)) return;
+    playerInfo.player.paddle.moveDown();
   }
 
   /* ------------------------------- helper func ------------------------------ */

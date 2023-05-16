@@ -234,7 +234,7 @@ export const maps = [
         width: 16,
         height: 1,
         depth: 35,
-        position: new Vector3(0, -1, 0),
+        position: new Vector3(0, -2, 0),
       },
     ],
     ball: {
