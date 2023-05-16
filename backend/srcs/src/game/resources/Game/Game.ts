@@ -53,7 +53,7 @@ export class Game {
 
   private _init_players(config: any, lobby: LobbyWithMembersEntity) {
     let sideTeamA = -1;
-    let sideTeamB = -1
+    let sideTeamB = -1;
     lobby.members.forEach((member) => {
       let placement = 0;
       if (lobby.nbPlayers == 4) {
@@ -66,11 +66,17 @@ export class Game {
         }
       }
       this._players.push(
-        new Player(member.userId, member.team, member.paddleType, config, placement),
+        new Player(
+          member.userId,
+          member.team,
+          member.paddleType,
+          config,
+          placement,
+        ),
       );
     });
     this._players.forEach((player) => {
-      console.log(player.paddle)
+      console.log(player.paddle);
       this._objects.push(player.paddle);
     });
   }
@@ -146,7 +152,7 @@ export class Game {
         } else if (
           objectIntersection != undefined &&
           intersection != undefined &&
-          objectIntersection.t < intersection.t
+          objectIntersection.t <= intersection.t
         ) {
           intersection = objectIntersection;
         }
@@ -187,24 +193,22 @@ export class Game {
 
   detectAndApplySuperPowers() {
     this._collisions.forEach((collision) => {
-      //PURPLE PADDLE
-      if (collision.type == EType.PURPLE_PADDLE){
-        if (collision.direction.z > 0){
+      if (collision.type == EType.PURPLE_PADDLE) {
+        if (collision.direction.z > 0) {
           this._players.forEach((player) => {
-            if (player.team == true){
+            if (player.team == true) {
               player.getConfused();
             }
-          })
-        }
-        else {
+          });
+        } else {
           this._players.forEach((player) => {
-            if (player.team == false){
+            if (player.team == false) {
               player.getConfused();
             }
-          })
+          });
         }
       }
-    })
+    });
   }
 
   exportGameInfo(): IGameInfo {
@@ -219,8 +223,7 @@ export class Game {
     this.processMovements(deltaTime);
     this.detectTunneling();
     this.detectAndApplyCollisions();
-    if (this._mode == "CHAMPIONS")
-      this.detectAndApplySuperPowers();
+    if (this._mode == 'CHAMPIONS') this.detectAndApplySuperPowers();
     this.detectGoal();
   }
 
