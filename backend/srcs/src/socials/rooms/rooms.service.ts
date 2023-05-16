@@ -446,6 +446,7 @@ export class RoomsService {
   }
 
   async setAdmin(userId: string, roomId: string, targetId: string) {
+    console.log(targetId);
     await this.checkManagerState(userId, { roomId, targetId });
     const newRoom = await this.prisma.room.update({
       where: {
@@ -453,9 +454,9 @@ export class RoomsService {
       },
       data: {
         participants: {
-          update: {
+          updateMany: {
             where: {
-              id: targetId,
+              userId: targetId,
             },
             data: {
               role: Role.ADMIN,

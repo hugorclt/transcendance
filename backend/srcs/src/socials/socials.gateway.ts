@@ -36,8 +36,6 @@ export class SocialsGateway
   }
 
   async handleConnection(client: AuthSocket) {
-    console.log('user: ', client.username, ' connected');
-
     const user = await this.prisma.user.update({
       where: {
         id: client.userId,
@@ -72,7 +70,6 @@ export class SocialsGateway
   }
 
   async handleDisconnect(client: AuthSocket) {
-    console.log('user: ', client.username, ' disconnected');
     const user = await this.prisma.user.update({
       where: {
         id: client.userId,

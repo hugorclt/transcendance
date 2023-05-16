@@ -20,6 +20,7 @@ import { PopUpBox } from "../FriendsList/FriendsCards/FriendsCardsStyle";
 import NotificationsPanel from "./Notifications/Notifications";
 import { SettingsContainer } from "../../Settings/Settings.style";
 import { RxCross2 } from "react-icons/rx";
+import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 
 function BottomBar() {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ function BottomBar() {
   const [user, setUser] = useAtom(userAtom);
   const [open, setOpen] = useState(false);
   const [conversation, setConversation] = useAtom(conversationAtom);
+  const gameSocket = useContext(LobbySocketContext);
 
   function logout() {
     axios
@@ -49,6 +51,7 @@ function BottomBar() {
         setConversation([]);
         socket?.emit("logout", response.data);
         socket?.disconnect();
+        gameSocket?.disconnect();
         navigate("/login", { replace: true });
       })
       .catch((error: AxiosError) => {
