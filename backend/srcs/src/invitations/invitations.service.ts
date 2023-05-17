@@ -29,15 +29,22 @@ export class InvitationsService {
     sender: any,
   ): Promise<InvitationExtendedEntity> {
     var invitation;
-    const alreadyExist = await this.prisma.invitation.findFirst({
-      where: {
-        type: createInvitationDto.type,
-        userId: createInvitationDto.userId,
-        userFromId: sender.sub,
-      },
-    });
-    if (alreadyExist) throw new ConflictException();
+
     if (createInvitationDto.type == 'FRIEND') {
+      const userTo = await this.usersService.findOneByUsername(
+        createInvitationDto.username,
+      );
+      if (!userTo) return;
+      const alreadyExist = await this.prisma.invitation.findFirst({
+        where: {
+          type: createInvitationDto.type,
+          userId: userTo.id,
+          userFromId: sender.sub,
+        },
+      });
+      if (alreadyExist) {
+        throw new ConflictException();
+      }
       if (createInvitationDto.username == sender.username)
         throw new UnprocessableEntityException();
       invitation = await this.createFriendInvitation(
@@ -45,6 +52,16 @@ export class InvitationsService {
         sender,
       );
     } else if (createInvitationDto.type == 'LOBBY') {
+      const alreadyExist = await this.prisma.invitation.findFirst({
+        where: {
+          type: createInvitationDto.type,
+          userId: createInvitationDto.userId,
+          userFromId: sender.sub,
+        },
+      });
+      if (alreadyExist) {
+        throw new ConflictException();
+      }
       invitation = await this.createLobbyInvitation(
         createInvitationDto,
         sender,
@@ -109,14 +126,16 @@ export class InvitationsService {
   ): Promise<InvitationEntity> {
     const receiver = await this.prisma.user.findUnique({
       where: {
-        username: createInvitationDto.username 
+        username: createInvitationDto.username,
       },
       include: {
         friends: true,
-      }
+      },
     });
-    const alreadyFriends = receiver.friends.some((friend) => friend.id == sender.sub)
-    if (alreadyFriends) throw new ConflictException("already friends");
+    const alreadyFriends = receiver.friends.some(
+      (friend) => friend.id == sender.sub,
+    );
+    if (alreadyFriends) throw new ConflictException('already friends');
     if (!receiver) throw new NotFoundException('user not found');
     if (await this.usersService.checkIfUserBlocked(receiver.id, sender.sub))
       throw new NotFoundException();
