@@ -313,7 +313,7 @@ export class RoomsService {
     if (participant.mute.getTime() < time.getTime()) {
       timeToMute = new Date(time.getTime() + managerRoomDto.time * 60000);
     } else {
-      throw new ConflictException("Already mute");
+      throw new ConflictException('Already mute');
     }
     const newRoom = await this.prisma.room.update({
       where: {
@@ -393,6 +393,7 @@ export class RoomsService {
 
   async updateRoomName(userId: string, newName: string, roomId: string) {
     if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
+    if (newName == '') return;
     const room = await this.prisma.room.update({
       where: {
         id: roomId,
