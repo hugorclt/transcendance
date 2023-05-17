@@ -393,7 +393,10 @@ export class RoomsService {
 
   async updateRoomName(userId: string, newName: string, roomId: string) {
     if (!(await this.isOwner(userId, roomId))) throw new ForbiddenException();
-    if (newName == '') return;
+    if (newName == '' || newName.length < 3) {
+      console.log('ccsadfa');
+      throw new ForbiddenException();
+    }
     const room = await this.prisma.room.update({
       where: {
         id: roomId,
