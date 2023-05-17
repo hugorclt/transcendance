@@ -23,7 +23,7 @@ import AdminInteraction from "./AdminInteraction";
 import { useAtom } from "jotai";
 import { friendAtom, userAtom } from "../../../../../services/store";
 import { useNavigate } from "react-router";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 function LeftSideChatCards(props: {
   roomId: string;
@@ -48,7 +48,12 @@ function LeftSideChatCards(props: {
   }
 
   const handleClick = () => {
-    socket?.emit("friend-request", props.name);
+    axiosPrivate
+      .post("/invitations", { type: "FRIEND", username: props.name })
+      .then((response: AxiosResponse) => {})
+      .catch((error: AxiosError) => {
+        console.log("error: ", JSON.stringify(error.message));
+      });
   };
 
   const handleProfil = () => {

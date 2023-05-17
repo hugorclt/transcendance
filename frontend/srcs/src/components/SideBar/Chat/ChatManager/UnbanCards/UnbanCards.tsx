@@ -38,6 +38,7 @@ function UnbanCards(props: TUnbanCardsProps) {
         color={COLORS.secondary}
         size={22}
         onClick={handleUnban}
+        cursor={"pointer"}
       />
     </UnbanCardsContainer>
   );
