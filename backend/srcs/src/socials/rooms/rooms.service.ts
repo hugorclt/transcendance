@@ -312,8 +312,9 @@ export class RoomsService {
 
     if (participant.mute.getTime() < time.getTime()) {
       timeToMute = new Date(time.getTime() + managerRoomDto.time * 60000);
+    } else {
+      throw new ConflictException("Already mute");
     }
-
     const newRoom = await this.prisma.room.update({
       where: {
         id: managerRoomDto.roomId,

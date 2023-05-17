@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { axiosPrivate } from "../../../../../services/axios";
 import { InsidePopUpButton } from "../../../FriendsList/FriendsCards/FriendsCardsStyle";
 import { InputRange, SliderContainer } from "./LeftSideChatCardsStyle";
@@ -11,6 +11,7 @@ interface TAdminInteractionProps {
 
 function AdminInteraction(props: TAdminInteractionProps) {
   const [sliderValue, setSliderValue] = useState(1);
+  const [time, setTime] = useState(new Date());
 
   const handleKick = () => {
     axiosPrivate.post("/rooms/kick", {
@@ -46,9 +47,7 @@ function AdminInteraction(props: TAdminInteractionProps) {
   };
   return (
     <>
-      <InsidePopUpButton onClick={handleMute}>
-        {"Mute user"}
-      </InsidePopUpButton>
+      <InsidePopUpButton onClick={handleMute}>Mute User</InsidePopUpButton>
       <SliderContainer>
         <InputRange
           type="range"
