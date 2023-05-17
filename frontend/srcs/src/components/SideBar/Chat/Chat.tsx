@@ -73,12 +73,11 @@ function Chat({ chat }: TChatProps) {
           return [...prev, newMessage];
         });
       }
-
-      return () => {
-        socket?.off("on-new-message");
-      };
     });
-  }, [socket]);
+    return () => {
+      socket?.off("on-new-message");
+    };
+  }, [socket, chat.id]);
 
   useEffect(() => {
     axiosPrivate
@@ -159,7 +158,7 @@ function Chat({ chat }: TChatProps) {
     const owner = chat.participants.find(
       (participant) => participant.id == user.id
     );
-    if (owner.role == "OWNER") return true;
+    if (owner?.role == "OWNER") return true;
     return false;
   };
 

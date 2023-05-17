@@ -17,7 +17,6 @@ import {
   notifAtom,
   resetAtoms,
   userAtom,
-  userDefaultValue,
 } from "../../../services/store";
 import Popup from "reactjs-popup";
 import Settings from "../../Settings/Settings";

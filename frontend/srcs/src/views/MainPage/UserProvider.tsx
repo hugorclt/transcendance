@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { userAtom, userDefaultValue } from "../../services/store";
+import { resetAtoms, userAtom, userDefaultValue } from "../../services/store";
 import { SocketContext } from "../../services/Auth/SocketContext";
 
 function UserProvider({ children }: { children: ReactNode }) {
@@ -35,6 +35,7 @@ function UserProvider({ children }: { children: ReactNode }) {
       setUser((prev) => ({ ...prev, status: newStatus }));
       if (newStatus === "DISCONNECTED") {
         setUser(userDefaultValue);
+        resetAtoms();
         navigate("/login", { state: { from: location }, replace: true });
       }
     });
