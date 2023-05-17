@@ -83,6 +83,7 @@ function InviteFriendsButton() {
       .then((res: AxiosResponse) => {
         setErrMsg("");
         setInvitedFriends([]);
+        setInvitedChat([]);
       })
       .catch((error: AxiosError) => {
         setErrMsg("Error creating invitations");
