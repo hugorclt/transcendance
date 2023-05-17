@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const NotificationsContainer = styled.div`
     width: 250px;
     height: 400px;
-    overflow: scroll;
+    overflow: auto;
 `;
 
 export const NotifButtonContainer = styled.div`
