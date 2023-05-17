@@ -63,6 +63,8 @@ function LeftSideChatCards(props: {
 
   const handleProfil = () => {
     navigate(`/profile/${props.name}`, { replace: true });
+    closeTooltip();
+
   };
 
   const handleBlock = () => {

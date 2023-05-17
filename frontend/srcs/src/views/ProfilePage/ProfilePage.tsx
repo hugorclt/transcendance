@@ -11,7 +11,7 @@ function ProfilePage(props) {
 
   useEffect(() => {
     setUsername(username);
-  }, []);
+  }, [username]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
