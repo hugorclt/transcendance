@@ -43,9 +43,7 @@ export class Field {
   }
 
   private _init_objects(config: any) {
-    config.objects?.forEach((object) => {
-      console.log('creating object');
-    });
+    config.objects?.forEach((object) => {});
   }
 
   private _init_goals(config: any) {

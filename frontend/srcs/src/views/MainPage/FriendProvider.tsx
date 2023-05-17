@@ -13,14 +13,9 @@ function FriendProvider({ children }: { children: ReactNode }) {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    axiosPrivate
-      .get("users/friends")
-      .then((res: AxiosResponse) => {
-        setFriendList(res.data);
-      })
-      .catch((err: AxiosError) => {
-        console.log("Error while fetching friendlist");
-      });
+    axiosPrivate.get("users/friends").then((res: AxiosResponse) => {
+      setFriendList(res.data);
+    });
   }, []);
 
   useEffect(() => {

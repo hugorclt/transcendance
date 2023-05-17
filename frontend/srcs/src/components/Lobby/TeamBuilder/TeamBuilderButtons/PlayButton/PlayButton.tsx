@@ -11,6 +11,7 @@ function PlayButton() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const [user, setUser] = useAtom(userAtom);
   const [readyToStart, setReadyToStart] = useState(false);
+  const [errMsg, setErrMsg] = useState<string>("");
   const axiosPrivate = useAxiosPrivate();
   const play = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -18,9 +19,10 @@ function PlayButton() {
       .get(`lobbies/${lobby.id}/play`)
       .then((response: AxiosResponse) => {
         setReadyToStart(false);
+        setErrMsg("");
       })
       .catch((error: AxiosError) => {
-        console.log("error starting game", JSON.stringify(error.message));
+        setErrMsg("Error starting game");
       });
   };
 

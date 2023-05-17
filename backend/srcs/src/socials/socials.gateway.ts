@@ -1,10 +1,7 @@
 import {
-  ConnectedSocket,
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
@@ -12,7 +9,7 @@ import { Namespace, Socket } from 'socket.io';
 import { Injectable, UseFilters } from '@nestjs/common';
 import { WsCatchAllFilter } from '../exceptions/ws-exceptions/ws-catch-all-filter';
 import { AuthSocket } from 'src/socket-adapter/types/AuthSocket.types';
-import { Participant, Role, Room, User } from '@prisma/client';
+import { Participant, User } from '@prisma/client';
 import { WsNotFoundException } from '../exceptions/ws-exceptions/ws-exceptions';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMessageDto } from './rooms/messages/dto/create-message.dto';
@@ -62,8 +59,8 @@ export class SocialsGateway
     });
     if (!rooms) return;
     await Promise.all(
-      rooms.map((room) => {
-        client.join(room.id);
+      rooms.map(async (room) => {
+        await client.join(room.id);
       }),
     );
     await client.join(client.userId);

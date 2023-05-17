@@ -33,6 +33,7 @@ type TInvitation = {
 function InviteFriendsButton() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useAtom(userAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [invitedChat, setInvitedChat] = useState<TConversation[]>([]);
   const [friendList, setFriendList] = useAtom(friendAtom);
@@ -80,10 +81,11 @@ function InviteFriendsButton() {
     axiosPrivate
       .post("/invitations/createMany", invitations)
       .then((res: AxiosResponse) => {
+        setErrMsg("");
         setInvitedFriends([]);
       })
       .catch((error: AxiosError) => {
-        console.log("error creating invitations");
+        setErrMsg("Error creating invitations");
       });
     setOpen(false);
   };

@@ -48,9 +48,6 @@ function Paddle(props: PlayerProps) {
 
   useEffect(() => {
     socket?.on("frame", (data) => {
-      if (data.collisions.length > 0) {
-        console.log("collision: ", data.collisions);
-      }
       if (user.id === props.id) setIsActive(true);
       data.players.forEach((player) => {
         if (player.id === props.id) {

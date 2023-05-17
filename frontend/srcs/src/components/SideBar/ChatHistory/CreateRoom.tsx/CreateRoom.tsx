@@ -2,11 +2,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
 import React, { FormEvent, useContext, useState } from "react";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
-import {
-  conversationAtom,
-  friendAtom,
-  userAtom,
-} from "../../../../services/store";
+import { conversationAtom, friendAtom } from "../../../../services/store";
 import { updateArray } from "../../../../services/utils/updateArray";
 import {
   StyledButton,
@@ -22,7 +18,6 @@ import {
   CreateRoomFriendsCardsContainer,
   CreateRoomLabel,
   CreateRoomScroll,
-  CreateRoomTitle,
 } from "../ChatHistoryStyle";
 import { RoomModalOpenContext } from "../../../../views/SideBarPage/RoomModalOpenContext";
 import { AiOutlinePlusSquare } from "react-icons/ai";
@@ -69,9 +64,10 @@ function CreateRoom() {
       })
       .then((res: AxiosResponse) => {
         setChat((prev) => updateArray(prev, res.data));
+        setErrMsg("");
       })
       .catch((err: AxiosError) => {
-        console.log("error while creating the room");
+        setErrMsg("Error while creating the room");
       });
     setPassword("");
     setName("");
@@ -126,7 +122,8 @@ function CreateRoom() {
             return (
               <CreateRoomFriendsCardsContainer
                 key={index}
-                style={{ backgroundColor: chooseColor(val.id) }}>
+                style={{ backgroundColor: chooseColor(val.id) }}
+              >
                 <CreateRoomFriendsCards>
                   <h4 key={index}>{val.username}</h4>
                   <div>
@@ -163,7 +160,8 @@ function CreateRoom() {
             type="text"
             required
             autoComplete="new-password"
-            placeholder="Room Name"></StyledInput>
+            placeholder="Room Name"
+          ></StyledInput>
           <StyledInput
             name="password"
             value={password}
@@ -171,13 +169,15 @@ function CreateRoom() {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             autoComplete="new-password"
-            placeholder="Password"></StyledInput>
+            placeholder="Password"
+          ></StyledInput>
           <CreateRoomLabel htmlFor="checkbox">Is Public?</CreateRoomLabel>
           <CreateRoomCheckBox
             name="checkbox"
             checked={isPrivate}
             onChange={handleCheck}
-            type="checkbox"></CreateRoomCheckBox>
+            type="checkbox"
+          ></CreateRoomCheckBox>
           <CreateRoomButtonBox>
             <StyledButton
               onClick={() => setOpen(false)}

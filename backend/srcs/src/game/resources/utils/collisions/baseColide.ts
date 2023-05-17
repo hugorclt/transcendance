@@ -3,13 +3,12 @@ import { HitBox } from '../HitBox';
 import { Vector3 } from '../Vector3';
 
 export function basePaddleCollide(ball: Ball, paddle: HitBox) {
-
   if (ball.isNormal == false) {
-    let speedNormal = new Vector3(0,0,0);
-    speedNormal.x = ball.oldVelocity.x,
-    speedNormal.y = ball.oldVelocity.y,
-    speedNormal.z = ball.oldVelocity.z,
-    ball.speed = speedNormal;
+    let speedNormal = new Vector3(0, 0, 0);
+    (speedNormal.x = ball.oldVelocity.x),
+      (speedNormal.y = ball.oldVelocity.y),
+      (speedNormal.z = ball.oldVelocity.z),
+      (ball.speed = speedNormal);
     ball.isNormal = true;
   }
   const xPos = ball.getPosition().x;
@@ -54,9 +53,9 @@ export function basePaddleCollide(ball: Ball, paddle: HitBox) {
   else var { x2, y2, z2 } = rotateX(thetaY, 0, 0, -norm);
   let newSpeed = rotateY(thetaX, x2, y2, z2);
   //change ball speed
-  ball.speedX = newSpeed.x2 * 1.1;
-  ball.speedY = newSpeed.y2 * 1.1;
-  ball.speedZ = newSpeed.z2 * 1.1;
+  ball.speedX = newSpeed.x2 * (norm > 200 ? 1 : 1.1);
+  ball.speedY = newSpeed.y2 * (norm > 200 ? 1 : 1.1);
+  ball.speedZ = newSpeed.z2 * (norm > 200 ? 1 : 1.1);
   return {
     position: ball.getPosition(),
     direction: new Vector3(0, 0, ball.speedZ > 0 ? 1 : -1),

@@ -17,7 +17,7 @@ import { userAtom } from "../../../services/store";
 
 function GoogleAuth() {
   const [isVisible, setIsVisible] = useState("none");
-  const [errMsg, setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,7 +42,8 @@ function GoogleAuth() {
               display: isVisible,
               color: "green",
             } as CSSProperties
-          }>
+          }
+        >
           Login Success!
         </p>
       );
@@ -55,7 +56,8 @@ function GoogleAuth() {
               display: isVisible,
               color: "red",
             } as CSSProperties
-          }>
+          }
+        >
           {errMsg}
         </p>
       );
@@ -86,7 +88,7 @@ function GoogleAuth() {
         }
       })
       .catch((error: AxiosError) => {
-        console.log(error);
+        setErrMsg("Error connecting to Google Server");
       });
   };
 

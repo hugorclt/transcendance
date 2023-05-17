@@ -35,7 +35,6 @@ import { displayName } from "../../../services/Chat/displayName";
 import Popup from "reactjs-popup";
 import { IoIosSettings } from "react-icons/io";
 import ChatManager from "./ChatManager/ChatManager";
-import { getImageBase64 } from "../../../services/utils/getImageBase64";
 import MediaQuery from "react-responsive";
 import { mediaSize } from "../../../mediaSize";
 import { getImageFromConversation } from "../ChatHistory/ChatCards/ChatCards";
@@ -49,7 +48,7 @@ function Chat({ chat }: TChatProps) {
   const messageBoxRef = useRef<null | HTMLFormElement>(null);
   const [user, setUser] = useAtom(userAtom);
   const [chatHistory, setChat] = useAtom(conversationAtom);
-  const [errMsg, setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState<string>("");
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
@@ -92,9 +91,10 @@ function Chat({ chat }: TChatProps) {
             roomId: message.roomId,
           }))
         );
+        setErrMsg("");
       })
       .catch((err: AxiosError) => {
-        console.log("error", err);
+        setErrMsg("Error getting rooms history");
       });
     return () => {
       setMessageList([]);
@@ -131,7 +131,8 @@ function Chat({ chat }: TChatProps) {
           flexDirection: "column",
           alignItems: isMe ? "flex-end" : "flex-start",
           boxSizing: "border-box",
-        }}>
+        }}
+      >
         {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
           <div style={{ color: COLORS.primary }}>{senderName}</div>
         ) : (
@@ -140,11 +141,13 @@ function Chat({ chat }: TChatProps) {
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}>
+          }}
+        >
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}>
+            }}
+          >
             {msg.content}
           </MessageContent>
         </MessageBox>
@@ -193,7 +196,8 @@ function Chat({ chat }: TChatProps) {
                     </div>
                   }
                   modal
-                  nested>
+                  nested
+                >
                   <ChatManager chat={chat} />
                 </Popup>
               )}

@@ -155,9 +155,9 @@ export class LobbiesGateway
   async onLeftMove(client: AuthSocket) {
     const playerInfo = this.getPlayerInfoFromClient(client);
 
-    //second way more advanced
     const gameObject = playerInfo.game.getObject();
     const playerHitbox = playerInfo.player.paddle.hitBox;
+    const confused = playerInfo.player.paddle.confused;
     const isCollided = gameObject.map((object) => {
       if (playerInfo.player.paddle == object) return false;
       if (playerInfo.game.ball == object) return false;
@@ -166,7 +166,7 @@ export class LobbiesGateway
         playerHitbox.height,
         playerHitbox.depth,
         new Vector3(
-          playerHitbox.getPosition().x - 0.2,
+          playerHitbox.getPosition().x + (confused ? 0.2 : -0.2),
           playerHitbox.getPosition().y,
           playerHitbox.getPosition().z,
         ),
@@ -185,6 +185,7 @@ export class LobbiesGateway
     const playerInfo = this.getPlayerInfoFromClient(client);
     const gameObject = playerInfo.game.getObject();
     const playerHitbox = playerInfo.player.paddle.hitBox;
+    const confused = playerInfo.player.paddle.confused;
     const isCollided = gameObject.map((object) => {
       if (playerInfo.player.paddle == object) return false;
       if (playerInfo.game.ball == object) return false;
@@ -193,7 +194,7 @@ export class LobbiesGateway
         playerHitbox.height,
         playerHitbox.depth,
         new Vector3(
-          playerHitbox.getPosition().x + 0.2,
+          playerHitbox.getPosition().x + (confused ? -0.2 : 0.2),
           playerHitbox.getPosition().y,
           playerHitbox.getPosition().z,
         ),
@@ -212,6 +213,7 @@ export class LobbiesGateway
     const playerInfo = this.getPlayerInfoFromClient(client);
     const gameObject = playerInfo.game.getObject();
     const playerHitbox = playerInfo.player.paddle.hitBox;
+    const confused = playerInfo.player.paddle.confused;
     const isCollided = gameObject.map((object) => {
       if (playerInfo.player.paddle == object) return false;
       if (playerInfo.game.ball == object) return false;
@@ -221,7 +223,7 @@ export class LobbiesGateway
         playerHitbox.depth,
         new Vector3(
           playerHitbox.getPosition().x,
-          playerHitbox.getPosition().y + 0.2,
+          playerHitbox.getPosition().y + (confused ? -0.2 : 0.2),
           playerHitbox.getPosition().z,
         ),
       );
@@ -239,6 +241,7 @@ export class LobbiesGateway
     const playerInfo = this.getPlayerInfoFromClient(client);
     const gameObject = playerInfo.game.getObject();
     const playerHitbox = playerInfo.player.paddle.hitBox;
+    const confused = playerInfo.player.paddle.confused;
     const isCollided = gameObject.map((object) => {
       if (playerInfo.player.paddle == object) return false;
       if (playerInfo.game.ball == object) return false;
@@ -248,7 +251,7 @@ export class LobbiesGateway
         playerHitbox.depth,
         new Vector3(
           playerHitbox.getPosition().x,
-          playerHitbox.getPosition().y - 0.2,
+          playerHitbox.getPosition().y + (confused ? 0.2 : -0.2),
           playerHitbox.getPosition().z,
         ),
       );

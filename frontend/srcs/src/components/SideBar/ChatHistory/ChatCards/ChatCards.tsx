@@ -2,11 +2,8 @@ import { useAtom } from "jotai";
 import {
   ChatCardsBox,
   ChatCardsEnd,
-  ChatCardsLastMessage,
   ChatCardsMiddle,
-  ChatCardsName,
   ChatCardsRoundedAvatar,
-  RoundNewChat,
 } from "./ChatCardsStyle";
 import { conversationAtom } from "../../../../services/store";
 import { ChatCardsProps } from "./ChatCardsType";
@@ -14,29 +11,33 @@ import { userAtom } from "../../../../services/store";
 import { displayName } from "../../../../services/Chat/displayName";
 import { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-// import { COLORS } from "../../../../colors";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { AxiosError, AxiosResponse } from "axios";
 import { COLORS } from "../../../../colors";
 import { getImageBase64 } from "../../../../services/utils/getImageBase64";
 import { TConversation, TUser } from "../../../../services/type";
 
-export const getImageFromConversation = (conversation : TConversation, user: TUser) => {
+export const getImageFromConversation = (
+  conversation: TConversation,
+  user: TUser
+) => {
   if (conversation.isDm == true) {
     if (conversation.participants[0].id == user.id) {
-      return (getImageBase64(conversation.participants[1].avatar))
+      return getImageBase64(conversation.participants[1].avatar);
     } else {
-      return (getImageBase64(conversation.participants[0].avatar))
+      return getImageBase64(conversation.participants[0].avatar);
     }
   } else {
-    return getImageBase64(conversation.avatar)
+    return getImageBase64(conversation.avatar);
   }
-}
+};
 
 function ChatCards({ conversation }: ChatCardsProps) {
   const [chat, setChat] = useAtom(conversationAtom);
   const [user, setUser] = useAtom(userAtom);
   const [cross, setCross] = useState(false);
+  const [errMsg, setErrMsg] = useState<string>("");
+
   const axiosPrivate = useAxiosPrivate();
 
   const addChatToTab = () => {
@@ -46,8 +47,7 @@ function ChatCards({ conversation }: ChatCardsProps) {
           elem.isActive = false;
           return elem;
         }
-        if (elem.isActive)
-          elem.isActive = false;
+        if (elem.isActive) elem.isActive = false;
         if (elem.id == conversation.id) {
           elem.isActive = true;
           elem.isRead = true;
@@ -71,16 +71,19 @@ function ChatCards({ conversation }: ChatCardsProps) {
           })
         );
         setChat((prev) => prev.filter((conv) => conv.id != conversation.id));
+        setErrMsg("");
       })
       .catch((err: AxiosError) =>
-        console.log("Error while deleting conversation", err)
+        setErrMsg("Error while deleting conversation")
       );
   };
 
   return (
     <ChatCardsBox onMouseEnter={openCross} onMouseLeave={closeCross}>
       <div onClick={addChatToTab} style={{ display: "flex", width: "90%" }}>
-        <ChatCardsRoundedAvatar src={getImageFromConversation(conversation, user)} />
+        <ChatCardsRoundedAvatar
+          src={getImageFromConversation(conversation, user)}
+        />
         <ChatCardsMiddle>
           <h5>{displayName(conversation, user)}</h5>
           <p>

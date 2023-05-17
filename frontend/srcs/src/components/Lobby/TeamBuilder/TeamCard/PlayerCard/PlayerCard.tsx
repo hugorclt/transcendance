@@ -21,6 +21,7 @@ interface PlayerCardProps {
 
 function PlayerCard({ team, member }: PlayerCardProps) {
   const [lobby, setLobby] = useAtom(lobbyAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const [user, setUser] = useAtom(userAtom);
   const axiosPrivate = useAxiosPrivate();
 
@@ -31,12 +32,11 @@ function PlayerCard({ team, member }: PlayerCardProps) {
         lobbyId: lobby.id,
         playerId: member.userId,
       })
-      .then((response: AxiosResponse) => {})
+      .then((response: AxiosResponse) => {
+        setErrMsg("");
+      })
       .catch((error: AxiosError) => {
-        console.log(
-          "error kicking player: ",
-          JSON.stringify(error.response?.data)
-        );
+        setErrMsg("Error kicking player");
       });
   };
 

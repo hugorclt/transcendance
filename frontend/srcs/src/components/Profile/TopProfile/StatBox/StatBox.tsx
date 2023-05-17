@@ -19,6 +19,7 @@ import { TProfileBoxProps } from "../ProfileBox/ProfileBox.js";
 
 export function StatBox({ user }: TProfileBoxProps) {
   const axiosPrivate = useAxiosPrivate();
+  const [errMsg, setErrMsg] = useState<string>("");
   const [stats, setStats] = useState<TStat>({
     id: "",
     xp: 0,
@@ -32,9 +33,10 @@ export function StatBox({ user }: TProfileBoxProps) {
       .get(`stats/user/${user.id}`)
       .then((response: AxiosResponse) => {
         setStats(response.data);
+        setErrMsg("");
       })
       .catch((error: AxiosError) => {
-        console.log(error.message);
+        setErrMsg("Error getting stats");
       });
   }, []);
 

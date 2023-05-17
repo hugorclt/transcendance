@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import { useAtom } from "jotai";
-import { lobbyAtom, userAtom } from "../../../../../services/store";
+import { lobbyAtom } from "../../../../../services/store";
 import { AxiosError, AxiosResponse } from "axios";
 import HeptaButton from "../../../../common/Button/HeptaButton/HeptaButton";
 import MediaQuery from "react-responsive";
@@ -9,18 +9,17 @@ import { mediaSize } from "../../../../../mediaSize";
 
 function ReadyButton() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
-  const [user, setUser] = useAtom(userAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const axiosPrivate = useAxiosPrivate();
   const changeReady = (e: React.SyntheticEvent) => {
     e.preventDefault();
     axiosPrivate
       .get(`lobbies/${lobby.id}/changeReady`)
-      .then((response: AxiosResponse) => {})
+      .then((response: AxiosResponse) => {
+        setErrMsg("");
+      })
       .catch((error: AxiosError) => {
-        console.log(
-          "error changing ready status: ",
-          JSON.stringify(error.message)
-        );
+        setErrMsg("Error changing ready status");
       });
   };
   return (

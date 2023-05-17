@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useRef,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { userAtom } from "../store";
 import { useAtom } from "jotai";
@@ -26,27 +20,12 @@ export const SocketContext = createContext<Socket | null>(null);
 
 export function SocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const connected = useRef(false);
   const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
-    socket?.on("unauthorized", () => {
-      console.log("user socket unauthorized");
-      //TODO: get another token
-    });
-
-    return () => {
-      socket?.off("unauthorized");
-    };
-  }, [socket]);
-
-  useEffect(() => {
     async function initSocket() {
-      if (!connected.current) {
-        const s: any = await initializeSocket(user?.accessToken);
-        setSocket(s);
-      }
-      connected.current = true;
+      const s: any = await initializeSocket(user?.accessToken);
+      setSocket(s);
     }
     initSocket();
   }, []);

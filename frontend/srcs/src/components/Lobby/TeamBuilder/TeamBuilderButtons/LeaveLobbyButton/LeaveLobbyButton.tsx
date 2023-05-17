@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import React from "react";
+import React, { useState } from "react";
 import {
   lobbyAtom,
   lobbyDefaultValue,
@@ -15,6 +15,7 @@ import CancelIcon from "../../../../../assets/icons/CancelIcon";
 function LeaveLobbyButton() {
   const [lobby, setLobby] = useAtom(lobbyAtom);
   const [user, setUser] = useAtom(userAtom);
+  const [errMsg, setErrMsg] = useState<string>("");
   const axiosPrivate = useAxiosPrivate();
   const leaveLobby = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -25,9 +26,10 @@ function LeaveLobbyButton() {
       })
       .then((response: AxiosResponse) => {
         setLobby(lobbyDefaultValue);
+        setErrMsg("");
       })
       .catch((error: AxiosError) => {
-        console.log(JSON.stringify(error?.response?.data));
+        setErrMsg("Error leaving lobby");
       });
   };
 

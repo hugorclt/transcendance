@@ -30,9 +30,9 @@ function JoinRoom() {
       .post("/rooms/join", { name: name, password: password })
       .then((res: AxiosResponse) => {
         setConv((prev) => [res.data, ...prev]);
+        setErrMsg("");
       })
       .catch((err: AxiosError) => {
-        console.log(err);
         if (err.response?.status == 404) setErrMsg("Room doesn't exist");
         else if (err.response?.status == 403)
           setErrMsg("Password doesn't match");
@@ -50,16 +50,22 @@ function JoinRoom() {
           onChange={(e) => setName(e.target.value)}
           type="text"
           autoComplete="new-password"
-          placeholder="Room Name"></StyledInput>
+          placeholder="Room Name"
+        ></StyledInput>
         <StyledInput
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           autoComplete="new-password"
-          placeholder="Password"></StyledInput>
+          placeholder="Password"
+        ></StyledInput>
         <CreateRoomButtonBox>
-          <StyledButton onClick={() => setOpen(false)} type="submit" value="Join room" />
+          <StyledButton
+            onClick={() => setOpen(false)}
+            type="submit"
+            value="Join room"
+          />
         </CreateRoomButtonBox>
       </CreateRoomForm>
       {errMsg.length != 0 ? <p style={{ color: "red" }}>{errMsg}</p> : <></>}
