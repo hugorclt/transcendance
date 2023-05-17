@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { COLORS, convertStatusColor } from "../../../../../colors";
 import { ProfileBoxStatus } from "../../../ProfileBox/ProfilBoxStyle";
 import {
@@ -39,6 +39,7 @@ function LeftSideChatCards(props: {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const [friendList, setFriendList] = useAtom(friendAtom);
+  const ref = useRef<any>();
 
   function displayRole(role: string) {
     if (role == "ADMIN")
@@ -47,10 +48,14 @@ function LeftSideChatCards(props: {
       return <FaCrown style={{ color: COLORS.secondary }} size={22} />;
   }
 
+  const closeTooltip = () => ref.current!.close();
+
   const handleClick = () => {
     axiosPrivate
       .post("/invitations", { type: "FRIEND", username: props.name })
-      .then((response: AxiosResponse) => {})
+      .then((response: AxiosResponse) => {
+        closeTooltip();
+      })
       .catch((error: AxiosError) => {
         console.log("error: ", JSON.stringify(error.message));
       });
@@ -66,6 +71,7 @@ function LeftSideChatCards(props: {
         id: props.userId,
       })
       .then((res: AxiosResponse) => {
+        closeTooltip();
         setFriendList((prev) => prev.filter((user) => user.id != props.userId));
       });
   };
@@ -83,6 +89,7 @@ function LeftSideChatCards(props: {
       <LeftSideChatCardsRightBox>
         {displayRole(props.role)}
         <Popup
+          ref={ref}
           position="left center"
           arrowStyle={{ color: COLORS.background }}
           trigger={

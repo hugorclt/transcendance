@@ -347,9 +347,15 @@ export class UsersService {
           },
         },
       },
+      include: {
+        friends: true
+      }
     });
 
     const userTo = await this.findOne(toBlockId);
+    if (!user.friends.some((friend) => friend.id == toBlockId)) {
+      return ;
+    }
     this.removeFriends(userId, userTo.username);
     this.socialsGateway.removeFriend(userId, userTo.id);
     return;
