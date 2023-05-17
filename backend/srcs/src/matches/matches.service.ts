@@ -76,6 +76,9 @@ export class MatchesService {
       where: {
         OR: [{ winners: { some: { id } } }, { losers: { some: { id } } }],
       },
+      orderBy: {
+        date: 'desc',
+      },
       include: {
         winners: true,
         losers: true,
