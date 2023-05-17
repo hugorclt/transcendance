@@ -13,7 +13,7 @@ export const NavBarSelectContainer = styled.div`
 `;
 
 export const NavBarSelect = styled.select`
-  background-color: inherit;
+  background-color: ${COLORS.secondary};
   border: none;
   color: white;
   font-weight: bold;
