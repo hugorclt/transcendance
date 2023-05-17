@@ -1,9 +1,8 @@
-import { atom } from "jotai";
+import { atom, useAtom } from "jotai";
 import {
   TConversation,
   TEndGame,
   TFriend,
-  TItem,
   TLobby,
   TMatch,
   TNotif,
@@ -25,9 +24,13 @@ export const userAtom = atom<TUser>(userDefaultValue);
 
 export const searchUserAtom = atom<string>("");
 
-export const userPreferencesAtom = atom<TUserPreferences>({
+export const userPreferencesDefaultValue = {
   visibility: "",
-});
+};
+
+export const userPreferencesAtom = atom<TUserPreferences>(
+  userPreferencesDefaultValue
+);
 
 export const lobbyDefaultValue = {
   id: "",
@@ -51,11 +54,37 @@ export const notifAtom = atom<TNotif[]>([]);
 
 export const sideBarAtom = atom<boolean>(false);
 
-export const endGameAtom = atom<TEndGame>({
+export const endGameDefaultValue: TEndGame = {
   winnerScore: 0,
   winners: [],
   loserScore: 0,
   losers: [],
   xp: 0,
   money: 0,
-});
+};
+
+export const endGameAtom = atom<TEndGame>(endGameDefaultValue);
+
+export function resetAtoms() {
+  const [user, setUser] = useAtom(userAtom);
+  const [searchUser, setSearchUser] = useAtom(searchUserAtom);
+  const [userPreferences, setUserPreferences] = useAtom(userPreferencesAtom);
+  const [lobby, setLobby] = useAtom(lobbyAtom);
+  const [friends, setFriends] = useAtom(friendAtom);
+  const [conversations, setConversations] = useAtom(conversationAtom);
+  const [matches, setMatches] = useAtom(matchAtom);
+  const [notifs, setNotifs] = useAtom(notifAtom);
+  const [sideBar, setSideBar] = useAtom(sideBarAtom);
+  const [endGame, setEndGame] = useAtom(endGameAtom);
+
+  setUser(userDefaultValue);
+  setSearchUser("");
+  setUserPreferences(userPreferencesDefaultValue);
+  setLobby(lobbyDefaultValue);
+  setFriends([]);
+  setConversations([]);
+  setMatches([]);
+  setNotifs([]);
+  setSideBar(false);
+  setEndGame(endGameDefaultValue);
+}

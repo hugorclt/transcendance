@@ -12,11 +12,16 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { SocketContext } from "../../../services/Auth/SocketContext";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAtom } from "jotai";
-import { conversationAtom, notifAtom, userAtom } from "../../../services/store";
+import {
+  conversationAtom,
+  notifAtom,
+  resetAtoms,
+  userAtom,
+  userDefaultValue,
+} from "../../../services/store";
 import Popup from "reactjs-popup";
 import Settings from "../../Settings/Settings";
 import { ButtonNoStyle } from "../../Lobby/LobbyCreator/LobbyCreator.style";
-import { PopUpBox } from "../FriendsList/FriendsCards/FriendsCardsStyle";
 import NotificationsPanel from "./Notifications/Notifications";
 import { SettingsContainer } from "../../Settings/Settings.style";
 import { RxCross2 } from "react-icons/rx";
@@ -38,17 +43,7 @@ function BottomBar() {
     axios
       .get("/auth/logout")
       .then((response: AxiosResponse) => {
-        setUser((prev) => ({
-          id: "",
-          username: "",
-          accessToken: "",
-          status: "",
-          avatar: "",
-          exp: 0,
-          balance: 0,
-          is2fa: false,
-        }));
-        setConversation([]);
+        resetAtoms();
         socket?.emit("logout", response.data);
         socket?.disconnect();
         gameSocket?.disconnect();
@@ -95,11 +90,24 @@ function BottomBar() {
         <NotificationsPanel />
       </Popup>
       <ButtonNoStyle onClick={() => setOpen(true)}>
-        <MdSettings size={26} style={{ color: COLORS.secondary, cursor: "pointer" }} />
+        <MdSettings
+          size={26}
+          style={{ color: COLORS.secondary, cursor: "pointer" }}
+        />
       </ButtonNoStyle>
-      <Popup modal open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+      <Popup
+        modal
+        open={open}
+        closeOnDocumentClick
+        onClose={() => setOpen(false)}
+      >
         <SettingsContainer>
-          <RxCross2 style={{cursor: "pointer"}} size={17} color={COLORS.secondary} onClick={() => setOpen(false)} />
+          <RxCross2
+            style={{ cursor: "pointer" }}
+            size={17}
+            color={COLORS.secondary}
+            onClick={() => setOpen(false)}
+          />
           <Settings />
         </SettingsContainer>
       </Popup>
