@@ -15,7 +15,7 @@ import { useAtom } from "jotai";
 import {
   conversationAtom,
   notifAtom,
-  resetAtoms,
+  useResetAtoms,
   userAtom,
 } from "../../../services/store";
 import Popup from "reactjs-popup";
@@ -33,22 +33,24 @@ function BottomBar() {
   const axios = useAxiosPrivate();
   const [notifs, setNotif] = useAtom(notifAtom);
   const socket = useContext(SocketContext);
-  const [user, setUser] = useAtom(userAtom);
   const [open, setOpen] = useState(false);
-  const [conversation, setConversation] = useAtom(conversationAtom);
   const gameSocket = useContext(LobbySocketContext);
+  const resetAtom = useResetAtoms();
 
   function logout() {
     axios
       .get("/auth/logout")
       .then((response: AxiosResponse) => {
-        resetAtoms();
         socket?.emit("logout", response.data);
+        resetAtom();
+        socket?.removeAllListeners();
         socket?.disconnect();
+        gameSocket?.removeAllListeners();
         gameSocket?.disconnect();
         navigate("/login", { replace: true });
       })
       .catch((error: AxiosError) => {
+        console.log("ya erreur frere");
         if (!error?.response) {
           setErrMsg("No server response");
         } else if (error.response?.status === 401) {

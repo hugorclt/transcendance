@@ -3,8 +3,9 @@ import { useAtom } from "jotai";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { resetAtoms, userAtom, userDefaultValue } from "../../services/store";
+import { useResetAtoms, userAtom } from "../../services/store";
 import { SocketContext } from "../../services/Auth/SocketContext";
+import { LobbySocketContext } from "../../services/Lobby/LobbySocketContext";
 
 function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useAtom(userAtom);
@@ -13,6 +14,8 @@ function UserProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const socket = useContext(SocketContext);
+  const gameSocket = useContext(LobbySocketContext);
+  const resetAtom = useResetAtoms();
 
   useEffect(() => {
     axiosPrivate
@@ -34,8 +37,11 @@ function UserProvider({ children }: { children: ReactNode }) {
     socket?.on("on-self-status-update", (newStatus) => {
       setUser((prev) => ({ ...prev, status: newStatus }));
       if (newStatus === "DISCONNECTED") {
-        setUser(userDefaultValue);
-        resetAtoms();
+        resetAtom();
+        socket?.removeAllListeners();
+        gameSocket?.removeAllListeners();
+        socket?.disconnect();
+        gameSocket?.disconnect();
         navigate("/login", { state: { from: location }, replace: true });
       }
     });

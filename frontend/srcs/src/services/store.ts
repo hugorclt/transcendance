@@ -65,7 +65,7 @@ export const endGameDefaultValue: TEndGame = {
 
 export const endGameAtom = atom<TEndGame>(endGameDefaultValue);
 
-export function resetAtoms() {
+export function useResetAtoms() {
   const [user, setUser] = useAtom(userAtom);
   const [searchUser, setSearchUser] = useAtom(searchUserAtom);
   const [userPreferences, setUserPreferences] = useAtom(userPreferencesAtom);
@@ -77,14 +77,18 @@ export function resetAtoms() {
   const [sideBar, setSideBar] = useAtom(sideBarAtom);
   const [endGame, setEndGame] = useAtom(endGameAtom);
 
-  setUser(userDefaultValue);
-  setSearchUser("");
-  setUserPreferences(userPreferencesDefaultValue);
-  setLobby(lobbyDefaultValue);
-  setFriends([]);
-  setConversations([]);
-  setMatches([]);
-  setNotifs([]);
-  setSideBar(false);
-  setEndGame(endGameDefaultValue);
+  const resetAtom = () => {
+    setUser(userDefaultValue);
+    setSearchUser("");
+    setUserPreferences(userPreferencesDefaultValue);
+    setLobby(lobbyDefaultValue);
+    setFriends([]);
+    setConversations([]);
+    setMatches([]);
+    setNotifs([]);
+    setSideBar(false);
+    setEndGame(endGameDefaultValue);
+  };
+
+  return resetAtom;
 }
