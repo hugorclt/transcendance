@@ -87,13 +87,12 @@ export class Ball extends IObject {
     return this._isNormal;
   }
 
-  public resetSpeed() {
+  public resetSpeed(oldPos: Vector3) {
+    console.log(oldPos.z);
     this._speed = new Vector3(
       this._initialSpeed.x,
       this._initialSpeed.y,
-      Math.floor(Math.random() * 1) - 1 > 0
-        ? this._initialSpeed.z
-        : -this._initialSpeed.z,
+      oldPos.z > 0 ? this._initialSpeed.z : -this._initialSpeed.z,
     );
   }
 

@@ -6,10 +6,10 @@ export function goalCollide(ball: Ball, object: HitBox) {
   const position = new Vector3(
     ball.getPosition().x,
     ball.getPosition().y,
-    ball.getPosition().y,
+    ball.getPosition().z,
   );
   ball.resetPosition();
-  ball.resetSpeed();
+  ball.resetSpeed(position);
 
   return {
     position: position,
