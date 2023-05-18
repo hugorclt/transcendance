@@ -129,7 +129,7 @@ export class Game {
       xMax - xMin,
       yMax - yMin,
       zMax - zMin,
-      new Vector3((xMax + xMin) / 2, (yMax + yMin) / 2, (zMax + zMin) / 2), //A VERIFIER
+      new Vector3((xMax + xMin) / 2, (yMax + yMin) / 2, (zMax + zMin) / 2),
     );
 
     var directors = new Vector3(

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import useRefreshToken from "../../hooks/useRefreshToken";
-import Loading from "../../components/common/Loading/Loading";
 import { useAtom } from "jotai";
 import { userAtom } from "../store";
 
@@ -26,7 +25,7 @@ function PersistLogin() {
     !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
-  return <>{isLoading ? <Loading /> : <Outlet />}</>;
+  return <>{isLoading ? <h1>Loading...</h1> : <Outlet />}</>;
 }
 
 export default PersistLogin;

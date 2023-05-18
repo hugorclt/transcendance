@@ -17,7 +17,7 @@ const Ball = (props: BallProps) => {
   const ballRef = useRef<Mesh>(null!);
   const socket = useContext(LobbySocketContext);
   const [trail, setTrail] = useState(0xfffff);
-  var velocity;
+  var velocity = new Vector3(0, 0, 0);
 
   useFrame(({ clock }) => {
     if (ballRef.current) {

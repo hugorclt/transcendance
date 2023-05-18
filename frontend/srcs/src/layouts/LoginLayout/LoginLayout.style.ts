@@ -12,7 +12,6 @@ export const LoginLayoutContainer = styled.div`
 
 export const LoginHeaderContainer = styled.div`
   width: 100%;
-  height: auto;
   display: flex;
   justify-content: center;
   text-align: center;

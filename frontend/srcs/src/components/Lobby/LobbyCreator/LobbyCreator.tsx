@@ -71,8 +71,8 @@ const createModalEnd = () => {
               {endGameInfo.xp && (
                 <h3 className="game-winner">
                   {endGameInfo.winners.includes(user.id)
-                    ? "You Won!"
-                    : "You loose!"}
+                    ? "You Win!"
+                    : "You Lose!"}
                 </h3>
               )}
               <h3>
