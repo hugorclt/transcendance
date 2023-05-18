@@ -39,7 +39,7 @@ const dataGameMode = [
   {
     name: "Champions",
     description:
-      "Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay",
+      "Pong Champions is a game mode that takes the classic game of Pong to the next level! Activate special powers to defeat your opponents",
     img: "../../../../public/planet.jpeg",
     left: false,
   },
