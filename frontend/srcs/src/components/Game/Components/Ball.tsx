@@ -5,9 +5,6 @@ import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 import { Object3D } from "./Assets/interfaces";
 import { createMeshComponent } from "./Assets/meshGenerator";
 import { useState } from "react";
-import { Trail } from "@react-three/drei";
-import * as THREE from "three";
-import { EType } from "../../../shared/enum";
 
 type BallProps = {
   ball: Object3D;
@@ -17,7 +14,7 @@ const Ball = (props: BallProps) => {
   const ballRef = useRef<Mesh>(null!);
   const socket = useContext(LobbySocketContext);
   const [trail, setTrail] = useState(0xfffff);
-  var velocity;
+  var velocity = new Vector3(0, 0, 0);
 
   useFrame(({ clock }) => {
     if (ballRef.current) {

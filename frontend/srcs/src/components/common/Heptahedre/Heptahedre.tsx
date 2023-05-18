@@ -7,7 +7,6 @@ function Heptahedre() {
     <HeptahedreContainer>
       <svg
         width="95%"
-        height="auto"
         viewBox="0 0 341 103"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

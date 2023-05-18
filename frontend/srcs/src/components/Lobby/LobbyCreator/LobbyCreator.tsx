@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GameModeCard from "./GameModeCard/GameModeCard";
 import { AxiosError, AxiosResponse } from "axios";
 import {
@@ -39,7 +39,7 @@ const dataGameMode = [
   {
     name: "Champions",
     description:
-      "Pong Champions is a game mode that takes the classic game of Pong to the next level by giving players the ability to activate special powers during gameplay",
+      "Pong Champions is a game mode that takes the classic game of Pong to the next level! Activate special powers to defeat your opponents",
     img: "../../../../public/planet.jpeg",
     left: false,
   },
@@ -71,8 +71,8 @@ const createModalEnd = () => {
               {endGameInfo.xp && (
                 <h3 className="game-winner">
                   {endGameInfo.winners.includes(user.id)
-                    ? "You Won!"
-                    : "You loose!"}
+                    ? "You Win!"
+                    : "You Lose!"}
                 </h3>
               )}
               <h3>

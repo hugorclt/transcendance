@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import axios from "../../../services/axios";
 import { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import Loading from "../../common/Loading/Loading";
 import { useAtom } from "jotai";
 import { userAtom } from "../../../services/store";
 
@@ -45,11 +44,7 @@ function Login42() {
     querySent.current = true;
   }, []);
 
-  return (
-    <div>
-      <Loading />
-    </div>
-  );
+  return <h1>Loading...</h1>;
 }
 
 export default Login42;

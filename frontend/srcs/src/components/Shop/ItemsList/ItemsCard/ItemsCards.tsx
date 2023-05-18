@@ -29,14 +29,13 @@ function ItemsCards({ name, desc, price, image, owned, setData }: TItemsProps) {
         setUser((prev) => ({
           ...prev,
           balance: user.balance - +price,
-        }))
+        }));
         setData((prev) => {
           return prev.map((item) => {
-            if (item.name == name)
-              item.owned = true
+            if (item.name == name) item.owned = true;
             return item;
-          })
-        })
+          });
+        });
       })
       .catch((err: AxiosError) => {
         setErrMsg("Error while buying item please retry");
@@ -52,7 +51,8 @@ function ItemsCards({ name, desc, price, image, owned, setData }: TItemsProps) {
         backgroundImage: `url(data:image/gif;base64,${image})`,
         backgroundSize: "cover",
         filter: owned ? "grayscale(80%)" : "none",
-      }}>
+      }}
+    >
       <div className="top-text">
         <h5 style={{ color: owned ? COLORS.grey : "" }}>{price}</h5>
         <TbCurrencyShekel color={COLORS.secondary} size={27} />
@@ -67,18 +67,37 @@ function ItemsCards({ name, desc, price, image, owned, setData }: TItemsProps) {
         <h5 style={{ color: owned ? COLORS.grey : "" }}>{desc}</h5>
         {!owned && (
           <>
-            <button style={{cursor: "pointer",backgroundColor: user.balance < +price ? COLORS.grey : COLORS.secondary}} disabled={user.balance < +price} onClick={() => setOpen((o) => !o)}>BUY</button>
+            <button
+              style={{
+                pointerEvents: user.balance < +price ? "none" : "all",
+                cursor: "pointer",
+                backgroundColor:
+                  user.balance < +price ? COLORS.grey : COLORS.secondary,
+              }}
+              disabled={user.balance < +price}
+              onClick={() => setOpen((o) => !o)}
+            >
+              BUY
+            </button>
             <Popup
               modal
               nested
               open={open}
               closeOnDocumentClick
-              onClose={closeModal}>
+              onClose={closeModal}
+            >
               <ModalBox>
                 <p>Confirm ?</p>
                 <ModalConfirmContainer>
-                  <button style={{cursor: "pointer"}} onClick={handleYes}>YES</button>
-                  <button style={{cursor: "pointer"}} onClick={() => setOpen((o) => !o)}>NO</button>
+                  <button style={{ cursor: "pointer" }} onClick={handleYes}>
+                    YES
+                  </button>
+                  <button
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setOpen((o) => !o)}
+                  >
+                    NO
+                  </button>
                 </ModalConfirmContainer>
                 {errMsg.length != 0 && <p style={{ color: "red" }}>{errMsg}</p>}
               </ModalBox>

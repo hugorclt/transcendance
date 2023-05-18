@@ -313,4 +313,19 @@ export class LobbiesGateway
   emitToLobby(lobbyId: string, eventName: string, eventData: any) {
     this.io.to(lobbyId).emit(eventName, eventData);
   }
+
+  emitToLobbySpectators(lobbyId: string, eventName: string, eventData: any) {
+    const game = this._games.get(lobbyId);
+    if (!game) return;
+    const playerIds = game.players.map((player) => player.id);
+    const playerSocketIds = playerIds.map(
+      (userId) => this.io.adapter.rooms.get(userId).values().next().value,
+    );
+    const room = this.io.adapter.rooms.get(lobbyId);
+    Array.from(room).forEach((id) => {
+      if (!playerSocketIds.includes(id)) {
+        this.io.to(id).emit(eventName, eventData);
+      }
+    });
+  }
 }

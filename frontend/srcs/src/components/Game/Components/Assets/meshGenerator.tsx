@@ -12,12 +12,12 @@ import useKeyboard from "../../../../hooks/useKeyboard";
 
 const PADDLE_COLORS = {
   [EType.CLASSIC_PADDLE]: {
-    color: "#fffff",
+    color: "#ffffff",
     emissive: "white",
     emissiveIntensity: 4,
   },
   [EType.BASIC_PADDLE]: {
-    color: "#fffff",
+    color: "#ffffff",
     emissive: "white",
     emissiveIntensity: 4,
   },

@@ -64,7 +64,6 @@ function LeftSideChatCards(props: {
   const handleProfil = () => {
     navigate(`/profile/${props.name}`, { replace: true });
     closeTooltip();
-
   };
 
   const handleBlock = () => {
@@ -105,7 +104,8 @@ function LeftSideChatCards(props: {
                 />
               )}
             </FriendsPopUpButton>
-          }>
+          }
+        >
           <PopUpBox>
             <InsidePopUpButton onClick={handleClick}>
               Add to friends
