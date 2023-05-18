@@ -699,6 +699,12 @@ export class LobbiesService {
             },
           },
         });
+        this.lobbiesGateway.emitToLobbySpectators(lobby.id, 'end-game', {
+          winnerScore: winnerScore,
+          loserScore: loserScore,
+          losers: losers,
+          winners: winners,
+        });
         lobbyWithMembers.members.forEach(async (member) => {
           this.lobbiesGateway.emitToLobby(member.userId, 'end-game', {
             winnerScore: winnerScore,
@@ -708,12 +714,6 @@ export class LobbiesService {
             money: await this.calculateMoney(member.userId, winners),
             xp: await this.calculateXp(member.userId, winners),
           });
-        });
-        this.lobbiesGateway.emitToLobby(lobby.id, 'end-game', {
-          winnerScore: winnerScore,
-          loserScore: loserScore,
-          losers: losers,
-          winners: winners,
         });
         await this.delete(lobby.id);
         this.lobbiesGateway.deleteRoom(lobby.id);

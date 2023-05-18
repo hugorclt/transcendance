@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GameModeCard from "./GameModeCard/GameModeCard";
 import { AxiosError, AxiosResponse } from "axios";
 import {

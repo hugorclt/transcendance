@@ -50,7 +50,6 @@ function BottomBar() {
         navigate("/login", { replace: true });
       })
       .catch((error: AxiosError) => {
-        console.log("ya erreur frere");
         if (!error?.response) {
           setErrMsg("No server response");
         } else if (error.response?.status === 401) {
