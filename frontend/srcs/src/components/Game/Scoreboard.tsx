@@ -67,8 +67,8 @@ function Scoreboard() {
         }}
       >
         Team 1&nbsp;&nbsp;&nbsp;
-        <Score value={team1score} blink={scoreChanged} /> -{" "}
-        <Score value={team2score} blink={scoreChanged} />
+        <Score value={team2score} blink={scoreChanged} /> -{" "}
+        <Score value={team1score} blink={scoreChanged} />
         &nbsp;&nbsp;&nbsp;Team 2
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ display: "flex" }}>

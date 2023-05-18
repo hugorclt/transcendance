@@ -30,7 +30,7 @@ function Ranking() {
 
   const getCategory = (user) => {
     const indexOf = stats.indexOf(select);
-    return [+user.stats[indexOf]];
+    return +user.stats[indexOf];
   };
 
   useEffect(() => {
@@ -45,9 +45,13 @@ function Ranking() {
   }, []);
 
   const renderRow = () => {
-    if (asc == true)
+    if (asc) {
       data.sort((a, b) => (getCategory(a) < getCategory(b) ? 1 : -1));
-    else data.sort((a, b) => (getCategory(a) > getCategory(b) ? 1 : -1));
+    } else {
+      data.sort((a, b) => (getCategory(a) > getCategory(b) ? 1 : -1));
+    }
+
+    console.log(data);
 
     return data.map((user, index) => {
       var color;

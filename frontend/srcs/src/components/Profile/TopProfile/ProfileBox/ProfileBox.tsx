@@ -3,14 +3,14 @@ import { ProfileBoxContainer } from "./ProfileBoxStyle.js";
 import { TUser } from "../../../../services/type.js";
 import { getImageBase64 } from "../../../../services/utils/getImageBase64.js";
 export type TProfileBoxProps = {
-  user: TUser;
+  user: any;
 };
 
 export function ProfileBox({ user }: TProfileBoxProps) {
   const calculateLevel = () => {
     const xp = Math.max(
       1,
-      Math.log(user.exp / 500) / Math.log(Math.pow(2, 1 / 5)) + 1
+      Math.log(user.xp / 500) / Math.log(Math.pow(2, 1 / 5)) + 1
     );
     return xp;
   };
