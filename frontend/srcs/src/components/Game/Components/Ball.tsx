@@ -5,9 +5,6 @@ import { LobbySocketContext } from "../../../services/Lobby/LobbySocketContext";
 import { Object3D } from "./Assets/interfaces";
 import { createMeshComponent } from "./Assets/meshGenerator";
 import { useState } from "react";
-import { Trail } from "@react-three/drei";
-import * as THREE from "three";
-import { EType } from "../../../shared/enum";
 
 type BallProps = {
   ball: Object3D;

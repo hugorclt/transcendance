@@ -11,7 +11,8 @@ function Score({ value, blink }) {
         fontFamily: "scoreboard",
         fontSize: "50px",
         animation: blink ? "blink 1s linear 0s 3" : "none",
-      }}>
+      }}
+    >
       {value}
     </span>
   );
@@ -42,7 +43,7 @@ function Scoreboard() {
         setScoreChanged(true);
       }
       const player = frame.players.find((paddle) => paddle.id == user.id);
-      setCharge(player.charge);
+      setCharge(player?.charge);
     });
 
     return () => {
@@ -63,7 +64,8 @@ function Scoreboard() {
           top: "30%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-        }}>
+        }}
+      >
         Team 1&nbsp;&nbsp;&nbsp;
         <Score value={team1score} blink={scoreChanged} /> -{" "}
         <Score value={team2score} blink={scoreChanged} />
@@ -76,21 +78,24 @@ function Scoreboard() {
                 height: "10px",
                 margin: "5px",
                 backgroundColor: charge >= 1 ? "skyblue" : "grey",
-              }}></div>
+              }}
+            ></div>
             <div
               style={{
                 width: "15px",
                 height: "10px",
                 margin: "5px",
                 backgroundColor: charge >= 2 ? "skyblue" : "grey",
-              }}></div>
+              }}
+            ></div>
             <div
               style={{
                 width: "15px",
                 height: "10px",
                 margin: "5px",
                 backgroundColor: charge >= 3 ? "skyblue" : "grey",
-              }}></div>
+              }}
+            ></div>
           </div>
         </div>
       </div>
