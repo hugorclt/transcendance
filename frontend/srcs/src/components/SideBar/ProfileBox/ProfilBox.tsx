@@ -1,4 +1,9 @@
-import React, { ChangeEvent, ChangeEventHandler } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router";
 import { AxiosError } from "axios";
@@ -26,6 +31,15 @@ function ProfilBox() {
   const [userPreferences, setUserPreferences] = useAtom(userPreferencesAtom);
   const navigate = useNavigate();
   const location = useLocation();
+  const [lvl, setLvl] = useState("0");
+
+  useEffect(() => {
+    setLvl(Math.floor(calculateLevel()).toString());
+  }, []);
+
+  useEffect(() => {
+    setLvl(Math.floor(calculateLevel()).toString());
+  }, [user.exp]);
 
   var changeStatusVisibility: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
@@ -41,8 +55,10 @@ function ProfilBox() {
   };
 
   const calculateLevel = () => {
-    const xp =
-      Math.max(1, Math.log(user.exp / 500) / Math.log(Math.pow(2, 1 / 5)) + 1);
+    const xp = Math.max(
+      1,
+      Math.log(user.exp / 500) / Math.log(Math.pow(2, 1 / 5)) + 1
+    );
     return xp;
   };
 
@@ -72,18 +88,19 @@ function ProfilBox() {
               }}
             />
           </ExperienceBar>
-          <h5>{Math.floor(calculateLevel())}</h5>
+          <h5>{lvl}</h5>
         </ExperienceBarContainer>
       </ProfilBoxLeft>
       <ProfilBoxRight>
         <CurrencyContainer>
-          <h5>{user?.balance}</h5>
+          <h5>{user?.balance ? user.balance : 0}</h5>
           <TbCurrencyShekel style={{ color: COLORS.secondary }} size={24} />
         </CurrencyContainer>
         <SelectBox>
           <StyledSelect
             value={userPreferences.visibility.toUpperCase()}
-            onChange={changeStatusVisibility}>
+            onChange={changeStatusVisibility}
+          >
             <option>VISIBLE</option>
             <option>AWAY</option>
             <option>INVISIBLE</option>
