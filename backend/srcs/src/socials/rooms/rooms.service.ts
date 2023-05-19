@@ -278,7 +278,7 @@ export class RoomsService {
   }
 
   async kickFromRoom(kickerId: string, managerRoomDto: ManagerRoomDto) {
-    this.checkManagerState(kickerId, managerRoomDto);
+    await this.checkManagerState(kickerId, managerRoomDto);
     const newRoom = await this.leaveRoom(
       managerRoomDto.targetId,
       managerRoomDto.roomId,
@@ -300,7 +300,7 @@ export class RoomsService {
   }
 
   async muteFromRoom(muterId: string, managerRoomDto: ManagerRoomDto) {
-    this.checkManagerState(muterId, managerRoomDto);
+    await this.checkManagerState(muterId, managerRoomDto);
     const participant = await this.prisma.participant.findFirst({
       where: {
         userId: managerRoomDto.targetId,

@@ -130,8 +130,7 @@ function Chat({ chat }: TChatProps) {
           flexDirection: "column",
           alignItems: isMe ? "flex-end" : "flex-start",
           boxSizing: "border-box",
-        }}
-      >
+        }}>
         {idx == 0 || array[idx - 1].senderId != msg.senderId ? (
           <div style={{ color: COLORS.primary }}>{senderName}</div>
         ) : (
@@ -140,13 +139,11 @@ function Chat({ chat }: TChatProps) {
         <MessageBox
           style={{
             backgroundColor: isMe ? COLORS.primary : COLORS.secondary,
-          }}
-        >
+          }}>
           <MessageContent
             style={{
               color: isMe ? COLORS.background : COLORS.primary,
-            }}
-          >
+            }}>
             {msg.content}
           </MessageContent>
         </MessageBox>
@@ -177,6 +174,7 @@ function Chat({ chat }: TChatProps) {
                 <FaUserFriends
                   onClick={() => setOpenManager(!openManager)}
                   style={{ color: COLORS.secondary }}
+                  cursor={"pointer"}
                   size={22}
                 />
               )}
@@ -191,12 +189,12 @@ function Chat({ chat }: TChatProps) {
                       <IoIosSettings
                         size={22}
                         style={{ color: COLORS.secondary }}
+                        cursor={"pointer"}
                       />
                     </div>
                   }
                   modal
-                  nested
-                >
+                  nested>
                   <ChatManager chat={chat} />
                 </Popup>
               )}
@@ -211,6 +209,7 @@ function Chat({ chat }: TChatProps) {
                 );
               }}
               style={{ color: COLORS.secondary }}
+              cursor={"pointer"}
               size={22}
             />
           </div>

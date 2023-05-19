@@ -400,10 +400,6 @@ export class UsersService {
   }
 
   async addFriend(addFriendDto: addFriendDto): Promise<any> {
-    //should check if invitation exist and
-    //TODO
-    //=> if not exist: error
-    //=> if exists delete and continue
     const invitation = await this.prisma.invitation.findFirst({
       where: {
         userFromId: addFriendDto.userFromId,

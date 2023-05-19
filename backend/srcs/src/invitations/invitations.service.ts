@@ -90,8 +90,6 @@ export class InvitationsService {
     const lobby = await this.prisma.lobby.findUnique({
       where: { id: createInvitationDto.lobbyId },
     });
-    //check lobby can be joined (game not started, lobby not full, sender is lobby owner)
-    //TODO
     if (
       await this.usersService.checkIfUserBlocked(
         createInvitationDto.userId,
