@@ -11,7 +11,6 @@ import { AxiosError, AxiosResponse } from "axios";
 
 const renderCards = (user_id: string) => {
   const [match, setMatch] = useState<TMatch[]>([]);
-  const [user, setuser] = useAtom(userAtom);
 
   useEffect(() => {
     axiosPrivate
@@ -25,7 +24,7 @@ const renderCards = (user_id: string) => {
   }, [user_id]);
 
   const getResult = (match: TMatch): string => {
-    if (match.losers.find((loser) => user.id == loser.id)) return "DEFEAT";
+    if (match.losers.find((loser) => user_id == loser.id)) return "DEFEAT";
     return "VICTORY";
   };
 

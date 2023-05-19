@@ -7,13 +7,6 @@ export type TProfileBoxProps = {
 };
 
 export function ProfileBox({ user }: TProfileBoxProps) {
-  const calculateLevel = () => {
-    const xp = Math.max(
-      1,
-      Math.log(user.xp / 500) / Math.log(Math.pow(2, 1 / 5)) + 1
-    );
-    return xp;
-  };
   return (
     <ProfileBoxContainer>
       <img
@@ -21,10 +14,7 @@ export function ProfileBox({ user }: TProfileBoxProps) {
         src={getImageBase64(user.avatar)}
       />
       <h3>{user.username}</h3>
-      <div style={{display: "flex"}}>
-        <p style={{marginRight: "16px"}}>{user.status}</p>
-        <div>Level: {Math.floor(calculateLevel())}</div>
-      </div>
+      <p>{user.status}</p>
     </ProfileBoxContainer>
   );
 }

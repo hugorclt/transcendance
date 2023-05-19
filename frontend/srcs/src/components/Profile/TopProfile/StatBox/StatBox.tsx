@@ -28,23 +28,32 @@ export function StatBox({ user }: TProfileBoxProps) {
     nbWin: 0,
   });
 
+  const calculateLevel = () => {
+    const xp = Math.max(
+      1,
+      Math.log(user.xp / 500) / Math.log(Math.pow(2, 1 / 5)) + 1
+    );
+    return xp;
+  };
+
   useEffect(() => {
     axiosPrivate
       .get(`stats/user/${user.id}`)
       .then((response: AxiosResponse) => {
+        console.log(response.data);
         setStats(response.data);
         setErrMsg("");
       })
       .catch((error: AxiosError) => {
         setErrMsg("Error getting stats");
       });
-  }, []);
+  }, [user]);
 
   return (
     <StatBoxContainer>
       <LvlBoxContainer>
         <FaCrown size={42} color={COLORS.white} />
-        <div>LVL = {stats.lvl}</div>
+        <div>LVL = {Math.floor(calculateLevel())}</div>
       </LvlBoxContainer>
       <NbGameContainer>
         <IoLogoGameControllerB size={42} color={COLORS.white} />
