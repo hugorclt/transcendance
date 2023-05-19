@@ -40,7 +40,6 @@ export function StatBox({ user }: TProfileBoxProps) {
     axiosPrivate
       .get(`stats/user/${user.id}`)
       .then((response: AxiosResponse) => {
-        console.log(response.data);
         setStats(response.data);
         setErrMsg("");
       })

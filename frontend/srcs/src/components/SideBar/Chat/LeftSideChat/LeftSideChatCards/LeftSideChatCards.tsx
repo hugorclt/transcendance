@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { COLORS, convertStatusColor } from "../../../../../colors";
 import { ProfileBoxStatus } from "../../../ProfileBox/ProfilBoxStyle";
 import {
@@ -17,7 +17,6 @@ import {
 } from "../../../FriendsList/FriendsCards/FriendsCardsStyle";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { SocketContext } from "../../../../../services/Auth/SocketContext";
-import { BiVolumeMute } from "react-icons/bi";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import AdminInteraction from "./AdminInteraction";
 import { useAtom } from "jotai";
@@ -39,6 +38,7 @@ function LeftSideChatCards(props: {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const [friendList, setFriendList] = useAtom(friendAtom);
+  const [errMsg, setErrMsg] = useState("");
   const ref = useRef<any>();
 
   function displayRole(role: string) {
@@ -57,7 +57,7 @@ function LeftSideChatCards(props: {
         closeTooltip();
       })
       .catch((error: AxiosError) => {
-        console.log("error: ", JSON.stringify(error.message));
+        setErrMsg("Error adding friend");
       });
   };
 
@@ -104,8 +104,7 @@ function LeftSideChatCards(props: {
                 />
               )}
             </FriendsPopUpButton>
-          }
-        >
+          }>
           <PopUpBox>
             <InsidePopUpButton onClick={handleClick}>
               Add to friends

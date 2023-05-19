@@ -51,8 +51,6 @@ function Ranking() {
       data.sort((a, b) => (getCategory(a) > getCategory(b) ? 1 : -1));
     }
 
-    console.log(data);
-
     return data.map((user, index) => {
       var color;
       var category;

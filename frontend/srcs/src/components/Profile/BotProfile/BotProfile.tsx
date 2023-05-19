@@ -13,14 +13,9 @@ const renderCards = (user_id: string) => {
   const [match, setMatch] = useState<TMatch[]>([]);
 
   useEffect(() => {
-    axiosPrivate
-      .get(`/matches/user/${user_id}`)
-      .then((response) => {
-        setMatch(response.data);
-      })
-      .catch((error) => {
-        console.error("This is not really sympathique");
-      });
+    axiosPrivate.get(`/matches/user/${user_id}`).then((response) => {
+      setMatch(response.data);
+    });
   }, [user_id]);
 
   const getResult = (match: TMatch): string => {
@@ -70,7 +65,9 @@ export function BotProfile({ user_id }) {
         <h2>Match History</h2>
       </FirstCardContainer>
       <FirstCard />
-      <div style={{width: "100%", flexGrow: "1" , overflowY: "auto"}}>{renderCards(user_id)}</div>
+      <div style={{ width: "100%", flexGrow: "1", overflowY: "auto" }}>
+        {renderCards(user_id)}
+      </div>
     </BotProfileContainer>
   );
 }

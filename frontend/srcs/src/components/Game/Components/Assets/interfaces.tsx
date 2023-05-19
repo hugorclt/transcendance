@@ -139,25 +139,3 @@ function validateIFrame(obj: any): obj is IFrame {
     obj.collisions.every(validateCollision)
   );
 }
-
-/*================================ PARSING ==============================*/
-
-// export function parseGameData(json: string): IGameInfo | null {
-//   const parsedData = JSON.parse(json);
-//   if (validateGameInfo(parsedData)) {
-//     return parsedData;
-//   } else {
-//     console.error("Invalid game data:", parsedData);
-//     return null;
-//   }
-// }
-
-// export function parseFrameData(json: string): IFrame | null {
-//   const parsedData = JSON.parse(json);
-//   if (validateIFrame(parsedData)) {
-//     return parsedData;
-//   } else {
-//     console.error("Invalid frame data:", parsedData);
-//     return null;
-//   }
-// }

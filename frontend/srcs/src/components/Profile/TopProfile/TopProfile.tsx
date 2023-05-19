@@ -3,7 +3,6 @@ import { ProfileBoxContainer } from "./ProfileBox/ProfileBoxStyle.js";
 import { ProfileBox, TProfileBoxProps } from "./ProfileBox/ProfileBox";
 import { StatBox } from "./StatBox/StatBox.jsx";
 import { TopProfileContainer } from "./TopProfileStyle.js";
-import { nanoid } from "nanoid";
 
 export function TopProfile({ user }: TProfileBoxProps) {
   return (

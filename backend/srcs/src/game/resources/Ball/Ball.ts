@@ -88,7 +88,6 @@ export class Ball extends IObject {
   }
 
   public resetSpeed(oldPos: Vector3) {
-    console.log(oldPos.z);
     this._speed = new Vector3(
       this._initialSpeed.x,
       this._initialSpeed.y,

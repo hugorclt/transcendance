@@ -190,6 +190,11 @@ export class LobbiesService {
         });
       }),
     );
+    await Promise.all(
+      users.map(async (user) => {
+        await this.lobbiesGateway.removeUserFromLobby(id, user.id);
+      }),
+    );
     const lobby = await this.prisma.lobby.update({
       where: { id },
       data: { members: { deleteMany: {} } },
